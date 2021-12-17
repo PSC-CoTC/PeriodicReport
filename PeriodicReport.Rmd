@@ -1,0 +1,219 @@
+---
+title: "Joint Coho Technical Committee Periodic Report"
+author: "PSC Joint Coho Technical Committee"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    collapsed: false
+    number_sections: true
+linkcolor: blue
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+library("tidyverse")
+library("readxl")
+library("kableExtra")
+theme_set(theme_light())
+
+fp <- list(
+  static_tables = "StaticTables.xlsx"
+)
+
+#can load an entire environment built ahead of time and save time on reknitting
+load("PeriodicReport_envi.RData")
+```
+
+```{r build_envi, include=FALSE, eval=FALSE}
+#### pre-declared objects in envi
+members <- readxl::read_excel(fp$static_tables, sheet = "members") %>%
+  mutate(across(where(is.character), ~replace_na(.,"")))
+
+save.image("PeriodicReport_envi.RData")
+```
+
+```{r coho_pic, out.width='75%'}
+knitr::include_graphics("images/CohoPic.png")
+```
+
+# Members
+
+```{r member_table}
+# #could rerun each time knitted...
+# readxl::read_excel(fp$static_tables, sheet = "members") %>%
+#   mutate(across(where(is.character), ~replace_na(.,""))) %>%
+#   knitr::kable(caption = "Membership of the Joint Coho Technical Committee") %>%
+#   kableExtra::kable_styling()
+
+members %>%
+  knitr::kable(caption = "Membership of the Joint Coho Technical Committee") %>%
+  kableExtra::kable_styling()
+```
+
+# Acronyms
+
+```{r}
+#do similarly to members or if needing links can do differently...
+```
+
+# Glossary
+
+Example of an external link like [CDFO](https://www.dfo-mpo.gc.ca/index-eng.htm).
+
+# Executive Summary
+
+Nothing here yet...
+
+Example of an internal link to the section on ABM [Goals and Objectives]
+
+# Introduction
+
+The Pacific Salmon Commission established a Southern Coho abundance-based management regime in 1999 that set forth an agreement to constrain exploitation rates below maximum levels (caps) on selected management units (MUs of naturally-spawning Coho Salmon in southern British Columbia and Washington/Oregon). When a new Coho Agreement was reached in 2008 (implemented 2009 through 2018), modifications were made to the list of specified MUs and the manner in which exploitation rate caps are established. This periodic report only presents information for the MUs identified in the 2009 Pacific Salmon Treaty.
+
+Chapter 5 of the 2009 Pacific Salmon Treaty Agreement (PST Agreement) between the U.S. and Canada (Parties; PSC 2009) established abundance-based management (ABM) regimes to constrain exploitation rates (ERs) on the following 13 Management Units (MUs) of naturally-spawning Coho Salmon originating in rivers along the Washington/British Columbia (B.C.) border:
+
+```{r management_unit_table}
+
+```
+
+## Southern B.C. Management Units
+
+The Canadian MUs are comprised of geographical aggregates of naturally-spawning Coho populations. The four MUs of interest to the Agreement encompass these 12 Conservation Units (CU) as determined by Canada's Wild Salmon Policy (WSP; Holtby and Ciruna 2007):
+
+```{r sbc_mu_table}
+#can fuss with formatting...
+
+```
+
+## U.S. Management Units
+
+The U.S. Inside MUs consist of naturally-spawning populations originating in the Skagit, Stillaguamish, Snohomish, and Hood Canal MUs and the Strait of Juan de Fuca. Coho populations in the U.S. Inside MUs belong to the larger Puget Sound/Strait of Georgia Coho Salmon evolutionarily significant unit (ESU; Weitkamp et al. 1995). Only the eastern portion of the Strait of Juan de Fuca MU is in this ESU. An ESU is a Pacific salmon population or group of populations that is substantially reproductively isolated from other conspecific populations and represents an important component of the evolutionary legacy of the species. The ESU policy (56 FR 58612) for Pacific salmon defines the criteria for identifying a Pacific salmon population as a distinct population segment, which can be listed under the U.S. Endangered Species Act of 1973.
+
+The U.S. Outside MUs consist of naturally-spawning populations from the Quillayute, Hoh, Queets, and Grays Harbor Basins. All U.S. Outside MUs, except the Grays Harbor MU, are part of the Olympic Peninsula ESU. Populations from the western portion of the Strait of Juan de Fuca MU are also in this ESU. The Grays Harbor MU is part of the Southwest Washington ESU.
+
+
+# Coho Abundance Based Management
+
+Under the abundance-based management (ABM) regime outlined in the 2008 PST Southern Coho Agreement, exploitation rates (ERs) (defined as total fishing mortality divided by total fishing mortality plus escapement) for each Party's fisheries are to be constrained for each MU, depending on status determinations provided by each Party.  Each year, through their domestic processes, the Parties classify the status of each MU as low, moderate, or abundant.  For the purpose of planning fisheries, the Parties exchange information pertaining to the status of their respective MUs for consideration in the development of pre-season plans.  Annual categorization of status determines the maximum ER (ER Cap) for each MU. 
+
+## Goals and Objectives
+
+Abundance-based management objectives are to maintain each of the MUs at Maximum Sustainable Harvest (MSH) over the long term while maintaining the genetic and ecological diversity of the component populations for the MUs. Under the Agreement, the Parties are required to establish escapement goals or ERs that achieve MSH, determine MSH ERs for each MU, and establish ERs for each MU and status category (low, moderate, and abundant).  Until such time as the Parties provide the MU ER targets, the 2008 PST Southern Coho Agreement of ABM identifies ER ceilings for the following MU status categories: 
+
+|**Status**	|	**Total Exploitation Rate**|
+|:---------:|:------------------------:|
+|Low	      |	Up to 20% |
+|Moderate	  |	21% - 40% |
+|Abundant	  |	41% - 65% |
+
+Details as to how exploitation rate constraints are established based on the status of MUs under the 2008 Southern Coho Agreement are contained in Annex IV Chapter 5 Section 9.b-c (Canadian exploitation rate caps on inside and outside U.S. MUs) and Section 9.d (U.S. exploitation rate caps on Canadian MUs).
+
+## Status Dependent Exploitation Rates  
+
+### Canadian Management Units 
+
+Procedures for determining the pre-season status of Canadian MUs are being developed concurrently with determination of Conservation Unit (CU) status benchmarks required with implementation of the Canada Department of Fisheries and Oceans' (CDFO) Wild Salmon Policy.  Methods have been approved through the CDFO's internal peer review process, Center for Scientific Advice - Pacific (CSAP) **(Holt et al. 2009)**.  Completion of benchmark determinations for Southern B.C. Coho MUs is scheduled for CSAP review in 2014.
+
+Since 2002, in the absence of benchmarks, the CDFO Stock Assessment staff has provided a categorical outlook for the next year's salmon status.  The [outlook](http://www.pac.dfo-mpo.gc.ca/fm-gp/species-especes/salmon-saumon/index-eng.htm) is intended to provide an objective and consistent context within which to initiate fisheries planning.  The category reflects the current interpretation of existing quantitative and qualitative information, including pre-season forecasts if available, and the opinion of CDFO Area stock assessment staff.  Where management targets for stocks have not been formally described, interim targets were either based on historical return levels or, if necessary, opinion of local staff. 
+
+Canadian Coho Salmon abundance has declined, particularly in southern B.C.  Interior Fraser River Coho have been classified as endangered by the Committee on the Status of Endangered Wildlife in Canada (COSEWIC) since 2002, but not under the Species at Risk Act.  However, the Canadian Minister of Fisheries has established a domestic ER cap of 3% for Canadian fishery impacts on Interior Fraser Coho.  The Interior Fraser MU is comprised of five Conservation Units (CU; North Thompson, South Thompson, Lower Thompson, Fraser Canyon, and Upper Fraser).  The Interior Fraser River Coho recovery planning process has determined the critical benchmark needed to maintain population viability.  Even with the reduction in fisheries exploitation, all Southern B.C. MUs have followed a similar dramatic declining trend in both marine survival and total abundance from the high levels observed in the 1980s and early 1990s **(Figure 4.1)**.  Spawning escapements have responded to the decreased exploitation and are within the range observed during the 1970s and 1980s.  However, the sustained low marine survival has resulted in a decreased total abundance. 
+
+*move to section 3?*
+Because of the absence of programs to estimate total abundance and escapement for many Canadian MUs, the bilaterally-developed tool, Backwards Coho FRAM, is relied upon to generate estimates of ocean age-3 cohort abundance and ERs using post-season data.  Cohort abundances (catch and escapement) of Canadian MUs, estimated by Backwards Coho FRAM, are depicted in Figure \@ref(fig:BCAbundance).  Reduced abundances apparent since 1996 were a major consideration that led to the development of ABM regimes for management of southern Coho Salmon.
+
+```{r BCAbundance, echo = FALSE, fig.cap = "Estimated Ocean Age-3 Abundances of Southern B.C. Coho Salmon Management Units; Catch Years 1986-2018.", eval=FALSE}
+PrePostBC <- openxlsx::read.xlsx("./data/CoTc_Output_File.xlsx", sheet = 3, detectDates = FALSE)
+
+PrePostBC <- tidyr::separate(PrePostBC[,-1], 3, c("Abundance", "Status"), sep = " ")
+
+PrePostBC <- tidyr::separate(PrePostBC, 5, c("Abundance2", "Status2"), sep = " ")
+
+ggplot(PrePostBC, # this is where the dataframe goes
+                aes(x = as.numeric(Catch.Year),  # X axis column name
+          y = as.numeric(Abundance2)/1000, # need to make sure that Y axis data is numeric, AND we are dividing by 1000 for the axis
+          group = Management.Unit)) + # grouping by Management unit so that the legend groups the colours and linetypes later
+  theme_classic() +
+          geom_line(aes(colour = Management.Unit, # choosing to make each Management Unit a different Colour
+          linetype = Management.Unit),  # making each MU a different linetype
+          size = 1.25) + # making the lines thicker (>1) (or thinner by going < 1)
+      scale_linetype_manual(values = c("solid", "longdash", "twodash", "dotted")) + # changes the line types
+      scale_color_manual(values = c('#abd9e9','#2c7bb6', '#fdae61', '#d7191c')) + # used colorbrewer2.org to select colour codes
+      labs(x = "Catch Year", y = "Cohort Abundance (thousands)") # renaming the x and y axis
+```
+
+### U.S. Management Units
+
+#### U.S. Inside Management Units
+
+The status for U.S. Inside MUs is assigned based on ocean abundance (forecasted or re-constructed).  Pre-season estimates of ocean abundance are typically forecasted from measured or modeled smolt production for each MU and multiplied by a marine survival rate predicted for each MU.  Marine survival is predicted with a variety of methods including average return rates, correlations between jack and adult return rates, and correlations between environmental variables and historical return rates.  Post-season estimates of ocean abundance are estimated using escapement and catch data and the Backwards Coho FRAM.  The status of each MU is defined by a series of ocean abundance breakpoints (see Table: \@ref(tab:InsideMUABM)).  Domestic management of Puget Sound naturally-spawning Coho stocks also uses abundance-based, tiered ER objectives defined in the Comprehensive Coho Plan **(CCW 1998)**, that are similar to but not exactly consistent with the PSC guidelines.  The identified break points between Low, Moderate, and Abundant status are based on population-specific productivity analyses conducted by the state and tribal co-managers in each river basin.
+
+```{r InsideMUABM, echo = FALSE, eval=FALSE}
+table4.1 <- openxlsx::read.xlsx("./data/CoTc_Output_File.xlsx", sheet = 1, detectDates = FALSE)
+names(table4.1) <- gsub(x = names(table4.1),
+                        pattern = "\\.",
+                        replacement = " ")
+
+knitr::kable(
+  table4.1[,-1], 
+  caption = "Abundance Category Breakpoints in Ocean Age-3 Abundance Associated with Low, Moderate, and Abundant Status of Naturally-Spawning Coho, U.S. Inside Management Units (PFMC 2012).", format.args = list(big.mark = ",")
+)
+```
+
+#### U.S. Outside Management Units
+
+The status for U.S. Outside MUs is assigned based on the ER ceiling identified annually, ocean abundance, and existing MU escapement goals.  Pre- and post-season ocean abundances are estimated with the same approach described for the U.S. Inside MUs.  Escapement goals for the U.S. Outside MUs are defined by state and tribal co-managers in each river basin and include escapement ranges in all but one (Grays Harbor) MU.  Escapement ranges were originally intended to reflect the range of uncertainty in the MSH escapement goals identified for each of these populations.  Unlike the U.S. Inside MUs, escapement goals for the U.S. Outside MUs do not vary with run size.  The escapement goals used for PST status determinations are the floor of the designated escapement ranges (see Table: \@ref(tab:OutsideMUABM)).  The stock status is "Low" if the ocean abundance is low enough that the ER ceiling falls at or below 20% in order to achieve the bottom end of the escapement range.  The stock status is "Moderate" if ocean abundance results in an ER ceiling between 21% and 40%.  The stock status is "Abundant" if ocean abundance results in an ER ceiling above 41%.
+
+```{r OutsideMUABM, echo=FALSE, eval=FALSE}
+table4.2 <- openxlsx::read.xlsx("./data/CoTc_Output_File.xlsx", sheet = 2, detectDates = FALSE)
+names(table4.2) <- gsub(x = names(table4.2),
+                        pattern = "\\.",
+                        replacement = " ")
+
+knitr::kable(
+  table4.2[,-1], 
+  caption = "Abundance Category Breakpoints in Ocean Abundance (harvest + escapement) Associated with Low, Moderate, and Abundant status of Naturally-Spawning Coho, Outside U.S. Management Units.", format.args = list(big.mark = ",")
+)
+```
+
+U.S. MUs belong to three different Coho Salmon evolutionarily significant units (ESU), the Puget Sound/Strait of Georgia, the Olympic Peninsula, and the Southwest Washington ESUs.  The Puget Sound/Strait of Georgia Coho ESU is currently a species of concern under the U.S. Endangered Species Act **(ESA; NMFS 2009)**.  The Olympic Peninsula ESU was evaluated for listing under the ESA and it was determined to be not warranted **(Weitkamp et al. 1995)**.  The Southwest Washington ESU is currently categorized as "undetermined".  The State of Washington considers Coho Salmon statewide to be a State Candidate to be reviewed for possible state listing as Endangered, Threatened, or Sensitive **(WDFW 2008)**.
+
+At the federal level, species of concern do not have formal protection under the ESA.  The primary purpose of identifying species of concern is to prevent the need to list them as threatened or endangered under the ESA.  This purpose can be achieved by the following actions: (1) identifying species potentially at risk; (2) increasing public awareness about those species; (3) identifying data deficiencies and uncertainties in species' status and threats; (4) stimulating cooperative research efforts to obtain the information necessary to evaluate species' status and threats; and, (5) fostering voluntary efforts to conserve the species before listing becomes warranted.
+
+Estimated ocean age-3 cohort abundances for Inside and Outside U.S. MUs are depicted in **Figure 4.2** and **Figure 4.3**, respectively.  Abundances for inside MUs tend to be synchronous, with above- or below-average abundances occurring in the same years (e.g., high in 2001, low in 2006).  Outside MUs are less synchronous and years with high abundances for Grays Harbor don't necessarily correspond to high abundances for other MUs.  
+*need to fix figures 4.2 and 4.3 and add them here*
+
+<center> __Estimated Ocean Age-3 Abundances of U.S. Inside Coho Salmon Management Units; Catch Years 1986-??.__ </center>
+
+<center> __Estimated Ocean Age-3 Abundances of U.S. Outside Coho Salmon Management Units; Catch Years 1986-??.__ </center>
+
+
+## Annual Determinations of Allowable Exploitation Rates for Management Units
+
+## Constraints on Exploitation Rates by Intercepting Fisheries
+
+## Information Requirement for Implementation
+
+### Stock and Fishery Assessment Reporting Systems
+
+# Bilateral Tools
+
+# Annual Implementation
+
+# Fishery Information
+
+# Management Units
+
+# Appendices
+
+## Appendix A
+
+## Appendix B
+
+## Appendix C
+
