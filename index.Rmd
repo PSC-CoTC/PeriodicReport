@@ -2,6 +2,8 @@
 title: "Joint Coho Technical Committee Periodic Report"
 author: "PSC Joint Coho Technical Committee"
 date: "`r Sys.Date()`"
+params:
+  mdb: "O:/code/coho_fram_validation/PSC_CoTC_PostSeason_CohoFRAMDB_thru2019_021021.mdb"
 output:
   html_document:
     toc: true
@@ -39,8 +41,35 @@ load("PeriodicReport_envi.RData")
 members <- readxl::read_excel(fp$static_tables, sheet = "members") %>%
   mutate(across(where(is.character), ~replace_na(.,"")))
 
+#### framr readers
+
+#mdb from params arg above
+#but coming from: https://extranet.psc.org/cohotc/FRAM%20Model/2_Postseason%20Runs/2_Database/PSC_CoTC_PostSeason_CohoFRAMDB_thru2019_021021.zip
+#in this particular mdb, appears to be a mysterious RunID 3 in the Escapement and Mortality tables but not RunID table...
+
+#could declare other controls in params?
+#runs <- NA
+
+#need LUs for stock and fishery units
+#can at least partially engineer from dd_cohopsc_server
+
+
+fram <- list(
+  escp = framr::read_coho_escp(params$mdb) |> 
+    filter(!is.na(RunYear))
+  ,
+  mort = read_coho_mort(params$mdb) |>
+    filter(!is.na(RunYear)) |> 
+    mutate(mort = LandedCatch + NonRetention + Shaker + DropOff + MSFLandedCatch + MSFNonRetention + MSFShaker + MSFDropOff)
+  )
+
+fram$escp
+
+
 save.image("PeriodicReport_envi.RData")
 ```
+
+This report based on `r basename(params$mdb)`
 
 ```{r coho_pic, out.width='75%'}
 knitr::include_graphics("images/CohoPic.png")
