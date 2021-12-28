@@ -438,11 +438,7 @@ where are we placing ER estimates?
 
 placeholder for links to detailed management unit profiles
 
-# Appendices
+# Glossary
 
-## Appendix A
 
-## Appendix B
-
-## Appendix C
 
