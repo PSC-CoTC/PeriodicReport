@@ -17,7 +17,13 @@ editor_options:
 ---
 
 <header style="color: #ff4000; font-weight: bold; font-size: 40px; text-align:center">
-    <p> !! DRAFT DOCUMENT UNDER DEVELOPMENT !! </p>
+
+<p>
+
+!! DRAFT DOCUMENT UNDER DEVELOPMENT !!
+
+</p>
+
 </header>
 
 ```{r setup, include=FALSE}
@@ -26,11 +32,17 @@ knitr::opts_chunk$set(echo = FALSE)
 library("tidyverse")
 library("readxl")
 library("kableExtra")
+library("gt")
 theme_set(theme_light())
 
 fp <- list(
   static_tables = "StaticTables.xlsx"
 )
+
+#modified from: https://github.com/dappdrd/CohoPSC/blob/bb61dd39715a29a739259c3791cdd26bd8f42a2f/server.R#L65
+#another place with LU info is the "year_template" sheet of the annual escapement compilation 
+
+
 
 #can load an entire environment built ahead of time and save time on reknitting
 load("PeriodicReport_envi.RData")
@@ -38,7 +50,10 @@ load("PeriodicReport_envi.RData")
 
 ```{r build_envi, include=FALSE, eval=FALSE}
 #### pre-declared objects in envi
-members <- readxl::read_excel(fp$static_tables, sheet = "members") %>%
+members <- readxl::read_excel(fp$static_tables, sheet = "members") |> 
+  mutate(across(where(is.character), ~replace_na(.,"")))
+
+lu_stock <- readxl::read_excel(fp$static_tables, sheet = "lu_stock") |> 
   mutate(across(where(is.character), ~replace_na(.,"")))
 
 #### framr readers
@@ -47,23 +62,60 @@ members <- readxl::read_excel(fp$static_tables, sheet = "members") %>%
 #but coming from: https://extranet.psc.org/cohotc/FRAM%20Model/2_Postseason%20Runs/2_Database/PSC_CoTC_PostSeason_CohoFRAMDB_thru2019_021021.zip
 #in this particular mdb, appears to be a mysterious RunID 3 in the Escapement and Mortality tables but not RunID table...
 
-#could declare other controls in params?
-#runs <- NA
 
-#need LUs for stock and fishery units
-#can at least partially engineer from dd_cohopsc_server
+# #NEED PRE-FISHING ABUNDANCE?
+# #From Cohort or BackwardsFRAM or ...?
+# tbl(mdb_con, "Cohort") |> filter(RunID == 42, StockID %in% local(lu_stock$StockID)) 
+# tbl(mdb_con, "Cohort") |> filter(RunID == 42, StockID %in% 227:228) 
+# tbl(mdb_con, "Cohort") |> filter(RunID == 42, StockID %in% 231:232)
+# tbl(mdb_con, "StockRecruit") |> filter(RunID == 42, StockID %in% 231:232)
+# #turns out that the numbers used in, for example, 6.1 - 6.3, are escp+mort
+# #tested for 2018 with Lower & Interior Fraser
+
+fram <- list()
+
+mdb_con <- DBI::dbConnect(drv = odbc::odbc(), .connection_string = paste0("Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=", params$mdb, ";"))
+
+fram$run_id <- tbl(mdb_con, "RunID") |> select(RunID, RunYear, RunName, RunTitle, TAMMName) |> collect()
+
+DBI::dbDisconnect(mdb_con)
+
+#manually inspect for 2004 onward...
+fram$run_id |> print(n=50)
+focal_run_ids <- 28:43
 
 
-fram <- list(
-  escp = framr::read_coho_escp(params$mdb) |> 
-    filter(!is.na(RunYear))
-  ,
-  mort = read_coho_mort(params$mdb) |>
-    filter(!is.na(RunYear)) |> 
+fram$escp <- framr::read_coho_escp(params$mdb, runs = focal_run_ids, stocks = lu_stock$StockID)
+
+fram$mort <- framr::read_coho_mort(params$mdb, runs = focal_run_ids, , stocks = lu_stock$StockID) |> 
     mutate(mort = LandedCatch + NonRetention + Shaker + DropOff + MSFLandedCatch + MSFNonRetention + MSFShaker + MSFDropOff)
-  )
 
-fram$escp
+# #probably wrong but demoing...
+# fram$escp |> 
+#   left_join(lu_stock, by = "StockID") |> 
+#   ggplot(aes(RunYear, escp, fill = StockLongName)) + 
+#   geom_col() + facet_wrap(~Name, scales = "free")
+
+#among other things, need to confirm order of operations of lu_stock join and aggregate
+left_join(
+  fram$escp
+  ,
+  fram$mort |> 
+    group_by(RunYear, StockID, StockLongName) |> 
+    summarise(across(mort, sum), .groups = "drop")
+  ,
+  by = c("RunYear", "StockID", "StockLongName")
+  ) |> 
+  left_join(lu_stock, by = "StockID") |> 
+  group_by(RunYear, PSCStock, Name) |> 
+  summarise(across(c(escp, mort), sum), .groups = "drop") |> 
+  mutate(
+    abun = escp + mort, #this matches the "post-season" cohort value in DD tables 6.1:6.3
+    er_tot = mort / abun
+  ) |> 
+  ggplot(aes(as.numeric(RunYear), er_tot)) +
+  geom_col() + geom_smooth() +
+  facet_wrap(~PSCStock+Name, scales = "free", labeller = label_wrap_gen(multi_line = F))
 
 
 save.image("PeriodicReport_envi.RData")
@@ -74,7 +126,6 @@ This report based on `r basename(params$mdb)`
 ```{r coho_pic, out.width='75%'}
 knitr::include_graphics("images/CohoPic.png")
 ```
-
 
 # Members
 
@@ -120,19 +171,21 @@ Chapter 5 of the 2009 Pacific Salmon Treaty Agreement (PST Agreement) between th
 
 The Canadian MUs are comprised of geographical aggregates of naturally-spawning Coho populations. The four MUs of interest to the Agreement encompass these 12 Conservation Units (CU) as determined by Canada's Wild Salmon Policy (WSP; Holtby and Ciruna 2007):
 
-***
-| Southern B.C. Inside Management Units| U.S. Inside Management Units|  
-|:-------|:-------------|  
-| Interior Fraser   | Skagit    |  
-| Lower Fraser      | Stillaguamish      |   
-| Strait of Georgia | Snohomish      | 
-|                   | Hood Canal| 
-|                   | **U.S. Outside Management Units** |  
-|                   |  Quillayute | 
-|                   |  Hoh  |  
-|                   | Queets |  
-|                   | Grays Harbor |  
-***  
+------------------------------------------------------------------------
+
+| Southern B.C. Inside Management Units | U.S. Inside Management Units      |
+|:--------------------------------------|:----------------------------------|
+| Interior Fraser                       | Skagit                            |
+| Lower Fraser                          | Stillaguamish                     |
+| Strait of Georgia                     | Snohomish                         |
+|                                       | Hood Canal                        |
+|                                       | **U.S. Outside Management Units** |
+|                                       | Quillayute                        |
+|                                       | Hoh                               |
+|                                       | Queets                            |
+|                                       | Grays Harbor                      |
+
+------------------------------------------------------------------------
 
 ```{r sbc_mu_table}
 #can fuss with formatting...
@@ -145,35 +198,33 @@ The U.S. Inside MUs consist of naturally-spawning populations originating in the
 
 The U.S. Outside MUs consist of naturally-spawning populations from the Quillayute, Hoh, Queets, and Grays Harbor Basins. All U.S. Outside MUs, except the Grays Harbor MU, are part of the Olympic Peninsula ESU. Populations from the western portion of the Strait of Juan de Fuca MU are also in this ESU. The Grays Harbor MU is part of the Southwest Washington ESU.
 
-
 # Coho Abundance Based Management
 
-Under the abundance-based management (ABM) regime outlined in the 2008 PST Southern Coho Agreement, exploitation rates (ERs) (defined as total fishing mortality divided by total fishing mortality plus escapement) for each Party's fisheries are to be constrained for each MU, depending on status determinations provided by each Party.  Each year, through their domestic processes, the Parties classify the status of each MU as low, moderate, or abundant.  For the purpose of planning fisheries, the Parties exchange information pertaining to the status of their respective MUs for consideration in the development of pre-season plans.  Annual categorization of status determines the maximum ER (ER Cap) for each MU. 
+Under the abundance-based management (ABM) regime outlined in the 2008 PST Southern Coho Agreement, exploitation rates (ERs) (defined as total fishing mortality divided by total fishing mortality plus escapement) for each Party's fisheries are to be constrained for each MU, depending on status determinations provided by each Party. Each year, through their domestic processes, the Parties classify the status of each MU as low, moderate, or abundant. For the purpose of planning fisheries, the Parties exchange information pertaining to the status of their respective MUs for consideration in the development of pre-season plans. Annual categorization of status determines the maximum ER (ER Cap) for each MU.
 
 ## Goals and Objectives
 
-Abundance-based management objectives are to maintain each of the MUs at Maximum Sustainable Harvest (MSH) over the long term while maintaining the genetic and ecological diversity of the component populations for the MUs. Under the Agreement, the Parties are required to establish escapement goals or ERs that achieve MSH, determine MSH ERs for each MU, and establish ERs for each MU and status category (low, moderate, and abundant).  Until such time as the Parties provide the MU ER targets, the 2008 PST Southern Coho Agreement of ABM identifies ER ceilings for the following MU status categories: 
+Abundance-based management objectives are to maintain each of the MUs at Maximum Sustainable Harvest (MSH) over the long term while maintaining the genetic and ecological diversity of the component populations for the MUs. Under the Agreement, the Parties are required to establish escapement goals or ERs that achieve MSH, determine MSH ERs for each MU, and establish ERs for each MU and status category (low, moderate, and abundant). Until such time as the Parties provide the MU ER targets, the 2008 PST Southern Coho Agreement of ABM identifies ER ceilings for the following MU status categories:
 
-|**Status**	|	**Total Exploitation Rate**|
-|:---------:|:------------------------:|
-|Low	      |	Up to 20% |
-|Moderate	  |	21% - 40% |
-|Abundant	  |	41% - 65% |
+| **Status** | **Total Exploitation Rate** |
+|:----------:|:---------------------------:|
+|    Low     |          Up to 20%          |
+|  Moderate  |          21% - 40%          |
+|  Abundant  |          41% - 65%          |
 
 Details as to how exploitation rate constraints are established based on the status of MUs under the 2008 Southern Coho Agreement are contained in Annex IV Chapter 5 Section 9.b-c (Canadian exploitation rate caps on inside and outside U.S. MUs) and Section 9.d (U.S. exploitation rate caps on Canadian MUs).
 
-## Status Dependent Exploitation Rates  
+## Status Dependent Exploitation Rates
 
-### Canadian Management Units 
+### Canadian Management Units
 
-Procedures for determining the pre-season status of Canadian MUs are being developed concurrently with determination of Conservation Unit (CU) status benchmarks required with implementation of the Canada Department of Fisheries and Oceans' (CDFO) Wild Salmon Policy.  Methods have been approved through the CDFO's internal peer review process, Center for Scientific Advice - Pacific (CSAP) **(Holt et al. 2009)**.  Completion of benchmark determinations for Southern B.C. Coho MUs is scheduled for CSAP review in 2014.
+Procedures for determining the pre-season status of Canadian MUs are being developed concurrently with determination of Conservation Unit (CU) status benchmarks required with implementation of the Canada Department of Fisheries and Oceans' (CDFO) Wild Salmon Policy. Methods have been approved through the CDFO's internal peer review process, Center for Scientific Advice - Pacific (CSAP) **(Holt et al. 2009)**. Completion of benchmark determinations for Southern B.C. Coho MUs is scheduled for CSAP review in 2014.
 
-Since 2002, in the absence of benchmarks, the CDFO Stock Assessment staff has provided a categorical outlook for the next year's salmon status.  The [outlook](http://www.pac.dfo-mpo.gc.ca/fm-gp/species-especes/salmon-saumon/index-eng.htm) is intended to provide an objective and consistent context within which to initiate fisheries planning.  The category reflects the current interpretation of existing quantitative and qualitative information, including pre-season forecasts if available, and the opinion of CDFO Area stock assessment staff.  Where management targets for stocks have not been formally described, interim targets were either based on historical return levels or, if necessary, opinion of local staff. 
+Since 2002, in the absence of benchmarks, the CDFO Stock Assessment staff has provided a categorical outlook for the next year's salmon status. The [outlook](http://www.pac.dfo-mpo.gc.ca/fm-gp/species-especes/salmon-saumon/index-eng.htm) is intended to provide an objective and consistent context within which to initiate fisheries planning. The category reflects the current interpretation of existing quantitative and qualitative information, including pre-season forecasts if available, and the opinion of CDFO Area stock assessment staff. Where management targets for stocks have not been formally described, interim targets were either based on historical return levels or, if necessary, opinion of local staff.
 
-Canadian Coho Salmon abundance has declined, particularly in southern B.C.  Interior Fraser River Coho have been classified as endangered by the Committee on the Status of Endangered Wildlife in Canada (COSEWIC) since 2002, but not under the Species at Risk Act.  However, the Canadian Minister of Fisheries has established a domestic ER cap of 3% for Canadian fishery impacts on Interior Fraser Coho.  The Interior Fraser MU is comprised of five Conservation Units (CU; North Thompson, South Thompson, Lower Thompson, Fraser Canyon, and Upper Fraser).  The Interior Fraser River Coho recovery planning process has determined the critical benchmark needed to maintain population viability.  Even with the reduction in fisheries exploitation, all Southern B.C. MUs have followed a similar dramatic declining trend in both marine survival and total abundance from the high levels observed in the 1980s and early 1990s **(Figure 4.1)**.  Spawning escapements have responded to the decreased exploitation and are within the range observed during the 1970s and 1980s.  However, the sustained low marine survival has resulted in a decreased total abundance. 
+Canadian Coho Salmon abundance has declined, particularly in southern B.C. Interior Fraser River Coho have been classified as endangered by the Committee on the Status of Endangered Wildlife in Canada (COSEWIC) since 2002, but not under the Species at Risk Act. However, the Canadian Minister of Fisheries has established a domestic ER cap of 3% for Canadian fishery impacts on Interior Fraser Coho. The Interior Fraser MU is comprised of five Conservation Units (CU; North Thompson, South Thompson, Lower Thompson, Fraser Canyon, and Upper Fraser). The Interior Fraser River Coho recovery planning process has determined the critical benchmark needed to maintain population viability. Even with the reduction in fisheries exploitation, all Southern B.C. MUs have followed a similar dramatic declining trend in both marine survival and total abundance from the high levels observed in the 1980s and early 1990s **(Figure 4.1)**. Spawning escapements have responded to the decreased exploitation and are within the range observed during the 1970s and 1980s. However, the sustained low marine survival has resulted in a decreased total abundance.
 
-*move to section 3?*
-Because of the absence of programs to estimate total abundance and escapement for many Canadian MUs, the bilaterally-developed tool, Backwards Coho FRAM, is relied upon to generate estimates of ocean age-3 cohort abundance and ERs using post-season data.  Cohort abundances (catch and escapement) of Canadian MUs, estimated by Backwards Coho FRAM, are depicted in Figure \@ref(fig:BCAbundance).  Reduced abundances apparent since 1996 were a major consideration that led to the development of ABM regimes for management of southern Coho Salmon.
+*move to section 3?* Because of the absence of programs to estimate total abundance and escapement for many Canadian MUs, the bilaterally-developed tool, Backwards Coho FRAM, is relied upon to generate estimates of ocean age-3 cohort abundance and ERs using post-season data. Cohort abundances (catch and escapement) of Canadian MUs, estimated by Backwards Coho FRAM, are depicted in Figure \@ref(fig:BCAbundance). Reduced abundances apparent since 1996 were a major consideration that led to the development of ABM regimes for management of southern Coho Salmon.
 
 ```{r BCAbundance, echo = FALSE, fig.cap = "Estimated Ocean Age-3 Abundances of Southern B.C. Coho Salmon Management Units; Catch Years 1986-2018.", eval=FALSE}
 PrePostBC <- openxlsx::read.xlsx("./data/CoTc_Output_File.xlsx", sheet = 3, detectDates = FALSE)
@@ -199,7 +250,7 @@ ggplot(PrePostBC, # this is where the dataframe goes
 
 #### U.S. Inside Management Units
 
-The status for U.S. Inside MUs is assigned based on ocean abundance (forecasted or re-constructed).  Pre-season estimates of ocean abundance are typically forecasted from measured or modeled smolt production for each MU and multiplied by a marine survival rate predicted for each MU.  Marine survival is predicted with a variety of methods including average return rates, correlations between jack and adult return rates, and correlations between environmental variables and historical return rates.  Post-season estimates of ocean abundance are estimated using escapement and catch data and the Backwards Coho FRAM.  The status of each MU is defined by a series of ocean abundance breakpoints (see Table: \@ref(tab:InsideMUABM)).  Domestic management of Puget Sound naturally-spawning Coho stocks also uses abundance-based, tiered ER objectives defined in the Comprehensive Coho Plan **(CCW 1998)**, that are similar to but not exactly consistent with the PSC guidelines.  The identified break points between Low, Moderate, and Abundant status are based on population-specific productivity analyses conducted by the state and tribal co-managers in each river basin.
+The status for U.S. Inside MUs is assigned based on ocean abundance (forecasted or re-constructed). Pre-season estimates of ocean abundance are typically forecasted from measured or modeled smolt production for each MU and multiplied by a marine survival rate predicted for each MU. Marine survival is predicted with a variety of methods including average return rates, correlations between jack and adult return rates, and correlations between environmental variables and historical return rates. Post-season estimates of ocean abundance are estimated using escapement and catch data and the Backwards Coho FRAM. The status of each MU is defined by a series of ocean abundance breakpoints (see Table: \@ref(tab:InsideMUABM)). Domestic management of Puget Sound naturally-spawning Coho stocks also uses abundance-based, tiered ER objectives defined in the Comprehensive Coho Plan **(CCW 1998)**, that are similar to but not exactly consistent with the PSC guidelines. The identified break points between Low, Moderate, and Abundant status are based on population-specific productivity analyses conducted by the state and tribal co-managers in each river basin.
 
 ```{r InsideMUABM, echo = FALSE, eval=FALSE}
 table4.1 <- openxlsx::read.xlsx("./data/CoTc_Output_File.xlsx", sheet = 1, detectDates = FALSE)
@@ -215,7 +266,7 @@ knitr::kable(
 
 #### U.S. Outside Management Units
 
-The status for U.S. Outside MUs is assigned based on the ER ceiling identified annually, ocean abundance, and existing MU escapement goals.  Pre- and post-season ocean abundances are estimated with the same approach described for the U.S. Inside MUs.  Escapement goals for the U.S. Outside MUs are defined by state and tribal co-managers in each river basin and include escapement ranges in all but one (Grays Harbor) MU.  Escapement ranges were originally intended to reflect the range of uncertainty in the MSH escapement goals identified for each of these populations.  Unlike the U.S. Inside MUs, escapement goals for the U.S. Outside MUs do not vary with run size.  The escapement goals used for PST status determinations are the floor of the designated escapement ranges (see Table: \@ref(tab:OutsideMUABM)).  The stock status is "Low" if the ocean abundance is low enough that the ER ceiling falls at or below 20% in order to achieve the bottom end of the escapement range.  The stock status is "Moderate" if ocean abundance results in an ER ceiling between 21% and 40%.  The stock status is "Abundant" if ocean abundance results in an ER ceiling above 41%.
+The status for U.S. Outside MUs is assigned based on the ER ceiling identified annually, ocean abundance, and existing MU escapement goals. Pre- and post-season ocean abundances are estimated with the same approach described for the U.S. Inside MUs. Escapement goals for the U.S. Outside MUs are defined by state and tribal co-managers in each river basin and include escapement ranges in all but one (Grays Harbor) MU. Escapement ranges were originally intended to reflect the range of uncertainty in the MSH escapement goals identified for each of these populations. Unlike the U.S. Inside MUs, escapement goals for the U.S. Outside MUs do not vary with run size. The escapement goals used for PST status determinations are the floor of the designated escapement ranges (see Table: \@ref(tab:OutsideMUABM)). The stock status is "Low" if the ocean abundance is low enough that the ER ceiling falls at or below 20% in order to achieve the bottom end of the escapement range. The stock status is "Moderate" if ocean abundance results in an ER ceiling between 21% and 40%. The stock status is "Abundant" if ocean abundance results in an ER ceiling above 41%.
 
 ```{r OutsideMUABM, echo=FALSE, eval=FALSE}
 table4.2 <- openxlsx::read.xlsx("./data/CoTc_Output_File.xlsx", sheet = 2, detectDates = FALSE)
@@ -229,17 +280,24 @@ knitr::kable(
 )
 ```
 
-U.S. MUs belong to three different Coho Salmon evolutionarily significant units (ESU), the Puget Sound/Strait of Georgia, the Olympic Peninsula, and the Southwest Washington ESUs.  The Puget Sound/Strait of Georgia Coho ESU is currently a species of concern under the U.S. Endangered Species Act **(ESA; NMFS 2009)**.  The Olympic Peninsula ESU was evaluated for listing under the ESA and it was determined to be not warranted **(Weitkamp et al. 1995)**.  The Southwest Washington ESU is currently categorized as "undetermined".  The State of Washington considers Coho Salmon statewide to be a State Candidate to be reviewed for possible state listing as Endangered, Threatened, or Sensitive **(WDFW 2008)**.
+U.S. MUs belong to three different Coho Salmon evolutionarily significant units (ESU), the Puget Sound/Strait of Georgia, the Olympic Peninsula, and the Southwest Washington ESUs. The Puget Sound/Strait of Georgia Coho ESU is currently a species of concern under the U.S. Endangered Species Act **(ESA; NMFS 2009)**. The Olympic Peninsula ESU was evaluated for listing under the ESA and it was determined to be not warranted **(Weitkamp et al. 1995)**. The Southwest Washington ESU is currently categorized as "undetermined". The State of Washington considers Coho Salmon statewide to be a State Candidate to be reviewed for possible state listing as Endangered, Threatened, or Sensitive **(WDFW 2008)**.
 
-At the federal level, species of concern do not have formal protection under the ESA.  The primary purpose of identifying species of concern is to prevent the need to list them as threatened or endangered under the ESA.  This purpose can be achieved by the following actions: (1) identifying species potentially at risk; (2) increasing public awareness about those species; (3) identifying data deficiencies and uncertainties in species' status and threats; (4) stimulating cooperative research efforts to obtain the information necessary to evaluate species' status and threats; and, (5) fostering voluntary efforts to conserve the species before listing becomes warranted.
+At the federal level, species of concern do not have formal protection under the ESA. The primary purpose of identifying species of concern is to prevent the need to list them as threatened or endangered under the ESA. This purpose can be achieved by the following actions: (1) identifying species potentially at risk; (2) increasing public awareness about those species; (3) identifying data deficiencies and uncertainties in species' status and threats; (4) stimulating cooperative research efforts to obtain the information necessary to evaluate species' status and threats; and, (5) fostering voluntary efforts to conserve the species before listing becomes warranted.
 
-Estimated ocean age-3 cohort abundances for Inside and Outside U.S. MUs are depicted in **Figure 4.2** and **Figure 4.3**, respectively.  Abundances for inside MUs tend to be synchronous, with above- or below-average abundances occurring in the same years (e.g., high in 2001, low in 2006).  Outside MUs are less synchronous and years with high abundances for Grays Harbor don't necessarily correspond to high abundances for other MUs.  
+Estimated ocean age-3 cohort abundances for Inside and Outside U.S. MUs are depicted in **Figure 4.2** and **Figure 4.3**, respectively. Abundances for inside MUs tend to be synchronous, with above- or below-average abundances occurring in the same years (e.g., high in 2001, low in 2006). Outside MUs are less synchronous and years with high abundances for Grays Harbor don't necessarily correspond to high abundances for other MUs.\
 *need to fix figures 4.2 and 4.3 and add them here*
 
-<center> __Estimated Ocean Age-3 Abundances of U.S. Inside Coho Salmon Management Units; Catch Years 1986-??.__ </center>
+<center>
 
-<center> __Estimated Ocean Age-3 Abundances of U.S. Outside Coho Salmon Management Units; Catch Years 1986-??.__ </center>
+**Estimated Ocean Age-3 Abundances of U.S. Inside Coho Salmon Management Units; Catch Years 1986-??.**
 
+</center>
+
+<center>
+
+**Estimated Ocean Age-3 Abundances of U.S. Outside Coho Salmon Management Units; Catch Years 1986-??.**
+
+</center>
 
 ## Annual Determinations of Allowable Exploitation Rates for Management Units
 
@@ -249,7 +307,7 @@ Estimated ocean age-3 cohort abundances for Inside and Outside U.S. MUs are depi
 
 ### Stock and Fishery Assessment Reporting Systems
 
-# Bilateral Assessment Tool - FRAM 
+# Bilateral Assessment Tool - FRAM
 
 [FRAM Overview](https://framverse.github.io/fram_doc/index.html)
 
@@ -257,15 +315,15 @@ Estimated ocean age-3 cohort abundances for Inside and Outside U.S. MUs are depi
 
 [Coho FRAM pre- and post-season applications](https://framverse.github.io/fram_doc/apps_coho.html)
 
-Coho fisheries are evaluated with the Coho Fisheries Regulation Assessment Model (Coho FRAM), a bilaterally developed tool that is employed for both pre-season fishery planning and post-season estimation of escapements and exploitation rates.  In simplest terms the Coho FRAM is an accounting model that evaluates X stocks in Y fisheries over Z time periods.  It can be used to estimate catch and escapement based on forecast abundance and planned fisheries (forward FRAM) or it can be used to reconstruct ocean abundance from observed escapements and fisheries (backward FRAM). The model is founded on a Base Period (currently 1986 to 1992) and scales it according to current stock abundances and fisheries impacts.  The base period is constructed with the aid of two other companion programs, the Mixed Stock Model (MSM) and RRTERM (Terminal Area Run Reconstructions). 
+Coho fisheries are evaluated with the Coho Fisheries Regulation Assessment Model (Coho FRAM), a bilaterally developed tool that is employed for both pre-season fishery planning and post-season estimation of escapements and exploitation rates. In simplest terms the Coho FRAM is an accounting model that evaluates X stocks in Y fisheries over Z time periods. It can be used to estimate catch and escapement based on forecast abundance and planned fisheries (forward FRAM) or it can be used to reconstruct ocean abundance from observed escapements and fisheries (backward FRAM). The model is founded on a Base Period (currently 1986 to 1992) and scales it according to current stock abundances and fisheries impacts. The base period is constructed with the aid of two other companion programs, the Mixed Stock Model (MSM) and RRTERM (Terminal Area Run Reconstructions).
 
 ## FRAM Base Period
 
-The base period is constructed from stock-specific ocean distributions by fishery and time period (January to June, July, August, September, and October to December) developed from coded-wire-tag (CWT) recoveries in coast wide fisheries from  1986 to 1992. The procedure used to generate base period data is depicted [below](#fig:FRAMDevel).  For each base period year, post-season reconstruction of cohort abundances for each Coho MU is based on two different models: the Mixed-Stock Model (MSM) that estimates the Production Expansion Factors for each Production Region and RRTERM program that estimates stock-specific impacts for terminal marine and freshwater fisheries.  The MSM uses CWT recoveries for each model stock expanded by the Production Expansion Factors to best describe the total catch in each marine mixed-stock fishery. The MSM/RRTERM cohort analysis has been used for post-season reconstructions for catch years **1986-??**.  The base period annual exploitation rates by fishery-month strata are provided in **here**.  Because escapement estimates were not available for several Canadian MUs for these years, escapement for Canadian MUs (excluding Interior Fraser) was estimated as catch*(1-ER), where ER was the hatchery indicator exploitation rate.
+The base period is constructed from stock-specific ocean distributions by fishery and time period (January to June, July, August, September, and October to December) developed from coded-wire-tag (CWT) recoveries in coast wide fisheries from 1986 to 1992. The procedure used to generate base period data is depicted [below](#fig:FRAMDevel). For each base period year, post-season reconstruction of cohort abundances for each Coho MU is based on two different models: the Mixed-Stock Model (MSM) that estimates the Production Expansion Factors for each Production Region and RRTERM program that estimates stock-specific impacts for terminal marine and freshwater fisheries. The MSM uses CWT recoveries for each model stock expanded by the Production Expansion Factors to best describe the total catch in each marine mixed-stock fishery. The MSM/RRTERM cohort analysis has been used for post-season reconstructions for catch years **1986-??**. The base period annual exploitation rates by fishery-month strata are provided in **here**. Because escapement estimates were not available for several Canadian MUs for these years, escapement for Canadian MUs (excluding Interior Fraser) was estimated as catch\*(1-ER), where ER was the hatchery indicator exploitation rate.
 
-<div id="fig:FRAMDevel">
+::: {#fig:FRAMDevel}
 ![**Procedure used to generate base period data for Coho FRAM**/\label{fig:FRAMDevel}](images/FRAMDevel.jpg)
-</div>
+:::
 
 ### Selection and Use of Coded-Wire Tags
 
@@ -277,162 +335,179 @@ The base period is constructed from stock-specific ocean distributions by fisher
 
 <!-- <span style="font-variant:small-caps;">Small Caps</span> -->
 
-The coded-wire tag (CWT) indicator stock program provides the primary data for predicting, monitoring, and modeling harvest impacts on individual Coho Salmon populations.  The Joint Coho Technical Committee (CoTC) uses CWT recoveries from the indicator stocks to reconstruct cohorts coastwide.  While a few indicator tag groups are naturally-spawning fish, the vast majority consist of hatchery fish intended to represent each MU.  Hatchery indicator stocks are selected on the basis of brood stock, rearing, and release strategies and are assumed to be surrogates for the naturally-spawning fish.  The indicator program assumes that tagged and untagged fish experience similar trends in marine survival and similar exploitation patterns.  Coastwide, approximately eight million juvenile Coho Salmon are coded-wire tagged annually **(Nandor et al. 2010)**.
+The coded-wire tag (CWT) indicator stock program provides the primary data for predicting, monitoring, and modeling harvest impacts on individual Coho Salmon populations. The Joint Coho Technical Committee (CoTC) uses CWT recoveries from the indicator stocks to reconstruct cohorts coastwide. While a few indicator tag groups are naturally-spawning fish, the vast majority consist of hatchery fish intended to represent each MU. Hatchery indicator stocks are selected on the basis of brood stock, rearing, and release strategies and are assumed to be surrogates for the naturally-spawning fish. The indicator program assumes that tagged and untagged fish experience similar trends in marine survival and similar exploitation patterns. Coastwide, approximately eight million juvenile Coho Salmon are coded-wire tagged annually **(Nandor et al. 2010)**.
 
-Some major changes in the CWT indicator stock program have occurred since the Pacific Salmon Treaty was signed in 1985.  One of the most notable changes is the mass marking of hatchery fish in the Pacific Northwest.  For many years, an adipose fin clip was used as an external mark to identify fish (natural spawning or hatchery) with a CWT.  However, since brood year 1995 in the U.S. and 1996 in Canada, the adipose fin clip has been used as a mass mark to identify hatchery-origin fish and no longer uniquely indicates a coded-wire-tagged fish.  With the advent of mark-selective fishing, marked (adipose fin-clipped) and unmarked fish do not have the same patterns of exploitation, violating the fundamental assumption of the indicator tag program.  These changes in marking and fishing have resulted in the development and use of double index tag (DIT) releases in the indicator tag programs. The DIT group consists of two groups of hatchery fish, each 100% tagged with its own unique CWT.  The two groups are presumed to be identical, except that one tagged group is unmarked and the other group is marked with an adipose fin clip.  In a MSF, catches of marked fish will be retained whereas catches of unmarked fish will be released.  The difference in return rates to the hatchery reflects the difference in ocean ERs in selective fisheries.  A DIT group is recommended when the stock of interest is expected to be exploited by a mark-selective fishery (MSF).  Unpaired (non-DIT) tag groups are either marked or unmarked and are considered single index tag (SIT) groups in this document. 
+Some major changes in the CWT indicator stock program have occurred since the Pacific Salmon Treaty was signed in 1985. One of the most notable changes is the mass marking of hatchery fish in the Pacific Northwest. For many years, an adipose fin clip was used as an external mark to identify fish (natural spawning or hatchery) with a CWT. However, since brood year 1995 in the U.S. and 1996 in Canada, the adipose fin clip has been used as a mass mark to identify hatchery-origin fish and no longer uniquely indicates a coded-wire-tagged fish. With the advent of mark-selective fishing, marked (adipose fin-clipped) and unmarked fish do not have the same patterns of exploitation, violating the fundamental assumption of the indicator tag program. These changes in marking and fishing have resulted in the development and use of double index tag (DIT) releases in the indicator tag programs. The DIT group consists of two groups of hatchery fish, each 100% tagged with its own unique CWT. The two groups are presumed to be identical, except that one tagged group is unmarked and the other group is marked with an adipose fin clip. In a MSF, catches of marked fish will be retained whereas catches of unmarked fish will be released. The difference in return rates to the hatchery reflects the difference in ocean ERs in selective fisheries. A DIT group is recommended when the stock of interest is expected to be exploited by a mark-selective fishery (MSF). Unpaired (non-DIT) tag groups are either marked or unmarked and are considered single index tag (SIT) groups in this document.
 
-To obtain unbiased estimates of fishery-specific impacts on individual stocks, a known proportion of both the catch and escapement must be sampled for CWTs throughout the migratory range of the stock and the proportion sampled must be adequate to produce a statistically reliable expansion of sampled Coho.  Mass marking creates the following two additional complexities for sampling of CWTs: (1) DIT stocks are unmarked but contain CWTs; and (2) marked fish do not necessarily contain CWTs.  Therefore, all fish, not just marked fish (with an adipose fin-clip), must be sampled for CWTs.  Detection of CWTs in unmarked fish requires electronic sampling using wands or tubes. Detection of CWTs in marked fish requires either field-based electronic sampling or collection of snouts for processing in the laboratory.  For complete accounting, fish must be sampled throughout their range, in catch and escapement. Electronic sampling of both unmarked and marked Coho places an additional burden of time and expense on agencies 
+To obtain unbiased estimates of fishery-specific impacts on individual stocks, a known proportion of both the catch and escapement must be sampled for CWTs throughout the migratory range of the stock and the proportion sampled must be adequate to produce a statistically reliable expansion of sampled Coho. Mass marking creates the following two additional complexities for sampling of CWTs: (1) DIT stocks are unmarked but contain CWTs; and (2) marked fish do not necessarily contain CWTs. Therefore, all fish, not just marked fish (with an adipose fin-clip), must be sampled for CWTs. Detection of CWTs in unmarked fish requires electronic sampling using wands or tubes. Detection of CWTs in marked fish requires either field-based electronic sampling or collection of snouts for processing in the laboratory. For complete accounting, fish must be sampled throughout their range, in catch and escapement. Electronic sampling of both unmarked and marked Coho places an additional burden of time and expense on agencies
 
-At present, the utility of the DIT program and the CWT program in general for Coho is reduced due to low tagging rates, insufficient MU representation, low recovery rates, and incomplete coastwide coverage of electronic sampling programs **(PSC-CWTW 2008)**.  In addition, the CWT program: (1) currently provides overall differences in ocean ERs – can’t discriminate individual fisheries; (2) has sample sizes that are generally small, so confidence limits are wide and estimates of differential impacts are imprecise; (3) is expensive and agencies are reluctant to fund tagging programs; and (4) unmarked DIT fish are unavailable for harvest in MSFs.
+At present, the utility of the DIT program and the CWT program in general for Coho is reduced due to low tagging rates, insufficient MU representation, low recovery rates, and incomplete coastwide coverage of electronic sampling programs **(PSC-CWTW 2008)**. In addition, the CWT program: (1) currently provides overall differences in ocean ERs -- can't discriminate individual fisheries; (2) has sample sizes that are generally small, so confidence limits are wide and estimates of differential impacts are imprecise; (3) is expensive and agencies are reluctant to fund tagging programs; and (4) unmarked DIT fish are unavailable for harvest in MSFs.
 
-Most MUs in the U.S. have CWT indicator stocks and DIT programs.  However, some of the programs have been eliminated in recent years due to budgetary constraints.  **Canada has  discontinued all of their DIT programs**.  The current Coho CWT indicator stocks for each MU and the brood years with DIT groups are listed in **Table 3.1**.  The tag codes used to represent each MU in the MSM for catch years 1986-1997 are listed in **Appendix B**.  All DIT groups released to date for each MU are listed in **Appendix C**. 
+Most MUs in the U.S. have CWT indicator stocks and DIT programs. However, some of the programs have been eliminated in recent years due to budgetary constraints. **Canada has discontinued all of their DIT programs**. The current Coho CWT indicator stocks for each MU and the brood years with DIT groups are listed in **Table 3.1**. The tag codes used to represent each MU in the MSM for catch years 1986-1997 are listed in **Appendix B**. All DIT groups released to date for each MU are listed in **Appendix C**.
 
-*Need to update this table!* 
+*Need to update this table!*
 
-**CWT indicator stocks and brood years with single index tag (SIT) and double index tag (DIT) groups for each Coho Management Unit (MU), brood years 1983-year.  Indicator stocks are hatchery-produced Coho unless specified as “Wild” (RMISD 2011).  SIT groups may be either marked or unmarked releases of CWT Coho.  DIT groups are marked and unmarked pairs of CWT Coho.**
+**CWT indicator stocks and brood years with single index tag (SIT) and double index tag (DIT) groups for each Coho Management Unit (MU), brood years 1983-year. Indicator stocks are hatchery-produced Coho unless specified as "Wild" (RMISD 2011). SIT groups may be either marked or unmarked releases of CWT Coho. DIT groups are marked and unmarked pairs of CWT Coho.**
 
-|Management Unit |	Indicator Stock |	Brood Yr </br> SIT | Brood Yr </br> DIT |
-|------------------ | :-----------------| :------: | :------:|
-| Southern B.C. MUs	||||
-|	Lower Fraser |	Inch Creek Hatchery	| 83-95	| 96-08 |
-||	Salmon River (Wild)[^1] |	84-01,05-07 |	NA |
-||	Chilliwack R. Hatchery |	83-95 |	96-02 |
-|	Interior Fraser |	Spius Cr. Hatchery (Coldwater R.)[^2] |	84-94,96-98 |	99-02 |
-||	Spius Cr. Hatchery (Salmon R.)[^3] |	95-96,99,01-02,04-05,07 |	--|
-||	Spius Cr. Hatchery (Spius Cr.)|	94-96,99-00 |	97-98|
-||	Eagle R. Hatchery (Salmon R.)	| 83-93	| --|
-||	Eagle R. Hatchery (Eagle River)|	83-93	| --|
-||	Dunn Cr. Hatchery  (Dunn Cr.)[^4]	| 83-92,94-95,97-07	| --|
-||	Dunn Cr. Hatchery (Lemieux Cr.)[^5]	| 83-86,88-95,97-08	| --|
-||	Dunn Cr. Hatchery (Louis Cr.)[^6] |	88-94,97-07	| --|
-||	Eagle River (Wild)[^7] | 00-03	| NA |
-||	Lemieux Creek (Wild) | 92-93 |	NA |
-|	Strait of Georgia Mainland	| Capilano River Hatchery |	83-97,00 |	-- |
-||		Lang Creek Hatchery|	07-08	| -- |
-|	Strait of Georgia Vancouver Island |	Quinsam River |	83-95	96-08|
-||		Big Qualicum River Hatchery|	83-85,87-95,03-08	| 96-02 |
-||		Goldstream River Hatchery	|91-94,03-08	|96-02|
-||		Puntledge River Hatchery[^8] |	83-02	| -- |
-||		Black Creek (Wild)[^9] |	83-07	| NA |
-| U.S. Inside MUs	||||
-|	Skagit|	Marblemount Hatchery (Skagit)[^10] |	83-94, 99-02 |	95-08 |
-||	Baker River (Wild)[^11] | 	83-08	| NA |
-|	Stillaguamish[^12] |	Wallace River H. (Skykomish)|	83-95 |	96-08 |
-||		Bernie Gobin Hatchery [^13] |	83-08|	--|
-||		Stillaguamish (Wild)|	84-87	| NA |
-|	Snohomish	|Wallace River H. (Skykomish) |	83-95 |	96-08 |
-||		Bernie Gobin Hatchery|	83-08 |	-- |
-|Hood Canal|	Quilcene NFH |	87-95 |	96-07 |
-||	Quilcene Bay Sea Pens |	88,90,93,95,02-08 |	96-01|
-||	Port Gamble Bay Pens |	83-96,04-08	| 96-03|
-||	George Adams Hatchery	| 83-94,96|	95,97-08|
-||	Big Beef Creek (Wild)[^14] |	83-08 |	NA |
-|Strait of Juan de Fuca	 | Lower Elwha Hatchery	| 86,90-94,98-03 |	95-08|
-||	Dungeness Hatchery[^15] |	83,86,89,91-94,05-08 |	--|
-||	Hoko and Salmon Cr. (Wild) |	84-87,08 |	NA|
-|U.S. Outside MUs ||||
-|Quillayute	| Sol Duc Hatchery[^16]|	83-88,90-95,00,03-04 |	96-99,01-03,05-06 |
-||	Various Tributaries (Wild)[^17] | 	83-86,88-92,07-08 |	07-08 |
-|Hoh |	Chalaat Creek Hatchery |	84,86-89 |	-- |
-||	Canyon Springs Pond	| 86-87	| -- |
-||	Sol Duc Hatchery |	85,87 |	-- |
-||	Hoh River (Wild)[^18] | 	83-87,03-06	| NA |
-|Queets |	Quinault Lake Hatchery	| 83-84,90-92 |	-- |
-||	Salmon R. Fish Culture[^19] |	83-04,06 |	95-03,05,07-08 |
-||	Queets/Clearwater wild[^20] |	83-08 |	NA |
-|Grays Harbor |	Bingham Creek Hatchery[^21] |	83-94 |	95-08 |
-||	Aberdeen Net Pens	| 88-90,92 |	-- |
-||	Humptulips Hatchery	| 83-94,06 |	95-96 |
-||	Bingham Creek (Wild)[^22] |	83-08 |	NA |
-||	Stevens & Scatter Creek (Wild) |	83-90,92-93	 | NA |
-||		Chehalis Upriver (Wild)[^23] |	83-97,00-08	| NA |
+| Management Unit                    | Indicator Stock                       |   Brood Yr </br> SIT    | Brood Yr </br> DIT |
+|------------------------------------|:--------------------------------------|:-----------------------:|:------------------:|
+| Southern B.C. MUs                  |                                       |                         |                    |
+| Lower Fraser                       | Inch Creek Hatchery                   |          83-95          |       96-08        |
+|                                    | Salmon River (Wild)[^1]               |       84-01,05-07       |         NA         |
+|                                    | Chilliwack R. Hatchery                |          83-95          |       96-02        |
+| Interior Fraser                    | Spius Cr. Hatchery (Coldwater R.)[^2] |       84-94,96-98       |       99-02        |
+|                                    | Spius Cr. Hatchery (Salmon R.)[^3]    | 95-96,99,01-02,04-05,07 |         --         |
+|                                    | Spius Cr. Hatchery (Spius Cr.)        |       94-96,99-00       |       97-98        |
+|                                    | Eagle R. Hatchery (Salmon R.)         |          83-93          |         --         |
+|                                    | Eagle R. Hatchery (Eagle River)       |          83-93          |         --         |
+|                                    | Dunn Cr. Hatchery (Dunn Cr.)[^4]      |    83-92,94-95,97-07    |         --         |
+|                                    | Dunn Cr. Hatchery (Lemieux Cr.)[^5]   |    83-86,88-95,97-08    |         --         |
+|                                    | Dunn Cr. Hatchery (Louis Cr.)[^6]     |       88-94,97-07       |         --         |
+|                                    | Eagle River (Wild)[^7]                |          00-03          |         NA         |
+|                                    | Lemieux Creek (Wild)                  |          92-93          |         NA         |
+| Strait of Georgia Mainland         | Capilano River Hatchery               |        83-97,00         |         --         |
+|                                    | Lang Creek Hatchery                   |          07-08          |         --         |
+| Strait of Georgia Vancouver Island | Quinsam River                         |       83-95 96-08       |                    |
+|                                    | Big Qualicum River Hatchery           |    83-85,87-95,03-08    |       96-02        |
+|                                    | Goldstream River Hatchery             |       91-94,03-08       |       96-02        |
+|                                    | Puntledge River Hatchery[^8]          |          83-02          |         --         |
+|                                    | Black Creek (Wild)[^9]                |          83-07          |         NA         |
+| U.S. Inside MUs                    |                                       |                         |                    |
+| Skagit                             | Marblemount Hatchery (Skagit)[^10]    |      83-94, 99-02       |       95-08        |
+|                                    | Baker River (Wild)[^11]               |          83-08          |         NA         |
+| Stillaguamish[^12]                 | Wallace River H. (Skykomish)          |          83-95          |       96-08        |
+|                                    | Bernie Gobin Hatchery [^13]           |          83-08          |         --         |
+|                                    | Stillaguamish (Wild)                  |          84-87          |         NA         |
+| Snohomish                          | Wallace River H. (Skykomish)          |          83-95          |       96-08        |
+|                                    | Bernie Gobin Hatchery                 |          83-08          |         --         |
+| Hood Canal                         | Quilcene NFH                          |          87-95          |       96-07        |
+|                                    | Quilcene Bay Sea Pens                 |    88,90,93,95,02-08    |       96-01        |
+|                                    | Port Gamble Bay Pens                  |       83-96,04-08       |       96-03        |
+|                                    | George Adams Hatchery                 |        83-94,96         |      95,97-08      |
+|                                    | Big Beef Creek (Wild)[^14]            |          83-08          |         NA         |
+| Strait of Juan de Fuca             | Lower Elwha Hatchery                  |     86,90-94,98-03      |       95-08        |
+|                                    | Dungeness Hatchery[^15]               |  83,86,89,91-94,05-08   |         --         |
+|                                    | Hoko and Salmon Cr. (Wild)            |        84-87,08         |         NA         |
+| U.S. Outside MUs                   |                                       |                         |                    |
+| Quillayute                         | Sol Duc Hatchery[^16]                 |  83-88,90-95,00,03-04   | 96-99,01-03,05-06  |
+|                                    | Various Tributaries (Wild)[^17]       |    83-86,88-92,07-08    |       07-08        |
+| Hoh                                | Chalaat Creek Hatchery                |        84,86-89         |         --         |
+|                                    | Canyon Springs Pond                   |          86-87          |         --         |
+|                                    | Sol Duc Hatchery                      |          85,87          |         --         |
+|                                    | Hoh River (Wild)[^18]                 |       83-87,03-06       |         NA         |
+| Queets                             | Quinault Lake Hatchery                |       83-84,90-92       |         --         |
+|                                    | Salmon R. Fish Culture[^19]           |        83-04,06         |   95-03,05,07-08   |
+|                                    | Queets/Clearwater wild[^20]           |          83-08          |         NA         |
+| Grays Harbor                       | Bingham Creek Hatchery[^21]           |          83-94          |       95-08        |
+|                                    | Aberdeen Net Pens                     |        88-90,92         |         --         |
+|                                    | Humptulips Hatchery                   |        83-94,06         |       95-96        |
+|                                    | Bingham Creek (Wild)[^22]             |          83-08          |         NA         |
+|                                    | Stevens & Scatter Creek (Wild)        |       83-90,92-93       |         NA         |
+|                                    | Chehalis Upriver (Wild)[^23]          |       83-97,00-08       |         NA         |
 
-[^1]: Brood years 1996-2001 and 2005-07: all tagged releases were unmarked. 
+[^1]: Brood years 1996-2001 and 2005-07: all tagged releases were unmarked.
+
 [^2]: Brood years 1997 and 1998: all tagged releases were unmarked.
-[^3]: Brood years 1999, 2001-02, and 2005: all tagged releases were unmarked.
-[^4]: Beginning BY 1997, all tagged releases were unmarked. 
-[^5]: Beginning BY 1997, all tagged releases were unmarked. 
-[^6]: Beginning BY 1997, all tagged releases were unmarked. 
-[^7]: All tagged releases were unmarked.
-[^8]: For BYs 1997 and 1999-2000, unmarked CWT fish were released, but not associated with a DIT group in RMIS.
-[^9]: Brood years 1997-2000, 2002-03, and 2005-07: all tagged releases were unmarked.  Brood year 2001 unmarked CWT fish were also released, but not associated with a DIT group in RMIS.
-[^10]: Brood year 2004 unmarked CWT fish were also released, but not associated with a DIT group in RMIS.
-[^11]: Beginning BY 1996, all tagged releases were unmarked.
-[^12]: Bernie Gobin Hatchery tagging program and the Skykomish tagging program at the Wallace River Hatchery are used to represent production in both the Stillaguamish and Snohomish River Basins.
-[^13]: Brood years 1997 and 1998: all tagged releases were unmarked.
-[^14]: Beginning BY 1996, all tagged releases were unmarked
-[^15]: Brood year 2005: unmarked CWT fish were released, but not listed as an associated DIT group in RMIS.
-[^16]: Brood years 2000 and 2004: unmarked CWT fish were released, but not listed as an associated DIT group in RMIS. 
-[^17]: Release groups were very small except Solduc BYs 07-08. 
-[^18]: In all years, release groups are very small.  Brood years 03-06: tagged releases were unmarked.
-[^19]: Brood years 2004 and 2006: unmarked CWT fish were released, but not listed as an associated DIT group in RMIS.
-[^20]: Beginning BY 1996, all tagged releases were unmarked.
-[^21]: Brood years 95, 04, 06-08 are listed as “Satsop” stock of a “mixed” origin in RMIS.
-[^22]: Beginning BY 1995, all tagged releases were unmarked.
-[^23]: Brood years 1995-1997 and 2000-2008: tagged releases were unmarked.
 
+[^3]: Brood years 1999, 2001-02, and 2005: all tagged releases were unmarked.
+
+[^4]: Beginning BY 1997, all tagged releases were unmarked.
+
+[^5]: Beginning BY 1997, all tagged releases were unmarked.
+
+[^6]: Beginning BY 1997, all tagged releases were unmarked.
+
+[^7]: All tagged releases were unmarked.
+
+[^8]: For BYs 1997 and 1999-2000, unmarked CWT fish were released, but not associated with a DIT group in RMIS.
+
+[^9]: Brood years 1997-2000, 2002-03, and 2005-07: all tagged releases were unmarked. Brood year 2001 unmarked CWT fish were also released, but not associated with a DIT group in RMIS.
+
+[^10]: Brood year 2004 unmarked CWT fish were also released, but not associated with a DIT group in RMIS.
+
+[^11]: Beginning BY 1996, all tagged releases were unmarked.
+
+[^12]: Bernie Gobin Hatchery tagging program and the Skykomish tagging program at the Wallace River Hatchery are used to represent production in both the Stillaguamish and Snohomish River Basins.
+
+[^13]: Brood years 1997 and 1998: all tagged releases were unmarked.
+
+[^14]: Beginning BY 1996, all tagged releases were unmarked
+
+[^15]: Brood year 2005: unmarked CWT fish were released, but not listed as an associated DIT group in RMIS.
+
+[^16]: Brood years 2000 and 2004: unmarked CWT fish were released, but not listed as an associated DIT group in RMIS.
+
+[^17]: Release groups were very small except Solduc BYs 07-08.
+
+[^18]: In all years, release groups are very small. Brood years 03-06: tagged releases were unmarked.
+
+[^19]: Brood years 2004 and 2006: unmarked CWT fish were released, but not listed as an associated DIT group in RMIS.
+
+[^20]: Beginning BY 1996, all tagged releases were unmarked.
+
+[^21]: Brood years 95, 04, 06-08 are listed as "Satsop" stock of a "mixed" origin in RMIS.
+
+[^22]: Beginning BY 1995, all tagged releases were unmarked.
+
+[^23]: Brood years 1995-1997 and 2000-2008: tagged releases were unmarked.
 
 # Annual Implementation
 
-Coho FRAM is used by the Pacific Fishery Management Council (PFMC) to model internal US fisheries as well as fisheries of interest to the PSC.  Expectations for MU status, cohort abundance, and fishery objectives are exchanged in March of each year for use in pre-season planning processes.  
+Coho FRAM is used by the Pacific Fishery Management Council (PFMC) to model internal US fisheries as well as fisheries of interest to the PSC. Expectations for MU status, cohort abundance, and fishery objectives are exchanged in March of each year for use in pre-season planning processes.
 
 ## Domestic Fishery Planning Processes
 
 ### United States
 
-Because the domestic planning processes of the Parties are not synchronous, a single pre-season command file containing expectations for both Canada and the U.S. is not available prior to the conclusion of the Pacific Fisheries Management Council (PFMC) process (U.S. pre-season fishery planning) in April.  The pre-season command file used by the PFMC incorporates cohort abundance for both Canadian and U.S. MUs, but planned fishery regulations for U.S. fisheries only.  Unless other information is available, Canadian regulations are assumed to be similar to those implemented in the previous year.  Subsequent to this process, additional command files are generated to represent the actual Canadian fishing plans.  Command files used in pre-season planning from 2004 to 2010 are detailed in Table 2.1.  These files contain specific information used at the time to model fisheries along with the pre-season forecasts of stock abundances.
+Because the domestic planning processes of the Parties are not synchronous, a single pre-season command file containing expectations for both Canada and the U.S. is not available prior to the conclusion of the Pacific Fisheries Management Council (PFMC) process (U.S. pre-season fishery planning) in April. The pre-season command file used by the PFMC incorporates cohort abundance for both Canadian and U.S. MUs, but planned fishery regulations for U.S. fisheries only. Unless other information is available, Canadian regulations are assumed to be similar to those implemented in the previous year. Subsequent to this process, additional command files are generated to represent the actual Canadian fishing plans. Command files used in pre-season planning from 2004 to 2010 are detailed in Table 2.1. These files contain specific information used at the time to model fisheries along with the pre-season forecasts of stock abundances.
 
 ### Canada
 
 ## Annual Data Exchange
 
-
 # Fishery Information
 
-Under the ABM regime, each Party is required to regulate its fisheries so as not to exceed exploitation rate (ER) constraints on MUs.  Fisheries and changes in management objectives during the reporting period are summarized within this chapter.  Total fishery mortality of all Management Units combined, by Canada and the U.S. from 1986 to ??? is depicted in **Figure 5.1**.  *do we still want Figure 5.1?  is it useful?*  **link these maps instead of placing in an appendix?**Maps showing Fishery Management Areas for British Columbia, Washington, and Oregon are included in Appendix D.
+Under the ABM regime, each Party is required to regulate its fisheries so as not to exceed exploitation rate (ER) constraints on MUs. Fisheries and changes in management objectives during the reporting period are summarized within this chapter. Total fishery mortality of all Management Units combined, by Canada and the U.S. from 1986 to ??? is depicted in **Figure 5.1**. *do we still want Figure 5.1? is it useful?* **link these maps instead of placing in an appendix?**Maps showing Fishery Management Areas for British Columbia, Washington, and Oregon are included in Appendix D.
 
 ## Canadian Fisheries
 
-Southern B.C. Coho Salmon are caught in First Nations, recreational, and commercial troll and net fisheries.  Since Coho Salmon rear in areas near the coast they are readily caught in directed fisheries and as bycatch in fisheries targeting other species.  As a result, Coho are harvested in mixed-stock fisheries, creating many challenges for the assessment and management of the species. 
+Southern B.C. Coho Salmon are caught in First Nations, recreational, and commercial troll and net fisheries. Since Coho Salmon rear in areas near the coast they are readily caught in directed fisheries and as bycatch in fisheries targeting other species. As a result, Coho are harvested in mixed-stock fisheries, creating many challenges for the assessment and management of the species.
 
-Coho catches on the south coast of B.C. have declined since the mid-1980s, initially due to declining abundance and more recently because of severe conservation measures in response to the declining abundance.  Total fishery ERs in Canada were reduced from a range of 75 to 80% in the mid-1980s to 60% in 1995, 37% in 1997, 5% in 1998, and are currently estimated by Backwards Coho FRAM at less than 10%.
+Coho catches on the south coast of B.C. have declined since the mid-1980s, initially due to declining abundance and more recently because of severe conservation measures in response to the declining abundance. Total fishery ERs in Canada were reduced from a range of 75 to 80% in the mid-1980s to 60% in 1995, 37% in 1997, 5% in 1998, and are currently estimated by Backwards Coho FRAM at less than 10%.
 
-Historically 89% of the commercial Coho catch on the south coast of B.C. was taken by the troll sector with the remainder harvested by commercial net fisheries.  The west coast of Vancouver Island (WCVI) troll fishery was the single largest commercial harvester, taking an average of 1.5 million Coho in the 10-year period before 1997, when major fishing restrictions were imposed.  This fishery intercepted stocks from the U.S., Strait of Georgia, and WCVI.  Since 2001, average catch retained in the WCVI troll fishery has been 725 Coho, due primarily to the timing and non-retention restrictions in place for this fishery.  Historically, catch in the Strait of Georgia troll fishery, comprised predominantly of Strait of Georgia stocks, was much smaller than the WCVI troll fishery (1986-1995 averaged 150,000 Coho, annually).  The Strait of Georgia troll fishery has not been permitted to retain Coho Salmon since 1995. 
+Historically 89% of the commercial Coho catch on the south coast of B.C. was taken by the troll sector with the remainder harvested by commercial net fisheries. The west coast of Vancouver Island (WCVI) troll fishery was the single largest commercial harvester, taking an average of 1.5 million Coho in the 10-year period before 1997, when major fishing restrictions were imposed. This fishery intercepted stocks from the U.S., Strait of Georgia, and WCVI. Since 2001, average catch retained in the WCVI troll fishery has been 725 Coho, due primarily to the timing and non-retention restrictions in place for this fishery. Historically, catch in the Strait of Georgia troll fishery, comprised predominantly of Strait of Georgia stocks, was much smaller than the WCVI troll fishery (1986-1995 averaged 150,000 Coho, annually). The Strait of Georgia troll fishery has not been permitted to retain Coho Salmon since 1995.
 
-Net fisheries in Johnstone Strait, Strait of Juan de Fuca and the Strait of Georgia harvest Coho incidentally during directed fisheries on Sockeye (O. nerka), Pink (O. gorbuscha), and Chum (O. keta) Salmon.  Net fisheries have been curtailed in recent years due to low returns of the target species and concerns for Chinook (O. tshawytscha) and Coho Salmon bycatch.
+Net fisheries in Johnstone Strait, Strait of Juan de Fuca and the Strait of Georgia harvest Coho incidentally during directed fisheries on Sockeye (O. nerka), Pink (O. gorbuscha), and Chum (O. keta) Salmon. Net fisheries have been curtailed in recent years due to low returns of the target species and concerns for Chinook (O. tshawytscha) and Coho Salmon bycatch.
 
-While the First Nations' harvest of Coho is small compared with other salmon species, several First Nations harvest Coho for food, social, and ceremonial (FSC) purposes.  Coho are caught in hook and line, net, and spear fisheries in or near their local streams.  They are also caught incidentally in other First Nations' salmon fisheries directed on other species, such as Sockeye and Chum Salmon.
+While the First Nations' harvest of Coho is small compared with other salmon species, several First Nations harvest Coho for food, social, and ceremonial (FSC) purposes. Coho are caught in hook and line, net, and spear fisheries in or near their local streams. They are also caught incidentally in other First Nations' salmon fisheries directed on other species, such as Sockeye and Chum Salmon.
 
-Recreational fishing for Coho in B.C. tidal waters continues to be important to residents and visitors.  Until the recent decline in Coho abundance and subsequent severe fishing restrictions, 70% of tidal recreational fishing took place within the Strait of Georgia.  Since 1995, most Coho recreational fishery effort and catch has shifted from the Strait of Georgia to the WCVI, in part due to low abundance of Coho inside Vancouver Island.  Overall, the proportion of Coho harvested by the recreational fishery has increased as commercial harvest has been significantly reduced as a result of the timing and non-retention harvest restrictions, as well as domestic allocation considerations in Canada that were implemented in response to the low abundance of Coho.
+Recreational fishing for Coho in B.C. tidal waters continues to be important to residents and visitors. Until the recent decline in Coho abundance and subsequent severe fishing restrictions, 70% of tidal recreational fishing took place within the Strait of Georgia. Since 1995, most Coho recreational fishery effort and catch has shifted from the Strait of Georgia to the WCVI, in part due to low abundance of Coho inside Vancouver Island. Overall, the proportion of Coho harvested by the recreational fishery has increased as commercial harvest has been significantly reduced as a result of the timing and non-retention harvest restrictions, as well as domestic allocation considerations in Canada that were implemented in response to the low abundance of Coho.
 
-Due to conservation concerns, most notably for the Interior Fraser MU, Canadian Coho Salmon fisheries have seen unprecedented restrictions since 1997.  In 1998 and 1999, no directed fisheries on naturally-spawning stocks of Coho were permitted; mandatory non-retention and non-possession of incidentally caught Coho was implemented in all areas, with the exception of some terminal hatchery locations.  In the Pacific Region, (i.e., all marine waters of B.C.), barbless hooks became required for all salmon-directed commercial and recreational hook and line gear in 1998, a regulation that remains in effect.  Pacific Region waters were classified as red or yellow zones.  In red zones, areas where Thompson River Coho were known to be prevalent, fishing was restricted to very limited experimental selective fisheries, as well as some limited First Nations' fisheries to meet food, social, and ceremonial requirements.  Red zones included inshore waters of Victoria to Barkley Sound and offshore waters of Barkley Sound to Quatsino Sound, from June to September.  Special management zones (SMZs), areas of mandatory Coho non-retention with special restrictions, were identified with the intent to avoid Coho encounters.  Fisheries were only permitted in locations and times when Thompson River Coho could be avoided or released unharmed.  These areas were subject to in-season adjustments, including time and area closures for all sectors.  Fisheries conducted in these SMZs were monitored to ensure Coho encounter rates did not become too high, and tissue samples were taken for stock identification.  In yellow zones, where endangered stocks were not prevalent, a selective fishing strategy was implemented for all commercial and recreational fisheries.  These fisheries were required to release any live Coho that were caught during operations.  Mandatory logbooks and an onboard observer program were initiated in commercial fisheries.  Limited Coho retention was allowed only for First Nations and recreational fisheries.
+Due to conservation concerns, most notably for the Interior Fraser MU, Canadian Coho Salmon fisheries have seen unprecedented restrictions since 1997. In 1998 and 1999, no directed fisheries on naturally-spawning stocks of Coho were permitted; mandatory non-retention and non-possession of incidentally caught Coho was implemented in all areas, with the exception of some terminal hatchery locations. In the Pacific Region, (i.e., all marine waters of B.C.), barbless hooks became required for all salmon-directed commercial and recreational hook and line gear in 1998, a regulation that remains in effect. Pacific Region waters were classified as red or yellow zones. In red zones, areas where Thompson River Coho were known to be prevalent, fishing was restricted to very limited experimental selective fisheries, as well as some limited First Nations' fisheries to meet food, social, and ceremonial requirements. Red zones included inshore waters of Victoria to Barkley Sound and offshore waters of Barkley Sound to Quatsino Sound, from June to September. Special management zones (SMZs), areas of mandatory Coho non-retention with special restrictions, were identified with the intent to avoid Coho encounters. Fisheries were only permitted in locations and times when Thompson River Coho could be avoided or released unharmed. These areas were subject to in-season adjustments, including time and area closures for all sectors. Fisheries conducted in these SMZs were monitored to ensure Coho encounter rates did not become too high, and tissue samples were taken for stock identification. In yellow zones, where endangered stocks were not prevalent, a selective fishing strategy was implemented for all commercial and recreational fisheries. These fisheries were required to release any live Coho that were caught during operations. Mandatory logbooks and an onboard observer program were initiated in commercial fisheries. Limited Coho retention was allowed only for First Nations and recreational fisheries.
 
-Since 2000, fisheries impacting naturally-spawning Coho from southern B.C., Washington State, and Oregon have been managed under the Pacific Salmon Treaty ABM regime.  The ABM plan constrains total fishery exploitation on key stock MUs in B.C.  For each MU, annual limits of fishing mortality are established based on the categorical level of abundance and the health of the naturally-spawning stocks.  In Canada, low status of Interior Fraser Coho has constrained southern B.C. fisheries for the last decade.  The Southern U.S. has been limited to 10% ER on Coho originating from the Interior Fraser MU.  Southern B.C. fisheries, in waters south of Cape Caution where Interior Fraser Coho are prevalent, have been managed to a maximum 3% total fishing mortality rate on the Interior Fraser Coho MU.  Non-retention of naturally-spawning Coho is generally in effect except for First Nations FSC opportunities in specific terminal systems where abundance permits and where retention of by-catch during fisheries for other species is permitted.  Release of unmarked Coho Salmon during periods when Interior Fraser Coho may be caught is required in all Canadian commercial and recreational fisheries. 
+Since 2000, fisheries impacting naturally-spawning Coho from southern B.C., Washington State, and Oregon have been managed under the Pacific Salmon Treaty ABM regime. The ABM plan constrains total fishery exploitation on key stock MUs in B.C. For each MU, annual limits of fishing mortality are established based on the categorical level of abundance and the health of the naturally-spawning stocks. In Canada, low status of Interior Fraser Coho has constrained southern B.C. fisheries for the last decade. The Southern U.S. has been limited to 10% ER on Coho originating from the Interior Fraser MU. Southern B.C. fisheries, in waters south of Cape Caution where Interior Fraser Coho are prevalent, have been managed to a maximum 3% total fishing mortality rate on the Interior Fraser Coho MU. Non-retention of naturally-spawning Coho is generally in effect except for First Nations FSC opportunities in specific terminal systems where abundance permits and where retention of by-catch during fisheries for other species is permitted. Release of unmarked Coho Salmon during periods when Interior Fraser Coho may be caught is required in all Canadian commercial and recreational fisheries.
 
 ## U.S. Fisheries
 
-Current U.S. fisheries are constrained by domestic and PST conservation objectives.  For the Puget Sound MUs, the 2008 PST Southern Coho Agreement of ABM uses the thresholds and stepped harvest rate goals from the Comprehensive Coho Agreement (CCW 1998), developed by Washington State and the Puget Sound tribes, and adopted by the Pacific Fishery Management Council as Fishery Management Plan conservation objectives in November 2009.  Actual ER constraints for Canadian fisheries on U.S. Coho MUs are determined by formulas that specify sharing of allowable total ERs and a "composite rule".  The composite rule adjusts constraints for Canadian fishery ERs based on the number of U.S. MUs that fall in a given category.  For example, if only one Washington coastal Coho MU is in low status, Canadian fisheries are constrained to a total ER on that unit of 12%; if two or more Washington coastal MUs are in low status, the constraint becomes 10%.  The most restrictive ER limit for Canadian fishery impacts on U.S. Coho MUs is 10%.
+Current U.S. fisheries are constrained by domestic and PST conservation objectives. For the Puget Sound MUs, the 2008 PST Southern Coho Agreement of ABM uses the thresholds and stepped harvest rate goals from the Comprehensive Coho Agreement (CCW 1998), developed by Washington State and the Puget Sound tribes, and adopted by the Pacific Fishery Management Council as Fishery Management Plan conservation objectives in November 2009. Actual ER constraints for Canadian fisheries on U.S. Coho MUs are determined by formulas that specify sharing of allowable total ERs and a "composite rule". The composite rule adjusts constraints for Canadian fishery ERs based on the number of U.S. MUs that fall in a given category. For example, if only one Washington coastal Coho MU is in low status, Canadian fisheries are constrained to a total ER on that unit of 12%; if two or more Washington coastal MUs are in low status, the constraint becomes 10%. The most restrictive ER limit for Canadian fishery impacts on U.S. Coho MUs is 10%.
 
-Fisheries between Cape Falcon, Oregon and the U.S./Canada Border are constrained by four factors: (1) management objectives and treaty Indian obligations for individual stock U.S. MUs; (2) treaty Indian/non-Indian and ocean/in-river sharing agreements; (3) stocks listed under the ESA; and (4) requirements of the PST.  The starting point for implementing these constraints is the forecasted January age-3 abundance and the modeled ocean distribution of each Coho stock.
+Fisheries between Cape Falcon, Oregon and the U.S./Canada Border are constrained by four factors: (1) management objectives and treaty Indian obligations for individual stock U.S. MUs; (2) treaty Indian/non-Indian and ocean/in-river sharing agreements; (3) stocks listed under the ESA; and (4) requirements of the PST. The starting point for implementing these constraints is the forecasted January age-3 abundance and the modeled ocean distribution of each Coho stock.
 
-Coho-directed recreational fisheries have been mark-selective since 1999 with the exception of a nine day fishery between the mouth of the Queets River and Leadbetter Point, Washington in 2004.  Non-Indian commercial troll fisheries have been mostly restricted to mark-selective Coho retention since 2000.  Treaty Indian fisheries are not restricted to mark-selective retention of Coho Salmon.  
+Coho-directed recreational fisheries have been mark-selective since 1999 with the exception of a nine day fishery between the mouth of the Queets River and Leadbetter Point, Washington in 2004. Non-Indian commercial troll fisheries have been mostly restricted to mark-selective Coho retention since 2000. Treaty Indian fisheries are not restricted to mark-selective retention of Coho Salmon.
 
 ## Catches
 
-**we need data for these** morts or catches? And, should we place these below ERs?  The treaty specifies ERs, not catches......
-where are we placing ER estimates?
-
+**we need data for these** morts or catches? And, should we place these below ERs? The treaty specifies ERs, not catches...... where are we placing ER estimates?
 
 ## Total Exploitation Rate Accounted for by Mark-Selective Fisheries
+
 *is this something that the treaty requests?*
 
 <!-- link Table and add text.  How many years should we include??? -->
 
-## Annual CoTC reports on Estimates of Exploitation Rates  
+## Annual CoTC reports on Estimates of Exploitation Rates
 
-*for historical reference - I think these should be referenced and links provided, but not imbedded in the text and not under their own heading.  What do others think?*
-<!-- link reports here -->
-
+*for historical reference - I think these should be referenced and links provided, but not imbedded in the text and not under their own heading. What do others think?* <!-- link reports here -->
 
 # Management Units
 
@@ -445,4 +520,3 @@ placeholder for links to detailed management unit profiles
 ## Appendix B
 
 ## Appendix C
-
