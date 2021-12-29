@@ -87,38 +87,72 @@ focal_run_ids <- 28:43
 
 fram$escp <- framr::read_coho_escp(params$mdb, runs = focal_run_ids, stocks = lu_stock$StockID)
 
-fram$mort <- framr::read_coho_mort(params$mdb, runs = focal_run_ids, , stocks = lu_stock$StockID) |> 
-    mutate(mort = LandedCatch + NonRetention + Shaker + DropOff + MSFLandedCatch + MSFNonRetention + MSFShaker + MSFDropOff)
+fram$mort <- framr::read_coho_mort(params$mdb, runs = focal_run_ids, , stocks = lu_stock$StockID)
 
-# #probably wrong but demoing...
-# fram$escp |> 
-#   left_join(lu_stock, by = "StockID") |> 
-#   ggplot(aes(RunYear, escp, fill = StockLongName)) + 
-#   geom_col() + facet_wrap(~Name, scales = "free")
-
-#among other things, need to confirm order of operations of lu_stock join and aggregate
-left_join(
-  fram$escp
-  ,
-  fram$mort |> 
-    group_by(RunYear, StockID, StockLongName) |> 
-    summarise(across(mort, sum), .groups = "drop")
-  ,
-  by = c("RunYear", "StockID", "StockLongName")
-  ) |> 
-  left_join(lu_stock, by = "StockID") |> 
-  group_by(RunYear, PSCStock, Name) |> 
-  summarise(across(c(escp, mort), sum), .groups = "drop") |> 
+#sum across timesteps (and Ages, but only 3s anyway)
+fram$mort_yr <- fram$mort |>
   mutate(
-    abun = escp + mort, #this matches the "post-season" cohort value in DD tables 6.1:6.3
-    er_tot = mort / abun
+    mort_ns = LandedCatch + NonRetention + Shaker + DropOff,
+    mort_msf = MSFLandedCatch + MSFNonRetention + MSFShaker + MSFDropOff
   ) |> 
-  ggplot(aes(as.numeric(RunYear), er_tot)) +
-  geom_col() + geom_smooth() +
-  facet_wrap(~PSCStock+Name, scales = "free", labeller = label_wrap_gen(multi_line = F))
+  group_by(RunYear, StockID, StockLongName, FisheryID, FisheryName) |> 
+  summarise(across(starts_with("mort"), sum), .groups = "drop")
+
+
+#build out the ER info
+
+psc <- left_join(
+  #join PSC metadata and reaggregate,
+  # then add columns of total mortality per year and PSC stock 
+  # summed over fisheries and repeating per individual fishery
+  fram$mort_yr |> 
+    left_join(lu_stock |> select(StockID, PSC_StockID = PSCStock, PSC_StockName = Name), by = "StockID") |> 
+    group_by(RunYear, PSC_StockID, PSC_StockName, FisheryID, FisheryName) |> 
+    summarise(across(starts_with("mort"), sum), .groups = "drop") |> 
+    group_by(RunYear, PSC_StockID, PSC_StockName) |> 
+    mutate(across(starts_with("mort"), list(sum = sum), .names = "{.col}_{.fn}")) |> 
+    ungroup()
+  ,
+  #now join escapement reaggregated to PSC stock per year, also repeating by fishery
+  fram$escp |> 
+    select(-RunID, -RunName) |> 
+    left_join(lu_stock |> select(StockID, PSC_StockID = PSCStock, PSC_StockName = Name), by = "StockID") |> 
+    group_by(RunYear, PSC_StockID, PSC_StockName) |> 
+    summarise(across(escp, sum), .groups = "drop") 
+  ,
+  by = c("RunYear", "PSC_StockID", "PSC_StockName")
+) |> 
+  mutate(
+    abund = mort_sum + escp,
+    across(c(mort, mort_sum), list(er = ~.x/abund))
+  ) 
+
+#these numbers match DD "CoTC_Output_File_1986-2018.xlsx"
+#but need to add conditions on FisheryID range for US vs Can division of ERs
+#basically tables 6.1-6.3 as individual stocks
+psc |> 
+  distinct(RunYear, PSC_StockName, abund) |> 
+  arrange(PSC_StockName, RunYear) |> 
+  split(~ PSC_StockName) 
+#basically "table Es"
+psc |> 
+  #filter(RunYear == "2018") |> 
+  distinct(RunYear, PSC_StockName, mort_sum, escp, abund, mort_sum_er) |> 
+  arrange(PSC_StockName, RunYear)
+#going towards "table F", but will need
+#various lower non-ER rows appended separately
+#and FisheryID aggregations defined
+#join fishery aggregations here & resummarize summing ERs?
+#or join above in "psc" object creation before first group_by?
+
+psc |> 
+  select(RunYear:FisheryName, mort_er) |> 
+  pivot_wider(names_from = RunYear, values_from = mort_er)
+  
 
 
 save.image("PeriodicReport_envi.RData")
+
 ```
 
 This report based on `r basename(params$mdb)`
