@@ -3,6 +3,7 @@ title: "Joint Coho Technical Committee Periodic Report"
 author: "PSC Joint Coho Technical Committee"
 date: "`r Sys.Date()`"
 params:
+  static_tables: "StaticTables.xlsx"
   mdb: "O:/code/coho_fram_validation/PSC_CoTC_PostSeason_CohoFRAMDB_thru2019_021021.mdb"
 output:
   html_document:
@@ -35,29 +36,27 @@ library("kableExtra")
 library("gt")
 theme_set(theme_light())
 
-fp <- list(
-  static_tables = "StaticTables.xlsx"
+static <- list(
+  members = readxl::read_excel(params$static_tables, sheet = "members") |> 
+    mutate(across(where(is.character), ~replace_na(.,"")))
+  ,
+  acronyms = readxl::read_excel(params$static_tables, sheet = "acronyms") |> 
+    mutate(across(where(is.character), ~replace_na(.,"")))
+  ,
+  #modified from: https://github.com/dappdrd/CohoPSC/blob/bb61dd39715a29a739259c3791cdd26bd8f42a2f/server.R#L65
+  #another place with LU info is the "year_template" sheet of the annual escapement compilation 
+  lu_stock = readxl::read_excel(params$static_tables, sheet = "lu_stock") |> 
+    mutate(across(where(is.character), ~replace_na(.,"")))
 )
 
-#modified from: https://github.com/dappdrd/CohoPSC/blob/bb61dd39715a29a739259c3791cdd26bd8f42a2f/server.R#L65
-#another place with LU info is the "year_template" sheet of the annual escapement compilation 
-
-
-
-#can load an entire environment built ahead of time and save time on reknitting
+# #can load an entire environment built ahead of time and save time on reknitting
 load("PeriodicReport_envi.RData")
+
 ```
 
 ```{r build_envi, include=FALSE, eval=FALSE}
-#### pre-declared objects in envi
-members <- readxl::read_excel(fp$static_tables, sheet = "members") |> 
-  mutate(across(where(is.character), ~replace_na(.,"")))
-
-lu_stock <- readxl::read_excel(fp$static_tables, sheet = "lu_stock") |> 
-  mutate(across(where(is.character), ~replace_na(.,"")))
 
 #### framr readers
-
 #mdb from params arg above
 #but coming from: https://extranet.psc.org/cohotc/FRAM%20Model/2_Postseason%20Runs/2_Database/PSC_CoTC_PostSeason_CohoFRAMDB_thru2019_021021.zip
 #in this particular mdb, appears to be a mysterious RunID 3 in the Escapement and Mortality tables but not RunID table...
@@ -79,17 +78,19 @@ mdb_con <- DBI::dbConnect(drv = odbc::odbc(), .connection_string = paste0("Drive
 fram$run_id <- tbl(mdb_con, "RunID") |> select(RunID, RunYear, RunName, RunTitle, TAMMName) |> collect()
 
 DBI::dbDisconnect(mdb_con)
+rm(mdb_con)
 
 #manually inspect for 2004 onward...
 fram$run_id |> print(n=50)
 focal_run_ids <- 28:43
 
 
-fram$escp <- framr::read_coho_escp(params$mdb, runs = focal_run_ids, stocks = lu_stock$StockID)
+fram$escp <- framr::read_coho_escp(params$mdb, runs = focal_run_ids, stocks = static$lu_stock$StockID)
 
-fram$mort <- framr::read_coho_mort(params$mdb, runs = focal_run_ids, , stocks = lu_stock$StockID)
+fram$mort <- framr::read_coho_mort(params$mdb, runs = focal_run_ids, , stocks = static$lu_stock$StockID)
 
 #sum across timesteps (and Ages, but only 3s anyway)
+#maintaining FRAM stocks and fisheries
 fram$mort_yr <- fram$mort |>
   mutate(
     mort_ns = LandedCatch + NonRetention + Shaker + DropOff,
@@ -99,58 +100,41 @@ fram$mort_yr <- fram$mort |>
   summarise(across(starts_with("mort"), sum), .groups = "drop")
 
 
-#build out the ER info
+# #build out the yearly totals and ER info for PSC stock (and fishery?) aggregations
+# #SUS fisheries are FRAM FisheryID 1:166
+# #Canadian ae FRAM FisheryID 167:193
+# #AK are 193:max?
+# fram$mort_yr |> distinct(FisheryID, FisheryName) |> arrange(FisheryID) |>  print(n=300)
 
 psc <- left_join(
-  #join PSC metadata and reaggregate,
-  # then add columns of total mortality per year and PSC stock 
-  # summed over fisheries and repeating per individual fishery
+  #join PSC metadata to mortality and re-aggregate,
+  # then add columns of total mortality per year per re-aggregated PSC stock 
+  # these are summed over fisheries and repeating per individual fishery
   fram$mort_yr |> 
-    left_join(lu_stock |> select(StockID, PSC_StockID = PSCStock, PSC_StockName = Name), by = "StockID") |> 
+    left_join(static$lu_stock |> select(StockID, PSC_StockID = PSCStock, PSC_StockName = Name), by = "StockID") |> 
     group_by(RunYear, PSC_StockID, PSC_StockName, FisheryID, FisheryName) |> 
     summarise(across(starts_with("mort"), sum), .groups = "drop") |> 
     group_by(RunYear, PSC_StockID, PSC_StockName) |> 
     mutate(across(starts_with("mort"), list(sum = sum), .names = "{.col}_{.fn}")) |> 
     ungroup()
   ,
-  #now join escapement reaggregated to PSC stock per year, also repeating by fishery
+  #now join escapement re-aggregated to PSC stock per year, also repeating by fishery
   fram$escp |> 
     select(-RunID, -RunName) |> 
-    left_join(lu_stock |> select(StockID, PSC_StockID = PSCStock, PSC_StockName = Name), by = "StockID") |> 
+    left_join(static$lu_stock |> select(StockID, PSC_StockID = PSCStock, PSC_StockName = Name), by = "StockID") |> 
     group_by(RunYear, PSC_StockID, PSC_StockName) |> 
     summarise(across(escp, sum), .groups = "drop") 
   ,
   by = c("RunYear", "PSC_StockID", "PSC_StockName")
-) |> 
+  ) |>
+  #now calc per-year-PSC stock abundance
+  #and total and per-fishery ERs
   mutate(
     abund = mort_sum + escp,
     across(c(mort, mort_sum), list(er = ~.x/abund))
-  ) 
+  )
 
-#these numbers match DD "CoTC_Output_File_1986-2018.xlsx"
-#but need to add conditions on FisheryID range for US vs Can division of ERs
-#basically tables 6.1-6.3 as individual stocks
-psc |> 
-  distinct(RunYear, PSC_StockName, abund) |> 
-  arrange(PSC_StockName, RunYear) |> 
-  split(~ PSC_StockName) 
-#basically "table Es"
-psc |> 
-  #filter(RunYear == "2018") |> 
-  distinct(RunYear, PSC_StockName, mort_sum, escp, abund, mort_sum_er) |> 
-  arrange(PSC_StockName, RunYear)
-#going towards "table F", but will need
-#various lower non-ER rows appended separately
-#and FisheryID aggregations defined
-#join fishery aggregations here & resummarize summing ERs?
-#or join above in "psc" object creation before first group_by?
-
-psc |> 
-  select(RunYear:FisheryName, mort_er) |> 
-  pivot_wider(names_from = RunYear, values_from = mort_er)
-  
-
-
+rm(params)
 save.image("PeriodicReport_envi.RData")
 
 ```
@@ -161,29 +145,128 @@ This report based on `r basename(params$mdb)`
 knitr::include_graphics("images/CohoPic.png")
 ```
 
-# Members
-
-```{r member_table}
-# #could rerun each time knitted...
-# readxl::read_excel(fp$static_tables, sheet = "members") %>%
-#   mutate(across(where(is.character), ~replace_na(.,""))) %>%
-#   knitr::kable(caption = "Membership of the Joint Coho Technical Committee") %>%
-#   kableExtra::kable_styling()
-
-members %>%
-  knitr::kable(caption = "Membership of the Joint Coho Technical Committee") %>%
-  kableExtra::kable_styling()
-```
-
-# Acronyms
+# Test/demo section
 
 ```{r}
-#do similarly to members or if needing links can do differently...
+psc_gg <- list()
+#looks like need to do some digging to sort facet overlap if going ggplotly route: https://github.com/plotly/plotly.R/issues/1224
 ```
 
-# Glossary
+## Abundance series (lines)
 
-Example of an external link like [CDFO](https://www.dfo-mpo.gc.ca/index-eng.htm).
+```{r fig.height=14, fig.width=10}
+#these numbers match DD "CoTC_Output_File_1986-2018.xlsx"
+#basically tables 6.1-6.3 as individual stocks
+
+# psc |> 
+#   distinct(RunYear, PSC_StockName, abund) |> 
+#   arrange(PSC_StockName, RunYear) |> 
+#   split(~ PSC_StockName)
+
+psc_gg$ann_abund <- psc |> 
+  distinct(RunYear, PSC_StockName, abund) |> 
+  mutate(RunYear = as.integer(RunYear)) |> 
+  ggplot(aes(RunYear, abund)) + 
+  geom_line() + 
+  facet_wrap(~PSC_StockName, scales = "free_y", ncol = 2)
+
+plotly::ggplotly(psc_gg$ann_abund)
+
+psc |> 
+  distinct(RunYear, PSC_StockName, abund) |> 
+  pivot_wider(names_from = RunYear, values_from = abund) |> 
+  gt(caption = "Annual FRAM-estimated abundance (as escapement + harvest)") |> 
+  fmt_integer(columns = `2004`:`2019`)
+
+```
+
+## Abundance series (bar escp+hvst)
+
+```{r fig.height=14, fig.width=10}
+# #basically "table Es"
+# psc |> 
+#   #filter(RunYear == "2018") |> 
+#   distinct(RunYear, PSC_StockName, mort_sum, escp, abund, mort_sum_er) |> 
+#   arrange(PSC_StockName, RunYear)
+
+psc_gg$ann_escp_hvst <- psc |> 
+  distinct(RunYear, PSC_StockName, hvst = mort_sum, escp) |> 
+  mutate(RunYear = as.integer(RunYear)) |> 
+  pivot_longer(names_to = "var", values_to = "val", -c(RunYear, PSC_StockName)) |> 
+  ggplot(aes(RunYear, val, fill = var)) + 
+  geom_col(position = position_dodge(width = 0.7)) + 
+  scale_fill_grey() +
+  facet_wrap(~PSC_StockName, scales = "free_y", ncol = 2) +
+  theme(legend.position = "top")
+
+plotly::ggplotly(psc_gg$ann_escp_hvst)
+
+```
+
+## ERs by Fishery
+
+Illustrating 25th, mean and 75th quantile of 2010-2019 ERs by FRAM fishery.
+
+```{r fig.height=14, fig.width=10}
+#going towards "table F", but will need
+#various lower non-ER rows appended separately
+#and FisheryID aggregations defined
+#join fishery aggregations here & resummarize summing ERs?
+#or join above in "psc" object creation before first group_by?
+
+psc_gg$er_fishery <- psc |> 
+  select(RunYear:FisheryName, mort_er) |> 
+  #pivot_wider(names_from = RunYear, values_from = mort_er)
+  filter(RunYear > 2009) |> 
+  group_by(PSC_StockName, FisheryName) |>
+  summarise(across(mort_er, list( q25 = ~quantile(., 0.25), mean = ~mean(.), q75 = ~quantile(., 0.75) )), .groups = "drop") |> 
+  filter(mort_er_mean > 0.005) |> 
+  group_by(PSC_StockName) |> 
+  ggplot(aes(FisheryName)) + #fct_reorder(FisheryName, mort_er_mean, mean)
+  geom_pointrange(aes(y = mort_er_mean, ymin = mort_er_q25, ymax = mort_er_q75)) +
+  scale_y_continuous(labels = scales::percent) +
+  coord_flip() +
+  facet_wrap(~PSC_StockName, scales = "free", ncol = 2)
+
+plotly::ggplotly(psc_gg$er_fishery)  
+```
+
+## NS vs MSF for a few stocks {.tabset}
+
+```{r}
+plot_ns_msf <- function(stknm){
+  psc |> 
+    filter(PSC_StockName==stknm) |> 
+    distinct(RunYear, PSC_StockName, NS = mort_ns_sum, MSF = mort_msf_sum) |> 
+    pivot_longer(names_to = "var", values_to = "val", -c(RunYear, PSC_StockName)) |> 
+    ggplot(aes(RunYear, val, fill = var)) +
+    geom_col(position = position_dodge(width = 0.7)) +
+    scale_fill_grey() +
+    scale_y_continuous("Mortality", labels = scales::comma) +
+    labs(subtitle = stknm)
+}
+
+```
+
+### Skagit
+
+```{r}
+plot_ns_msf("Skagit")
+```
+
+### Queets
+
+```{r}
+plot_ns_msf("Queets")
+```
+
+### Lower Fraser
+
+```{r}
+plot_ns_msf("Lower Fraser")
+```
+
+\
 
 # Executive Summary
 
@@ -365,9 +448,7 @@ The base period is constructed from stock-specific ocean distributions by fisher
 
 ## Coded-Wire-Tag Indicator Stocks{CWTProgram}
 
-**should this be in its own chapter (like it was in the previous report?)**
-
-<!-- <span style="font-variant:small-caps;">Small Caps</span> -->
+*should this be in its own chapter (like it was in the previous report?)*
 
 The coded-wire tag (CWT) indicator stock program provides the primary data for predicting, monitoring, and modeling harvest impacts on individual Coho Salmon populations. The Joint Coho Technical Committee (CoTC) uses CWT recoveries from the indicator stocks to reconstruct cohorts coastwide. While a few indicator tag groups are naturally-spawning fish, the vast majority consist of hatchery fish intended to represent each MU. Hatchery indicator stocks are selected on the basis of brood stock, rearing, and release strategies and are assumed to be surrogates for the naturally-spawning fish. The indicator program assumes that tagged and untagged fish experience similar trends in marine survival and similar exploitation patterns. Coastwide, approximately eight million juvenile Coho Salmon are coded-wire tagged annually **(Nandor et al. 2010)**.
 
@@ -535,17 +616,31 @@ Coho-directed recreational fisheries have been mark-selective since 1999 with th
 
 ## Total Exploitation Rate Accounted for by Mark-Selective Fisheries
 
-*is this something that the treaty requests?*
-
-<!-- link Table and add text.  How many years should we include??? -->
+*Include?*
 
 ## Annual CoTC reports on Estimates of Exploitation Rates
 
-*for historical reference - I think these should be referenced and links provided, but not imbedded in the text and not under their own heading. What do others think?* <!-- link reports here -->
+*CCT: for historical reference - I think these should be referenced and links provided, but not embedded in the text and not under their own heading. What do others think?*
 
 # Management Units
 
 placeholder for links to detailed management unit profiles
+
+# Members
+
+```{r member_table}
+gt(static$members, caption = "Membership of the Joint Coho Technical Committee")
+```
+
+# Acronyms
+
+```{r}
+gt(static$acronyms) |> 
+  fmt(
+    columns = "URL", 
+    fns = \(x){ paste('<a href="',x,'">',x,'</a>') }
+  )
+```
 
 # Glossary
 
