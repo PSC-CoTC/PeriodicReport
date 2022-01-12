@@ -152,9 +152,11 @@ psc_gg <- list()
 #looks like need to do some digging to sort facet overlap if going ggplotly route: https://github.com/plotly/plotly.R/issues/1224
 ```
 
-## Abundance series (lines)
+## Abundance {.tabset}
 
-```{r fig.height=14, fig.width=10}
+Annual harvest and escapement.
+
+```{r gt_ann_abund, fig.height=8, fig.width=12}
 #these numbers match DD "CoTC_Output_File_1986-2018.xlsx"
 #basically tables 6.1-6.3 as individual stocks
 
@@ -162,15 +164,6 @@ psc_gg <- list()
 #   distinct(RunYear, PSC_StockName, abund) |> 
 #   arrange(PSC_StockName, RunYear) |> 
 #   split(~ PSC_StockName)
-
-psc_gg$ann_abund <- psc |> 
-  distinct(RunYear, PSC_StockName, abund) |> 
-  mutate(RunYear = as.integer(RunYear)) |> 
-  ggplot(aes(RunYear, abund)) + 
-  geom_line() + 
-  facet_wrap(~PSC_StockName, scales = "free_y", ncol = 2)
-
-plotly::ggplotly(psc_gg$ann_abund)
 
 psc |> 
   distinct(RunYear, PSC_StockName, abund) |> 
@@ -180,28 +173,109 @@ psc |>
 
 ```
 
-## Abundance series (bar escp+hvst)
+```{r func_plot_abund_bar}
+#add linear or loess trend?
+plot_abund_bar <- function(stknm){
+  psc |> 
+    filter(PSC_StockName==stknm) |>
+    distinct(RunYear, PSC_StockName, Harvest = mort_sum, Escapement = escp) |> 
+    mutate(RunYear = as.integer(RunYear)) |> 
+    pivot_longer(names_to = "var", values_to = "val", -c(RunYear, PSC_StockName)) |> 
+    ggplot(aes(RunYear, val, fill = var)) + 
+    geom_col(position = position_dodge(width = 0.7)) + 
+    scale_fill_grey("", start = 0.3, end = 0.7) +
+    scale_y_continuous("Harvest or Escapement", labels = scales::comma) +
+    theme(legend.position = "top") +
+    labs(subtitle = stknm)
+}
 
-```{r fig.height=14, fig.width=10}
+# psc_gg$ann_abund <- psc |> 
+#   distinct(RunYear, PSC_StockName, abund) |> 
+#   mutate(RunYear = as.integer(RunYear)) |> 
+#   ggplot(aes(RunYear, abund)) + 
+#   geom_line() + 
+#   facet_wrap(~PSC_StockName, scales = "free_y", ncol = 2)
+
 # #basically "table Es"
 # psc |> 
 #   #filter(RunYear == "2018") |> 
 #   distinct(RunYear, PSC_StockName, mort_sum, escp, abund, mort_sum_er) |> 
 #   arrange(PSC_StockName, RunYear)
-
-psc_gg$ann_escp_hvst <- psc |> 
-  distinct(RunYear, PSC_StockName, hvst = mort_sum, escp) |> 
-  mutate(RunYear = as.integer(RunYear)) |> 
-  pivot_longer(names_to = "var", values_to = "val", -c(RunYear, PSC_StockName)) |> 
-  ggplot(aes(RunYear, val, fill = var)) + 
-  geom_col(position = position_dodge(width = 0.7)) + 
-  scale_fill_grey() +
-  facet_wrap(~PSC_StockName, scales = "free_y", ncol = 2) +
-  theme(legend.position = "top")
-
-plotly::ggplotly(psc_gg$ann_escp_hvst)
+# 
+# psc_gg$ann_escp_hvst <- psc |> 
+#   distinct(RunYear, PSC_StockName, hvst = mort_sum, escp) |> 
+#   mutate(RunYear = as.integer(RunYear)) |> 
+#   pivot_longer(names_to = "var", values_to = "val", -c(RunYear, PSC_StockName)) |> 
+#   ggplot(aes(RunYear, val, fill = var)) + 
+#   geom_col(position = position_dodge(width = 0.7)) + 
+#   scale_fill_grey() +
+#   facet_wrap(~PSC_StockName, scales = "free_y", ncol = 2) +
+#   theme(legend.position = "top")
+# 
+# psc_gg$ann_escp_hvst
 
 ```
+
+
+### Southern B.C.
+
+```{r}
+plot_abund_bar("Lower Fraser")
+```
+
+```{r}
+plot_abund_bar("Interior Fraser")
+```
+
+```{r}
+plot_abund_bar("Georgia Strait ML")
+```
+
+```{r}
+plot_abund_bar("Georgia Strait VI")
+```
+
+### U.S. Inside
+
+```{r}
+plot_abund_bar("Skagit")
+```
+
+```{r}
+plot_abund_bar("Stillaguamish")
+```
+
+```{r}
+plot_abund_bar("Snohomish")
+```
+
+```{r}
+plot_abund_bar("Hood Canal")
+```
+
+```{r}
+plot_abund_bar("US Strait JDF")
+```
+
+
+### U.S. Outside
+
+```{r}
+plot_abund_bar("Quillayute")
+```
+
+```{r}
+plot_abund_bar("Hoh")
+```
+
+```{r}
+plot_abund_bar("Queets")
+```
+
+```{r}
+plot_abund_bar("Grays Harbor")
+```
+
 
 ## ERs by Fishery
 
@@ -228,12 +302,13 @@ psc_gg$er_fishery <- psc |>
   coord_flip() +
   facet_wrap(~PSC_StockName, scales = "free", ncol = 2)
 
-plotly::ggplotly(psc_gg$er_fishery)  
+psc_gg$er_fishery
+
 ```
 
-## NS vs MSF for a few stocks {.tabset}
+## NS vs MSF {.tabset}
 
-```{r}
+```{r plot_ns_msf}
 plot_ns_msf <- function(stknm){
   psc |> 
     filter(PSC_StockName==stknm) |> 
@@ -254,10 +329,10 @@ plot_ns_msf <- function(stknm){
 plot_ns_msf("Skagit")
 ```
 
-### Queets
+### Hoh
 
 ```{r}
-plot_ns_msf("Queets")
+plot_ns_msf("Hoh")
 ```
 
 ### Lower Fraser
@@ -268,11 +343,6 @@ plot_ns_msf("Lower Fraser")
 
 \
 
-# Executive Summary
-
-Nothing here yet...
-
-Example of an internal link to the section on ABM [Goals and Objectives]
 
 # Introduction
 
