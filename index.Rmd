@@ -28,7 +28,7 @@ editor_options:
 </header>
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
 
 library("tidyverse")
 library("readxl")
@@ -145,7 +145,7 @@ This report based on `r basename(params$mdb)`
 knitr::include_graphics("images/CohoPic.png")
 ```
 
-# Test/demo section
+# Test section
 
 ```{r}
 psc_gg <- list()
@@ -173,6 +173,8 @@ psc |>
 
 ```
 
+\
+
 ```{r func_plot_abund_bar}
 #add linear or loess trend?
 plot_abund_bar <- function(stknm){
@@ -181,9 +183,10 @@ plot_abund_bar <- function(stknm){
     distinct(RunYear, PSC_StockName, Harvest = mort_sum, Escapement = escp) |> 
     mutate(RunYear = as.integer(RunYear)) |> 
     pivot_longer(names_to = "var", values_to = "val", -c(RunYear, PSC_StockName)) |> 
-    ggplot(aes(RunYear, val, fill = var)) + 
+    ggplot(aes(RunYear, val, fill = var, color = var)) + 
     geom_col(position = position_dodge(width = 0.7)) + 
-    scale_fill_grey("", start = 0.3, end = 0.7) +
+    #geom_smooth(method = "lm", se = F) +
+    scale_fill_grey("", start = 0.3, end = 0.7, aesthetics = c("fill", "color")) +
     scale_y_continuous("Harvest or Escapement", labels = scales::comma) +
     theme(legend.position = "top") +
     labs(subtitle = stknm)
@@ -215,7 +218,6 @@ plot_abund_bar <- function(stknm){
 # psc_gg$ann_escp_hvst
 
 ```
-
 
 ### Southern B.C.
 
@@ -516,7 +518,7 @@ The base period is constructed from stock-specific ocean distributions by fisher
 
 ### Mixed-Stock Model and RRTERM
 
-## Coded-Wire-Tag Indicator Stocks{CWTProgram}
+## Coded-Wire-Tag Indicator Stocks
 
 *should this be in its own chapter (like it was in the previous report?)*
 
