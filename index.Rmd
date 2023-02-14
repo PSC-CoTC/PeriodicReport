@@ -11,7 +11,7 @@ output:
     number_sections: yes
 params:
   static_tables: StaticTables.xlsx
-  mdb: O:/code/coho/fram_mdbs/PSC_CoTC_PostSeason_CohoFRAMDB_thru2019_021021.mdb
+  mdb: ~/O/code/coho/fram_mdbs/PSC_CoTC_PostSeason_CohoFRAMDB_thru2020_021622.mdb
 linkcolor: blue
 editor_options:
   chunk_output_type: console
@@ -28,7 +28,8 @@ editor_options:
 </header>
 
 Next steps
-  - figures 
+  - figures
+    - 
     
   - tables
 
@@ -63,86 +64,109 @@ static <- list(
 ```
 
 ```{r build_envi, include=FALSE, eval=FALSE}
+#mdb from params arg above, sourced locally from CoTC Sharepoint
 
-#### framr readers
-#mdb from params arg above
-#but coming from: https://extranet.psc.org/cohotc/FRAM%20Model/2_Postseason%20Runs/2_Database/PSC_CoTC_PostSeason_CohoFRAMDB_thru2019_021021.zip
-#in this particular mdb, appears to be a mysterious RunID 3 in the Escapement and Mortality tables but not RunID table...
+fram_mdb_reader <- function(
+    mdb_file_path = params$mdb,
+    fram_table,
+    osx = grepl("apple", sessionInfo()$platform)
+    ) {
+  if(osx){
+    t_out <- readr::read_csv(I(
+      system2(
+        "mdb-export",
+        args = paste(str_replace_all(mdb_file_path, " ", "\\\\ "),
+                     fram_table),
+        stdout = T) 
+    ))
+  } else {
+    db_con <- DBI::dbConnect(
+      drv = odbc::odbc(),
+      .connection_string = paste0(
+        "Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=", mdb_file_path, ";")
+      )
 
+    t_out <- DBI::dbReadTable(db_con, fram_table)
 
-# #NEED PRE-FISHING ABUNDANCE?
-# #From Cohort or BackwardsFRAM or ...?
-# tbl(mdb_con, "Cohort") |> filter(RunID == 42, StockID %in% local(lu_stock$StockID)) 
-# tbl(mdb_con, "Cohort") |> filter(RunID == 42, StockID %in% 227:228) 
-# tbl(mdb_con, "Cohort") |> filter(RunID == 42, StockID %in% 231:232)
-# tbl(mdb_con, "StockRecruit") |> filter(RunID == 42, StockID %in% 231:232)
-# #turns out that the numbers used in, for example, 6.1 - 6.3, are escp+mort
-# #tested for 2018 with Lower & Interior Fraser
+    DBI::dbDisconnect(db_con)
+  }
+  return(t_out)
+}
+
 
 fram <- list()
 
-mdb_con <- DBI::dbConnect(drv = odbc::odbc(), .connection_string = paste0("Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=", params$mdb, ";"))
+fram$stockIDs <- static$lu_stock$StockID
 
-fram$run_id <- tbl(mdb_con, "RunID") |> select(RunID, RunYear, RunName, RunTitle, TAMMName) |> collect()
+fram$runIDs <- 22:44 #1998-2020, but 34:44 2010onward
 
-DBI::dbDisconnect(mdb_con)
-rm(mdb_con)
-
-#manually inspect for 2004 onward...
-fram$run_id |> print(n=50)
-focal_run_ids <- 28:43
-
-
-fram$escp <- framr::read_coho_escp(params$mdb, runs = focal_run_ids, stocks = static$lu_stock$StockID)
-
-fram$mort <- framr::read_coho_mort(params$mdb, runs = focal_run_ids, , stocks = static$lu_stock$StockID)
-
-#sum across timesteps (and Ages, but only 3s anyway)
+#Note the original negative escapement in A12A Wild in 2005 is due to an error in the FRAM database
+#Mortality is summed across timesteps (and Ages, but only 3s anyway)
 #maintaining FRAM stocks and fisheries
-fram$mort_yr <- fram$mort |>
+fram$fishery <- fram_mdb_reader(fram_table = "Fishery") |> 
+  filter(Species == "COHO") |> select(FisheryID, FisheryName)
+fram$stock <- fram_mdb_reader(fram_table = "Stock") |> 
+  filter(Species == "COHO", StockID %in% fram$stockIDs) |> select(StockID, StockLongName)
+fram$runid <- fram_mdb_reader(fram_table = "RunID") |> 
+  filter(RunID %in% fram$runIDs) |> 
+  select(RunID, RunYear)
+fram$escp <- fram_mdb_reader(fram_table = "Escapement") |> 
+  filter(StockID %in% fram$stockIDs, RunID %in% fram$runIDs) |> 
+  select(RunID, StockID, escp = Escapement) |> 
+  mutate(escp = if_else(escp < 0, 0, escp))
+fram$mort <- fram_mdb_reader(fram_table = "Mortality") |> 
+  filter(StockID %in% fram$stockIDs, RunID %in% fram$runIDs) |> 
   mutate(
     mort_ns = LandedCatch + NonRetention + Shaker + DropOff,
-    mort_msf = MSFLandedCatch + MSFNonRetention + MSFShaker + MSFDropOff
+    mort_msf = MSFLandedCatch + MSFNonRetention + MSFShaker + MSFDropOff,
+    mort = mort_ns + mort_msf
   ) |> 
-  group_by(RunYear, StockID, StockLongName, FisheryID, FisheryName) |> 
-  summarise(across(starts_with("mort"), sum), .groups = "drop")
+  group_by(RunID, StockID, FisheryID) |> 
+  summarise(across(LandedCatch:mort, ~sum(., na.rm=T)), .groups = "drop")
 
 
 # #build out the yearly totals and ER info for PSC stock (and fishery?) aggregations
 # #SUS fisheries are FRAM FisheryID 1:166
 # #Canadian are FRAM FisheryID 167:193
 # #AK are 193:max?
-# fram$mort_yr |> distinct(FisheryID, FisheryName) |> arrange(FisheryID) |>  print(n=300)
+
+# join PSC metadata and re-aggregate, 
+# also adding columns of total mortality per year per re-aggregated PSC stock 
+# these are summed over fisheries and repeating per individual fishery
+# same idea for escapement...
 
 psc <- left_join(
-  # join PSC metadata to mortality and re-aggregate,
-  # then add columns of total mortality per year per re-aggregated PSC stock 
-  # these are summed over fisheries and repeating per individual fishery
-  fram$mort_yr |> 
-    left_join(static$lu_stock |> select(StockID, PSC_StockID = PSCStock, PSC_StockName = Name), by = "StockID") |> 
+  fram$mort |> 
+    left_join(fram$runid, by = "RunID") |> 
+    left_join(fram$fishery, by = "FisheryID") |> 
+    left_join(
+      static$lu_stock |> 
+        select(StockID, PSC_StockID = PSCStock, PSC_StockName = Name),
+      by = "StockID") |> 
     group_by(RunYear, PSC_StockID, PSC_StockName, FisheryID, FisheryName) |> 
     summarise(across(starts_with("mort"), sum), .groups = "drop") |> 
     group_by(RunYear, PSC_StockID, PSC_StockName) |> 
     mutate(across(starts_with("mort"), list(sum = sum), .names = "{.col}_{.fn}")) |> 
     ungroup()
   ,
-  #now join escapement re-aggregated to PSC stock per year, also repeating by fishery
   fram$escp |> 
-    select(-RunID, -RunName) |> 
-    left_join(static$lu_stock |> select(StockID, PSC_StockID = PSCStock, PSC_StockName = Name), by = "StockID") |> 
+    left_join(fram$runid, by = "RunID") |> 
+    left_join(
+      static$lu_stock |> 
+        select(StockID, PSC_StockID = PSCStock, PSC_StockName = Name),
+      by = "StockID") |> 
     group_by(RunYear, PSC_StockID, PSC_StockName) |> 
     summarise(across(escp, sum), .groups = "drop") 
   ,
   by = c("RunYear", "PSC_StockID", "PSC_StockName")
   ) |>
-  #now calc per-year-PSC stock abundance
-  #and total and per-fishery ERs
   mutate(
     abund = mort_sum + escp,
     across(c(mort, mort_sum), list(er = ~.x/abund))
-  )
+  ) |> 
+  left_join(distinct(static$lu_stock, PSC_StockID = PSCStock, PSC_Region = Region), by = "PSC_StockID")
 
-rm(params)
+rm(params, static, fram, fram_mdb_reader)
 save.image("PeriodicReport_envi.RData")
 
 ```
@@ -153,35 +177,46 @@ This report based on `r basename(params$mdb)`
 knitr::include_graphics("images/CohoPic.png")
 ```
 
-# Test section
+# Tables
 
-```{r}
-psc_gg <- list()
-#looks like need to do some digging to sort facet overlap if going ggplotly route: https://github.com/plotly/plotly.R/issues/1224
-```
-
-## Abundance {.tabset}
-
-Annual harvest and escapement.
+## Abundance
 
 ```{r gt_ann_abund, fig.height=8, fig.width=12}
 #these numbers match DD "CoTC_Output_File_1986-2018.xlsx"
 #basically tables 6.1-6.3 as individual stocks
 
-# psc |> 
-#   distinct(RunYear, PSC_StockName, abund) |> 
-#   arrange(PSC_StockName, RunYear) |> 
-#   split(~ PSC_StockName)
-
 psc |> 
-  distinct(RunYear, PSC_StockName, abund) |> 
+  distinct(RunYear, PSC_Region, PSC_StockName, abund) |> 
   pivot_wider(names_from = RunYear, values_from = abund) |> 
-  gt(caption = "Annual FRAM-estimated abundance (as escapement + harvest)") |> 
-  fmt_integer(columns = `2004`:`2019`)
+  gt(
+    groupname_col = "PSC_Region",
+    caption = "Annual FRAM-estimated abundance (as escapement + harvest)"
+    ) |> 
+  cols_hide(`1998`:`2010`) |> 
+  fmt_integer(columns = -PSC_StockName)
+
+```
+
+## Exploitation Rates
+
+```{r gt_ER, fig.height=8, fig.width=12}
+psc |> 
+  distinct(RunYear, PSC_Region, PSC_StockName, mort_sum_er) |> 
+  pivot_wider(names_from = RunYear, values_from = mort_sum_er) |> 
+  gt(
+    groupname_col = "PSC_Region",
+    caption = "Annual FRAM-estimated Exploitation Rates as harvest / abundance"
+    ) |> 
+  cols_hide(`1998`:`2010`) |> 
+  fmt_percent(columns = -PSC_StockName)
 
 ```
 
 
+
+# Figures
+
+## Abundance {.tabset}
 
 ```{r func_plot_abund_bar}
 #add linear or loess trend?
