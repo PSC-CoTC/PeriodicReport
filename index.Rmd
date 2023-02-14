@@ -2,18 +2,18 @@
 title: "Joint Coho Technical Committee Periodic Report"
 author: "PSC Joint Coho Technical Committee"
 date: "`r Sys.Date()`"
-params:
-  static_tables: "StaticTables.xlsx"
-  mdb: "O:/code/coho_fram_validation/PSC_CoTC_PostSeason_CohoFRAMDB_thru2019_021021.mdb"
 output:
   html_document:
-    toc: true
+    toc: yes
     toc_depth: 2
-    toc_float: true
-    collapsed: false
-    number_sections: true
+    toc_float: yes
+    collapsed: no
+    number_sections: yes
+params:
+  static_tables: StaticTables.xlsx
+  mdb: O:/code/coho/fram_mdbs/PSC_CoTC_PostSeason_CohoFRAMDB_thru2019_021021.mdb
 linkcolor: blue
-editor_options: 
+editor_options:
   chunk_output_type: console
 ---
 
@@ -27,6 +27,11 @@ editor_options:
 
 </header>
 
+Next steps
+  - figures 
+    
+  - tables
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
 
@@ -35,6 +40,9 @@ library("readxl")
 library("kableExtra")
 library("gt")
 theme_set(theme_light())
+
+# #can load an entire environment built ahead of time and save time on reknitting
+load("PeriodicReport_envi.RData")
 
 static <- list(
   members = readxl::read_excel(params$static_tables, sheet = "members") |> 
@@ -47,10 +55,10 @@ static <- list(
   #another place with LU info is the "year_template" sheet of the annual escapement compilation 
   lu_stock = readxl::read_excel(params$static_tables, sheet = "lu_stock") |> 
     mutate(across(where(is.character), ~replace_na(.,"")))
+  ,
+  glossary = readxl::read_excel(params$static_tables, sheet = "glossary") |> 
+    mutate(across(where(is.character), ~replace_na(.,"")))
 )
-
-# #can load an entire environment built ahead of time and save time on reknitting
-load("PeriodicReport_envi.RData")
 
 ```
 
@@ -102,12 +110,12 @@ fram$mort_yr <- fram$mort |>
 
 # #build out the yearly totals and ER info for PSC stock (and fishery?) aggregations
 # #SUS fisheries are FRAM FisheryID 1:166
-# #Canadian ae FRAM FisheryID 167:193
+# #Canadian are FRAM FisheryID 167:193
 # #AK are 193:max?
 # fram$mort_yr |> distinct(FisheryID, FisheryName) |> arrange(FisheryID) |>  print(n=300)
 
 psc <- left_join(
-  #join PSC metadata to mortality and re-aggregate,
+  # join PSC metadata to mortality and re-aggregate,
   # then add columns of total mortality per year per re-aggregated PSC stock 
   # these are summed over fisheries and repeating per individual fishery
   fram$mort_yr |> 
@@ -173,7 +181,7 @@ psc |>
 
 ```
 
-\
+
 
 ```{r func_plot_abund_bar}
 #add linear or loess trend?
@@ -216,10 +224,12 @@ plot_abund_bar <- function(stknm){
 #   theme(legend.position = "top")
 # 
 # psc_gg$ann_escp_hvst
+# 
+# In the following section, we need to combine the Georgia Strait MUs into 1 MU
 
 ```
 
-### Southern B.C.
+### Southern B.C. Management Units
 
 ```{r}
 plot_abund_bar("Lower Fraser")
@@ -237,7 +247,7 @@ plot_abund_bar("Georgia Strait ML")
 plot_abund_bar("Georgia Strait VI")
 ```
 
-### U.S. Inside
+### U.S. Inside Management Units
 
 ```{r}
 plot_abund_bar("Skagit")
@@ -260,7 +270,7 @@ plot_abund_bar("US Strait JDF")
 ```
 
 
-### U.S. Outside
+### U.S. Outside Management Units
 
 ```{r}
 plot_abund_bar("Quillayute")
@@ -279,78 +289,11 @@ plot_abund_bar("Grays Harbor")
 ```
 
 
-## ERs by Fishery
-
-Illustrating 25th, mean and 75th quantile of 2010-2019 ERs by FRAM fishery.
-
-```{r fig.height=14, fig.width=10}
-#going towards "table F", but will need
-#various lower non-ER rows appended separately
-#and FisheryID aggregations defined
-#join fishery aggregations here & resummarize summing ERs?
-#or join above in "psc" object creation before first group_by?
-
-psc_gg$er_fishery <- psc |> 
-  select(RunYear:FisheryName, mort_er) |> 
-  #pivot_wider(names_from = RunYear, values_from = mort_er)
-  filter(RunYear > 2009) |> 
-  group_by(PSC_StockName, FisheryName) |>
-  summarise(across(mort_er, list( q25 = ~quantile(., 0.25), mean = ~mean(.), q75 = ~quantile(., 0.75) )), .groups = "drop") |> 
-  filter(mort_er_mean > 0.005) |> 
-  group_by(PSC_StockName) |> 
-  ggplot(aes(FisheryName)) + #fct_reorder(FisheryName, mort_er_mean, mean)
-  geom_pointrange(aes(y = mort_er_mean, ymin = mort_er_q25, ymax = mort_er_q75)) +
-  scale_y_continuous(labels = scales::percent) +
-  coord_flip() +
-  facet_wrap(~PSC_StockName, scales = "free", ncol = 2)
-
-psc_gg$er_fishery
-
-```
-
-## NS vs MSF {.tabset}
-
-```{r plot_ns_msf}
-plot_ns_msf <- function(stknm){
-  psc |> 
-    filter(PSC_StockName==stknm) |> 
-    distinct(RunYear, PSC_StockName, NS = mort_ns_sum, MSF = mort_msf_sum) |> 
-    pivot_longer(names_to = "var", values_to = "val", -c(RunYear, PSC_StockName)) |> 
-    ggplot(aes(RunYear, val, fill = var)) +
-    geom_col(position = position_dodge(width = 0.7)) +
-    scale_fill_grey() +
-    scale_y_continuous("Mortality", labels = scales::comma) +
-    labs(subtitle = stknm)
-}
-
-```
-
-### Skagit
-
-```{r}
-plot_ns_msf("Skagit")
-```
-
-### Hoh
-
-```{r}
-plot_ns_msf("Hoh")
-```
-
-### Lower Fraser
-
-```{r}
-plot_ns_msf("Lower Fraser")
-```
-
-\
-
-
 # Introduction
 
-The Pacific Salmon Commission established a Southern Coho abundance-based management regime in 1999 that set forth an agreement to constrain exploitation rates below maximum levels (caps) on selected management units (MUs of naturally-spawning Coho Salmon in southern British Columbia and Washington/Oregon). When a new Coho Agreement was reached in 2008 (implemented 2009 through 2018), modifications were made to the list of specified MUs and the manner in which exploitation rate caps are established. This periodic report only presents information for the MUs identified in the 2009 Pacific Salmon Treaty.
+In response to a decline in natural coho abundance, the Pacific Salmon Commission established a Southern Coho abundance-based management regime (ABM) in 1999 (PSC 1999). This Southern Coho Management Plan (SCMP) aimed to conserve Coho Management Units (MUs of naturally-spawning Coho Salmon in southern British Columbia and Washington/Oregon) based on abundance status and escapement goals. The SCMP set out to constrain exploitation rates below maximum levels (caps) on selected management units in order to achieve long-term Maximum Sustainable Harvests (MSH). These constraints are implemented by specifying exploitation rate limits for the individual MUs dependent on annual abundance status.  
 
-Chapter 5 of the 2009 Pacific Salmon Treaty Agreement (PST Agreement) between the U.S. and Canada (Parties; PSC 2009) established abundance-based management (ABM) regimes to constrain exploitation rates (ERs) on the following 13 Management Units (MUs) of naturally-spawning Coho Salmon originating in rivers along the Washington/British Columbia (B.C.) border:
+When a new Coho Management Plan was reached in 2008 (implemented 2009 through 2018; PSC 2009) and the latest agreement finalized (applies to the period from 2019 through 2028; PSC 2022), modifications were made to the list of specified MUs and to the manner in which exploitation rate caps are established. This periodic report presents information for the MUs identified in the most current Pacific Salmon Treaty's (PST) Southern Coho Management Plan (Chapter 5 of Annex IV in the current PST). In the 2008 SCMP abundance-based management regimes were established to constrain exploitation rates (ERs) on the 13 Management Units (MUs) of naturally-spawning Coho Salmon originating in rivers along the Washington/British Columbia (B.C.) border listed below. Within the most recent Management Plan (PSC 2022), the Georgia Strait Vancouver Island and the Georgia Strait Mainland Management Units are now combined into the Strait of Georgia Management Unit. 
 
 ```{r management_unit_table}
 
@@ -360,21 +303,22 @@ Chapter 5 of the 2009 Pacific Salmon Treaty Agreement (PST Agreement) between th
 
 The Canadian MUs are comprised of geographical aggregates of naturally-spawning Coho populations. The four MUs of interest to the Agreement encompass these 12 Conservation Units (CU) as determined by Canada's Wild Salmon Policy (WSP; Holtby and Ciruna 2007):
 
-------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
-| Southern B.C. Inside Management Units | U.S. Inside Management Units      |
-|:--------------------------------------|:----------------------------------|
-| Interior Fraser                       | Skagit                            |
-| Lower Fraser                          | Stillaguamish                     |
-| Strait of Georgia                     | Snohomish                         |
-|                                       | Hood Canal                        |
-|                                       | **U.S. Outside Management Units** |
-|                                       | Quillayute                        |
-|                                       | Hoh                               |
-|                                       | Queets                            |
-|                                       | Grays Harbor                      |
+| **Southern B.C. Inside Management Units** | **U.S. Inside Management Units**  |
+|:------------------------------------------|:----------------------------------|
+| Interior Fraser                           | Skagit                            |
+| Lower Fraser                              | Stillaguamish                     |
+| Strait of Georgia                         | Snohomish                         |
+|                                           | Hood Canal                        |
+|                                           | Strait of Juan de Fuca            |
+|                                           | **U.S. Outside Management Units** |
+|                                           | Quillayute                        |
+|                                           | Hoh                               |
+|                                           | Queets                            |
+|                                           | Grays Harbor                      |
 
-------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 ```{r sbc_mu_table}
 #can fuss with formatting...
@@ -389,11 +333,15 @@ The U.S. Outside MUs consist of naturally-spawning populations from the Quillayu
 
 # Coho Abundance Based Management
 
-Under the abundance-based management (ABM) regime outlined in the 2008 PST Southern Coho Agreement, exploitation rates (ERs) (defined as total fishing mortality divided by total fishing mortality plus escapement) for each Party's fisheries are to be constrained for each MU, depending on status determinations provided by each Party. Each year, through their domestic processes, the Parties classify the status of each MU as low, moderate, or abundant. For the purpose of planning fisheries, the Parties exchange information pertaining to the status of their respective MUs for consideration in the development of pre-season plans. Annual categorization of status determines the maximum ER (ER Cap) for each MU.
+Under the abundance-based management (ABM) regime, exploitation rates (ERs) (defined as total fishing mortality divided by total fishing mortality plus escapement) for each Party's fisheries are to be constrained for each MU, depending on status determinations provided by each Party. Each year, through their domestic processes, the Parties use management reference points to classify the status of each MU as low, moderate, or abundant. For the purpose of planning fisheries, the Parties exchange information pertaining to the status of their respective MUs for consideration in the development of pre-season plans. Annual categorization of status determines the maximum ER (ER Cap) for each MU. 
 
 ## Goals and Objectives
 
-Abundance-based management objectives are to maintain each of the MUs at Maximum Sustainable Harvest (MSH) over the long term while maintaining the genetic and ecological diversity of the component populations for the MUs. Under the Agreement, the Parties are required to establish escapement goals or ERs that achieve MSH, determine MSH ERs for each MU, and establish ERs for each MU and status category (low, moderate, and abundant). Until such time as the Parties provide the MU ER targets, the 2008 PST Southern Coho Agreement of ABM identifies ER ceilings for the following MU status categories:
+The objective of the Southern Coho Management Plan (SCMP) as described in the Treaty is to manage the fisheries impact on Southern coho stocks by limiting the total fishery exploitation and allow the different MUs to produce long-term Maximum Sustainable Harvest (MSH), while maintaining the genetic and ecological diversity of the individual populations. In addition, the plan is designed to improve the prospect of sustaining healthy fisheries for both parties over the long-term. The plan is also expected to be cost-effective, flexible to available technical capacity and information, provide a predictable framework for planning fisheries impacts on the spawning populations and allow for objective monitoring, evaluation and modification of the management regime.
+
+In order to achieve this, annual exploitation rate (ER) limits or caps are established for each of the MUs based on the level of abundance and health of the natural stocks. Actual exploitation rate constraints for Canadian fisheries on U.S. coho MUs are determined by formulas that specify sharing allowable exploitation rates and a composite rule, which adjust constraints for Canadian fishery exploitation rates based on the number of U.S. MUs that fall in a given category. Exploitation rate constraints for U.S. fisheries on Canadian MUs are dependent on the status of the Interior Fraser MU until the biological status of the other Canadian MUs has been determined. Canada is currently working to develop the information base (smolt to adult survival, escapement) to support the application of the status determination method developed for the Interior Fraser coho MU to the Lower Fraser and Strait of Georgia MUs.
+
+Abundance-based management objectives are to maintain each of the MUs at Maximum Sustainable Harvest (MSH) over the long term while maintaining the genetic and ecological diversity of the component populations for the MUs. Under the Agreement, the Parties are required to establish escapement goals or ERs that achieve MSH, determine MSH ERs for each MU, and establish ERs for each MU and status category (low, moderate, and abundant). Until such time as the Parties provide the MU ER targets, the SCMP identified ER ceilings for the following MU status categories:
 
 | **Status** | **Total Exploitation Rate** |
 |:----------:|:---------------------------:|
@@ -401,11 +349,13 @@ Abundance-based management objectives are to maintain each of the MUs at Maximum
 |  Moderate  |          21% - 40%          |
 |  Abundant  |          41% - 65%          |
 
-Details as to how exploitation rate constraints are established based on the status of MUs under the 2008 Southern Coho Agreement are contained in Annex IV Chapter 5 Section 9.b-c (Canadian exploitation rate caps on inside and outside U.S. MUs) and Section 9.d (U.S. exploitation rate caps on Canadian MUs).
+Details as to how exploitation rate constraints are established based on the status of MUs under the SCMP are contained in Annex IV Chapter 5 Section 9.b-c (Canadian exploitation rate caps on inside and outside U.S. MUs) and Section 9.d (U.S. exploitation rate caps on Canadian MUs).
+
+
 
 ## Status Dependent Exploitation Rates
 
-### Canadian Management Units
+### Canadian Management Units ---- this needs updating!
 
 Procedures for determining the pre-season status of Canadian MUs are being developed concurrently with determination of Conservation Unit (CU) status benchmarks required with implementation of the Canada Department of Fisheries and Oceans' (CDFO) Wild Salmon Policy. Methods have been approved through the CDFO's internal peer review process, Center for Scientific Advice - Pacific (CSAP) **(Holt et al. 2009)**. Completion of benchmark determinations for Southern B.C. Coho MUs is scheduled for CSAP review in 2014.
 
@@ -469,26 +419,69 @@ knitr::kable(
 )
 ```
 
+#### U.S. Management Units Federal Status 
 U.S. MUs belong to three different Coho Salmon evolutionarily significant units (ESU), the Puget Sound/Strait of Georgia, the Olympic Peninsula, and the Southwest Washington ESUs. The Puget Sound/Strait of Georgia Coho ESU is currently a species of concern under the U.S. Endangered Species Act **(ESA; NMFS 2009)**. The Olympic Peninsula ESU was evaluated for listing under the ESA and it was determined to be not warranted **(Weitkamp et al. 1995)**. The Southwest Washington ESU is currently categorized as "undetermined". The State of Washington considers Coho Salmon statewide to be a State Candidate to be reviewed for possible state listing as Endangered, Threatened, or Sensitive **(WDFW 2008)**.
 
 At the federal level, species of concern do not have formal protection under the ESA. The primary purpose of identifying species of concern is to prevent the need to list them as threatened or endangered under the ESA. This purpose can be achieved by the following actions: (1) identifying species potentially at risk; (2) increasing public awareness about those species; (3) identifying data deficiencies and uncertainties in species' status and threats; (4) stimulating cooperative research efforts to obtain the information necessary to evaluate species' status and threats; and, (5) fostering voluntary efforts to conserve the species before listing becomes warranted.
 
+In 2018, the National Marine Fisheries Service (NMFS) notified the Pacific Fishery Management Council (Council) that the Strait of Juan de Fuca, Queets, and Snohomish natural coho salmon stocks managed under the Council's Pacific Coast Salmon Fishery Management Plan (FMP) met the overfished criteria of the FMP and the Magnuson-Stevens Fishery Conservation and Management Act (MSA). NMFS determined that these stocks were overfished under the MSA, due to spawning escapement falling below the required level for the 3-year period 2014-2016. The MSA requires overfished stocks to be rebuilt, generally within 10 years. The overfished determinations were announced in the Federal Register on August 6, 2018 (83 FR 38292).  In response to the overfished determination, the Council developed rebuilding plans for these stocks and provided them to NMFS in 2019. In 2021, NMFS issued a final rule under the authority of the MSA to approve and implement rebuilding plans recommended by the Council for the three stocks (86 FR 9301; https://www.federalregister.gov/documents/2021/02/12/2021-02834/fisheries-off-west-coast-states-west-coast-salmon-fisheries-rebuilding-coho-salmon-stocks). This final rule adopts the existing harvest control rules, which use an annual abundance-based stepped harvest rate control rule with stock-specific abundance levels governing the total exploitation rates applied to forecast stock abundance levels. For Snohomish natural coho, this final rule amends the existing harvest control rule by adding a 10-percent buffer to the existing escapement goal and adjusting the abundance steps during the rebuilding period.  For all three coho salmon stocks, the Council's Salmon Technical Team's analysis determined that freshwater and marine habitat conditions were the primary cause of these stocks meeting the FMP's criteria for being overfished rather than fishing.    
+
+#### U.S. Management Units Abundances 
 Estimated ocean age-3 cohort abundances for Inside and Outside U.S. MUs are depicted in **Figure 4.2** and **Figure 4.3**, respectively. Abundances for inside MUs tend to be synchronous, with above- or below-average abundances occurring in the same years (e.g., high in 2001, low in 2006). Outside MUs are less synchronous and years with high abundances for Grays Harbor don't necessarily correspond to high abundances for other MUs.\
-*need to fix figures 4.2 and 4.3 and add them here*
+*need to fix figures 4.2 and 4.3 and add them here*  #--> should we add a stacked bar graph of all of the U.S. MUs combined over years?  (or by inside and out?) instead of individual lines of MUs on a graph? 
 
 <center>
 
-**Estimated Ocean Age-3 Abundances of U.S. Inside Coho Salmon Management Units; Catch Years 1986-??.**
+**Estimated Ocean Age-3 Abundances of U.S. Inside Coho Salmon Management Units; Catch Years 1986-2021.**
 
 </center>
 
 <center>
 
-**Estimated Ocean Age-3 Abundances of U.S. Outside Coho Salmon Management Units; Catch Years 1986-??.**
+**Estimated Ocean Age-3 Abundances of U.S. Outside Coho Salmon Management Units; Catch Years 1986-2021.**
 
 </center>
 
 ## Annual Determinations of Allowable Exploitation Rates for Management Units
+
+### Strait of Juan de Fuca Management Unit --> may wish to move these to another section!
+
+The Juan de Fuca Coho Salmon stock was declared overfished in 2018. The target year for rebuilding Juan de Fuca coho is 2023. The harvest control rule during the rebuilding period for Strait of Juan de Fuca Coho is the abundance-based stepped harvest rate of:
+
+**Juan de Fuca coho stepped harvest rates**
+
+| **Abundance category** | **Age-3 ocean abundance** | **Total allowable exploitation rate** |
+|:--------------------:|:------------------------:|:-----------------------------------:|
+| Normal               | Greater than 27,445      | 60% |
+| Low                  | Between 11,679 and 27,445| 40% | 
+| Critical             | 11,679 or less           | 20% |
+
+### Queets Management Unit 
+
+The Queets Coho Salmon stock was declared overfished in 2018. The target year for rebuilding Queets coho is 2019. The harvest control rule during the rebuilding period for Queets Coho is the abundance-based stepped harvest rate of: 
+
+**Queets stepped harvest rates**
+
+| **Abundance category** | **Age-3 ocean abundance** | **Total allowable exploitation rate** |
+|:--------------------:|:------------------------:|:-----------------------------------:|
+| Normal               | Greater than 9,667       | 65% |
+| Low                  | Between 7,250 and 9,667  | 40% | 
+| Critical             | 7,250 or less            | 20% |
+
+
+### Snohomish Management Unit
+
+The Snohomish coho salmon stock was declared overfished in 2018. The target year for rebuilding Snohomish coho is 2020. The harvest control rule during the rebuilding period for Snohomish coho is the abundance-based stepped harvest rate of: 
+
+**Snohomish stepped harvest rates**
+
+| **Abundance category** | **Age-3 ocean abundance** | **Total allowable exploitation rate** |
+|:--------------------:|:-------------------------:|:-----------------------------------:|
+| Normal               | Greater than 137,000[^1]  | 60% |
+| Low                  | Between 51,667 and 137,000| 40% | 
+| Critical             | 51,667 or less            | 20% |
+
+[^1] In years when Snohomish Coho abundance is forecast to exceed 137,000, the total allowable exploitation rate will be limited to target achieving a spawning escapement of 55,000 Snohomish Coho.
 
 ## Constraints on Exploitation Rates by Intercepting Fisheries
 
@@ -508,15 +501,19 @@ Coho fisheries are evaluated with the Coho Fisheries Regulation Assessment Model
 
 ## FRAM Base Period
 
-The base period is constructed from stock-specific ocean distributions by fishery and time period (January to June, July, August, September, and October to December) developed from coded-wire-tag (CWT) recoveries in coast wide fisheries from 1986 to 1992. The procedure used to generate base period data is depicted [below](#fig:FRAMDevel). For each base period year, post-season reconstruction of cohort abundances for each Coho MU is based on two different models: the Mixed-Stock Model (MSM) that estimates the Production Expansion Factors for each Production Region and RRTERM program that estimates stock-specific impacts for terminal marine and freshwater fisheries. The MSM uses CWT recoveries for each model stock expanded by the Production Expansion Factors to best describe the total catch in each marine mixed-stock fishery. The MSM/RRTERM cohort analysis has been used for post-season reconstructions for catch years **1986-??**. The base period annual exploitation rates by fishery-month strata are provided in **here**. Because escapement estimates were not available for several Canadian MUs for these years, escapement for Canadian MUs (excluding Interior Fraser) was estimated as catch\*(1-ER), where ER was the hatchery indicator exploitation rate.
+The base period is constructed from stock-specific ocean distributions by fishery and time period (January to June, July, August, September, and October to December) developed from coded-wire-tag (CWT) recoveries in coast wide fisheries from 1986 to 1992. The procedure used to generate base period data is depicted [below](#fig:FRAMDevel). For each base period year, post-season reconstruction of cohort abundances for each Coho MU is based on two different models: the Mixed-Stock Model (MSM) that estimates the Production Expansion Factors for each Production Region and RRTERM program that estimates stock-specific impacts for terminal marine and freshwater fisheries. The MSM uses CWT recoveries for each model stock expanded by the Production Expansion Factors to best describe the total catch in each marine mixed-stock fishery. The MSM/RRTERM cohort analysis has been used for post-season reconstructions for catch years **1986-2007**. Beginning with catch year 1993, too few coded-wire tags were recovered in mixed-stock fisheries to perform robust cohort analyses using the mixed-stock model. 
+
+The base period annual exploitation rates by fishery-month strata are provided in **here**. Because escapement estimates were not available for several Canadian MUs for these years, escapement for Canadian MUs (excluding Interior Fraser) was estimated as catch\*(1-ER), where ER was the hatchery indicator exploitation rate.
 
 ::: {#fig:FRAMDevel}
 ![**Procedure used to generate base period data for Coho FRAM**/\label{fig:FRAMDevel}](images/FRAMDevel.jpg)
 :::
 
 ### Selection and Use of Coded-Wire Tags
+#### do we wish to link sections of the other report, or just repeat it here?
 
 ### Mixed-Stock Model and RRTERM
+#### do we wish to link sections of the other report, or just repeat it here?
 
 ## Coded-Wire-Tag Indicator Stocks
 
@@ -532,111 +529,97 @@ At present, the utility of the DIT program and the CWT program in general for Co
 
 Most MUs in the U.S. have CWT indicator stocks and DIT programs. However, some of the programs have been eliminated in recent years due to budgetary constraints. **Canada has discontinued all of their DIT programs**. The current Coho CWT indicator stocks for each MU and the brood years with DIT groups are listed in **Table 3.1**. The tag codes used to represent each MU in the MSM for catch years 1986-1997 are listed in **Appendix B**. All DIT groups released to date for each MU are listed in **Appendix C**.
 
-*Need to update this table!*
+**Coded-wire-tag indicator stocks and brood years with single index tag (SIT) and double index tag (DIT) groups for each Coho Management Unit (MU), beginning with brood year 1983. Indicator stocks are hatchery-produced Coho unless specified as "Wild" (Release data downloaded from RMIS 1-10-203). SIT groups may be either marked or unmarked releases of CWT Coho. DIT groups are marked (adipose-fin clipped) and unmarked pairs of CWT Coho.**
 
-**CWT indicator stocks and brood years with single index tag (SIT) and double index tag (DIT) groups for each Coho Management Unit (MU), brood years 1983-year. Indicator stocks are hatchery-produced Coho unless specified as "Wild" (RMISD 2011). SIT groups may be either marked or unmarked releases of CWT Coho. DIT groups are marked and unmarked pairs of CWT Coho.**
-
-| Management Unit                    | Indicator Stock                       |   Brood Yr </br> SIT    | Brood Yr </br> DIT |
-|------------------------------------|:--------------------------------------|:-----------------------:|:------------------:|
-| Southern B.C. MUs                  |                                       |                         |                    |
-| Lower Fraser                       | Inch Creek Hatchery                   |          83-95          |       96-08        |
-|                                    | Salmon River (Wild)[^1]               |       84-01,05-07       |         NA         |
-|                                    | Chilliwack R. Hatchery                |          83-95          |       96-02        |
-| Interior Fraser                    | Spius Cr. Hatchery (Coldwater R.)[^2] |       84-94,96-98       |       99-02        |
-|                                    | Spius Cr. Hatchery (Salmon R.)[^3]    | 95-96,99,01-02,04-05,07 |         --         |
-|                                    | Spius Cr. Hatchery (Spius Cr.)        |       94-96,99-00       |       97-98        |
-|                                    | Eagle R. Hatchery (Salmon R.)         |          83-93          |         --         |
-|                                    | Eagle R. Hatchery (Eagle River)       |          83-93          |         --         |
-|                                    | Dunn Cr. Hatchery (Dunn Cr.)[^4]      |    83-92,94-95,97-07    |         --         |
-|                                    | Dunn Cr. Hatchery (Lemieux Cr.)[^5]   |    83-86,88-95,97-08    |         --         |
-|                                    | Dunn Cr. Hatchery (Louis Cr.)[^6]     |       88-94,97-07       |         --         |
-|                                    | Eagle River (Wild)[^7]                |          00-03          |         NA         |
+| **Management Unit**                | **Indicator Stock**                   |**Brood Yr**</br>**SIT** |**Brood Yr**</br>**DIT**|
+|------------------------------------|:--------------------------------------|:-----------------------:|:----------------------:|
+| **Southern B.C. MUs**              |                                       |                         |                    |
+| Lower Fraser                       | Inch Creek Hatchery                   |      83-95,14-19        |       96-13        |
+|                                    | Salmon River (Wild)[^1]               |    84-99,01,03,05-07    |         NA         |
+|                                    | Chilliwack R. H. (Chilliwack R.)      |          83-95          |       96-02        |
+|                                    | Chehalis R. H. (Chehalis R.)          |          83-97          |         --         |
+| Interior Fraser                    | Spius Cr. H. (Coldwater R.)[^2]       |       84-94,96-98,03-19 |       99-02        |
+|                                    | Spius Cr. H. (Salmon R./TOMF)[^3]     | 95-96,99,01-02,04-05,</br> 07,14,17-19|--    |
+|                                    | Spius Cr. H. (Spius Cr.)[^4]          |       94-96,99-00       |       97-98        |
+|                                    | Spius Cr. H. (Eagle R.)               |       10-13,15-19       |         --         |
+|                                    | Chilliwack R. H. (Coldwater R.)[^5]   |          16-19          |         --         |
+|                                    | Eagle R. H. (Salmon R.)[^6]           |          83-93          |         --         |
+|                                    | Eagle R. H. (Eagle R.)[^7]            |          83-93          |         --         |
+|                                    | Eagle R. H. (Perry R.)[^8]            |          84-86          |         --         |
+|                                    | Dunn Cr. H. (Dunn Cr.)[^9]            | 86-87,89-90,92,95,98-07 |         --         |
+|                                    | Dunn Cr. H. (Dunn Lake)[^10]          |      84-91,94,97        |         --         |
+|                                    | Dunn Cr. H. (Lemieux Cr.)[^11]        | 83-86,88,92-93,97-99,</br> 03,06-09    | --  |
+|                                    | Dunn Cr. H. (Louis Cr.)[^12]          |       88-94,97-07       |         --         |
+|                                    | Dunn Cr. H. (Ianson Ch.)[^13]         | 88-91,94-95,00-02,04-05 |         --         |
+|                                    | Eagle River (Wild)[^14]               |          00-03          |         NA         |
 |                                    | Lemieux Creek (Wild)                  |          92-93          |         NA         |
-| Strait of Georgia Mainland         | Capilano River Hatchery               |        83-97,00         |         --         |
-|                                    | Lang Creek Hatchery                   |          07-08          |         --         |
-| Strait of Georgia Vancouver Island | Quinsam River                         |       83-95 96-08       |                    |
-|                                    | Big Qualicum River Hatchery           |    83-85,87-95,03-08    |       96-02        |
-|                                    | Goldstream River Hatchery             |       91-94,03-08       |       96-02        |
-|                                    | Puntledge River Hatchery[^8]          |          83-02          |         --         |
-|                                    | Black Creek (Wild)[^9]                |          83-07          |         NA         |
-| U.S. Inside MUs                    |                                       |                         |                    |
-| Skagit                             | Marblemount Hatchery (Skagit)[^10]    |      83-94, 99-02       |       95-08        |
-|                                    | Baker River (Wild)[^11]               |          83-08          |         NA         |
-| Stillaguamish[^12]                 | Wallace River H. (Skykomish)          |          83-95          |       96-08        |
-|                                    | Bernie Gobin Hatchery [^13]           |          83-08          |         --         |
-|                                    | Stillaguamish (Wild)                  |          84-87          |         NA         |
-| Snohomish                          | Wallace River H. (Skykomish)          |          83-95          |       96-08        |
-|                                    | Bernie Gobin Hatchery                 |          83-08          |         --         |
-| Hood Canal                         | Quilcene NFH                          |          87-95          |       96-07        |
-|                                    | Quilcene Bay Sea Pens                 |    88,90,93,95,02-08    |       96-01        |
-|                                    | Port Gamble Bay Pens                  |       83-96,04-08       |       96-03        |
-|                                    | George Adams Hatchery                 |        83-94,96         |      95,97-08      |
-|                                    | Big Beef Creek (Wild)[^14]            |          83-08          |         NA         |
-| Strait of Juan de Fuca             | Lower Elwha Hatchery                  |     86,90-94,98-03      |       95-08        |
-|                                    | Dungeness Hatchery[^15]               |  83,86,89,91-94,05-08   |         --         |
-|                                    | Hoko and Salmon Cr. (Wild)            |        84-87,08         |         NA         |
-| U.S. Outside MUs                   |                                       |                         |                    |
-| Quillayute                         | Sol Duc Hatchery[^16]                 |  83-88,90-95,00,03-04   | 96-99,01-03,05-06  |
-|                                    | Various Tributaries (Wild)[^17]       |    83-86,88-92,07-08    |       07-08        |
-| Hoh                                | Chalaat Creek Hatchery                |        84,86-89         |         --         |
+| Strait of Georgia Mainland         | Capilano R. H.                        |        83-97,00         |         --         |
+|                                    | Lang Creek H. (Lang Cr.)[^15]         |    87-91,95-96,08-09    |         --         |
+| Strait of Georgia Vancouver Island | Quinsam R. H.                         |       83-85,18-19       |       96-17        |
+|                                    | Big Qualicum R. H.                    | 83-85,87-95,03-15,17-19 |       96-02        |
+|                                    | Goldstream R. H.                      |       91-94,03-11       |       96-02        |
+|                                    | Puntledge R. H.[^16]                  |  83-97,99-02,09-10,19   |         --         |
+|                                    | Black Creek (Wild)[^17]               |          83-17          |         NA         |
+| **U.S. Inside MUs**                |                                       |                         |                    |
+| Skagit                             | Marblemount H. (Skagit R.)            |          83-93          |       94-20        |
+|                                    | Baker River (Wild)[^18]               |       83-97,00-22       |         NA         |
+| Stillaguamish[^19]                 | Wallace R. H. (Skykomish R.)          |          83-95          |       96-20        |
+|                                    | Stillaguamish R. (Wild)               |          84-87          |         NA         |
+| Snohomish                          | Wallace R. H. (Skykomish R.)          |          83-95          |       96-20        |
+|                                    | Bernie Gobin H. (Tulalip Cr.)[^20]    |          83-20          |         --         |
+| Hood Canal                         | Quilcene NFH                          |          87-95          |       96-20        |
+|                                    | Quilcene Bay Sea Pens                 | 88,90,93,95,02-11,13-14 |       96-01        |
+|                                    | Port Gamble Bay Pens                  |       83-95,04-20       |       96-03        |
+|                                    | George Adams H. (Skokomish R.)        |        83-94,96         |      95,97-20      |
+|                                    | Big Beef Creek (Wild)[^21]            |          83-20          |         NA         |
+| Strait of Juan de Fuca             | Lower Elwha H.[^22]                   |     85-94,12,15,18      |95-11,13-14,16-17,09-20|
+|                                    | Dungeness H.                          |83,86,89,91-94,05-08,18-20 |         --       |
+|                                    | Hoko Falls H.                         |          18-20          |         --         |
+|                                    | Hoko and Salmon Creek (Wild)          |        84-87,08         |         NA         |
+| **U.S. Outside MUs**               |                                       |                         |                    |
+| Quillayute                         | Sol Duc H.                            |       83-88,90-95       |       96-20        |
+|                                    | Various Tributaries (Wild)[^23]       |       83-86,88-92       |                    |
+| Hoh                                | Chalaat Creek H.                      |        84,86-89         |         --         |
 |                                    | Canyon Springs Pond                   |          86-87          |         --         |
-|                                    | Sol Duc Hatchery                      |          85,87          |         --         |
-|                                    | Hoh River (Wild)[^18]                 |       83-87,03-06       |         NA         |
-| Queets                             | Quinault Lake Hatchery                |       83-84,90-92       |         --         |
-|                                    | Salmon R. Fish Culture[^19]           |        83-04,06         |   95-03,05,07-08   |
-|                                    | Queets/Clearwater wild[^20]           |          83-08          |         NA         |
-| Grays Harbor                       | Bingham Creek Hatchery[^21]           |          83-94          |       95-08        |
-|                                    | Aberdeen Net Pens                     |        88-90,92         |         --         |
-|                                    | Humptulips Hatchery                   |        83-94,06         |       95-96        |
-|                                    | Bingham Creek (Wild)[^22]             |          83-08          |         NA         |
+|                                    | Sol Duc H.                            |          85,87          |         --         |
+|                                    | Hoh River (Wild)[^24]                 |     83-87,03,05-12      |         NA         |
+| Queets                             | Quinault Lake H.                      |       83-84,90-92       |         --         |
+|                                    | Salmon R. Fish Culture                |        83, 85-94        |       95-20        |
+|                                    | Queets/Clearwater wild[^25]           |       83-11,13-20       |         NA         |
+| Grays Harbor                       | Bingham Creek H.                      |          83-94          |       95-20        |
+|                                    | Aberdeen Net Pens                     |       88-90,92-94       |         --         |
+|                                    | Humptulips H. (Stevens Cr.)           |  83-94,06,10-12,19-20   |       95-96        |
+|                                    | Bingham Creek (Wild)[^26]             |          83-20          |         NA         |
 |                                    | Stevens & Scatter Creek (Wild)        |       83-90,92-93       |         NA         |
-|                                    | Chehalis Upriver (Wild)[^23]          |       83-97,00-08       |         NA         |
+|                                    | Chehalis Upriver (Wild)[^27]          |       83-97,00-20       |         NA         |
 
-[^1]: Brood years 1996-2001 and 2005-07: all tagged releases were unmarked.
-
-[^2]: Brood years 1997 and 1998: all tagged releases were unmarked.
-
-[^3]: Brood years 1999, 2001-02, and 2005: all tagged releases were unmarked.
-
-[^4]: Beginning BY 1997, all tagged releases were unmarked.
-
-[^5]: Beginning BY 1997, all tagged releases were unmarked.
-
-[^6]: Beginning BY 1997, all tagged releases were unmarked.
-
-[^7]: All tagged releases were unmarked.
-
-[^8]: For BYs 1997 and 1999-2000, unmarked CWT fish were released, but not associated with a DIT group in RMIS.
-
-[^9]: Brood years 1997-2000, 2002-03, and 2005-07: all tagged releases were unmarked. Brood year 2001 unmarked CWT fish were also released, but not associated with a DIT group in RMIS.
-
-[^10]: Brood year 2004 unmarked CWT fish were also released, but not associated with a DIT group in RMIS.
-
-[^11]: Beginning BY 1996, all tagged releases were unmarked.
-
-[^12]: Bernie Gobin Hatchery tagging program and the Skykomish tagging program at the Wallace River Hatchery are used to represent production in both the Stillaguamish and Snohomish River Basins.
-
-[^13]: Brood years 1997 and 1998: all tagged releases were unmarked.
-
-[^14]: Beginning BY 1996, all tagged releases were unmarked
-
-[^15]: Brood year 2005: unmarked CWT fish were released, but not listed as an associated DIT group in RMIS.
-
-[^16]: Brood years 2000 and 2004: unmarked CWT fish were released, but not listed as an associated DIT group in RMIS.
-
-[^17]: Release groups were very small except Solduc BYs 07-08.
-
-[^18]: In all years, release groups are very small. Brood years 03-06: tagged releases were unmarked.
-
-[^19]: Brood years 2004 and 2006: unmarked CWT fish were released, but not listed as an associated DIT group in RMIS.
-
-[^20]: Beginning BY 1996, all tagged releases were unmarked.
-
-[^21]: Brood years 95, 04, 06-08 are listed as "Satsop" stock of a "mixed" origin in RMIS.
-
-[^22]: Beginning BY 1995, all tagged releases were unmarked.
-
-[^23]: Brood years 1995-1997 and 2000-2008: tagged releases were unmarked.
+[^1]: Beginning BY 1996, all tagged releases were unmarked.
+[^2]: BYs 1997 and 1998, all tagged releases were unmarked; fry released BYs 84-90 and 93.
+[^3]: BYs 1999, 2001-02, and 2005, all tagged releases were unmarked; fry released BY 1995.
+[^4]: BYs 1997 and 1998 were released as fry.
+[^5]: When space is limited at Spius Creek Hatchery, additional fish are raised at Chilliwack River Hatchery and released in the Coldwater River.
+[^6]: Fry released BYs 1983-1990.
+[^7]: All fry releases.
+[^8]: All fry releases.
+[^9]: Beginning BY 1998, all tagged releases were unmarked; fry released BY 1987, 1989-90.
+[^10]: BY 1997 released unmarked; fry released BY 1984-86, 1988.
+[^11]: Beginning BY 1997, all tagged releases were unmarked; fry released BY 1983-86, 1988.
+[^12]: Beginning BY 1997, all tagged releases were unmarked; fry released BY 1988-89.
+[^13]: Begging BY 2000, all tagged releases were unmarked. 
+[^14]: All tagged releases were unmarked.
+[^15]: Fry released BY 1989.
+[^16]: Fry released BYs 2009-10.
+[^17]: Beginning with BY 1997 (except 2004) tagged releases were unmarked. 
+[^18]: Beginning BY 1996, all tagged releases were unmarked.
+[^19]: Bernie Gobin Hatchery tagging program and the Skykomish tagging program at the Wallace River Hatchery are used to represent production in both the Stillaguamish and Snohomish River Basins.
+[^20]: BY 1997-98 were released unmarked; this stock was used to represent Stillaguamish in the FRAM base period.
+[^21]: BY 1996 and 1998-2020, all tagged releases were unmarked.
+[^22]: Fry released BY 1986.
+[^23]: Release groups were very small.
+[^24]: In all years, release groups are very small. Beginning BY 2003, all tagged releases were unmarked.
+[^25]: Beginning BY 1996, all tagged releases were unmarked.
+[^26]: Beginning BY 1995, all tagged releases were unmarked.
+[^27]: Beginning BY 1995, all tagged releases were unmarked.
 
 # Annual Implementation
 
@@ -644,9 +627,11 @@ Coho FRAM is used by the Pacific Fishery Management Council (PFMC) to model inte
 
 ## Domestic Fishery Planning Processes
 
+Each country manages the Coho harvest within its ER cap through its own domestic fisheries management processes and annual fisheries plans. For Canada, the annual domestic planning process is documented in the salmon Integrated Fisheries Management Plan (IFMP). For the U.S., the North of Cape Falcon ocean salmon fishing plans are reported in Preseason Report III (PFMC). For U.S. Inside MUs, the 2019 PST uses the exploitation rate thresholds and stepped harvest rate goals from the Comprehensive Coho Agreement and adopted as FMP conservation objectives in 2009. For U.S. Outside MUs, exploitation rate constraints represent the Maximum Fishing Mortality Threshold (MFMT).
+
 ### United States
 
-Because the domestic planning processes of the Parties are not synchronous, a single pre-season command file containing expectations for both Canada and the U.S. is not available prior to the conclusion of the Pacific Fisheries Management Council (PFMC) process (U.S. pre-season fishery planning) in April. The pre-season command file used by the PFMC incorporates cohort abundance for both Canadian and U.S. MUs, but planned fishery regulations for U.S. fisheries only. Unless other information is available, Canadian regulations are assumed to be similar to those implemented in the previous year. Subsequent to this process, additional command files are generated to represent the actual Canadian fishing plans. Command files used in pre-season planning from 2004 to 2010 are detailed in Table 2.1. These files contain specific information used at the time to model fisheries along with the pre-season forecasts of stock abundances.
+Because the domestic planning processes of the Parties are not synchronous, a single pre-season command file containing expectations for both Canada and the U.S. is not available prior to the conclusion of the PFMC process (U.S. pre-season fishery planning) in April. The pre-season command file used by the PFMC incorporates cohort abundance for both Canadian and U.S. MUs, but planned fishery regulations for U.S. fisheries only. Unless other information is available, Canadian regulations are assumed to be similar to those implemented in the previous year. Subsequent to this process, additional command files are generated to represent the actual Canadian fishing plans. Command files used in pre-season planning from 2004 to 2020 are detailed in Table 2.1. These files contain specific information used at the time to model fisheries along with the pre-season forecasts of stock abundances.
 
 ### Canada
 
@@ -680,15 +665,131 @@ Current U.S. fisheries are constrained by domestic and PST conservation objectiv
 
 Fisheries between Cape Falcon, Oregon and the U.S./Canada Border are constrained by four factors: (1) management objectives and treaty Indian obligations for individual stock U.S. MUs; (2) treaty Indian/non-Indian and ocean/in-river sharing agreements; (3) stocks listed under the ESA; and (4) requirements of the PST. The starting point for implementing these constraints is the forecasted January age-3 abundance and the modeled ocean distribution of each Coho stock.
 
-Coho-directed recreational fisheries have been mark-selective since 1999 with the exception of a nine day fishery between the mouth of the Queets River and Leadbetter Point, Washington in 2004. Non-Indian commercial troll fisheries have been mostly restricted to mark-selective Coho retention since 2000. Treaty Indian fisheries are not restricted to mark-selective retention of Coho Salmon.
+Most Coho-directed recreational fisheries have been mark-selective since 1999. Non-Indian commercial troll fisheries have been mostly restricted to mark-selective Coho retention since 2000. Treaty Indian fisheries are not restricted to mark-selective retention of Coho Salmon.
 
-## Catches
 
-**we need data for these** morts or catches? And, should we place these below ERs? The treaty specifies ERs, not catches...... where are we placing ER estimates?
+## Fishery Mortalities and Exploitation Rates
 
-## Total Exploitation Rate Accounted for by Mark-Selective Fisheries
 
-*Include?*
+### Exploitation Rates by Fishery
+
+Illustrating 25th, mean and 75th quantile of 2010-2019 Exploitation Rates by FRAM fishery.
+
+```{r fig.height=14, fig.width=10}
+#going towards "table F", but will need
+#various lower non-ER rows appended separately
+#and FisheryID aggregations defined
+#join fishery aggregations here & resummarize summing ERs?
+#or join above in "psc" object creation before first group_by?
+
+psc_gg$er_fishery <- psc |> 
+  select(RunYear:FisheryName, mort_er) |> 
+  #pivot_wider(names_from = RunYear, values_from = mort_er)
+  filter(RunYear > 2009) |> 
+  group_by(PSC_StockName, FisheryName) |>
+  summarise(across(mort_er, list( q25 = ~quantile(., 0.25), mean = ~mean(.), q75 = ~quantile(., 0.75) )), .groups = "drop") |> 
+  filter(mort_er_mean > 0.005) |> 
+  group_by(PSC_StockName) |> 
+  ggplot(aes(FisheryName)) + #fct_reorder(FisheryName, mort_er_mean, mean)
+  geom_pointrange(aes(y = mort_er_mean, ymin = mort_er_q25, ymax = mort_er_q75)) +
+  scale_y_continuous(labels = scales::percent) +
+  coord_flip() +
+  facet_wrap(~PSC_StockName, scales = "free", ncol = 2)
+
+psc_gg$er_fishery
+
+```
+
+
+\
+
+### Mortalities by Non-Selective Fisheries and Mark-Selective Fisheries  {.tabset}
+
+```{r plot_ns_msf}
+plot_ns_msf <- function(stknm){
+  psc |> 
+    filter(PSC_StockName==stknm) |> 
+    distinct(RunYear, PSC_StockName, NS = mort_ns_sum, MSF = mort_msf_sum) |> 
+    pivot_longer(names_to = "var", values_to = "val", -c(RunYear, PSC_StockName)) |> 
+    ggplot(aes(RunYear, val, fill = var)) +
+    geom_col(position = position_dodge(width = 0.7)) +
+    scale_fill_grey() +
+    scale_y_continuous("Mortality", labels = scales::comma) +
+    labs(subtitle = stknm)
+}
+
+```
+
+### Lower Fraser MU
+
+```{r}
+plot_ns_msf("Lower Fraser")
+```
+
+### Interior Fraser MU
+
+```{r}
+plot_ns_msf("Interior Fraser")
+```
+
+### Georgia Strait MU
+
+```{r}
+plot_ns_msf("Georgia Strait")
+```
+
+### Skagit MU
+
+```{r}
+plot_ns_msf("Skagit")
+```
+
+### Stillaguamish MU
+
+```{r}
+plot_ns_msf("Stillagumish")
+```
+
+### Snohomish MU
+
+```{r}
+plot_ns_msf("Snohomish")
+```
+
+### Hood Canal MU
+
+```{r}
+plot_ns_msf("Hood Canal")
+```
+
+### US Strait JDF MU
+
+```{r}
+plot_ns_msf("US Strait JDF")
+```
+
+### Quillayute MU
+
+```{r}
+plot_ns_msf("Quillayute")
+```
+### Hoh MU
+
+```{r}
+plot_ns_msf("Hoh")
+```
+### Queets MU
+
+```{r}
+plot_ns_msf("Queets")
+```
+### Grays Harbor MU
+
+```{r}
+plot_ns_msf("Grays Harbor")
+```
+
+
 
 ## Annual CoTC reports on Estimates of Exploitation Rates
 
@@ -716,3 +817,6 @@ gt(static$acronyms) |>
 
 # Glossary
 
+```{r}
+gt(static$glossary)
+```
