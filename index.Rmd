@@ -34,7 +34,7 @@ Next steps
   - tables
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 
 library("tidyverse")
 library("readxl")
@@ -141,7 +141,7 @@ psc <- left_join(
     left_join(fram$fishery, by = "FisheryID") |> 
     left_join(
       static$lu_stock |> 
-        select(StockID, PSC_StockID = PSCStock, PSC_StockName = Name),
+        select(StockID, PSC_StockID, PSC_StockName),
       by = "StockID") |> 
     group_by(RunYear, PSC_StockID, PSC_StockName, FisheryID, FisheryName) |> 
     summarise(across(starts_with("mort"), sum), .groups = "drop") |> 
@@ -153,7 +153,7 @@ psc <- left_join(
     left_join(fram$runid, by = "RunID") |> 
     left_join(
       static$lu_stock |> 
-        select(StockID, PSC_StockID = PSCStock, PSC_StockName = Name),
+        select(StockID, PSC_StockID, PSC_StockName),
       by = "StockID") |> 
     group_by(RunYear, PSC_StockID, PSC_StockName) |> 
     summarise(across(escp, sum), .groups = "drop") 
@@ -164,7 +164,14 @@ psc <- left_join(
     abund = mort_sum + escp,
     across(c(mort, mort_sum), list(er = ~.x/abund))
   ) |> 
-  left_join(distinct(static$lu_stock, PSC_StockID = PSCStock, PSC_Region = Region), by = "PSC_StockID")
+  left_join(
+    static$lu_stock |> 
+      distinct(PSC_StockID, PSC_Region, cap_method,
+               low_mod_abund, mod_abd_abund,
+               low_er_cap, mod_er_cap, abd_er_cap,
+               low_escp_goal, upr_escp_goal)
+    , by = "PSC_StockID"
+    )
 
 rm(params, static, fram, fram_mdb_reader)
 save.image("PeriodicReport_envi.RData")
@@ -181,25 +188,65 @@ knitr::include_graphics("images/CohoPic.png")
 
 ## Abundance
 
-```{r gt_ann_abund, fig.height=8, fig.width=12}
-#these numbers match DD "CoTC_Output_File_1986-2018.xlsx"
-#basically tables 6.1-6.3 as individual stocks
-
+```{r gt_annual_abund}
 psc |> 
-  distinct(RunYear, PSC_Region, PSC_StockName, abund) |> 
-  pivot_wider(names_from = RunYear, values_from = abund) |> 
+  distinct(RunYear, PSC_Region, PSC_StockName, abund, low_mod_abund, mod_abd_abund) |> 
+  mutate(
+    PSC_Region = factor(PSC_Region, levels = c("Canada","US Inside","US Outside")),
+    abd = case_when(
+      abund < low_mod_abund ~ "L",
+      abund >= low_mod_abund & abund <= mod_abd_abund ~ "M",
+      abund > mod_abd_abund ~ "A",
+      is.na(low_mod_abund) ~ ""
+    ),
+    abd = if_else(
+      abd == "",
+      format(round(abund), big.mark=",", trim=TRUE),
+      paste0(format(round(abund), big.mark=",", trim=TRUE), " [",abd,"]")
+      ),
+    abund = NULL
+  ) |> 
+  pivot_wider(names_from = RunYear, values_from = abd) |> 
+  arrange(PSC_Region) |> 
   gt(
-    groupname_col = "PSC_Region",
-    caption = "Annual FRAM-estimated abundance (as escapement + harvest)"
+    groupname_col = "PSC_Region", 
+    caption = "Annual FRAM-estimated abundance (escapement + harvest)"
     ) |> 
-  cols_hide(`1998`:`2010`) |> 
-  fmt_integer(columns = -PSC_StockName)
+  tab_options(
+    table.width = 1500
+    ) |> 
+  cols_hide(c(ends_with("_abund"), `1998`:`2003`)) |> 
+  cols_width(
+    PSC_StockName ~ px(150),
+    starts_with("2") ~ px(120)
+    ) |> 
+  cols_align(align = "right", columns = starts_with("2")) |> 
+  tab_style(
+    style = cell_text(align = "right"),
+    locations = cells_column_labels(columns = PSC_StockName)
+  ) |>
+  tab_style(
+    style = cell_text(size = 0),
+    locations = cells_column_labels(columns = PSC_StockName)
+  ) |>
+  tab_style(
+    style = list(cell_fill("grey70"), cell_text(weight = "bold")),
+    locations = cells_column_labels()
+  ) |>
+  tab_style_body(
+    style = cell_fill("#F5E298"),
+    pattern =  "\\[L]"
+  ) |> 
+  tab_style_body(
+    style = cell_fill("#C6F5BA"),
+    pattern =  "\\[A]"
+  )
 
 ```
 
 ## Exploitation Rates
 
-```{r gt_ER, fig.height=8, fig.width=12}
+```{r gt_annual_ER}
 psc |> 
   distinct(RunYear, PSC_Region, PSC_StockName, mort_sum_er) |> 
   pivot_wider(names_from = RunYear, values_from = mort_sum_er) |> 
@@ -213,27 +260,50 @@ psc |>
 ```
 
 
-
 # Figures
 
 ## Abundance {.tabset}
 
-```{r func_plot_abund_bar}
-#add linear or loess trend?
-plot_abund_bar <- function(stknm){
+```{r func_plot_abund_bar, }
+plot_abund_bar <- function(stknm = "Skagit"){
   psc |> 
-    filter(PSC_StockName==stknm) |>
-    distinct(RunYear, PSC_StockName, Harvest = mort_sum, Escapement = escp) |> 
-    mutate(RunYear = as.integer(RunYear)) |> 
-    pivot_longer(names_to = "var", values_to = "val", -c(RunYear, PSC_StockName)) |> 
+    filter(PSC_StockName==stknm, RunYear > 2003) |>
+    distinct(RunYear, PSC_StockName, 
+             Harvest = mort_sum, Escapement = escp, Abundance = abund, 
+             low_mod_abund, mod_abd_abund) |> 
+    pivot_longer(names_to = "var", values_to = "val",
+                 -c(RunYear, PSC_StockName, low_mod_abund, mod_abd_abund)) |> 
+    mutate(across(ends_with("_abund"), ~if_else(var == "Abundance", ., NA_real_))) |> 
     ggplot(aes(RunYear, val, fill = var, color = var)) + 
-    geom_col(position = position_dodge(width = 0.7)) + 
-    #geom_smooth(method = "lm", se = F) +
+    geom_col() + 
+    geom_hline(aes(yintercept = low_mod_abund), color = "yellow", linetype = 2) +
+    geom_hline(aes(yintercept = mod_abd_abund), color = "yellow", linetype = 3) +
+    geom_vline(xintercept = 2010) +
+    geom_smooth(formula = y ~ x, method = "lm", se = F) +
     scale_fill_grey("", start = 0.3, end = 0.7, aesthetics = c("fill", "color")) +
-    scale_y_continuous("Harvest or Escapement", labels = scales::comma) +
-    theme(legend.position = "top") +
+    scale_x_continuous(breaks = seq(1998, 2040, by = 3), guide = guide_axis(n.dodge = 2)) +
+    scale_y_continuous("", labels = scales::comma) +
+    facet_wrap(~var, nrow = 1) +
+    theme(legend.position = "none") +
     labs(subtitle = stknm)
 }
+
+
+
+# plot_abund_bar <- function(stknm){
+#   psc |> 
+#     filter(PSC_StockName==stknm) |>
+#     distinct(RunYear, PSC_StockName, Harvest = mort_sum, Escapement = escp) |> 
+#     mutate(RunYear = as.integer(RunYear)) |> 
+#     pivot_longer(names_to = "var", values_to = "val", -c(RunYear, PSC_StockName)) |> 
+#     ggplot(aes(RunYear, val, fill = var, color = var)) + 
+#     geom_col(position = position_dodge(width = 0.7)) + 
+#     #geom_smooth(method = "lm", se = F) +
+#     scale_fill_grey("", start = 0.3, end = 0.7, aesthetics = c("fill", "color")) +
+#     scale_y_continuous("Harvest or Escapement", labels = scales::comma) +
+#     theme(legend.position = "top") +
+#     labs(subtitle = stknm)
+# }
 
 # psc_gg$ann_abund <- psc |> 
 #   distinct(RunYear, PSC_StockName, abund) |> 
@@ -275,11 +345,7 @@ plot_abund_bar("Interior Fraser")
 ```
 
 ```{r}
-plot_abund_bar("Georgia Strait ML")
-```
-
-```{r}
-plot_abund_bar("Georgia Strait VI")
+plot_abund_bar("Strait of Georgia")
 ```
 
 ### U.S. Inside Management Units
@@ -710,7 +776,7 @@ Most Coho-directed recreational fisheries have been mark-selective since 1999. N
 
 Illustrating 25th, mean and 75th quantile of 2010-2019 Exploitation Rates by FRAM fishery.
 
-```{r fig.height=14, fig.width=10}
+```{r fig.height=14, fig.width=10, eval=FALSE}
 #going towards "table F", but will need
 #various lower non-ER rows appended separately
 #and FisheryID aggregations defined
