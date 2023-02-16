@@ -11,7 +11,7 @@ output:
     number_sections: yes
 params:
   static_tables: StaticTables.xlsx
-  mdb: ~/O/code/coho/fram_mdbs/PSC_CoTC_PostSeason_CohoFRAMDB_thru2020_021622.mdb
+  mdb: ~/O/code/coho/fram_mdbs/PSC_CoTC_PostSeason_CohoFRAMDB_thru2021_021523.mdb
 linkcolor: blue
 editor_options:
   chunk_output_type: console
@@ -38,7 +38,9 @@ library("gt")
 theme_set(theme_light())
 
 # #can load an entire environment built ahead of time and save time on reknitting
-load("PeriodicReport_envi.RData")
+# load("PeriodicReport_envi.RData")
+
+psc <- readr::read_csv("psc_postfram_1998_2021.csv")
 
 static <- list(
   members = readxl::read_excel(params$static_tables, sheet = "members") |> 
@@ -58,8 +60,9 @@ static <- list(
 
 ```
 
-```{r build_envi, include=FALSE, eval=FALSE}
+```{r rebuild_psc_csv, include=FALSE, eval=FALSE}
 #mdb from params arg above, sourced locally from CoTC Sharepoint
+#moving from .RData to .csv on load to allow more portability/generality
 
 fram_mdb_reader <- function(
     mdb_file_path = params$mdb,
@@ -93,7 +96,7 @@ fram <- list()
 
 fram$stockIDs <- static$lu_stock$StockID
 
-fram$runIDs <- 22:44 #1998-2020, but 34:44 2010onward
+fram$runIDs <- 22:45 #1998-2020, but 34:44 2010onward
 
 #Note the original negative escapement in A12A Wild in 2005 is due to an error in the FRAM database
 #Mortality is summed across timesteps (and Ages, but only 3s anyway)
@@ -182,9 +185,10 @@ psc <- left_join(
 #plus 0 out 66,67,69 for sid 139 and 65:69 for sid140 (prob already 0)
 
 
+# rm(params, static, fram, fram_mdb_reader)
+# save.image("PeriodicReport_envi.RData")
 
-rm(params, static, fram, fram_mdb_reader)
-save.image("PeriodicReport_envi.RData")
+write_csv(psc, "psc_postfram_1998_2021.csv")
 
 ```
 
@@ -208,18 +212,29 @@ The U.S. Inside MUs consist of naturally-spawning populations originating in the
 
 The U.S. Outside MUs consist of naturally-spawning populations from the Quillayute, Hoh, Queets, and Grays Harbor Basins. All U.S. Outside MUs, except the Grays Harbor MU, are part of the Olympic Peninsula ESU. Populations from the western portion of the Strait of Juan de Fuca MU are also in this ESU. The Grays Harbor MU is part of the Southwest Washington ESU.
 
-| **Southern B.C. Inside Management Units** | **U.S. Inside Management Units**  |
-|:------------------------------------------|:----------------------------------|
-| Interior Fraser                           | Skagit                            |
-| Lower Fraser                              | Stillaguamish                     |
-| Strait of Georgia                         | Snohomish                         |
-|                                           | Hood Canal                        |
-|                                           | Strait of Juan de Fuca            |
-|                                           | **U.S. Outside Management Units** |
-|                                           | Quillayute                        |
-|                                           | Hoh                               |
-|                                           | Queets                            |
-|                                           | Grays Harbor                      |
+```{r mu_table}
+# psc |> 
+#   distinct(Region = PSC_Region, `Management Units` =  PSC_StockName) |> 
+#   arrange(Region) |>  
+#   mutate(Region = str_replace(Region, "Canada", "Southern B.C.")) |> 
+#   gt(groupname_col = "Region") |> 
+#   tab_options(table.width = px(250)) |> 
+#   tab_style(locations = cells_column_labels(), style = cell_text(align = "center")) |> 
+#   tab_style(locations = cells_row_groups(), style = cell_text(align = "left", weight = "bold")) |> 
+#   tab_style(locations = cells_body(), style = cell_text(align = "right"))
+
+tibble(
+  `Southern BC` = c("Interior Fraser", "Lower Fraser", "Strait of Georgia", "", ""),
+  `US Outside` = c("Skagit", "Stillaguamish", "Snohomish", "Hood Canal", "US Strait JDF"),
+  `US Inside` = c("Quillayute", "Hoh", "Queets", "Grays Harbor", "")
+) |> 
+  gt() |> 
+  tab_options(table.width = px(400)) |> 
+  tab_style(locations = cells_column_labels(), style = cell_text(align = "center", weight = "bold")) |> 
+  tab_style(locations = cells_body(), style = cell_text(align = "left")) |> 
+  tab_header(title = "Management Units")
+
+```
 
 ## Coho ABM Goals and Objectives
 
@@ -370,35 +385,29 @@ The Snohomish coho salmon stock was declared overfished in 2018. The target year
 
 # Bilateral Assessment Tool - FRAM
 
-[FRAM Overview](https://framverse.github.io/fram_doc/index.html)
+Coho fisheries are evaluated with the Coho Fisheries Regulation Assessment Model [(Coho FRAM)](https://framverse.github.io/fram_doc/calcs_data_coho.html), a bilaterally developed tool that is employed for both pre-season fishery planning and post-season estimation of escapements and exploitation rates [(see: pre- and post-season applications)](https://framverse.github.io/fram_doc/apps_coho.html). 
 
-[Coho FRAM model details](https://framverse.github.io/fram_doc/calcs_data_coho.html)
+Coho FRAM is an annual mixed-stock accounting model that evaluates a set of stock units within a set of fisheries over time periods within a single fishing year (the calendar year for Coho). It can be used to estimate catch and escapement based on forecast abundance and planned fisheries ('forward'), or it can be used to reconstruct ocean abundance from observed escapements and fisheries ('backward'). 
 
-[Coho FRAM pre- and post-season applications](https://framverse.github.io/fram_doc/apps_coho.html)
-
-Coho fisheries are evaluated with the Coho Fisheries Regulation Assessment Model (Coho FRAM), a bilaterally developed tool that is employed for both pre-season fishery planning and post-season estimation of escapements and exploitation rates. In simplest terms the Coho FRAM is an accounting model that evaluates X stocks in Y fisheries over Z time periods. It can be used to estimate catch and escapement based on forecast abundance and planned fisheries (forward FRAM) or it can be used to reconstruct ocean abundance from observed escapements and fisheries (backward FRAM). The model is founded on a Base Period (currently 1986 to 1992) and scales it according to current stock abundances and fisheries impacts. The base period is constructed with the aid of two other companion programs, the Mixed Stock Model (MSM) and RRTERM (Terminal Area Run Reconstructions).
-
-## FRAM Base Period
-
-The base period is constructed from stock-specific ocean distributions by fishery and time period (January to June, July, August, September, and October to December) developed from coded-wire-tag (CWT) recoveries in coast wide fisheries from 1986 to 1992. The procedure used to generate base period data is depicted [below](#fig:FRAMDevel). For each base period year, post-season reconstruction of cohort abundances for each Coho MU is based on two different models: the Mixed-Stock Model (MSM) that estimates the Production Expansion Factors for each Production Region and RRTERM program that estimates stock-specific impacts for terminal marine and freshwater fisheries. The MSM uses CWT recoveries for each model stock expanded by the Production Expansion Factors to best describe the total catch in each marine mixed-stock fishery. The MSM/RRTERM cohort analysis has been used for post-season reconstructions for catch years **1986-2007**. Beginning with catch year 1993, too few coded-wire tags were recovered in mixed-stock fisheries to perform robust cohort analyses using the mixed-stock model. 
-
-The base period annual exploitation rates by fishery-month strata are provided in **here**. Because escapement estimates were not available for several Canadian MUs for these years, escapement for Canadian MUs (excluding Interior Fraser) was estimated as catch\*(1-ER), where ER was the hatchery indicator exploitation rate.
+The Coho FRAM base period parameterization, determinining stock-fishery-timestep impacts, was constructed from stock-specific fishery recoveries of coded-wire-tag (CWT) within the time steps January to June, July, August, September, and October to December during coast wide fisheries from 1986 to 1992. The procedure used to generate base period data is depicted [below](#fig:FRAMDevel). For each base period year, post-season reconstruction of cohort abundances for each Coho MU is based on two different models: the Mixed-Stock Model (MSM) that estimates the Production Expansion Factors for each Production Region and RRTERM program that estimates stock-specific impacts for terminal marine and freshwater fisheries. The MSM uses CWT recoveries for each model stock expanded by the Production Expansion Factors to best describe the total catch in each marine mixed-stock fishery. The MSM/RRTERM cohort analysis has been used for post-season reconstructions for catch years **1986-2007**. Beginning with catch year 1993, too few coded-wire tags were recovered in mixed-stock fisheries to perform robust cohort analyses using the mixed-stock model. 
 
 ::: {#fig:FRAMDevel}
 ![**Procedure used to generate base period data for Coho FRAM**/\label{fig:FRAMDevel}](images/FRAMDevel.jpg)
 :::
 
-### Selection and Use of Coded-Wire Tags
-
-*do we wish to link sections of the other report, or just repeat it here?*
-
 ### Mixed-Stock Model and RRTERM
 
 *do we wish to link sections of the other report, or just repeat it here?*
 
+
 ## Coded-Wire-Tag Indicator Stocks
 
 *should this be in its own chapter (like it was in the previous report?)*
+
+### Selection and Use of Coded-Wire Tags
+
+*do we wish to link sections of the other report, or just repeat it here?*
+
 
 The coded-wire tag (CWT) indicator stock program provides the primary data for predicting, monitoring, and modeling harvest impacts on individual Coho Salmon populations. The Joint Coho Technical Committee (CoTC) uses CWT recoveries from the indicator stocks to reconstruct cohorts coastwide. While a few indicator tag groups are naturally-spawning fish, the vast majority consist of hatchery fish intended to represent each MU. Hatchery indicator stocks are selected on the basis of brood stock, rearing, and release strategies and are assumed to be surrogates for the naturally-spawning fish. The indicator program assumes that tagged and untagged fish experience similar trends in marine survival and similar exploitation patterns. Coastwide, approximately eight million juvenile Coho Salmon are coded-wire tagged annually **(Nandor et al. 2010)**.
 
@@ -680,6 +689,8 @@ plot_ns_msf("Grays Harbor")
 
 ## Abundance
 
+*Note that Quillayute and Queets values are those from the FRAM database and have not yet been extracted from the relevant TAMM cells for each year*
+
 ```{r gt_annual_abund}
 psc |> 
   distinct(RunYear, PSC_Region, PSC_StockName, abund, low_mod_abund, mod_abd_abund) |> 
@@ -738,6 +749,8 @@ psc |>
 
 ## Exploitation Rates
 
+*Note that Quillayute and Queets values are those from the FRAM database and have not yet been extracted from the relevant TAMM cells for each year*
+
 ```{r gt_annual_ER}
 psc |> 
   distinct(RunYear, PSC_Region, PSC_StockName, mort_sum_er) |> 
@@ -747,13 +760,15 @@ psc |>
     caption = "Annual FRAM-estimated Exploitation Rates as harvest / abundance"
     ) |> 
   cols_hide(`1998`:`2010`) |> 
-  fmt_percent(columns = -PSC_StockName)
+  fmt_percent(columns = -PSC_StockName, decimals = 1)
 
 ```
 
 # Figures
 
 ## Abundance 
+
+*Note that Quillayute and Queets values are those from the FRAM database and have not yet been extracted from the relevant TAMM cells for each year*
 
 ```{r func_plot_abund_bar}
 plot_abund_bar <- function(stknm = "Skagit"){
@@ -821,6 +836,8 @@ plot_abund_bar("US Strait JDF")
 
 ### U.S. Outside Management Units
 
+*Note that Quillayute and Queets values are those from the FRAM database and have not yet been extracted from the relevant TAMM cells for each year*
+
 ```{r}
 plot_abund_bar("Quillayute")
 ```
@@ -842,9 +859,9 @@ plot_abund_bar("Grays Harbor")
 
 *CCT: for historical reference - I think these should be referenced and links provided, but not embedded in the text and not under their own heading. What do others think?*
 
-# Management Units
+# Management Unit Profiles
 
-placeholder for links to detailed management unit profiles
+*placeholder for links to detailed management unit profiles*
 
 # Members
 
