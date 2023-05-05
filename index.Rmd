@@ -200,11 +200,11 @@ knitr::include_graphics("images/CohoPic.png")
 
 # Introduction
 
-In response to a decline in natural coho abundance, the Pacific Salmon Commission established a Southern Coho abundance-based management regime (ABM) in 1999 (PSC 1999). This Southern Coho Management Plan (SCMP) aimed to conserve Coho Management Units (MUs of naturally-spawning Coho Salmon in southern British Columbia and Washington/Oregon) based on abundance status and escapement goals. The SCMP set out to constrain exploitation rates (ERs; defined as total fishing mortality divided by total fishing mortality plus escapement) below maximum levels (caps) on selected management units in order to achieve long-term Maximum Sustainable Harvests (MSH). These constraints are implemented by specifying ER caps for the individual MUs dependent on annual abundance status. During their respective preseason planning processes, the Parties use management reference points to classify the status of each MU as low, moderate, or abundant. The parties then exchange these status determinations as a key factor in development of pre-season plans.
+In response to a decline in natural coho abundance, the Pacific Salmon Commission established a Southern Coho abundance-based management regime (CoABM) in 1999 (PSC 1999). This Southern Coho Management Plan (SCMP) aimed to conserve Coho Management Units (MUs of naturally-spawning Coho Salmon in southern British Columbia and Washington/Oregon) based on abundance status and escapement goals. The SCMP set out to constrain exploitation rates (ERs; defined as total fishing mortality divided by total fishing mortality plus escapement) below maximum levels (caps) on selected management units in order to achieve long-term Maximum Sustainable Harvests (MSH). These constraints are implemented by specifying ER caps for the individual MUs dependent on annual abundance status. During their respective preseason planning processes, the Parties use management reference points to classify the status of each MU as low, moderate, or abundant. The parties then exchange these status determinations as a key factor in development of pre-season plans.
 
 When a new Coho Management Plan was reached in 2008 (implemented 2009 through 2018; PSC 2009) and the latest agreement finalized (applies to the period from 2019 through 2028; PSC 2022), modifications were made to the list of specified MUs and to the manner in which exploitation rate caps are established. This periodic report presents information for the MUs identified in the most current Pacific Salmon Treaty's (PST) Southern Coho Management Plan (Chapter 5 of Annex IV in the current PST). In the 2008 SCMP abundance-based management regimes were established to constrain exploitation rates (ERs) on the 13 Management Units (MUs) of naturally-spawning Coho Salmon originating in rivers along the Washington/British Columbia (B.C.) border listed below. Within the most recent Management Plan (PSC 2022), the Georgia Strait Vancouver Island and the Georgia Strait Mainland Management Units are now combined into the Strait of Georgia Management Unit. 
 
-## Management Units
+## Management Unit Overview
 
 The Canadian MUs are comprised of geographical aggregates of naturally-spawning Coho populations.
 
@@ -236,7 +236,7 @@ tibble(
 
 ```
 
-## Coho ABM Goals and Objectives
+## Coho Abundance Base Management Goals and Objectives
 
 The objective of the Southern Coho Management Plan (SCMP) as described in the Treaty is to manage the fisheries impact on Southern coho stocks by limiting the total fishery exploitation and allow the different MUs to produce long-term Maximum Sustainable Harvest (MSH), while maintaining the genetic and ecological diversity of the individual populations. In addition, the plan is designed to improve the prospect of sustaining healthy fisheries for both parties over the long-term. The plan is intended to be cost-effective and flexible to available technical capacity and information, while providing a predictable framework for planning fisheries impacts and allowing for objective monitoring, evaluation and modification.
 
@@ -250,6 +250,67 @@ Under the Agreement, the Parties are required to establish escapement goals or E
 
 Annual ER caps are established for each of the MUs based on the level of abundance and health of the natural stocks. These caps are then apportioned between the Parties. Constraints for Canadian fisheries on U.S. MUs are determined by formulas that specify sharing of allowable ERs as well as a composite rule, which together adjust caps according to the number of U.S. MUs that fall within a given category. Constraints for U.S. fisheries on Canadian MUs depend on the status of the Interior Fraser MU until the biological status of the other Canadian MUs has been determined. Canada is currently working to develop the information (smolt to adult survival rates, escapements) needed to apply the status determination method used for the Interior Fraser coho MU to the Lower Fraser and Strait of Georgia MUs. Details as to how exploitation rate constraints are established based on the status of MUs under the SCMP are contained in Annex IV Chapter 5 Section 9.b-c (Canadian exploitation rate caps on inside and outside U.S. MUs) and Section 9.d (U.S. exploitation rate caps on Canadian MUs).
 
+## Fishery Overview
+
+## FRAM Overview
+
+## Recent Trends in Marine and Terrestrial Environments
+
+The productivity of Pacific salmon populations is influenced by numerous factors, including human activities (e.g., fishing mortality, habitat restoration and degradation, hatchery production) and environmental conditions in both fresh and marine habitats. Because of this, changes in the productivity for most populations partially reflects variation in environmental conditions. Due to large-scale environmental variation captured by metrics such as the El Niño–Southern Oscillation (ENSO) and Pacific Decadal Oscillation (PDO), population productivity undergoes periods of high and low productivity.  Relatively productive conditions resulted in high freshwater and marine survival rates and subsequent high adult returns for many salmon stocks throughout the Pacific Northwest at various times, especially in the late 2000s and early 2010s.  However, changes in ocean and freshwater conditions beginning in early 2014 due to exceptionally warm ocean waters and associated terrestrial impacts, plus an extremely strong El Niño event, led to subsequent declines in abundance in many populations.  Here, we briefly summarize marine and terrestrial conditions over the past 15–20 years to provide environmental context when examining trends in southern Coho Salmon under the PST.
+
+### Terrestrial Conditions
+
+Annual average temperatures and precipitation by water year (Oct–Sep) provide a broad-brush view of terrestrial conditions across the Pacific Northwest. A strong and persistent warming trend and large year-to-year variations in precipitation are among the most notable features in recent decades (link temp_rain_pic here). Within snow-dominated watersheds, warmer winters and springs experienced in recent years reduce snow accumulation and hasten snowmelt. Reduced snowpack causes an earlier and smaller freshet in spring and can result in lower minimum flows and higher stream temperatures in summer.  
+
+```{r temp_rain_pic, out.width='100%'}
+knitr::include_graphics("images/Env_fig1.jpg")
+```
+Water year (Oct–Sep) surface air temperature (top) and precipitation (bottom) for the Pacific Northwest (OR, WA, and ID combined). The historical average for 1981–2010 is shown with a black horizontal line. Data from https://www.ncdc.noaa.gov/ cag/regional/time-series.
+
+For the Pacific Northwest, water year 2015 stands out as the warmest year on record (link temp_rain_pic here). The combination of below-average precipitation and record-high surface air temperature in 2015 brought record-low springtime snowpack to much of the west. Diminished snowpack and high surface temperatures combined with low springtime precipitation yielded especially low runoff to western watersheds in spring and early summer 2015. Unusually low flows and warm stream temperatures in spring/summer 2015 caused widespread problems for salmon throughout the western United States, including large mortality events for returning Sockeye Salmon to the Fraser and Columbia Rivers. 
+
+In June 2021, record-breaking terrestrial temperatures were recorded across western North America due to a ‘heat dome’ (White et al. 2023). It resulted in some of the highest temperatures ever recorded across large parts of British Columbia, Oregon, and Washington (11–19°C, 20–35°F above normal temperatures), including the highest temperature ever recorded in Canada (49.5°C, 121.3°F).  This 1,000-year event was due to an exceptionally strong ridge centered over the area, whose strength was greatly increased by climate change. The heat wave sparked numerous extensive wildfires, extensive damage to forest vegetation and crops, and was responsible for the deaths of nearly 1,400 people across the region.
+
+Coho Salmon inhabiting streams, rivers, and marine environments were likely affected by the heat dome, although many of these impacts are not well documented. Streams temperatures across the region increased dramatically in response to the heat dome, which also decreases oxygen saturation, potentially causing to physiological stress to stream-dwelling fish. In intertidal environments in the Salish Sea, an estimated 1 billion animals (primarily shellfish) died as a result of the heat wave coinciding with extreme low tides, which then impacted water quality (Raymond et al. 2022). The true impacts of the 2021 heat dome on Coho Salmon populations managed under PST will likely never be known, but may include generally decreased productivity and survival for the 2020 year class (which returns as adults in 2023), because it was residing in freshwater during the extraordinary event.
+
+### Marine Conditions
+
+Surface temperatures in the northeastern Pacific Ocean vary on decadal time scales, with periods of above and below average temperatures, as indicated by the Pacific Decadal Oscillation (PDO; Mantua et al. 1997). Recently, surface temperatures were notably cooler than average from 1999–2002, 2008–13 and again starting in 2020 (link PDO_pic here). They were warmer than normal from 2003–05, and at record highs for much of the period from fall 2013–20 due to a series of marine heat waves (link PDO_pic here). For the California Current region, surface temperatures reached record high levels from 2014–16, with 2015 being the single warmest year in the historical record (Jacox et al. 2018). In most years, positive PDO values correspond to El Niño events (e.g., the 2015/2016 El Niño), while negative PDO values correspond to La Niña events (e.g., 2021, 2022, and 2023 La Niñas).
+
+```{r temp_rain_pic, out.width='100%'}
+knitr::include_graphics("images/Env_fig2.png")
+```
+Time series of shifts in sign of the Pacific Decadal Oscillation (PDO; bars) and the Ocean Niño Index (ONI; line) from 1996 to the present. Red bars indicate positive (warm) years; blue bars are negative (cool) years. Credit: NOAA Fisheries.
+
+Since the original “blob” in 2014–16 (Bond et al. 2015), a series of marine heat waves have spread across large parts of the North Pacific Ocean in 2019, 2020, 2022, and 2023. These heat waves not only cause elevated water temperatures, but are also associated with extremely low nutrient levels. These heat waves vary greatly in their location across the North Pacific Ocean and although largely offshore, they occasionally spread to coastal waters such as 2015.
+
+#### Biological impacts of marine conditions
+
+The biological impacts of these temperature swings and marine heat waves are documented in a number of annual reports and descriptive papers (e.g., Morgan et al. 2019) for areas of the northeastern Pacific Ocean that Coho Salmon occupy during their marine residence period. In all cases, the reports show a dramatic biological response at all trophic levels—from primary producers to marine mammals and seabirds—to the marine heatwaves that have spread across the northeastern Pacific Ocean since 2014 and continued into 2023. These ecosystem changes have had large effects (both positive and negative) on Pacific salmon returns around the Pacific Rim, not just southern Coho Salmon.  
+
+Overall, the marine heat wave in 2014–2016 had the most drastic impact on marine ecosystems in 2015, with lingering effects into 2016 and 2017. Conditions had somewhat returned to “normal” in 2018 and again in 2021, but marine heat waves in coastal waters in 2019 and 2022 set off a series of marine ecosystem changes across the North Pacific. Here we provide a brief summary of some of the largest biological impacts recent ocean conditions that were observed. 
+
+*Primary Producers*. One of the most dramatic impacts to coastal waters was the largest bloom of the diatom Pseudo-nitzschia ever recorded in 2015 (Bates et al. 2018). It stretched from Southern California to the Aleutian Islands in Alaska. Pseudo-nitzschia produces domoic acid, a neurotoxin that causes amnesic shellfish poisoning, which is potentially fatal in mammals (including humans) and seabirds, but apparently does not affect fish.  The 2015 bloom caused high domoic acid levels, resulting in fishery closures for razor clams and Dungeness crab and the death of hundreds of seabirds and marine mammals. Continuing (but much smaller) Pseudo-nitzschia blooms have continued across to flare up along the coasts from California to British Columbia ever since. 
+
+*Lower Trophic Levels*. Marine heatwaves also dramatically altered the lower trophic levels, resulting in decreases in high quality prey such as lipid-rich copepods and krill, and increases in gelatinous organisms (jellyfish, pelagic tunicates), which have low nutritional value. This shift to poor prey quality was expected to cause poor survival for juvenile fish and seabirds which rely on these prey types.  The year 2017 also saw an explosion of *Pyrosoma atlanticum*, from California to SE Alaska. These normally tropical species are rare north of Southern California but spread north starting in 2013, peaking in 2017, and largely absent north of California by 2019. Pyrosomes are a low-quality, high-fiber prey, but were observed in the stomachs of dozens of species, including juvenile and adult Pacific salmon. Lower trophic levels rebounded in 2021, but less so in 2022 due to inconsistent upwelling.
+
+*Nekton*. Larger fish and invertebrates, which serve as forage fish, showed both increases and decreases in abundance and ranges. For example, California market squid has been expanding as far north as SE Alaska, and caught in commercial quantities in Washington and Oregon waters since 2016.  Other species that proliferated in the warm water of the California Current include Pacific Pompano, Northern Anchovy, and both Jack and Pacific Mackerel.  Species with marked declines include Pacific Hake, juvenile sardine and anchovy, and Pacific Herring. Juvenile rockfish were extremely abundant in the northern California Current and as far north as British Columbia in 2016–18. Exotic American shad, has also exhibited remarkable increases in abundance in the Columbia River, with counts over Bonneville Dam reaching 7.4 million fish in 2019 and exceeding 5 million fish since 2018.
+
+Farther north, Northern Anchovy have been extremely abundant in the Salish Sea since 2016. Juvenile salmon of all species except chum have also been below average off the west coast of Vancouver Island, while Chum Salmon have been abundant. The catch of juvenile salmon in 2017 in both Icy Straits, Alaska (mainly Pink, Chum, and Sockeye Salmon), and off the Washington/Oregon coasts (spring Chinook and Coho Salmon), were both extremely low, consistent with low adult returns (e.g., Columbia River spring Chinook Salmon in 2019). Forage fish in Alaskan waters show mixed trends with decreases in Capelin and Sand Lance and increases in Pacific Herring.
+
+*Apex fishes*. Reports from northern waters suggest increases in several apex fishes, including Spiny Dogfish, Arrowtooth Flounder and sablefish. By contrast, Pacific Cod crashed in 2017, resulting in closures for Alaskan cod fisheries in 2018. Elevated sea surface temperatures in 2015 (and to less extent in 2019) also resulted dramatic range extensions for warm water fishes including billfish, tunas, and sharks.
+
+*Seabirds*. Particularly notable impacts to seabirds were large die-offs of Cassin’s Auklet in winter 2014–15, and Common Murres between summer 2015 and spring 2016 from California to Alaska and again along the Washington–Oregon coasts in fall 2019.
+
+*Marine mammals*. Recent extreme ocean conditions have resulted in several large mortality events for marine mammals. In the California Current, record numbers of California sea lion pups were found starving in early 2015, while there was elevated sea lion mortality during 2013–16.  Because of poor conditions along the entire coast, the number of California and Stellar sea lions in the Columbia River estuary peaked in 2015, where they consumed large quantities of adult (and presumably juvenile) salmon. There have also been two large whale unusual mortality events recently: in the western Gulf of Alaska and British Columbia in 2015–16 (52 whales of many species), and a gray whale mortality event in 2019 (over 250 dead whales reported from Mexico to Alaska).
+
+*Pacific salmon*.  The abundance of Pacific salmon populations around the Pacific Rim have also shown dramatic changes since 2015. While some populations (especially in northern areas) have returned at record high abundances, others have dropped to new lows. These trends demonstrates that unusually high or low returns are not restricted to any one region, species, or production type (hatchery or natural), but were ocean-wide. For example, recent low steelhead returns to the Columbia River basin parallel extremely low steelhead returns to the Fraser River basin, and while Russian Pink and Bristol Bay Sockeye Salmon reached record highs, Fraser Sockeye and Japanese Chum Salmon fell to record lows. 
+
+Coho Salmon populations from the Oregon coast to the Salish Sea had unexpectedly low returns in 2015, including some of the lowest returns on record. Although returns were predicted to be above average, the small body size and low abundance of these adults suggested poor feeding conditions during the last summer in marine waters. Steelhead returns were extremely low in 2017 and 2018 in the same areas, to the point that Thompson and Chilcotin River (Fraser River, British Columbia) steelhead were petitioned for emergency protection under the Canadian Species At Risk Act (Neilson and Taylor 2018). One species in the region that increased in abundance was Chum Salmon starting in 2016, perhaps in part due to their reliance on gelatinous prey, which were abundant.
+
+Both Fraser and Columbia River Sockeye Salmon, which re-enter freshwater in mid-summer, incurred huge in-river mortalities in 2015 due to elevated river temperatures. The following year (2016), Fraser River Sockeye Salmon had the smallest return on record (total run of <1 million fish), but was even lower in 2019 (500,000 fish), as progeny of the 2015 year class returned as adults. The 2020 Fraser River Sockeye Salmon return was still lower (<300,000 fish). By contrast, Columbia River Sockeye Salmon returns were relatively high in 2016 (326,000), and reached an all-time high of 341,000 counted over Bonneville Dam in 2020.
+
+In Alaska, there was a strong east–west gradient in run size, with western Alaska generally having exceptionally high salmon returns, while central and southeastern Alaska saw declines. Perhaps most impressive has been the annual catch of Bristol Bay Sockeye Salmon, which broke a new abundance record in 2022 with 79 million adults (the 20 year [2002–2021] average run was 43.6 million). Similarly, 2017 was the highest statewide catch of Chum Salmon on record, due in part to record Prince William Sound catches. In contrast, the abundance of Yukon River Chinook and Chum Salmon have greatly declined for reasons that aren’t entirely clear, leading to conservation concerns for both the salmon and the many subsistence fishers who rely on these runs for nutrition.
 
 # Determination of MU Status Benchmarks and ER Caps
 
@@ -511,25 +572,133 @@ Most MUs in the U.S. have CWT indicator stocks and DIT programs. However, some o
 [^26]: Beginning BY 1995, all tagged releases were unmarked.
 [^27]: Beginning BY 1995, all tagged releases were unmarked.
 
-# Annual Implementation
+# Annual Implementation of the Southern Coho Management Plan
 
-Coho FRAM is used by the Pacific Fishery Management Council (PFMC) to model internal US fisheries as well as fisheries of interest to the PSC. Expectations for MU status, cohort abundance, and fishery objectives are exchanged in March of each year for use in pre-season planning processes.
-
-## Domestic Fishery Planning Processes
+The Coho Fisheries Regulation Assessment Model (Coho FRAM, Model Evaluation Workgroup (MEW). 2008) has been the tool used to plan U.S. preseason fisheries and also to evaluate, postseason, exploitation rates (ERs) by the fisheries of both Parties on the naturally spawning Coho management units (MUs) specified by the CoABM. Canada has not been using Coho FRAM preseason, instead using a combination of a ‘domestic model’ for planning marine fisheries and a ‘decay model’ for planning Fraser River fisheries. 
 
 Each country manages the Coho harvest within its ER cap through its own domestic fisheries management processes and annual fisheries plans. For Canada, the annual domestic planning process is documented in the salmon Integrated Fisheries Management Plan (IFMP). For the U.S., the North of Cape Falcon ocean salmon fishing plans are reported in Preseason Report III (PFMC). For U.S. Inside MUs, the 2019 PST uses the exploitation rate thresholds and stepped harvest rate goals from the Comprehensive Coho Agreement and adopted as FMP conservation objectives in 2009. For U.S. Outside MUs, exploitation rate constraints represent the Maximum Fishing Mortality Threshold (MFMT).
 
-### United States
+## United States fishery Planning Process
+
+The U.S. annual salmon fishery planning process starts in January with a Stock and Fishery Evaluation (SAFE) report on fisheries and escapements from previous years and concludes in early April when preseason fishing plans for US fisheries are developed. Outlined below are the Coho FRAM inputs used within the US domestic process to plan annual Coho fisheries, and postseason data needed to evaluate the preseason plan.
+
+  *Preseason FRAM inputs:
+    +Stocks’ abundance forecasts
+    +Fishery inputs by Coho FRAM time period (e.g., season structure, gear and retention restrictions, quota levels, fishery harvest rate scalars) 
+    
+  *Inseason:
+    +FRAM fishery adjustments 
+    
+  *Postseason FRAM inputs:
+    +Stocks’ observed escapement
+    +Fisheries’ observed catch and non-retention mortality by FRAM time period
 
 Because the domestic planning processes of the Parties are not synchronous, a single pre-season command file containing expectations for both Canada and the U.S. is not available prior to the conclusion of the PFMC process (U.S. pre-season fishery planning) in April. The pre-season command file used by the PFMC incorporates cohort abundance for both Canadian and U.S. MUs, but planned fishery regulations for U.S. fisheries only. Unless other information is available, Canadian regulations are assumed to be similar to those implemented in the previous year. Subsequent to this process, additional command files are generated to represent the actual Canadian fishing plans. Command files used in pre-season planning from 2004 to 2020 are detailed in Table 2.1. These files contain specific information used at the time to model fisheries along with the pre-season forecasts of stock abundances.
 
-### Canada
+### U.S. Preseason Abundance Forecasts
+The U.S. forecast development commences in January of every year. U.S. Forecasts for both Coho and Chinook stocks are finalized in late February and published in the annual Pacific Fisheries Management Council’s (PFMC) Pre I Report. In mid-March, the Parties share general expectations for stock abundance and fisheries though a manager-to-manager information exchange (see Development of Canadian Preseason Coho FRAM Inputs). These forecasts are then used throughout the PFMC/NOF (North of Falcon) salmon fishery planning meetings which conclude at the April PFMC meeting.
 
-## Annual Data Exchange
+The forecast methodologies for many U.S. stocks’ are generally based upon the products of two estimates specific to each production source: 1) number of smolts leaving freshwaters; and, 2) expected regional marine survival rates. Numbers of naturally produced smolts are estimated in a variety of ways but are based upon a large and widely distributed system of smolt traps. The number of smolts released from hatcheries are known. Marine survival is defined as, and calculated from, catch plus escapement from CWT data. Sibling relationships, between jack returns and subsequent return to the mature cohort, have also been used as an index to predict marine survival. Environmental conditions have been increasingly relied upon as predictors of anticipated survival from smolt to adults entering the fisheries.
+
+### Development of U.S. Preseason FRAM Inputs
+U.S. fishery planning relies upon both the Coho and Chinook FRAM models. The process starts at the early March PFMC meeting, proceeds through March at a variety of regional meetings (including the NOF meetings), and concludes in early/mid April at the next PFMC meeting.
+
+**U.S. Coho FRAM Stock Abundance Inputs:**
+Abundance forecasts are incorporated into two models, Coho FRAM and Chinook FRAM, both of which rely on similar algorithms and common computer code. Mass marked and unmarked naturally and hatchery produced stocks (components of MUs) are represented in U.S. Coho FRAM (e.g., Queets naturally produced unmarked, Queets naturally produced marked, Queets hatchery unmarked, Queets hatchery marked). For the MUs specified by the CoABM, appropriate unmarked naturally produced stocks are combined. Numeric forecasts for southern US Coho stocks are provided from regional managers which utilize a variety of methodologies. The annual forecasts of Coho FRAM stocks are entered as Abundance Scalars, applied within the model to Base Period Stock Abundance.
+
+Prior to the March PFMC meeting, an initial Coho FRAM model run with last year’s planned fisheries and the current year’s US forecasts serves to inform, in a general sense, how the fishery plan from the previous year needs to change to accommodate the current year’s stocks’ abundances. The results from this model run are included in the PFMC’s Pre I Report.
+
+Starting with this initial model run, the US domestic salmon planning process is affected by the timing and quality of forecasts for Canadian Coho stocks. Coho FRAM performs best when data for all stocks are incorporated. The US domestic process is, in theory, at the half way point before Canadian forecasts are provided and combined with US forecasts for FRAM modeling at the NOF 2 meeting in late March. Thus, at the March PFMC meeting and the NOF 1 meeting there is hesitation to fully use the FRAM results for planning domestic fisheries as those results will likely change when Canadian forecasts are incorporated.
+
+**U.S. FRAM Fishery Inputs:**
+Expected fishery catch and/or mortality is the other major category of preseason inputs to Coho FRAM. At the March PFMC meeting three options (e.g., catch levels, retention restrictions, harvest rate scalars, seasons) are developed (low, moderate, high) for the US ocean fisheries (California, Oregon, and Washington coasts). The FRAM results for both Coho and Chinook from these March options are published in the annual PFMC Pre II Report.
+
+During the course of March and early April US meetings, the North of Falcon (NOF) domestic planning refines fishery inputs to insure compliance with various agreements. These include the PFMC Salmon Framework Plan, domestic and international treaties; and the US Endangered Species Act which collectively establish constraints on fishery impacts upon US Coho and Chinook stocks.
+
+For the PFMC ocean fisheries the model inputs are Catch Quotas and regulations such as mark-selective fisheries, with the expectation that subsequent inseason monitoring will close fisheries without exceeding quotas. The model inputs for most sport and commercial US Puget Sound marine and terminal area fisheries are expected catch or expected harvest rates, generally based upon recent year averages and anticipated fisheries for Fraser sockeye, pink and chum salmon, and regulations such as mark selective fishing. In some cases the Catch Quota management approach is also used within Puget Sound with planned fishery closure as inseason observations indicate FRAM total fishery mortality estimates are being approached. The mortality associated with Coho non-retention is another class of fishery inputs.
+
+Through the month of March the NOF meetings shape inside fisheries (Washington Coastal terminal, Puget Sound marine and freshwater) for both Coho and Chinook for compliance with domestic and international requirements. The NOF planning informs the April PFMC meeting toward the development of the final set of ocean, inside, and terminal fisheries. The FRAM modeling results of the final adopted regulations for ocean fisheries are published in the PFMC Pre III Report, and submitted to the US Department of Commerce for confirmation of compliance with the US Endangered Species Act and other domestic obligations. Inside fisheries are formalized by regional agreements by state and tribal managers. There is virtually no ability to modify the regulations and agreements after they are adopted.
+
+Throughout this process, the January post season, Pre I-III reports are provided to Canada as information. The Final April PFMC Coho FRAM run is also provided to Canada. It is the April PFMC model run that until recently has provided the information for post season assessment of exploitation rates (see Canadian section of “Timing of Domestic Planning” for potential exception).
+
+### U.S. Inseason Management
+
+Inseason changes to planned U.S fisheries are limited, but have been implemented under some specific conditions. When ocean area/fishery specific quotas are not being caught in an ocean area then part of the quota may be transferred to another ocean area/fishery, based upon FRAM estimates of neutral impacts to the limiting stock(s); this may include adjustments to bag limits, seasons, and/or MSF regulations. The preseason planned prosecution of some fisheries is dependent upon the results of test fisheries, i.e. the Fraser Panel Sockeye directed commercial fisheries. Emergency closures due to attaining or exceeding planned catch quotas or in response to indications of reduced abundance.
+
+## Canadian Fishery Planning Process
+Annual Canadian fisheries are planned using a combination of two domestic models (marine fisheries and freshwater decay models) and tools focused upon Interior Fraser River (IFR) Coho. The planning process starts early in the year. A draft Integrated Salmon Fishery Management Plan (IFMP) is available for stakeholder comment in April, but the IFMP is not finalized until formally approved by the Fisheries Minister in June.
+
+In the domestic process, initial planning scenarios are developed based on discussions with Fishery Managers, preliminary salmon outlook for stock status (prepared in November of previous year), effort expectation (targeted or incidental impact on IFR coho) given ER constraints, and domestic allocation policy. Once stock abundance forecasts are available in March and timing and diversion forecasts for Fraser sockeye are available in June, the final Salmon IFMP is submitted to the Minister for approval. The Canadian domestic model does not use coho abundance forecasts directly, relying instead upon past relationships between fisheries’ effort and IFR ER, to estimate preseason projected ER for IFR. Depending on what species or fishery specific objectives are in place for the upcoming season, the domestic model is populated with anticipated effort based on trends in recent years and scaled to base period (1986–1997) effort. Multiple scenarios are run based on adjusting preliminary fishing plans (species, effort, month, gear, regulations) and results are reviewed by Fisheries Managers and evaluated for multiple objectives, in particular, meeting the preseason ER objectives for IFR coho.
+
+### Development of Canadian Preseason Coho FRAM Inputs
+
+The U.S. preseason Coho FRAM modeling requires Canadian inputs to complete the model for the U.S. domestic planning and this also enables the pre to post season Coho FRAM evaluation of both Parties’ fisheries. The Canadian data used to inform Coho FRAM for annual U.S. preseason planning and joint postseason evaluation are outlined below:
+
+  *Preseason:
+    +Stocks’ abundance forecasts, or
+    +Regional expected marine survival rates, based on CWT indicator stocks
+    +FRAM fishery scalars by coho FRAM time period from postseason analysis of a fishery plan similar to anticipated fishing patterns 
+    
+  *Inseason:
+    +FRAM fishery adjustments or significant deviations in expected abundance / catch
+    
+  *Postseason:
+    +Stocks’ observed escapement, or
+    +Regional observed marine survival rates
+    +Fisheries’ observed catch by FRAM time period
+
+**Canadian FRAM Stock Abundance Inputs:**
+U.S. FRAM preseason modeling requires forecasts of Canadian stocks. Forecast development commences every year in early March, and is provided to US FRAM modelers in mid to late March for use at the second NOF meeting, prior to the April PFMC meeting.
+
+To obtain these values Canadian forecast methodology uses the following information:
+
+  1) Annual hatchery production
+  2) Base Period FRAM natural production
+  3) Base Period hatchery production
+  4) Predicted marine survival
+  5) Base Period marine survival
+  6) Base Period FRAM stock abundance values
+
+Estimates of freshwater production (smolt out-migrants) for hatchery produced Coho, by FRAM production region, are scaled to Base Period production. Next the annual expected regional marine survival (m.s.) is scaled to Base Period marine survival. Both ratios are applied to a stock’s Base Period abundance to produce the annual adult abundance forecasts. To illustrate (by stock):
+
+  *(annual H smolts)/(base H smolts) X (expected m.s.)/(base m.s.) X Base Adults = Adult H Abundance
+
+Hatchery smolt data are obtained from the Canadian Salmon Enhancement Program. Where naturally produced smolt out-migrant estimates exists (2 of 14 Canadian production regions), the values are used. For the production regions where naturally produced smolt data are not available (the remaining 12 of 14 Canadian production regions), the default production starting values has been the same as the annual hatchery output for the same FRAM production region, assuming similar smolt abundance trends between naturally produced and hatchery smolts. As hatchery production has been reduced over time it has become necessary to find other means to obtain the surrogates for naturally produced smolt production.
+
+Marine survival expectations have been based upon hatchery and wild indicator CWT returns. As the number of coho indicators has been reduced over time it has become necessary to use adjacent MU indicators to estimate marine survival for some MUs and use hatchery indicators to estimate survival of naturally spawning Coho.
+
+For IFR, where naturally produced smolt output is not available, the forecasted adult returns are used as inputs to Coho FRAM. This forecast is based on a naive model, usually an average of the previous three years estimated ocean adult abundance. However, the forecast may be “as observed last year” when it appears a longer term average is not appropriate; this was the case for the 2016 fishing year forecast. Several U.S. 2016 forecasts also used the “as observed last year” approach due to the extremely poor returns in 2015 and the observations that those same poor environmental conditions existed for the smolts entering the ocean in 2015 (i.e. the 2016 adults).
+
+**Canadian FRAM Fishery Inputs:**
+
+Preseason FRAM’s anticipated fishery related mortality for Canadian Coho retention fisheries is modeled using Fishery Scalars (these Scalars essentially function as a harvest rate within the FRAM) taken from postseason Coho FRAM model runs with similar fishery plans and effort. For example, impacts of the Fraser River sockeye directed fisheries may be estimated from 4 years previous. The Fraser River pink directed fishery impacts are estimated from the fisheries 2 year previous. The impacts from the Chinook troll fishery are based on a year with a similar Chinook harvest guidelines. The mortality associated with Coho non-retention regulation is another class of fishery inputs, also taken from previous postseason FRAM model runs under the assumption of similar fishery plans and effort, and similar Coho abundance levels.
+
+### Canadian Inseason Management
+Canadian fishery planning process generally concludes in June, with the fisheries directed upon Fraser River salmon (Pinks, Sockeye, and Chum) driven by test fisheries. This later planning process can produce anticipated fishery impacts that diverge from the postseason Canadian fishery scalars used for the US domestic modeling the previous April. In such cases the April PFMC FRAM model run can be “updated” to evaluate both Parties compliance with the Coho Agreement.
+
+## Joint Canadian and U.S. Postseason Evaluations
+“Backwards Coho FRAM” is used to generate estimates of exploitation rates that are used to evaluate management performance relative to constraints set forth in the CoABM. Data required to populate FRAM are not available until one year after the fisheries were prosecuted, thus the 2021 postseason ER estimates were produced in February of 2023. The Backwards Coho FRAM is also employed to produce estimates of historic exploitation rates reported in the CoTC Periodic Report.
+
+Backwards Coho FRAM requires estimated mortalities by fishery strata (uses the Base Period stock-fishery-time steps; terminal IFR fisheries have been incorporated recently) and available estimates of escapements to reconstruct annual cohort abundances and generate post-season estimates of ERs. The escapement estimates for Coho FRAM stocks and catch information (catch, type of fishery --Mark Selective, Non-retention, Quota) for FRAM fisheries are compiled from various government agencies (USA: Federal, State and Tribal; Canada: Federal, and First Nations) and reviewed by the CoTC.
+
+The Backwards Coho FRAM derives total cohort abundance of Coho FRAM stocks through an iterative process of estimating the set of stock abundance scalars that best explain observed escapements and reported catches. FRAM calculation of stock abundance scalars is the preferred method and occurs when escapement data are available (almost all US stocks). When escapement estimates are not available (almost all Canadian stocks), the stock abundance scalars are calculated externally and entered into FRAM; an estimate of “observed” marine survival has been used as a surrogate to recalculate Canadian stock abundances per the preseason method previously described. Consequently, FRAM’s iterative process of estimating a full set of stock abundance scalars is not possible and this has implications for backwards FRAM estimates of abundance for all stocks. Ideally total cohort abundance for each MU is derived by summing model estimated stock specific: pre-terminal catch, terminal catch, and escapement.
+
+The Backwards Coho FRAM provides two estimates of cohort abundance, termed “Ocean age-3” and “January age-3”. Ocean age-3 abundance includes escapement and fishery impacts. January age-3 includes escapement, fishery impacts, and natural mortality. Ocean age-3 is the basis for Pacific Salmon Treaty stock status and is therefore the measure provided in the tables and figures in the Management Unit Status section the Periodic Report, and in the annual postseason evaluations.
+
+These estimates of cohort abundance, catches and escapements are used to generate estimates of ERs and determine MU status for post season reporting to the Southern Panel.
 
 # Fishery Information
+Under the CoABM regime, each Party is required to regulate its fisheries so as not to exceed exploitation rate (ER) constraints on MUs. Fisheries and changes in management objectives during the reporting period are summarized within this chapter. Total fishery mortality of all Management Units combined, by Canada and the U.S. from 1986 to 2021 is depicted in **Figure 5.1**. Here are maps showing Fishery Management Areas for British Columbia, Washington, and Oregon:
 
-Under the ABM regime, each Party is required to regulate its fisheries so as not to exceed exploitation rate (ER) constraints on MUs. Fisheries and changes in management objectives during the reporting period are summarized within this chapter. Total fishery mortality of all Management Units combined, by Canada and the U.S. from 1986 to ??? is depicted in **Figure 5.1**. *do we still want Figure 5.1? is it useful?* **link these maps instead of placing in an appendix?**Maps showing Fishery Management Areas for British Columbia, Washington, and Oregon are included in Appendix D.
+::: {#fig:DFOMap}
+![**Canadian DFO Southern BC Pacific Fisheries Management Areas.**/\label{fig:DFOMap}](images/PFMA_CDFO.png)
+:::
+::: {#fig:WAMap}
+![**Washington Coast and Puget Sound Marine Fishery Areas.**/\label{fig:WAMap}](images/WA_MFA.jpg)
+:::
+::: {#fig:ORMap}
+![**Oregon Ocean Salmon Management Areas and Major Port Locations.**/\label{fig:ORMap}](images/OR_SMA.jpg)
+:::
 
 ## Canadian Fisheries
 
@@ -551,7 +720,7 @@ Since 2000, fisheries impacting naturally-spawning Coho from southern B.C., Wash
 
 ## U.S. Fisheries
 
-Current U.S. fisheries are constrained by domestic and PST conservation objectives. For the Puget Sound MUs, the 2008 PST Southern Coho Agreement of ABM uses the thresholds and stepped harvest rate goals from the Comprehensive Coho Agreement (CCW 1998), developed by Washington State and the Puget Sound tribes, and adopted by the Pacific Fishery Management Council as Fishery Management Plan conservation objectives in November 2009. Actual ER constraints for Canadian fisheries on U.S. Coho MUs are determined by formulas that specify sharing of allowable total ERs and a "composite rule". The composite rule adjusts constraints for Canadian fishery ERs based on the number of U.S. MUs that fall in a given category. For example, if only one Washington coastal Coho MU is in low status, Canadian fisheries are constrained to a total ER on that unit of 12%; if two or more Washington coastal MUs are in low status, the constraint becomes 10%. The most restrictive ER limit for Canadian fishery impacts on U.S. Coho MUs is 10%.
+Current U.S. fisheries are constrained by domestic and PST conservation objectives. For the Puget Sound MUs, the 2008 PST Southern Coho Agreement of CoABM uses the thresholds and stepped harvest rate goals from the Comprehensive Coho Agreement (CCW 1998), developed by Washington State and the Puget Sound tribes, and adopted by the Pacific Fishery Management Council as Fishery Management Plan conservation objectives in November 2009. Actual ER constraints for Canadian fisheries on U.S. Coho MUs are determined by formulas that specify sharing of allowable total ERs and a "composite rule". The composite rule adjusts constraints for Canadian fishery ERs based on the number of U.S. MUs that fall in a given category. For example, if only one Washington coastal Coho MU is in low status, Canadian fisheries are constrained to a total ER on that unit of 12%; if two or more Washington coastal MUs are in low status, the constraint becomes 10%. The most restrictive ER limit for Canadian fishery impacts on U.S. Coho MUs is 10%.
 
 Fisheries between Cape Falcon, Oregon and the U.S./Canada Border are constrained by four factors: (1) management objectives and treaty Indian obligations for individual stock U.S. MUs; (2) treaty Indian/non-Indian and ocean/in-river sharing agreements; (3) stocks listed under the ESA; and (4) requirements of the PST. The starting point for implementing these constraints is the forecasted January age-3 abundance and the modeled ocean distribution of each Coho stock.
 
