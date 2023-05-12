@@ -3,9 +3,9 @@ title: "Joint Coho Technical Committee Periodic Report"
 author: "PSC Joint Coho Technical Committee"
 date: "`r Sys.Date()`"
 output:
-  html_document:
+  bookdown::html_document2:
     toc: yes
-    toc_depth: 2
+    toc_depth: 4
     toc_float: yes
     collapsed: no
     number_sections: yes
@@ -361,7 +361,7 @@ The productivity of Pacific salmon populations is influenced by numerous factors
 
 Annual average temperatures and precipitation by water year (Oct–Sep) provide a broad-brush view of terrestrial conditions across the Pacific Northwest. A strong and persistent warming trend and large year-to-year variations in precipitation are among the most notable features in recent decades (link temp_rain_pic here). Within snow-dominated watersheds, warmer winters and springs experienced in recent years reduce snow accumulation and hasten snowmelt. Reduced snowpack causes an earlier and smaller freshet in spring and can result in lower minimum flows and higher stream temperatures in summer.  
 
-```{r temp_rain_pic, out.width='100%'}
+```{r temp_pic_EnvFig1, out.width='100%'}
 knitr::include_graphics("images/Env_fig1.jpg")
 ```
 
@@ -377,7 +377,7 @@ Coho Salmon inhabiting streams, rivers, and marine environments were likely affe
 
 Surface temperatures in the northeastern Pacific Ocean vary on decadal time scales, with periods of above and below average temperatures, as indicated by the Pacific Decadal Oscillation (PDO; Mantua et al. 1997). Recently, surface temperatures were notably cooler than average from 1999–2002, 2008–13 and again starting in 2020 (link PDO_pic here). They were warmer than normal from 2003–05, and at record highs for much of the period from fall 2013–20 due to a series of marine heat waves (link PDO_pic here). For the California Current region, surface temperatures reached record high levels from 2014–16, with 2015 being the single warmest year in the historical record (Jacox et al. 2018). In most years, positive PDO values correspond to El Niño events (e.g., the 2015/2016 El Niño), while negative PDO values correspond to La Niña events (e.g., 2021, 2022, and 2023 La Niñas).
 
-```{r temp_rain_pic, out.width='100%'}
+```{r temp_pic_EnvFig2, out.width='100%'}
 knitr::include_graphics("images/Env_fig2.png")
 ```
 
@@ -661,7 +661,7 @@ These estimates of cohort abundance, catches and escapements are used to generat
 
 
 
-# Management Unit Profiles
+# Post-2010 (2004?) Performance of Abundance Based Management Regime
 
 ## Overview of Coded Wire Tag Use
 
@@ -770,9 +770,9 @@ Most MUs in the U.S. have CWT indicator stocks and DIT programs. However, some o
 [^27]: Beginning BY 1995, all tagged releases were unmarked.
 
 
+## Multi-MU Assessment
 
-
-## Abundance Overview (placeholder table)
+### Abundance Overview (placeholder table)
 
 *Note that Quillayute and Queets values are those from the FRAM database and have not yet been extracted from the relevant TAMM cells for each year*
 
@@ -832,7 +832,7 @@ psc |>
 
 ```
 
-## ER Overview (placeholder table & fig)
+### ER Overview (placeholder table & fig)
 
 *Note that Quillayute and Queets values are those from the FRAM database and have not yet been extracted from the relevant TAMM cells for each year*
 
@@ -882,12 +882,30 @@ psc |>
 
 ```
 
-
-## Canadian MUs
+## MU Specific Assessment/Performance
 
 ### Lower Fraser
 
-..text, figures and tables..
+#### Biological & Geographic Description
+
+#### Management 
+
+##### Objectives
+
+##### Assessment
+
+###### Marking and tagging
+
+###### Escapement Monitoring
+
+###### Fishery Monitoring
+
+##### Enhancement
+
+#### Status (MU-specific figures, tables, etc.)
+
+- includes historical/base period info, current fisheries
+
 
 ```{r}
 plot_abund_bar("Lower Fraser")
@@ -895,7 +913,26 @@ plot_abund_bar("Lower Fraser")
 
 ### Interior Fraser
 
-..text, figures and tables..
+#### Biological & Geographic Description
+
+#### Management 
+
+##### Objectives
+
+##### Assessment
+
+###### Marking and tagging
+
+###### Escapement Monitoring
+
+###### Fishery Monitoring
+
+##### Enhancement
+
+#### Status (MU-specific figures, tables, etc.)
+
+- includes historical/base period info, current fisheries
+
 
 ```{r}
 plot_abund_bar("Interior Fraser")
@@ -903,17 +940,53 @@ plot_abund_bar("Interior Fraser")
 
 ### Strait of Georgia
 
-..text, figures and tables..
+#### Biological & Geographic Description
+
+#### Management 
+
+##### Objectives
+
+##### Assessment
+
+###### Marking and tagging
+
+###### Escapement Monitoring
+
+###### Fishery Monitoring
+
+##### Enhancement
+
+#### Status (MU-specific figures, tables, etc.)
+
+- includes historical/base period info, current fisheries
+
 
 ```{r}
 plot_abund_bar("Strait of Georgia")
 ```
 
-## U.S. Inside MUs
 
 ### Skagit
 
-..text, figures and tables..
+#### Biological & Geographic Description
+
+#### Management 
+
+##### Objectives
+
+##### Assessment
+
+###### Marking and tagging
+
+###### Escapement Monitoring
+
+###### Fishery Monitoring
+
+##### Enhancement
+
+#### Status (MU-specific figures, tables, etc.)
+
+- includes historical/base period info, current fisheries
 
 ```{r}
 plot_abund_bar("Skagit")
@@ -922,7 +995,25 @@ plot_abund_bar("Skagit")
 
 ### Stillaguamish
 
-..text, figures and tables..
+#### Biological & Geographic Description
+
+#### Management 
+
+##### Objectives
+
+##### Assessment
+
+###### Marking and tagging
+
+###### Escapement Monitoring
+
+###### Fishery Monitoring
+
+##### Enhancement
+
+#### Status (MU-specific figures, tables, etc.)
+
+- includes historical/base period info, current fisheries
 
 ```{r}
 plot_abund_bar("Stillaguamish")
@@ -931,7 +1022,26 @@ plot_abund_bar("Stillaguamish")
 
 ### Snohomish
 
-..text, figures and tables..
+#### Biological & Geographic Description
+
+#### Management 
+
+##### Objectives
+
+##### Assessment
+
+###### Marking and tagging
+
+###### Escapement Monitoring
+
+###### Fishery Monitoring
+
+##### Enhancement
+
+#### Status (MU-specific figures, tables, etc.)
+
+- includes historical/base period info, current fisheries
+
 
 ```{r}
 plot_abund_bar("Snohomish")
@@ -940,7 +1050,57 @@ plot_abund_bar("Snohomish")
 
 ### Hood Canal
 
-..text, figures and tables..
+#### Biological & Geographic Description
+
+The Hood Canal management unit consists of the following nine stocks: Northeast Hood Canal, Dewatto, Southeast Hood Canal, Skokomish, Southwest Hood Canal, Hamma Hamma, Duckabush, Dosewallips, and Quilcene/Dabob Bays (CWW 1998).  Coho salmon utilize almost all of the accessible tributaries draining into Hood Canal.  Hood Canal Coho Salmon belong to the larger Puget Sound/Strait of Georgia Coho Salmon evolutionarily significant unit (ESU; [Weitkamp et al. 1995][References]).  This ESU is currently a species of concern under the U.S. Endangered Species Act (NOAA Fisheries 2009).
+
+The Hood Canal Management unit includes all waters south and east of a line from Olele Point to Foulweather Bluff (WDFW and WWTIT 1994) (Figure 1.3).
+
+Hood Canal is a 61 mile long fish hook-shaped fjord, bordered on the west by the heavily forested Olympic Mountains and the low rolling hills of the Kitsap Peninsula border it on the east.  It is 1.2 to 2.5 miles (2 to 4 km) wide, and up to 570 feet (175 meters) deep in the main body of the canal.  The depth at the northern entrance to the canal is 165 to 245 feet (50 to 75 meters), and shallows to 130 feet (40 meters) or less in the “arm” on the southern end of Hood Canal.  The freshwater habitat of this MU consists of numerous small to medium-sized river basins entering Hood Canal.  
+
+Watersheds flowing into Hood Canal from the west, draining out of the Olympic Mountains, are high gradient rivers with limited access to anadromous fish due to natural barriers.  They consist of river systems from the Skokomish River at the southwest corner northward to the Big Quilcene River.  The Skokomish River, including the South and North forks, is the largest watershed.  The other major watersheds that flow into the canal from the west include the Hamma Hamma, Duckabush, and Dosewallips rivers.  These systems drain the eastern slopes of the Olympic Mountain Range, are of consistently higher gradient, and receive snowmelt runoff in addition to rain-fed discharge.  The Duckabush and Dosewallips rivers also have some glacial input.  Most tributaries entering the west side of Hood Canal are not highly productive for natural Coho due to the high average gradients, with the exception of some tributaries in the Skokomish River drainage.
+
+Watersheds flowing into Hood Canal from the east, off the Kitsap Peninsula, are lower gradient, smaller systems.  These river systems include the Union, Dewatto, and Tahuya rivers.  The Kitsap Peninsula tributaries have some of the highest quality Coho spawning and rearing habitat in the MU, due to the numerous low gradient tributaries and limited urban development in most of this area.  
+
+Much of the land base in the region is managed for commercial timber production, though the upper reaches of the longer western Hood Canal tributaries originate in Olympic National Park.  There are several small to moderate-sized communities scattered through the MU.  Residential and commercial development rates are increasing rapidly on the Kitsap Peninsula, with the fastest growth around the town of Belfair on the southeastern end of the Hood Canal arm and along the northeast side of Hood Canal northwest of Bremerton.  
+
+There have been severe water quality issues in Hood Canal in recent years due to seasonally low dissolved oxygen (DO) problems.  It is thought that the DO problem is associated with the shallow sill at the northern end that prevents full tidal exchange of the deep water layer, and organic pollutant inputs from human activities have exacerbated the periodic anoxic conditions in the sub-surface water layers in recent years (Allen 2007).  It is currently unknown what the implications of this problem are for the future productivity of salmon populations in the region. 
+
+A number of salmon hatchery facilities exist within the Hood Canal MU and listed below are the Coho programs in the canal (Figure 1.3).
+
+The Quilcene National Fish Hatchery (QNFH) is located in the northwestern section of Hood Canal on the Big Quilcene River at RM 3 [KM 4.8] from the estuary (Figure 1.3) (USFWS 2007).  This facility was constructed in 1911 and is operated by the U.S. Fish and Wildlife Service.  Coho Salmon have been raised continuously since 1911, presumably begun with local Quilcene River broodstock.  It is an integrated harvest program with the goal of providing adult Coho for harvest (USFWS 1999).  Current Coho annual production goals include 400,000 smolts (24,000 lbs) to be released on-station, 200,000 pre-smolts (9,050 lbs at transfer) to be transferred to the Skokomish Tribal net pen in Quilcene Bay, and 450,000 eyed eggs to be transferred to George Adams Hatchery (which are transferred later to the Port Gamble Bay Net Pens) (USFWS 2007).  The QNFH stock is a somewhat early returning population compared to most other hatchery and wild populations in the Puget Sound region.
+
+George Adams Hatchery is operated by WDFW and is located on Purdy Creek, a tributary to the lower Skokomish River in southwestern Hood Canal (Figure 1.3) (WDFW 2003).  The hatchery was constructed in 1960 and expanded in 1977.  The purpose of the Coho program at George Adams is to augment harvest opportunities and, in part, mitigate for reduced natural production in the Skokomish system, primarily caused by hydroelectric dams on the North Fork Skokomish.  The program is intended to be an isolated harvest program; however, an unknown number of adults stray into the spawning grounds of the Skokomish River.  Current Coho production goal is 500,000 yearlings released annually into Purdy Creek.
+
+In addition to WDFW production at George Adams, the hatchery receives 450,000 eyed eggs from the QNFH and rears the fish for eventual transfer to the Port Gamble Bay Net Pens. 
+
+The WDFW Hoodsport Hatchery, located on the southwestern side of Hood Canal north of the Skokomish River, discontinued Coho production after the 1993 brood.  
+
+The Quilcene Net Pens are anchored at the southeast end of Quilcene Bay near Fisherman’s Point (commercial Marine Management Area [MMA] 12A), in northwestern Hood Canal (Skokomish Tribe 2003).  This program is operated by the Skokomish Tribe and began releasing Coho in 1986.  Eggs are collected from QNFH broodstock, incubated and hatched, and the fry are reared to smolts in the same hatchery before transfer to the Quilcene Bay Net Pens.  The net pens receive the Coho smolts in January and the fish are reared until release in April or May.  The program is intended to be an isolated harvest program and the production goal is to release 200,000 Coho smolts annually.
+
+The Port Gamble Net Pens are anchored at the north end of Port Gamble Bay (commercial MMA 9A) in northern Hood Canal. The net pens are operated by the Port Gamble S’Klallam Tribe and began releasing Coho smolts in 1981 (Port Gamble S’Klallam Tribe 2003).  Eggs are collected from QNFH broodstock and transferred to George Adams Hatchery where they are hatched and the fry are reared to smolts before transfer to the Port Gamble Net Pens.  The net pens receive the Coho smolts in January and the fish are reared until release in April or May.  The program is intended to be an isolated harvest program and the production goal is to release 400,000 Coho smolts annually.
+
+
+#### Management 
+
+##### Objectives
+
+##### Assessment
+
+###### Marking and tagging
+
+###### Escapement Monitoring
+
+###### Fishery Monitoring
+
+##### Enhancement
+
+#### Status (MU-specific figures, tables, etc.)
+
+- includes historical/base period info, current fisheries
+
+
+
 
 ```{r}
 plot_abund_bar("Hood Canal")
@@ -949,19 +1109,56 @@ plot_abund_bar("Hood Canal")
 
 ### US Strait JDF
 
-..text, figures and tables..
+#### Biological & Geographic Description
+
+#### Management 
+
+##### Objectives
+
+##### Assessment
+
+###### Marking and tagging
+
+###### Escapement Monitoring
+
+###### Fishery Monitoring
+
+##### Enhancement
+
+#### Status (MU-specific figures, tables, etc.)
+
+- includes historical/base period info, current fisheries
+
 
 ```{r}
 plot_abund_bar("US Strait JDF")
 ```
 
-## U.S. Outside MUs
 
 ### Quillayute
 
 *Note that Quillayute and Queets values are those from the FRAM database and have not yet been extracted from the relevant TAMM cells for each year*
 
-..text, figures and tables..
+#### Biological & Geographic Description
+
+#### Management 
+
+##### Objectives
+
+##### Assessment
+
+###### Marking and tagging
+
+###### Escapement Monitoring
+
+###### Fishery Monitoring
+
+##### Enhancement
+
+#### Status (MU-specific figures, tables, etc.)
+
+- includes historical/base period info, current fisheries
+
 
 ```{r}
 plot_abund_bar("Quillayute")
@@ -970,7 +1167,25 @@ plot_abund_bar("Quillayute")
 
 ### Hoh
 
-..text, figures and tables..
+#### Biological & Geographic Description
+
+#### Management 
+
+##### Objectives
+
+##### Assessment
+
+###### Marking and tagging
+
+###### Escapement Monitoring
+
+###### Fishery Monitoring
+
+##### Enhancement
+
+#### Status (MU-specific figures, tables, etc.)
+
+- includes historical/base period info, current fisheries
 
 ```{r}
 plot_abund_bar("Hoh")
@@ -981,7 +1196,26 @@ plot_abund_bar("Hoh")
 
 *Note that Quillayute and Queets values are those from the FRAM database and have not yet been extracted from the relevant TAMM cells for each year*
 
-..text, figures and tables..
+#### Biological & Geographic Description
+
+#### Management 
+
+##### Objectives
+
+##### Assessment
+
+###### Marking and tagging
+
+###### Escapement Monitoring
+
+###### Fishery Monitoring
+
+##### Enhancement
+
+#### Status (MU-specific figures, tables, etc.)
+
+- includes historical/base period info, current fisheries
+
 
 ```{r}
 plot_abund_bar("Queets")
@@ -990,7 +1224,26 @@ plot_abund_bar("Queets")
 
 ### Grays Harbor
 
-..text, figures and tables..
+#### Biological & Geographic Description
+
+#### Management 
+
+##### Objectives
+
+##### Assessment
+
+###### Marking and tagging
+
+###### Escapement Monitoring
+
+###### Fishery Monitoring
+
+##### Enhancement
+
+#### Status (MU-specific figures, tables, etc.)
+
+- includes historical/base period info, current fisheries
+
 
 ```{r}
 plot_abund_bar("Grays Harbor")
@@ -1018,6 +1271,15 @@ gt(static$acronyms) |>
 ```{r}
 gt(static$glossary)
 ```
+
+# References
+
+*internal inline links direct here, individual refs themselves will have external links as '(pdf)[urls_of_raw.pdf]' for reader to click*
+
+Weitkamp-1995 Weitkamp 1995 Some paper Some Journal
+
+Weitkamp-et-al-1996 Weitkamp 1996 Some paper Some Journal
+
 
 # Appendix: Annual CoTC reports on Estimates of Exploitation Rates
 
