@@ -57,8 +57,18 @@ static <- list(
   ,
   glossary = readxl::read_excel(params$static_tables, sheet = "glossary") |> 
     mutate(across(where(is.character), ~replace_na(.,"")))
+  ,
+  releases = readxl::read_excel(
+    params$static_tables, sheet = "Releases",
+    col_types = c(rep('text',6), 'numeric', 'text', rep('numeric',6))) |> 
+    mutate(across(where(is.character), ~replace_na(.,"")))
 )
 
+pal_rel_tag_mark <- c("CWT_Unclipped"= "#4D5370", 
+                      "CWT_Unclipped_DIT" = alpha("#263C19", 0.6),
+                      "CWT_Clipped" = "#A6B7C6",
+                      "MM"= "#E4C22B", "Unclipped" = "#965127")
+  
 ```
 
 ```{r rebuild_psc_csv, include=FALSE, eval=FALSE}
@@ -759,6 +769,135 @@ Most MUs in the U.S. have CWT indicator stocks and DIT programs. However, some o
 [^25]: Beginning BY 1996, all tagged releases were unmarked.
 [^26]: Beginning BY 1995, all tagged releases were unmarked.
 [^27]: Beginning BY 1995, all tagged releases were unmarked.
+
+```{r fig_wild_stock_tagging}
+#pending some changes to the MU strings from CCT
+static$releases |> 
+  filter(
+    rearing_type != "H",
+    MU %in% c(
+      "FRSLOW","FRSUPP","GSMLND","GSVNCI",
+      "GRAYHB","HOHRIV","HOODCL","QUEETS", "QUILUT","SKAGIT","SJDFCA",
+      "Snoh","Stilly")
+  ) |> 
+  mutate(MU = if_else(MU %in% c("GSMLND","GSVNCI"), "GeorgSt", MU)) |> 
+  select(MU, brood_year, CWT_Clipped, CWT_Unclipped) |> 
+  pivot_longer(cols = starts_with("CWT_"), names_to = "tag_mark", values_to = "val") |> 
+  mutate(tag_mark = factor(tag_mark, levels = c("CWT_Unclipped", "CWT_Unclipped_DIT", "CWT_Clipped"))) |> 
+  drop_na(val) |> 
+  ggplot() +
+  geom_col(aes(brood_year, val, fill = tag_mark)) +
+  #scale_fill_grey() +
+  scale_fill_manual(values = pal_rel_tag_mark) +
+  scale_x_continuous("Brood Year", breaks = seq(1980, 2024, by = 4)) +
+  scale_y_continuous("Released with CWT", labels = scales::comma) +
+  facet_wrap(~MU) +
+  theme(
+    legend.position = "bottom", legend.title = element_blank(),
+    strip.background = element_rect(fill = NA), strip.text = element_text(colour = 1, hjust = 0)
+  )
+  
+```
+
+```{r fig_hatch_stock_releases_all_cwt_only}
+#pending some changes to the MU strings from CCT
+#also pending hatchery_location_name filter modification to only indicatory groups in StaticTables
+static$releases |> 
+  filter(
+    rearing_type == "H",
+    MU %in% c(
+      "FRSLOW","FRSUPP","GSMLND","GSVNCI",
+      "GRAYHB","HOHRIV","HOODCL","QUEETS", "QUILUT","SKAGIT","SJDFCA",
+      "Snoh","Stilly")
+  ) |> 
+  mutate(MU = if_else(MU %in% c("GSMLND","GSVNCI"), "GeorgSt", MU)) |> 
+  filter(
+    !str_detect(hatchery_location_name, "chools|CHOOL| ES| MS| HS| FFA")
+  ) |>
+  select(MU, brood_year, tag_code_or_release_id, CWT_Clipped, CWT_Unclipped, CWT_Unclipped_DIT) |> 
+  pivot_longer(cols = -c(MU, brood_year, tag_code_or_release_id), names_to = "tag_mark", values_to = "val") |> 
+  drop_na(val) |> 
+  mutate(tag_mark = factor(tag_mark, levels = names(pal_rel_tag_mark))) |> 
+  group_by(brood_year, tag_mark) |> summarise(val = sum(val), .groups = "drop") |> 
+  filter(between(brood_year,1980,2020)) |> 
+  ggplot() +
+  geom_col(aes(brood_year, val, fill = tag_mark)) +
+  scale_fill_manual(values = pal_rel_tag_mark) +
+  scale_x_continuous("Brood Year", breaks = seq(1980, 2024, by = 4)) +
+  scale_y_continuous("Releases", labels = scales::comma) +
+  theme(
+    legend.position = "bottom", legend.title = element_blank()
+  )
+  
+```
+
+```{r fig_hatch_stock_releases_mu_cwt_only}
+#pending some changes to the MU strings from CCT
+static$releases |> 
+  filter(
+    rearing_type == "H",
+    MU %in% c(
+      "FRSLOW","FRSUPP","GSMLND","GSVNCI",
+      "GRAYHB","HOHRIV","HOODCL","QUEETS", "QUILUT","SKAGIT","SJDFCA",
+      "Snoh","Stilly")
+  ) |> 
+  mutate(MU = if_else(MU %in% c("GSMLND","GSVNCI"), "GeorgSt", MU)) |> 
+  filter(
+    !str_detect(hatchery_location_name, "chools|CHOOL| ES| MS| HS| FFA")
+  ) |> #pull(hatchery_location_name) |> unique()
+  select(MU, brood_year, tag_code_or_release_id, CWT_Clipped, CWT_Unclipped, CWT_Unclipped_DIT) |> 
+  pivot_longer(cols = -c(MU, brood_year, tag_code_or_release_id), names_to = "tag_mark", values_to = "val") |> 
+  drop_na(val) |> 
+  mutate(tag_mark = factor(tag_mark, levels = names(pal_rel_tag_mark))) |> 
+  group_by(MU, brood_year, tag_mark) |> summarise(val = sum(val), .groups = "drop") |> 
+  filter(between(brood_year,1980,2020)) |> 
+  ggplot() +
+  geom_col(aes(brood_year, val, fill = tag_mark)) +
+  scale_fill_manual(values = pal_rel_tag_mark) +
+  scale_x_continuous("Brood Year", breaks = seq(1980, 2024, by = 4)) +
+  scale_y_continuous("Releases", labels = scales::comma) +
+  facet_wrap(~MU) +
+  theme(
+    legend.position = "bottom", legend.title = element_blank(),
+    strip.background = element_rect(fill = NA), strip.text = element_text(colour = 1, hjust = 0)
+  )
+  
+```
+
+```{r fig_hatch_stock_releases_mu}
+#pending some changes to the MU strings from CCT
+#also pending hatchery_location_name filter modification to only indicatory groups in StaticTables
+static$releases |> 
+  filter(
+    rearing_type == "H",
+    MU %in% c(
+      "FRSLOW","FRSUPP","GSMLND","GSVNCI",
+      "GRAYHB","HOHRIV","HOODCL","QUEETS", "QUILUT","SKAGIT","SJDFCA",
+      "Snoh","Stilly")
+  ) |> 
+  mutate(MU = if_else(MU %in% c("GSMLND","GSVNCI"), "GeorgSt", MU)) |> 
+  filter(
+    !str_detect(hatchery_location_name, "chools|CHOOL| ES| MS| HS| FFA")
+  ) |> #pull(hatchery_location_name) |> unique()
+  select(MU, brood_year, tag_code_or_release_id, CWT_Clipped, CWT_Unclipped, CWT_Unclipped_DIT, MM, Unclipped) |> 
+  pivot_longer(cols = -c(MU, brood_year, tag_code_or_release_id), names_to = "tag_mark", values_to = "val") |> 
+  drop_na(val) |> 
+  mutate(tag_mark = factor(tag_mark, levels = names(pal_rel_tag_mark))) |> 
+  group_by(MU, brood_year, tag_mark) |> summarise(val = sum(val), .groups = "drop") |> 
+  filter(between(brood_year,1980,2020)) |> 
+  ggplot() +
+  geom_col(aes(brood_year, val, fill = tag_mark)) +
+  scale_fill_manual(values = pal_rel_tag_mark) +
+  scale_x_continuous("Brood Year", breaks = seq(1980, 2024, by = 4)) +
+  scale_y_continuous("Releases", labels = scales::comma) +
+  facet_wrap(~MU) +
+  theme(
+    legend.position = "bottom", legend.title = element_blank(),
+    strip.background = element_rect(fill = NA), strip.text = element_text(colour = 1, hjust = 0)
+  )
+  
+```
+
 
 
 ## Multi-MU Assessment
