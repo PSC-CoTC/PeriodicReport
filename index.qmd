@@ -9,6 +9,7 @@ number-sections: true
 number-depth: 4
 crossref:
   chapters: true
+bibliography: references.bib
 params:
   static_tables: StaticTables.xlsx
   mdb: ~/O/code/coho/fram_mdbs/PSC_CoTC_PostSeason_CohoFRAMDB_thru2021_021523.mdb
@@ -58,17 +59,32 @@ static <- list(
   glossary = readxl::read_excel(params$static_tables, sheet = "glossary") |> 
     mutate(across(where(is.character), ~replace_na(.,"")))
   ,
+  #field PSC_MU designates relevant units for report, those in PST
+  #field Indicator defines evaluated CWT release groups (as "Y")
   releases = readxl::read_excel(
     params$static_tables, sheet = "Releases",
-    col_types = c(rep('text',6), 'numeric', 'text', rep('numeric',6))) |> 
+    col_types = c(rep('text',9), 'numeric', 'text', rep('numeric',6))
+    ) |> 
     mutate(across(where(is.character), ~replace_na(.,"")))
+  ,
+  smolts = readxl::read_excel(params$static_tables, sheet = "Smolts") |> 
+    select(out_year = `Out-migration Year`, everything(), -Reference) |> 
+    pivot_longer(cols = -out_year, names_to = "mu_name", values_to = "n") |> 
+    drop_na(n)
 )
+
+levels <- list(
+  mu_name = c("Interior Fraser", "Lower Fraser",
+  "Strait of Georgia", #created inline by combining Mainland and Van.Isl.
+  "Skagit","Stillaguamish","Snohomish","Hood Canal","Strait of Juan de Fuca",
+  "Quillayute","Hoh","Queets","Grays Harbor"
+  ))
 
 pal_rel_tag_mark <- c("CWT_Unclipped"= "#4D5370", 
                       "CWT_Unclipped_DIT" = alpha("#263C19", 0.6),
                       "CWT_Clipped" = "#A6B7C6",
-                      "MM"= "#E4C22B", "Unclipped" = "#965127")
-  
+                      "Clipped_only"= "#E4C22B", "Unclipped" = "#965127")
+
 ```
 
 ```{r rebuild_psc_csv, include=FALSE, eval=FALSE}
@@ -247,6 +263,22 @@ plot_ns_msf <- function(stknm = "Skagit"){
     labs(subtitle = stknm)
 }
 
+```
+
+```{r func_plot_smolt_out_migration_est}
+plot_smolts <- function(stknm = "Skagit"){
+  static$smolts |> 
+    filter(mu_name == stknm) |> 
+    ggplot(aes(out_year, n)) +
+    geom_col() +
+    geom_smooth() +
+    #geom_line() + geom_point() +
+    scale_x_continuous("Out migration year") +
+    scale_y_continuous("Smolts", labels = scales::comma) +
+    labs(
+      title = paste(stknm, "stimated smolt outmigrants")
+    )
+}
 ```
 
 
@@ -598,6 +630,7 @@ Throughout this process, the January post season, Pre I-III reports are provided
 Inseason changes to planned U.S fisheries are limited, but have been implemented under some specific conditions. When ocean area/fishery specific quotas are not being caught in an ocean area then part of the quota may be transferred to another ocean area/fishery, based upon FRAM estimates of neutral impacts to the limiting stock(s); this may include adjustments to bag limits, seasons, and/or MSF regulations. The preseason planned prosecution of some fisheries is dependent upon the results of test fisheries, i.e. the Fraser Panel Sockeye directed commercial fisheries. Emergency closures due to attaining or exceeding planned catch quotas or in response to indications of reduced abundance.
 
 ## Canadian Fishery Planning Process
+
 Annual Canadian fisheries are planned using a combination of two domestic models (marine fisheries and freshwater decay models) and tools focused upon Interior Fraser River (IFR) Coho. The planning process starts early in the year. A draft Integrated Salmon Fishery Management Plan (IFMP) is available for stakeholder comment in April, but the IFMP is not finalized until formally approved by the Fisheries Minister in June.
 
 In the domestic process, initial planning scenarios are developed based on discussions with Fishery Managers, preliminary salmon outlook for stock status (prepared in November of previous year), effort expectation (targeted or incidental impact on IFR coho) given ER constraints, and domestic allocation policy. Once stock abundance forecasts are available in March and timing and diversion forecasts for Fraser sockeye are available in June, the final Salmon IFMP is submitted to the Minister for approval. The Canadian domestic model does not use coho abundance forecasts directly, relying instead upon past relationships between fisheries’ effort and IFR ER, to estimate preseason projected ER for IFR. Depending on what species or fishery specific objectives are in place for the upcoming season, the domestic model is populated with anticipated effort based on trends in recent years and scaled to base period (1986–1997) effort. Multiple scenarios are run based on adjusting preliminary fishing plans (species, effort, month, gear, regulations) and results are reviewed by Fisheries Managers and evaluated for multiple objectives, in particular, meeting the preseason ER objectives for IFR coho.
@@ -646,9 +679,11 @@ For IFR, where naturally produced smolt output is not available, the forecasted 
 Preseason FRAM’s anticipated fishery related mortality for Canadian Coho retention fisheries is modeled using Fishery Scalars (these Scalars essentially function as a harvest rate within the FRAM) taken from postseason Coho FRAM model runs with similar fishery plans and effort. For example, impacts of the Fraser River sockeye directed fisheries may be estimated from 4 years previous. The Fraser River pink directed fishery impacts are estimated from the fisheries 2 year previous. The impacts from the Chinook troll fishery are based on a year with a similar Chinook harvest guidelines. The mortality associated with Coho non-retention regulation is another class of fishery inputs, also taken from previous postseason FRAM model runs under the assumption of similar fishery plans and effort, and similar Coho abundance levels.
 
 ### Canadian Inseason Management
+
 Canadian fishery planning process generally concludes in June, with the fisheries directed upon Fraser River salmon (Pinks, Sockeye, and Chum) driven by test fisheries. This later planning process can produce anticipated fishery impacts that diverge from the postseason Canadian fishery scalars used for the US domestic modeling the previous April. In such cases the April PFMC FRAM model run can be “updated” to evaluate both Parties compliance with the Coho Agreement.
 
 ## Joint Canadian and U.S. Postseason Evaluations
+
 “Backwards Coho FRAM” is used to generate estimates of exploitation rates that are used to evaluate management performance relative to constraints set forth in the CoABM. Data required to populate FRAM are not available until one year after the fisheries were prosecuted, thus the 2021 postseason ER estimates were produced in February of 2023. The Backwards Coho FRAM is also employed to produce estimates of historic exploitation rates reported in the CoTC Periodic Report.
 
 Backwards Coho FRAM requires estimated mortalities by fishery strata (uses the Base Period stock-fishery-time steps; terminal IFR fisheries have been incorporated recently) and available estimates of escapements to reconstruct annual cohort abundances and generate post-season estimates of ERs. The escapement estimates for Coho FRAM stocks and catch information (catch, type of fishery --Mark Selective, Non-retention, Quota) for FRAM fisheries are compiled from various government agencies (USA: Federal, State and Tribal; Canada: Federal, and First Nations) and reviewed by the CoTC.
@@ -770,28 +805,31 @@ Most MUs in the U.S. have CWT indicator stocks and DIT programs. However, some o
 [^26]: Beginning BY 1995, all tagged releases were unmarked.
 [^27]: Beginning BY 1995, all tagged releases were unmarked.
 
-```{r fig_wild_stock_tagging}
-#pending some changes to the MU strings from CCT
+```{r fig_wild_stock_tagging, fig.height=9, fig.width=8}
 static$releases |> 
   filter(
     rearing_type != "H",
-    MU %in% c(
-      "FRSLOW","FRSUPP","GSMLND","GSVNCI",
-      "GRAYHB","HOHRIV","HOODCL","QUEETS", "QUILUT","SKAGIT","SJDFCA",
-      "Snoh","Stilly")
+    Indicator=="Y",
+    # MU %in% c(
+    #   "FRSLOW","FRSUPP","GSMLND","GSVNCI",
+    #   "GRAYHB","HOHRIV","HOODCL","QUEETS", "QUILUT","SKAGIT","SJDFCA",
+    #   "Snoh","Stilly")
   ) |> 
-  mutate(MU = if_else(MU %in% c("GSMLND","GSVNCI"), "GeorgSt", MU)) |> 
-  select(MU, brood_year, CWT_Clipped, CWT_Unclipped) |> 
+  mutate(
+    #MU = if_else(MU %in% c("GSMLND","GSVNCI"), "GeorgSt", MU)
+    MU_Name = if_else(str_detect(MU_Name, "Georgia"), "Strait of Georgia", MU_Name) |> 
+      factor(levels = levels$mu_name)
+    ) |> 
+  select(MU_Name, brood_year, CWT_Clipped, CWT_Unclipped) |> 
   pivot_longer(cols = starts_with("CWT_"), names_to = "tag_mark", values_to = "val") |> 
   mutate(tag_mark = factor(tag_mark, levels = c("CWT_Unclipped", "CWT_Unclipped_DIT", "CWT_Clipped"))) |> 
   drop_na(val) |> 
   ggplot() +
   geom_col(aes(brood_year, val, fill = tag_mark)) +
-  #scale_fill_grey() +
   scale_fill_manual(values = pal_rel_tag_mark) +
   scale_x_continuous("Brood Year", breaks = seq(1980, 2024, by = 4)) +
   scale_y_continuous("Released with CWT", labels = scales::comma) +
-  facet_wrap(~MU) +
+  facet_wrap(~MU_Name, ncol = 2) +
   theme(
     legend.position = "bottom", legend.title = element_blank(),
     strip.background = element_rect(fill = NA), strip.text = element_text(colour = 1, hjust = 0)
@@ -800,22 +838,17 @@ static$releases |>
 ```
 
 ```{r fig_hatch_stock_releases_all_cwt_only}
-#pending some changes to the MU strings from CCT
-#also pending hatchery_location_name filter modification to only indicatory groups in StaticTables
 static$releases |> 
   filter(
     rearing_type == "H",
-    MU %in% c(
-      "FRSLOW","FRSUPP","GSMLND","GSVNCI",
-      "GRAYHB","HOHRIV","HOODCL","QUEETS", "QUILUT","SKAGIT","SJDFCA",
-      "Snoh","Stilly")
+    Indicator=="Y"
   ) |> 
-  mutate(MU = if_else(MU %in% c("GSMLND","GSVNCI"), "GeorgSt", MU)) |> 
-  filter(
-    !str_detect(hatchery_location_name, "chools|CHOOL| ES| MS| HS| FFA")
-  ) |>
-  select(MU, brood_year, tag_code_or_release_id, CWT_Clipped, CWT_Unclipped, CWT_Unclipped_DIT) |> 
-  pivot_longer(cols = -c(MU, brood_year, tag_code_or_release_id), names_to = "tag_mark", values_to = "val") |> 
+  mutate(
+    MU_Name = if_else(str_detect(MU_Name, "Georgia"), "Strait of Georgia", MU_Name) |> 
+      factor(levels = levels$mu_name)
+  ) |> 
+  select(MU_Name, brood_year, tag_code_or_release_id, CWT_Clipped, CWT_Unclipped, CWT_Unclipped_DIT) |> 
+  pivot_longer(cols = -c(MU_Name, brood_year, tag_code_or_release_id), names_to = "tag_mark", values_to = "val") |> 
   drop_na(val) |> 
   mutate(tag_mark = factor(tag_mark, levels = names(pal_rel_tag_mark))) |> 
   group_by(brood_year, tag_mark) |> summarise(val = sum(val), .groups = "drop") |> 
@@ -831,32 +864,29 @@ static$releases |>
   
 ```
 
-```{r fig_hatch_stock_releases_mu_cwt_only}
-#pending some changes to the MU strings from CCT
+```{r fig_hatch_stock_releases_mu_cwt_only, fig.height=9, fig.width=8}
+#pending some changes to the MU_Name strings from CCT
 static$releases |> 
   filter(
     rearing_type == "H",
-    MU %in% c(
-      "FRSLOW","FRSUPP","GSMLND","GSVNCI",
-      "GRAYHB","HOHRIV","HOODCL","QUEETS", "QUILUT","SKAGIT","SJDFCA",
-      "Snoh","Stilly")
+    Indicator=="Y"
   ) |> 
-  mutate(MU = if_else(MU %in% c("GSMLND","GSVNCI"), "GeorgSt", MU)) |> 
-  filter(
-    !str_detect(hatchery_location_name, "chools|CHOOL| ES| MS| HS| FFA")
-  ) |> #pull(hatchery_location_name) |> unique()
-  select(MU, brood_year, tag_code_or_release_id, CWT_Clipped, CWT_Unclipped, CWT_Unclipped_DIT) |> 
-  pivot_longer(cols = -c(MU, brood_year, tag_code_or_release_id), names_to = "tag_mark", values_to = "val") |> 
+  mutate(
+    MU_Name = if_else(str_detect(MU_Name, "Georgia"), "Strait of Georgia", MU_Name) |> 
+      factor(levels = levels$mu_name)
+  ) |> 
+  select(MU_Name, brood_year, tag_code_or_release_id, CWT_Clipped, CWT_Unclipped, CWT_Unclipped_DIT) |> 
+  pivot_longer(cols = -c(MU_Name, brood_year, tag_code_or_release_id), names_to = "tag_mark", values_to = "val") |> 
   drop_na(val) |> 
   mutate(tag_mark = factor(tag_mark, levels = names(pal_rel_tag_mark))) |> 
-  group_by(MU, brood_year, tag_mark) |> summarise(val = sum(val), .groups = "drop") |> 
+  group_by(MU_Name, brood_year, tag_mark) |> summarise(val = sum(val), .groups = "drop") |> 
   filter(between(brood_year,1980,2020)) |> 
   ggplot() +
   geom_col(aes(brood_year, val, fill = tag_mark)) +
   scale_fill_manual(values = pal_rel_tag_mark) +
   scale_x_continuous("Brood Year", breaks = seq(1980, 2024, by = 4)) +
   scale_y_continuous("Releases", labels = scales::comma) +
-  facet_wrap(~MU) +
+  facet_wrap(~MU_Name, ncol = 2) +
   theme(
     legend.position = "bottom", legend.title = element_blank(),
     strip.background = element_rect(fill = NA), strip.text = element_text(colour = 1, hjust = 0)
@@ -864,40 +894,36 @@ static$releases |>
   
 ```
 
-```{r fig_hatch_stock_releases_mu}
-#pending some changes to the MU strings from CCT
+```{r fig_hatch_stock_releases_mu, fig.height=9, fig.width=8}
+#pending some changes to the MU_Name strings from CCT
 #also pending hatchery_location_name filter modification to only indicatory groups in StaticTables
 static$releases |> 
   filter(
     rearing_type == "H",
-    MU %in% c(
-      "FRSLOW","FRSUPP","GSMLND","GSVNCI",
-      "GRAYHB","HOHRIV","HOODCL","QUEETS", "QUILUT","SKAGIT","SJDFCA",
-      "Snoh","Stilly")
+    PSC_MU =="Y"
   ) |> 
-  mutate(MU = if_else(MU %in% c("GSMLND","GSVNCI"), "GeorgSt", MU)) |> 
-  filter(
-    !str_detect(hatchery_location_name, "chools|CHOOL| ES| MS| HS| FFA")
-  ) |> #pull(hatchery_location_name) |> unique()
-  select(MU, brood_year, tag_code_or_release_id, CWT_Clipped, CWT_Unclipped, CWT_Unclipped_DIT, MM, Unclipped) |> 
-  pivot_longer(cols = -c(MU, brood_year, tag_code_or_release_id), names_to = "tag_mark", values_to = "val") |> 
+  mutate(
+    MU_Name = if_else(str_detect(MU_Name, "Georgia"), "Strait of Georgia", MU_Name) |> 
+      factor(levels = levels$mu_name)
+  ) |> 
+  select(MU_Name, brood_year, tag_code_or_release_id, CWT_Clipped, CWT_Unclipped, CWT_Unclipped_DIT, Clipped_only, Unclipped) |> 
+  pivot_longer(cols = -c(MU_Name, brood_year, tag_code_or_release_id), names_to = "tag_mark", values_to = "val") |> 
   drop_na(val) |> 
   mutate(tag_mark = factor(tag_mark, levels = names(pal_rel_tag_mark))) |> 
-  group_by(MU, brood_year, tag_mark) |> summarise(val = sum(val), .groups = "drop") |> 
+  group_by(MU_Name, brood_year, tag_mark) |> summarise(val = sum(val), .groups = "drop") |> 
   filter(between(brood_year,1980,2020)) |> 
   ggplot() +
   geom_col(aes(brood_year, val, fill = tag_mark)) +
   scale_fill_manual(values = pal_rel_tag_mark) +
   scale_x_continuous("Brood Year", breaks = seq(1980, 2024, by = 4)) +
   scale_y_continuous("Releases", labels = scales::comma) +
-  facet_wrap(~MU) +
+  facet_wrap(~MU_Name, ncol = 2) +
   theme(
     legend.position = "bottom", legend.title = element_blank(),
     strip.background = element_rect(fill = NA), strip.text = element_text(colour = 1, hjust = 0)
   )
   
 ```
-
 
 
 ## Multi-MU Assessment
@@ -1013,6 +1039,7 @@ psc |>
 ```
 
 ## MU Specific Assessment/Performance
+
 
 ### Lower Fraser
 
@@ -1215,6 +1242,7 @@ To-do --> add table 4.2 (pre-post table)
 **Preseason forecasts and post-season estimates of wild Coho in the Skagit MU. Cohort abundance is age-3 ocean recruits (harvest and escapement). Post-season cohort abundance is derived using the backwards version of the Fishery Regulation Assessment Model (FRAM).**
 
 ###### Escapement Monitoring
+
 Escapements to the Baker system are counted at the Baker trap.  Hatchery fish are distinguished by ad-clips.  Wild fish returning to the Baker, including those that carry CWTs, are not ad-clipped.  
 
 Natural Coho escapement estimation efforts in the Skagit MU have a long and problematic history and are a textbook example of the challenges of estimating Coho Salmon escapements to large watersheds (Haymes 2008).  An early effort at estimating a basin-total Coho escapement to this MU was a 1961 Washington Department of Fisheries (WDF, now Washington Department of Fish and Wildlife, or WDFW) mark-recapture (M/R) escapement study.  This study focused on deriving a Pink Salmon (O. gorbuscha) escapement estimate for that year, but also tagged returning adult Coho to develop a Coho escapement estimate from spawning ground tag recoveries (Stockley 1963).  The Coho escapement estimate derived from this study (116,726) was confounded by low numbers of tagged Coho adults (289), limited tag recovery effort during the Coho spawning season, low numbers of tags recovered, and poor distribution of the tag recoveries (68 tags, of which 60 came from the Baker Lake adult trap, a drainage which accounts for a small fraction of the total natural Coho escapement to this MU).  
@@ -1237,6 +1265,7 @@ To-do --> add spawner distribution map
 
 
 ###### Fishery Monitoring
+
 *this is canned language used in all of the MUs.  should we include real data here - like fishery sample rates on fisheries that impact this stock?*
 
 A fundamental requirement of abundance-based Coho Salmon management under the PST is that all fishery impacts on individual MUs be annually monitored with respect to both number of fish caught and CWTs.  This requires basic reporting of total impacts by fishery and the capacity to estimate each fishery’s MU-specific impacts.  Total fishing mortalities for each MU must be estimated to enable managers the ability to evaluate the annual exploitation rate relative to the PST-prescribed impact limits.
@@ -1264,7 +1293,13 @@ Mark-selective fisheries have been intensively monitored to collect data to esti
 
 - includes historical/base period info, current fisheries
 
+```{r fig_smolt_skagit}
+plot_smolts("Skagit")
+```
+
+
 ##### Historic Distribution of Fishery Mortality  
+
 The base period for the FRAM defines the temporal and spatial distributions of salmon fishing mortalities from each MU.  The current FRAM base period for Coho Salmon includes catch years 1986-1992.  During this period, fishing effort, tagging, and fishery sampling of Coho Salmon was high, allowing relatively fine-scale discrimination between salmon distributions.  Coded-wire-tag codes used during the base period for the Skagit MU are provided in Appendix B and average base period exploitation rates by individual fisheries are provided in Appendix C.
 
 During the base period, Coho production from the Skagit MU contributed to U.S. and Canadian marine sport and commercial fisheries in southern British Columbia, the northern Washington coast, Strait of Juan de Fuca, and inner Puget Sound (Figure 5 1; Appendix C).  Terminal tribal and non-tribal set and drift-net Coho net fisheries occur in commercial fishery management area 8 and the lower Skagit River.  Moderate-sized Coho sport fisheries occur in sport fishery management area 8.1, the mainstem Skagit River, and the Cascade River.  The terminal fishery co-managers are WDFW, and the Upper Skagit, Sauk-Suiattle, and Swinomish Tribes.  
@@ -1513,7 +1548,7 @@ The performances of forecasts for Hood Canal Coho MU abundance have generally un
 The method used for estimating natural Coho escapements in this MU is the Base-Year Index approach (Haymes 2008). This approach is used to estimate annual Coho escapements to most of the major river basins and geographically associated aggregations of smaller independent tributaries in the Puget Sound region, exclusive of the Strait of Juan de Fuca. The Base-Year Index approach was adopted for estimating Coho escapements in this region because the distribution of Coho spawners is geographically broad in each river basin and an approach is required that is not dependent on the direct census of a large portion of the total spawning habitat, and that can use serial live and/or dead fish observations instead of spawning redd enumeration because the multiple species overlap and/or high spawning densities often make Coho redd enumeration impractical.
 	
 	
-The Base-Year Index method allows expansion of an annual index of abundance developed from serial field counts of live or dead salmon, collected in a relatively small fraction of the total freshwater habitat to an estimate of basin or region-total escapement.  A series of point counts of live Coho abundance are made in several fixed-location survey reaches, distributed throughout each major river basin or region. At the end of the spawning season an abundance index is developed for each index survey reach using the “area under the curve” (AUC) approach (Ames 1984; Irvine et al. 1993). The sum of the individual abundance index values from an individual escapement estimation unit (usually a river basin) are then multiplied by a historical “base year” basin-total escapement estimate developed from a mark-recapture study. The resulting value is divided by the base year index of abundance calculated for the same survey reaches that were monitored in the current escapement year, to produce the basin-total escapement estimate for the current year.
+The Base-Year Index method allows expansion of an annual index of abundance developed from serial field counts of live or dead salmon, collected in a relatively small fraction of the total freshwater habitat to an estimate of basin or region-total escapement.  A series of point counts of live Coho abundance are made in several fixed-location survey reaches, distributed throughout each major river basin or region. At the end of the spawning season an abundance index is developed for each index survey reach using the “area under the curve” (AUC) approach (Ames 1984 @ames_1984; Irvine et al. 1993). The sum of the individual abundance index values from an individual escapement estimation unit (usually a river basin) are then multiplied by a historical “base year” basin-total escapement estimate developed from a mark-recapture study. The resulting value is divided by the base year index of abundance calculated for the same survey reaches that were monitored in the current escapement year, to produce the basin-total escapement estimate for the current year.
 
 In the Hood Canal MU, escapements are estimated in 10 survey reaches covering 9 miles (14.5 km) (Haymes 2008).  In addition, natural smolt production and adult escapements are intensively monitored by WDFW at the Big Beef Creek Research Station and 3 nearby tributaries that enter Hood Canal on the Kitsap Peninsula northeast of Bremerton. A permanent WDFW upstream/downstream migrant weir is located on Big Beef Cr. just upstream of the estuary, and  juvenile fence traps are installed annually on 3 smaller adjacent tributaries (WRIAs 15.0377, 15.0400, and 15.0404).  The adult escapement information collected at this weir is used as an index abundance adjustment scalar in the Base-Year Index escapement estimation process for the MU. Spawning redd enumeration-based accounting of adult escapement is currently conducted on the three study streams adjacent to Big Beef that are being monitored for juvenile production as part of an ongoing habitat productivity study (Volkhardt et al. 2007).  Historical trends in escapement for the Hood Canal MU are provided in Table 5 3 and Figure 4 2. Known distribution of spawners within the basin is depicted in Figure 4 3.
 
@@ -1747,7 +1782,12 @@ gt(static$acronyms) |>
 gt(static$glossary)
 ```
 
-# References {#sec-refs}
+# References
+
+::: {#refs}
+:::
+
+# Ref_older {#sec-refs}
 
 *internal inline links direct here, individual refs themselves will have external links as '(pdf)[urls_of_raw.pdf]' for reader to click*
 
