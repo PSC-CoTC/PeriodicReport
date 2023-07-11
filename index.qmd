@@ -1812,8 +1812,6 @@ Hobday, A. J., and G. W. Boehlert.  2001.  The role of coastal ocean variation i
 
 Irvine, J., J. Morris, and L. Cobb.  1993. Area-under-the-curve salmon escapement estimation manual.  Canadian Fisheries and Aquatic Sciences Technical Report 1932. 
 
-**Jacox, M. G., M. A. Alexander, N. J. Mantua, J. D. Scott, G. Hervieux, R. S. Webb, and F. E. Werner. 2018. Forcing of multiyear extreme ocean temperatures that impacted California Current living marine resources in 2016. Bulletin of the American Meteorological Society 99: S27–S33.  DOI: https://doi.org/10.1175/BAMS-D-17-0119.1** 
-
 Johnson, S. L.  1988.  The effects of the 1983 El Niño on Oregon's coho (Oncorhynchus kisutch) and chinook (O. tshawytscha) salmon.  Fisheries Research 6:105-123.
 
 Kinsel, C., M. Zimmerman, L. Kishimoto, and P. Topping.  2008.  2007 Skagit River salmon production evaluation.  Annual Report.  State of Washington, Department of Fish and Wildlife, Olympia, Washington. 
@@ -1826,13 +1824,9 @@ Logerwell, E. A., N. J. Mantua, P. W. Lawson, R. C. Francis, and V. N. Agostini.
 
 Malick, M. J., M. D. Adkison, and A. C. Wertheimer.  2009.  Variable effects of biological and environmental processes on coho salmon marine survival in Southeast Alaska.  Transactions of the American Fisheries Society 138:846–860.
 
-**Mantua, N. J., S. R. Hare, Y. Zhang, J. M. Wallace, and R. C. Francis.  1997.  A Pacific interdecadal climate oscillation with impacts on salmon production.  Bulletin of the American Meteorological Society 78:1069-1079.**
-
 Mathews, S. B., and F. W. Olson.  1980.  Factors affecting Puget Sound coho salmon (Oncorhynchus kisutch) runs. Canadian Journal of Fisheries and Aquatic Sciences 37:1373-1378.
 
 *Morgan, C. A., B. R. Beckman, L. A. Weitkamp, and K. L. Fresh. 2019.  Recent Ecosystem Disturbance in the Northern California Current.  Fisheries 44(10):465-474, doi: 10.1002/fsh.10273.*
-
-**Neilson, J. and E. Taylor. 2018.  Technical summaries and supporting information for emergency assessments: Steelhead Oncorhynchus mykiss (Thompson River and Chilcotin River populations).  COSEWIC assessment report, 26 pp. Available online at <https://www.canada.ca/en/environment-climate-change/services/species-risk-public-registry/cosewic-assessments-status-reports/steelhead-trout-thompson-river-chilcotin-technical-summaries-2018.html>.**
 
 NOAA Fisheries.  2009.  Endangered Species Act status of West Coast salmon and steelhead.  NOAA National Marine Fisheries Service Updated July 1, 2009.  Available online at <http://www.nwr.noaa.gov>.
 
@@ -1858,8 +1852,6 @@ Quinn, T. P., B. R. Dickerson, and L. A. Vøllestad.  2005.  Marine survival and
 
 Quinn, T. P., and N. P. Peterson.  1996.  The influence of habitat complexity and fish size on over-winter survival and growth of individually marked juvenile coho salmon (Oncorhynchus kisutch) in Big Beef Creek, Washington.  Canadian Journal of Fisheries and Aquatic Sciences 53:1996.
 
-**Raymond, W. W., and 10 coauthors. 2022.  Assessment of the impacts of an unprecedented heatwave on intertidal shellfish of the Salish Sea. Ecology. Available online at <https://doi.org/10.1002/ecy.3798>.**
-
 RMISD (Regional Mark Information System Database).  Continuously since 1977.  Online database.  Pacific States Marine Fisheries Commission, Regional Mark Processing Center, Portland, OR. URL:<http://www.rmpc.org>.
 
 Rupp, D. E., T. C. Wainwright, P. W. Lawson, and W. T. Peterson.  2011.  Marine environment-based forecasting of coho salmon (Oncorhynchus kisutch) adult recruitment.  Fisheries Oceanography doi:10.1111/j.1365-2419.2011.00605.x.
@@ -1881,8 +1873,6 @@ Smoker, W. A.  1955.  Effects of stream flow on silver salmon production in west
 Stockley.  1963.  1961 Skagit River silver salmon run: progress report.  Washington State Department of Fisheries, Research Division.
 
 Teo, S. L., L. W. Botsford, and A. Hastings.  2009.  Spatio-temporal covariability in coho salmon (Oncorhynchus kisutch) survival, from California to southeast Alaska. Deep-Sea Research, Part II 56:2570-2578.
-
-**Thompson, A. R., et al. 2022.  State of the California Current Ecosystem in 2021: Winter is coming?  Frontiers in Marine Science 9. Available online at <https://doi.org/10.3389/fmars.2022.958727>.**
 
 Volkhardt, G. C., S. L. Johnson, B. A. Miller, T. E. Nickelson, and D. E. Seiler.  2007.  Rotary screw traps and inclined plane screen traps.  Pages 235-266 in D. H. Johnson, B. M. Shrier, J. S. O'Neal, J. A. Knutzen, X. Augerot, T. A. O-Neil, and T. N. Pearsons, editors.  Salmonid field protocols handbook: techniques for assessing status and trends in salmon and trout populations.  American Fisheries Society, Bethesda, Maryland.
 
@@ -1908,13 +1898,7 @@ Weitkamp, L. A., T. C. Wainwright, G. J. Bryant, G. B. Milner, D. J. Teel, R. G.
 
 Weitkamp, L. A., J. A. Orsi, K. W. Myers, and R. C. Francis.  2011.  Contrasting early marine ecology of Chinook salmon and coho salmon in Southeast Alaska: Insight into factors affecting marine survival.  Marine and Coastal Fisheries: Dynamics, Management, and Ecosystem Science 3:233-249.
 
-**White, R. H. and 15 coauthors. 2023. The unprecedented Pacific Northwest heatwave of June 2021. Nature Communications 14, 727 (2023). Available online at <https://doi.org/10.1038/s41467-023-36289-3>.**
-
 Zillges, G.  1977.  Methodology for determining Puget Sound coho escapement estimates, pre-season run size prediction, and in-season run assessment.  WDF Technical Report 28, WDFW, Olympia WA.
-
-Zimmerman, M.  2012.  2012 wild coho forecasts for Puget Sound, Washington Coast, and Lower Columbia.  Washington Department of Fish and Wildlife, Science Division, Fish Program unpublished annual advisory report.  Available online at <http://www.wdfw.wa.gov>
-
-Zimmerman, M.  2013.  2013 wild coho forecasts for Puget Sound, Washington Coast, and Lower Columbia.  Washington Department of Fish and Wildlife, Science Division, Fish Program unpublished annual advisory report.  Available online at <http://www.wdfw.wa.gov>
 
 
 
