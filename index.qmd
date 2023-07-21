@@ -32,7 +32,7 @@ editor_options:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 
-library("tidyverse")
+library("tidyverse", quietly = T)
 library("readxl")
 library("kableExtra")
 library("gt")
@@ -67,6 +67,9 @@ static <- list(
     ) |> 
     mutate(across(where(is.character), ~replace_na(.,"")))
   ,
+  #these data derive from CCT review of annual wild coho forecasts from WDFW
+  #originally compiled/prepared by Volkhardt, Seiler, Zimmerman, Litz
+  #needs review and possible updating
   smolts = readxl::read_excel(params$static_tables, sheet = "Smolts") |> 
     select(out_year = `Out-migration Year`, everything(), -Reference) |> 
     pivot_longer(cols = -out_year, names_to = "mu_name", values_to = "n") |> 
@@ -271,14 +274,16 @@ plot_smolts <- function(stknm = "Skagit"){
     filter(mu_name == stknm) |> 
     ggplot(aes(out_year, n)) +
     geom_col() +
-    geom_smooth() +
+    #geom_smooth() +
     #geom_line() + geom_point() +
-    scale_x_continuous("Out migration year") +
+    scale_x_continuous("Outmigration year") +
     scale_y_continuous("Smolts", labels = scales::comma) +
     labs(
-      title = paste(stknm, "stimated smolt outmigrants")
+      title = paste(stknm, "estimated naturally produced smolt outmigrants")
     )
 }
+
+plot_smolts()
 ```
 
 
@@ -865,7 +870,6 @@ static$releases |>
 ```
 
 ```{r fig_hatch_stock_releases_mu_cwt_only, fig.height=9, fig.width=8}
-#pending some changes to the MU_Name strings from CCT
 static$releases |> 
   filter(
     rearing_type == "H",
@@ -895,8 +899,6 @@ static$releases |>
 ```
 
 ```{r fig_hatch_stock_releases_mu, fig.height=9, fig.width=8}
-#pending some changes to the MU_Name strings from CCT
-#also pending hatchery_location_name filter modification to only indicatory groups in StaticTables
 static$releases |> 
   filter(
     rearing_type == "H",
@@ -1153,7 +1155,7 @@ Numerous salmon hatchery facilities exist within the Skagit Basin, including sma
 
 +	Coho are also reared in net pens within the Oak Harbor Marina ([WDFW 2003b ). This Coho program is a marine net pen program operated by WDFW and local sport angling groups and usually receives stock from the Marblemount Hatchery and is operated as an isolated program with an annual goal of releasing 30,000 smolts. The purpose of this program is to provide harvest opportunity for sport and commercial fishers.
 
-#### Management 
+#### Management framework 
 
 ##### Objectives
 
@@ -1179,67 +1181,78 @@ The current PST/Council exploitation rate ceilings for the Skagit MU natural Coh
 
 ##### Stock Assessment
 
-###### Indicator Stocks within the Management Unit
+###### Indicator Stocks
 
 The Baker wild releases are currently used as a marine survival rate indicator. The Skagit stock releases from Marblemount Hatchery and the Baker wild releases are used as exploitation rate indicator stocks. Coho Salmon released from Marblemount Hatchery have been double index tagged starting with brood year 1995.
 
 Coded wire tag recovery-based survival and exploitation rate data are available for the Marblemount Hatchery and Baker River Wild Coho tagging programs (Haymes 2008). The Baker River program began in 1983 and its purpose is to supply experimental and research smolts for gulper efficiency testing, serve as an indicator stock for wild Skagit Coho, and supplement natural production in the basin (WDFW and PSE 2003). Approximately 25,000–30,000 Baker Lake wild smolts are annually coded-wire tagged only (Figure 4 4).  The Marblemount Hatchery Coho program has been in existence for 64 years and its purpose is to provide harvest opportunity (WDFW 2003a).  The hatchery indicator program is currently a double index tag (DIT) program (differentially tagged fish released with or without adipose clips; see glossary, Section 6.2) with a goal of releasing 45,000 tagged fish of each group, one with an adipose fin clip and one without (WDFW 2003a). The DIT program began with brood year 1995. Exploitation rate values for the non-ad clipped+CWT Coho provide a surrogate measure of exploitation for natural origin Coho from this MU. There is no regular coded-wire-tag sampling of the freshwater sport fisheries in the MU, which results in some negative bias in tag recoveries. Double index tag groups released for the Skagit MU are provided in ??.
 
-To-do --> Figure 4.4 
-**Total number of Baker Lake wild Coho tagged and released, brood years 1983-2009.**
+```{r fig_wild_stock_tagging_skagit, fig.cap="Naturally produced tagging", fig.height=6, fig.width=8}
+static$releases |> 
+  filter(
+    rearing_type != "H",
+    Indicator=="Y",
+    MU_Name == "Skagit"
+  ) |> 
+  select(MU_Name, brood_year, CWT_Clipped, CWT_Unclipped) |> 
+  pivot_longer(cols = starts_with("CWT_"), names_to = "tag_mark", values_to = "val") |> 
+  mutate(tag_mark = factor(tag_mark, levels = c("CWT_Unclipped", "CWT_Unclipped_DIT", "CWT_Clipped"))) |> 
+  drop_na(val) |> 
+  ggplot() +
+  geom_col(aes(brood_year, val, fill = tag_mark)) +
+  scale_fill_manual(values = pal_rel_tag_mark) +
+  scale_x_continuous("Brood Year", breaks = seq(1980, 2024, by = 4)) +
+  scale_y_continuous("Released with CWT", labels = scales::comma) +
+  facet_wrap(~MU_Name, ncol = 2) +
+  theme(
+    legend.position = "bottom", legend.title = element_blank(),
+    strip.background = element_rect(fill = NA), strip.text = element_text(colour = 1, hjust = 0)
+  )
+  
+```
 
-**Forecast Methods and Performance**
+```{r fig_hatch_stock_releases_mu_cwt_only_skagit, fig.cap="Hatchery produced tagging", fig.height=6, fig.width=8}
+static$releases |> 
+  filter(
+    rearing_type == "H",
+    Indicator=="Y",
+    MU_Name == "Skagit"
+  ) |> 
+  select(MU_Name, brood_year, tag_code_or_release_id, CWT_Clipped, CWT_Unclipped, CWT_Unclipped_DIT) |> 
+  pivot_longer(cols = -c(MU_Name, brood_year, tag_code_or_release_id), names_to = "tag_mark", values_to = "val") |> 
+  drop_na(val) |> 
+  mutate(tag_mark = factor(tag_mark, levels = names(pal_rel_tag_mark))) |> 
+  group_by(MU_Name, brood_year, tag_mark) |> summarise(val = sum(val), .groups = "drop") |> 
+  filter(between(brood_year,1980,2020)) |> 
+  ggplot() +
+  geom_col(aes(brood_year, val, fill = tag_mark)) +
+  scale_fill_manual(values = pal_rel_tag_mark) +
+  scale_x_continuous("Brood Year", breaks = seq(1980, 2024, by = 4)) +
+  scale_y_continuous("Releases", labels = scales::comma) +
+  facet_wrap(~MU_Name, ncol = 2) +
+  theme(
+    legend.position = "bottom", legend.title = element_blank(),
+    strip.background = element_rect(fill = NA), strip.text = element_text(colour = 1, hjust = 0)
+  )
+  
+```
+
+
+###### Forecast Methods
+
 Since 1996, WDFW and tribal biologists have developed forecasts of wild Coho run size for all primary and most secondary management units in Puget Sound and the Washington coast (Zimmerman 2013).  These annual forecasts are described in the Pacific Fishery Management Council’s Preseason Forecast I document available each February (e.g., PFMC 2013b; www.pcouncil.org).  These forecasts rely on estimates of wild Coho production (i.e., smolts) paired with estimates of marine survival.  Wild Coho production estimates for each of the primary and secondary management units in Puget Sound were derived from results of juvenile trapping studies conducted in the Skagit, Stillaguamish, Snohomish, Green, Nisqually, and Deschutes rivers as well as in tributaries to Lake Washington and Hood Canal.  Analyses of these long-term data sets have demonstrated that wild Coho smolt production is limited by a combination of factors including seeding levels (i.e., escapement), environmental effects (flows, marine derived nutrients), and habitat degradation (Zimmerman 2012). 
 
 Estimates of wild Coho production in the Skagit Basin are based on catch of wild Coho smolts in a juvenile trapping program on the lower mainstem Skagit River.  A scoop-and-screw trap combination is operated by WDFW in the lower Skagit River mainstem, located at RM 17 from the river mouth.  Trapping began in 1990 and the juvenile trap is calibrated using recaptures of wild yearling Coho marked and released from an upstream tributary (Mannser Creek, RM 35).  Coho abundance is calculated using a Petersen estimator with Chapman modification (Seber 1973; Volkhardt et al. 2007).  Estimated smolt production has been quite consistent in the Skagit MU, averaging 1,060,823 smolts annually during 1990–2012 and 1,127,564 during 2000–2012.  Smolt production has varied from a low of 426,963 in 2008 to a high of 1,885,000 in 2002 and has exceeded 1,000,000 smolts in 13 of the last 23 years (Table 4 1).  Freshwater productivity (smolts/female) during this period was a function of Coho spawner abundance.  The smolt-spawner function derived based on Skagit Coho estimates is comparable to systems with census counts, lending further credibility to the Skagit juvenile and adult estimates.  Natural smolt production numbers have also been estimated for the 1984 to 1990 out-migration years by back-calculating from the number of coded-wire tags (CWTs) recovered from wild origin fish in terminal fisheries (Hayman 1995).
 
 Marine survival rates of wild Coho stocks have been measured using wild CWT indicator stocks in four geographic regions of Puget Sound: Big Beef Creek, Deschutes River, South Fork Skykomish River, and Baker River (Zimmerman 2012).  These populations are assumed to be representative of the different Puget Sound regions.  In the Baker River, a tributary to the Skagit River, marine survival of Coho smolts has averaged 7.9% (range of 1% and 14%) over 19 brood years (1989–1997, 2003–2009), with a high of 13.9% for return year 1989 and a low of 1.1% for return year 2003 (Figure 4 1).  Although the long term trend in marine survival is downwards, high survival (>10%) in 2009 and 2012 is encouraging.
 
-**Skagit River MU natural smolt production, 1990–2012 out-migration years (PFMC Preseason Reports 2000–2013).**
 
-|-----------------------|-----------|
-|Out-migration Year	|  Smolt Production |
-|-----------------------|-----------|
-| 1990 |  774,600  |
-| 1991 |	652,000  |
-| 1992 |	1,073,000  |
-| 1993 |	623,000  |
-| 1994 |	1,129,000  |
-| 1995 |	727,000  |
-| 1996 |	1,125,000  |
-| 1997 |	1,174,000  |
-| 1998 |	1,760,000  |
-| 1999 |	703,000  |
-| 2000 |	1,453,000  |
-| 2001 |	1,014,000  |
-| 2002 |	1,885,000 |
-| 2003 |	1,382,000 |
-| 2004 |	885,000 |
-| 2005 |	1,018,000 |
-| 2006 |	735,876 |
-| 2007 |	747,491 |
-| 2008 |	426,963 |
-| 2009 |	1,475,000 |
-| 2010 |	1,447,000 |
-| 2011 |	952,000 |
-| 2012 |	1,237,000 |
-| 2013||
-| 2014||
-| 2015||
-| 2016||
-| 2017||
-| 2018||
-| 2019||
-| 2020||
-| 2021||
-| 2022||
+```{r fig_smolts_skagit, fig.cap="TBD", fig.height=5, fig.width=8}
+plot_smolts("Skagit")
+```
 
 **Marine survival for Baker River Coho Salmon, the average marine survival of Puget Sound indicator stocks, and forecast survival for Skagit Coho salmon by year (data from Zimmerman 2012, 2013, unpublished data; forecast data from PFMC Preseason I reports).**
 
-A comparison of preseason adult ocean age-3 recruit forecasts with post-season estimates derived from Backwards FRAM run reconstruction have been mixed, with some forecasts over estimating abundances and others underestimating it (Table 4 2).  During catch years 2004–2013, predicted cohort size (without natural mortality) ranged from a low of 26,799 (2007) to a high of 155,814 (2004), while post-season estimates ranged from 11,521 (2006) to 145,283 (2004) (Table 4 2).  Accordingly, the difference between preseason and post-season estimates varied from -210% (2007) to +89% (2006) of the preseason estimates. 
-
-To-do --> add table 4.2 (pre-post table)
-**Preseason forecasts and post-season estimates of wild Coho in the Skagit MU. Cohort abundance is age-3 ocean recruits (harvest and escapement). Post-season cohort abundance is derived using the backwards version of the Fishery Regulation Assessment Model (FRAM).**
 
 ###### Escapement Monitoring
 
@@ -1257,16 +1270,27 @@ In the 1990s another escapement estimation approach was developed for Skagit MU 
 
 There are a number of reasons for the differences observed in the escapement estimates derived by the various methods discussed above.  The Base-Year Index escapement formula for the Skagit has an inherent negative bias due to a decision made by WDF management biologists following completion of the 1977 mark-recapture escapement study to select a value approaching the lower bound of the 95% confidence interval from the M/R study results as the “base year” escapement estimate (WDF 1985).  The 29,200 value that was selected by the WDF managers is considerably lower than the M/R study point estimate of 43,000, which has a 95% confidence interval (CI) of 25,211–148,464.  This decision was based on concern about the limited number of marks recovered in the M/R study, and the subsequent possibility of positive bias in the M/R-based estimate.  Further uncertainty in the 1977 M/R estimate was highlighted by a re-analysis of the 1977 M/R study data by the Northwest Indian Fisheries Commission (NWIFC) that produced a point estimate of 110,758, with a 95% CI of 4,564–216,952 (Conrad 1995).
 
-There are uncertainties regarding the point estimates of escapement derived by the newer M/R-based estimates, due to the positive bias that can occur from missed mark recoveries at fish traps or spawning grounds, under-estimates of post-tagging mortality or tag loss, size selectivity in the terminal test fisheries, or other issues (Cousens et al. 1982).  The accuracy of the “marine survival*smolt outmigration”-based method is dependent upon the assumption that the Baker River natural-origin smolts survive and are exploited in fisheries at the same rate as the rest of the Skagit MU natural origin smolts, which may not be true.  The veracity of the “test fishery hatchery/wild ratio”-based method is dependent upon an equal exploitation rate on the hatchery and wild populations.  Due to unresolved uncertainties at this time regarding the accuracy of all the various available methods and associated estimates, the escapement estimates currently used by the co-managers for management purposes for the 1986-to-present period are an average of the annual results of the Base-Year Index and M/R (“Reverse Petersen”)-based estimates of escapement.  Historical trends in escapement for the Skagit MU are provided in Figure 4 2.  Known distribution of spawners within the basin is depicted in Figure 4 3.
+There are uncertainties regarding the point estimates of escapement derived by the newer M/R-based estimates, due to the positive bias that can occur from missed mark recoveries at fish traps or spawning grounds, under-estimates of post-tagging mortality or tag loss, size selectivity in the terminal test fisheries, or other issues (Cousens et al. 1982).  The accuracy of the “marine survival*smolt outmigration”-based method is dependent upon the assumption that the Baker River natural-origin smolts survive and are exploited in fisheries at the same rate as the rest of the Skagit MU natural origin smolts, which may not be true.  The veracity of the “test fishery hatchery/wild ratio”-based method is dependent upon an equal exploitation rate on the hatchery and wild populations.  Due to unresolved uncertainties at this time regarding the accuracy of all the various available methods and associated estimates, the escapement estimates currently used by the co-managers for management purposes for the 1986-to-present period are an average of the annual results of the Base-Year Index and M/R (“Reverse Petersen”)-based estimates of escapement.  Historical trends in escapement for the Skagit MU are provided in Figure 4 2.  Known distribution of spawners within the basin is depicted in Figure NNN (derived from WDFW’s Salmonid Stock Inventory (SaSI) located at: http://wdfw.wa.gov/conservation/fisheries/sasi/).
 
-To-do --> add spawner distribution map
+![Spawner distribution of Coho Salmon in the Skagit River Basin](images/Skagit_Spawner_Map.jpg){#fig-spwnskgt}
 
-**Spawner distribution of Coho Salmon in the Skagit River Basin (figure from WDFW’s Salmonid Stock Inventory (SaSI) located at: http://wdfw.wa.gov/conservation/fisheries/sasi/).**
+```{r fig_swifd_spwn_TBD, eval=F}
+swifd <- sf::read_sf("~/Downloads/swifd/SWIFD.shp") |> sf::st_zm()
+
+swifd |> 
+  filter(SPECCODE=="CO", between(WRIA,3,4)) |> 
+    mapview::mapview(zcol = "USETYPE_DE")
+#  filter(USE_TYPE==2) |> 
+  ggplot() + geom_sf(aes(color = USETYPE_DE))
+  
+```
 
 
 ###### Fishery Monitoring
 
-*this is canned language used in all of the MUs.  should we include real data here - like fishery sample rates on fisheries that impact this stock?*
+*CCT: this is canned language used in all of the MUs.  should we include real data here - like fishery sample rates on fisheries that impact this stock?*
+
+*DA: I think canned/uniform langauge around pre-term mixed stock monitoring, i.e. PSSP, belongs ahead of individual MUs, but terminal/freshwater creel can/should go here...and/but that requires either writing it or pulling from multi-year coho-centric MSF-monitoring report generated by Ty for NOF22*
 
 A fundamental requirement of abundance-based Coho Salmon management under the PST is that all fishery impacts on individual MUs be annually monitored with respect to both number of fish caught and CWTs.  This requires basic reporting of total impacts by fishery and the capacity to estimate each fishery’s MU-specific impacts.  Total fishing mortalities for each MU must be estimated to enable managers the ability to evaluate the annual exploitation rate relative to the PST-prescribed impact limits.
 
@@ -1281,24 +1305,50 @@ Post-season exploitation rate estimates are also generated using the Post-Season
 
 Hatchery releases of brood years 1983–1992 were highly variable, ranging from a high of three million fish released from brood year 1983 to a low of 380,000 fish from brood year 1988 (Figure 6 1, Appendix E) (RMIS 1977).  Brood years 1993 to 2009 releases have averaged 500,000 annually.  Mass marking and double index tagging of hatchery fish began with the 1995 brood.
 
-To-do --> add figure 6.1 
-**Total hatchery releases for the Skagit MU, brood years 1983–2020 (data downloaded on ?? [RMIS 1977]).**
-
 With the advent of technology to automatically remove adipose fins and/or insert CWTs using mobile “tagging trailers”, mass marking of hatchery fish was implemented for Coho Salmon in the mid-1990s (SFEC 1999).  Mass marking allows mark selective fisheries (MSF) for Coho Salmon in which marked hatchery fish can be retained and unmarked wild fish released, resulting in higher harvest rates on hatchery fish than wild fish.  Mass marking was fully implemented for Coho Salmon from the Columbia River, Washington coast, and Puget Sound with the 1997 brood, including both mass marking (adipose fin clip) the vast majority of hatchery fish and use of select double index tag (DIT) groups (paired clipped and unclipped fish with CWTs) (SFEC 1999).  Mass marking began with the 1995 brood and an average of approximately 283,000 fish has been mass marked per year since then (Figure 6 1) (RMISD 1977).  All DIT groups that have been released from the Skagit MU are provided in Appendix A and summarized in Appendix E.
 
 Mark-selective fisheries have been intensively monitored to collect data to estimate key parameters characterizing MSF fisheries and their impacts on unmarked salmon.  Sampling activities include dockside creel sampling, on-water observation, and a Voluntary Trip Report (VTR) system.  Data collected from this sampling is used to estimate key parameters necessary to manage fisheries and integrate MSFs in the FRAM model.  These parameters include: mark rate of the targeted Coho populations; total number of Coho harvested or released by mark-status, the coded-wire-tag stock composition of landed Coho, and total mortality of marked and unmarked Coho.     
 
-
-#### Status (MU-specific figures, tables, etc.)
-
-- includes historical/base period info, current fisheries
-
-```{r fig_smolt_skagit}
-plot_smolts("Skagit")
+```{r fig_hatch_stock_releases_skagit, fig.cap="Skagit hatchery releases", fig.height=9, fig.width=8}
+static$releases |> 
+  filter(
+    rearing_type == "H",
+    PSC_MU =="Y",
+    MU_Name == "Skagit"
+  ) |> 
+  select(MU_Name, brood_year, tag_code_or_release_id, CWT_Clipped, CWT_Unclipped, CWT_Unclipped_DIT, Clipped_only, Unclipped) |> 
+  pivot_longer(cols = -c(MU_Name, brood_year, tag_code_or_release_id), names_to = "tag_mark", values_to = "val") |> 
+  drop_na(val) |> 
+  mutate(tag_mark = factor(tag_mark, levels = names(pal_rel_tag_mark))) |> 
+  group_by(MU_Name, brood_year, tag_mark) |> summarise(val = sum(val), .groups = "drop") |> 
+  filter(between(brood_year,1980,2020)) |> 
+  ggplot() +
+  geom_col(aes(brood_year, val, fill = tag_mark)) +
+  scale_fill_manual(values = pal_rel_tag_mark) +
+  scale_x_continuous("Brood Year", breaks = seq(1980, 2024, by = 4)) +
+  scale_y_continuous("Releases", labels = scales::comma) +
+  facet_wrap(~MU_Name, ncol = 2) +
+  theme(
+    legend.position = "bottom", legend.title = element_blank(),
+    strip.background = element_rect(fill = NA), strip.text = element_text(colour = 1, hjust = 0)
+  )
+  
 ```
 
 
-##### Historic Distribution of Fishery Mortality  
+#### Management performance (MU-specific figures, tables, etc.)
+
+- includes historical/base period info, current fisheries
+
+##### Forecast evaluation
+
+A comparison of preseason adult ocean age-3 recruit forecasts with post-season estimates derived from Backwards FRAM run reconstruction have been mixed, with some forecasts over estimating abundances and others underestimating it (Table 4 2).  During catch years 2004–2013, predicted cohort size (without natural mortality) ranged from a low of 26,799 (2007) to a high of 155,814 (2004), while post-season estimates ranged from 11,521 (2006) to 145,283 (2004) (Table 4 2).  Accordingly, the difference between preseason and post-season estimates varied from -210% (2007) to +89% (2006) of the preseason estimates. 
+
+To-do --> add table 4.2 (pre-post table)
+**Preseason forecasts and post-season estimates of wild Coho in the Skagit MU. Cohort abundance is age-3 ocean recruits (harvest and escapement). Post-season cohort abundance is derived using the backwards version of the Fishery Regulation Assessment Model (FRAM).**
+
+
+##### Fishery Mortality and Escapement
 
 The base period for the FRAM defines the temporal and spatial distributions of salmon fishing mortalities from each MU.  The current FRAM base period for Coho Salmon includes catch years 1986-1992.  During this period, fishing effort, tagging, and fishery sampling of Coho Salmon was high, allowing relatively fine-scale discrimination between salmon distributions.  Coded-wire-tag codes used during the base period for the Skagit MU are provided in Appendix B and average base period exploitation rates by individual fisheries are provided in Appendix C.
 
