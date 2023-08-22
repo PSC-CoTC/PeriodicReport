@@ -1517,15 +1517,15 @@ Once a preseason forecast of ocean age-3 adult coho has been made, the forecast 
 
 ###### Marking and tagging
 
-The Hood Canal MU has several indicator stocks [@CoTC_2011]. These indicator stocks are: Quilcene NFH, Quilcene Net Pens, Port Gamble Net Pens, and George Adams hatchery.  Big Beef Creek is also a wild indicator stock.
+The Hood Canal MU has several indicator stocks [@CoTC_2011]. These indicator stocks are: Quilcene NFH, Quilcene Net Pens, Port Gamble Net Pens, and George Adams hatchery. Big Beef Creek is also a wild indicator stock.
 
 ToDo --> reference Figure 6.1
 
-Wild Coho survival and exploitation rates are monitored by natural-origin CWT marked Coho from the WDFW Big Beef Creek Research Station. All upstream migrating adults and downstream migrating juveniles are enumerated, a portion of the out-migrants coded-wire tagged, and a portion of the returning adults sampled for CWT recoveries ([Volkhardt et al. 2007 ). An average of ?? wild Coho Salmon were coded-wire tagged and released in years 1996-2022, annually (Figure 4.4) ([RMISD 1977 ). Harvest rates may be higher for Big Beef Creek-origin Coho than Hood Canal natural Coho in aggregate. This is due to the presence of intensive tribal net fisheries in the marine waters adjacent to Big Beef Creek that may exploit Coho staging for entry to Big Beef Creek and adjacent streams at a higher rate than the other natural populations in the basin.
+Wild Coho survival and exploitation rates are monitored by natural-origin CWT marked Coho from the WDFW Big Beef Creek Research Station. All upstream migrating adults and downstream migrating juveniles are enumerated, a portion of the out-migrants coded-wire tagged, and a portion of the returning adults sampled for CWT recoveries [@Volkhardt_et_al_2007]. An average of ?? wild Coho Salmon were coded-wire tagged and released in years 1996-2022, annually (Figure 4.4) [@RMISD_1977]. Harvest rates may be higher for Big Beef Creek-origin Coho than Hood Canal natural Coho in aggregate. This is due to the presence of intensive tribal net fisheries in the marine waters adjacent to Big Beef Creek that may exploit Coho staging for entry to Big Beef Creek and adjacent streams at a higher rate than the other natural populations in the basin.
 
 ToDo --> add Figure 4.4
 
-**Total number of Hood Canal wild Coho tagged and released, brood years 1983-2020 (data downloaded on ?? [RMISD 1977])**
+**Total number of Hood Canal wild Coho tagged and released, brood years 1983-2020 (data downloaded on ??; [@RMISD_1977])
 	
 In addition to wild stock tagging at Big Beef Creek, coded-wire-tag recovery-based estimates of survival rates are available for the Port Gamble Net Pens, Quilcene Bay Net Pens, Quilcene NFH, and George Adams Hatchery programs. Exploitation rate estimates are available for the Quilcene NFH and George Adams CWT programs. Coho broodstock are not collected at the net pen release sites, so there is no complete accounting of escapement of coded-wire-tagged Coho originating from these facilities, and exploitation rates cannot be directly calculated for these programs. The intensive fisheries adjacent to the Quilcene Bay and Port Gamble net pens are designed to harvest the majority of available Coho retuning to these areas, so the sum of all tag recoveries in fisheries and escapement are considered to provide reasonable relative estimates of marine survival for these programs, albeit with some negative bias.  
 
@@ -1533,15 +1533,15 @@ The Big Quilcene NFH and George Adams CWT releases are Double Index Tag (DIT) pr
 
 **Forecast Methods and Performance**
 
-Since 1996, WDFW and tribal biologists have developed forecasts of wild Coho run size for all primary and most secondary management units in Puget Sound and the Washington coast (Zimmerman 2013).  These annual forecasts are described in the Pacific Fishery Management Council’s Preseason Forecast I document available each February (PFMC 2013b; www.pcouncil.org).  These forecasts rely on estimates of wild Coho production (i.e., smolts) paired with estimates of marine survival.  Wild Coho production estimates for each of the primary and secondary management units in Puget Sound were derived from results of juvenile trapping studies conducted in the Skagit, Stillaguamish, Snohomish, Green, Nisqually, East Kitsap, and Deschutes rivers as well as in tributaries to Lake Washington and Hood Canal.  Analyses of these long-term data sets have demonstrated that wild Coho smolt production is limited by a combination of factors including seeding levels (i.e., escapement), environmental effects (flows, marine derived nutrients), and habitat degradation (Zimmerman 2013).
+Since 1996, WDFW and tribal biologists have developed forecasts of wild Coho run size for all primary and most secondary management units in Puget Sound and the Washington coast [@Zimmerman_2013]. These annual forecasts are described in the Pacific Fishery Management Council’s Preseason Forecast I document available each February [@PFMC_2013b; www.pcouncil.org].  These forecasts rely on estimates of wild Coho production (i.e., smolts) paired with estimates of marine survival. Wild Coho production estimates for each of the primary and secondary management units in Puget Sound were derived from results of juvenile trapping studies conducted in the Skagit, Stillaguamish, Snohomish, Green, Nisqually, East Kitsap, and Deschutes rivers as well as in tributaries to Lake Washington and Hood Canal. Analyses of these long-term data sets have demonstrated that wild Coho smolt production is limited by a combination of factors including seeding levels (i.e., escapement), environmental effects (flows, marine derived nutrients), and habitat degradation [@Zimmerman_2013].
 
-For Hood Canal MU, natural smolt production and adult escapements are intensively monitored by WDFW at the Big Beef Creek Research Station and three nearby tributaries that enter Hood Canal on the Kitsap Peninsula northeast of Bremerton.  A permanent WDFW upstream/downstream migrant weir is located on Big Beef Creek just upstream of the estuary, and juvenile fence traps are installed annually on Little Anderson, Seabeck, and Stavis creeks,  which are smaller adjacent tributaries (WRIAs 15.0377, 15.0400, and 15.0404). 
+For Hood Canal MU, natural smolt production and adult escapements are intensively monitored by WDFW at the Big Beef Creek Research Station and three nearby tributaries that enter Hood Canal on the Kitsap Peninsula northeast of Bremerton. A permanent WDFW upstream/downstream migrant weir is located on Big Beef Creek just upstream of the estuary, and juvenile fence traps are installed annually on Little Anderson, Seabeck, and Stavis creeks, which are smaller adjacent tributaries (WRIAs 15.0377, 15.0400, and 15.0404). 
 	
-Production is not directly measured in all Hood Canal tributaries; therefore estimates are based on an expansion of the measured production.  Three approaches have been used to expand measured production at Big Beef Creek and neighboring tributaries to a Hood Canal estimate (Zimmerman 2012).  The first approach assumes that Coho production from four tributaries (Little Anderson, Big Beef, Seabeck, and Stavis creeks) is 5.9% that of the entire Hood Canal (Zillges 1977).  A subsequent review by the Hood Canal Joint Technical Committee (HCJTC) estimated that Coho production from these same four tributaries to be 7.6% that of Hood Canal (HCJTC 1994).  A third approach (Volkhardt and Seiler 2001), based on the HCJTC forecast review in summer of 2001, estimated that Coho production from Big Beef Creek was 4.56% that of Hood Canal.  
+Production is not directly measured in all Hood Canal tributaries; therefore estimates are based on an expansion of the measured production. Three approaches have been used to expand measured production at Big Beef Creek and neighboring tributaries to a Hood Canal estimate [@Zimmerman_2012]. The first approach assumes that Coho production from four tributaries (Little Anderson, Big Beef, Seabeck, and Stavis creeks) is 5.9% that of the entire Hood Canal [@Zillges_1977]. A subsequent review by the Hood Canal Joint Technical Committee (HCJTC) estimated that Coho production from these same four tributaries to be 7.6% that of Hood Canal [@HCJTC_1994]. A third approach [@Volkhardt_and_Seiler_2001], based on the HCJTC forecast review in summer of 2001, estimated that Coho production from Big Beef Creek was 4.56% that of Hood Canal.  
 
 *ToDo - update data* Estimated smolt production in the Hood Canal MU averaged 566,000 smolts annually during 1995-2001 and 665,000 during 2002-2012.  Smolt production has varied from a low of 323,000 in 2012 to a high of 995,000 in 2009 (Table 4.1).  
 
-**Hood Canal MU natural smolt production, 1995-2012 out-migration years ([Zimmerman 2012, 2013 ).**
+**Hood Canal MU natural smolt production, 1995-2012 out-migration years [@Zimmerman_2012; @Zimmerman_2013].**
 
 |**Out-migration Year**|	**Smolt Production**|
 |----------------------|----------------------|
@@ -1575,15 +1575,15 @@ Production is not directly measured in all Hood Canal tributaries; therefore est
 | 2022  |  |
 |----------------------|----------------------|
 
-Marine survival rates of wild Coho stocks have been measured using wild CWT indicator stocks in four geographic regions of Puget Sound: Big Beef Creek, Deschutes River, South Fork Skykomish River, and Baker River (Zimmerman 2013).  These populations are assumed to be representative of the different Puget Sound regions. Marine survival of Big Beef Coho (Hood Canal) was correlated with jack return rates. Between 1977 and 1996, the ratio of adult to jack return rates averaged 11.3 (range = 6 to 18) and was remarkably consistent among years. During these years, 78% of the variation in age-3 Coho marine survival could be predicted from jack return rates. Over the past decade, the ratio of adult to jack returns has increased (average = 26.8). During this period, jack return rates explain 70% of the variation in marine survival of Big Beef Coho.  
+Marine survival rates of wild Coho stocks have been measured using wild CWT indicator stocks in four geographic regions of Puget Sound: Big Beef Creek, Deschutes River, South Fork Skykomish River, and Baker River [@Zimmerman_2013]. These populations are assumed to be representative of the different Puget Sound regions. Marine survival of Big Beef Coho (Hood Canal) was correlated with jack return rates. Between 1977 and 1996, the ratio of adult to jack return rates averaged 11.3 (range = 6 to 18) and was remarkably consistent among years. During these years, 78% of the variation in age-3 Coho marine survival could be predicted from jack return rates. Over the past decade, the ratio of adult to jack returns has increased (average = 26.8). During this period, jack return rates explain 70% of the variation in marine survival of Big Beef Coho.  
 
-Jack returns represent the composite of variables impacting early survival in the marine environment assuming that early marine survival remains the driver of overall return rates. While this assumption has been moderately supported by results from the WSPE monitoring stations, there are years when jack returns have had very poor predictive capacity and periods when the ratio of jack to adult returns change without a clear explanation. In the preparation for developing the adult forecast, this uncertainty was further addressed by examining the relationships between major ocean indicators (i.e., PDO, upwelling, spring transition) and marine survival.  When significant correlations existed, predicted age-3 marine survival was compared between the ocean indicator and jack return approach. 
+Jack returns represent the composite of variables impacting early survival in the marine environment assuming that early marine survival remains the driver of overall return rates. While this assumption has been moderately supported by results from the WSPE monitoring stations, there are years when jack returns have had very poor predictive capacity and periods when the ratio of jack to adult returns change without a clear explanation. In the preparation for developing the adult forecast, this uncertainty was further addressed by examining the relationships between major ocean indicators (i.e., PDO, upwelling, spring transition) and marine survival. When significant correlations existed, predicted age-3 marine survival was compared between the ocean indicator and jack return approach. 
 
 Marine survival for the indicator stock for the Hood Canal MU, Big Beef Creek, has averaged 15% during return years 1978-2012 (broods 1975-2009), with a high of 32% in 1986 and a low of 2% in 2010 (*ToDo* Figure 4.1). Marine survival of broods 1975-2002 averaged 17%, while marine survival of broods 2003-2009 averaged only 6.3%. Like other Puget Sound indicators, the long term trend in marine survival is downwards although marine survivals exceeding 20% during the period from 2002 to 2004 is encouraging.
 
-*ToDo* Figure 4.1 --> Marine survival of Big Beef Creek Coho Salmon and the average marine survival of Puget Sound indicator stocks by year (data from Zimmerman 2012; M. Zimmerman, WDFW, unpublished data). 
+*ToDo* Figure 4.1 --> Marine survival of Big Beef Creek Coho Salmon and the average marine survival of Puget Sound indicator stocks by year [data from @Zimmerman_2012; M. Zimmerman, WDFW, unpublished data]. 
 
-The performances of forecasts for Hood Canal Coho MU abundance have generally underestimated actual abundance, resulting in negative differences between pre- and post-season estimates (Table 4.2).  During catch years 2004-2010, predicted cohort size (without natural mortality) ranged from a low of 30,363 (2008) to a high of 98,400 (2005) while post-season estimates ranged from 14,812 (2010) to 240,822 (2004) (CoTC 2011; FRAM; CoTC unpubl. data).  Accordingly, the difference between preseason and post-season estimates varied from −145% (2004) to +55% (2010) of the preseason estimates.
+The performances of forecasts for Hood Canal Coho MU abundance have generally underestimated actual abundance, resulting in negative differences between pre- and post-season estimates (Table 4.2).  During catch years 2004-2010, predicted cohort size (without natural mortality) ranged from a low of 30,363 (2008) to a high of 98,400 (2005) while post-season estimates ranged from 14,812 (2010) to 240,822 (2004) [@CoTC_2011; FRAM; CoTC unpublished data].  Accordingly, the difference between preseason and post-season estimates varied from −145% (2004) to +55% (2010) of the preseason estimates.
 
 *ToDo* --> add table 4.2 with columns Catch Year, Pre and Post-season Cohort sizes, and difference (preseason-post-season)/preseason
 
@@ -1592,12 +1592,11 @@ The performances of forecasts for Hood Canal Coho MU abundance have generally un
 
 ###### Escapement Monitoring
 
-The method used for estimating natural Coho escapements in this MU is the Base-Year Index approach (Haymes 2008). This approach is used to estimate annual Coho escapements to most of the major river basins and geographically associated aggregations of smaller independent tributaries in the Puget Sound region, exclusive of the Strait of Juan de Fuca. The Base-Year Index approach was adopted for estimating Coho escapements in this region because the distribution of Coho spawners is geographically broad in each river basin and an approach is required that is not dependent on the direct census of a large portion of the total spawning habitat, and that can use serial live and/or dead fish observations instead of spawning redd enumeration because the multiple species overlap and/or high spawning densities often make Coho redd enumeration impractical.
+The method used for estimating natural Coho escapements in this MU is the Base-Year Index approach [@Haymes_2008]. This approach is used to estimate annual Coho escapements to most of the major river basins and geographically associated aggregations of smaller independent tributaries in the Puget Sound region, exclusive of the Strait of Juan de Fuca. The Base-Year Index approach was adopted for estimating Coho escapements in this region because the distribution of Coho spawners is geographically broad in each river basin and an approach is required that is not dependent on the direct census of a large portion of the total spawning habitat, and that can use serial live and/or dead fish observations instead of spawning redd enumeration because the multiple species overlap and/or high spawning densities often make Coho redd enumeration impractical.	
 	
-	
-The Base-Year Index method allows expansion of an annual index of abundance developed from serial field counts of live or dead salmon, collected in a relatively small fraction of the total freshwater habitat to an estimate of basin or region-total escapement.  A series of point counts of live Coho abundance are made in several fixed-location survey reaches, distributed throughout each major river basin or region. At the end of the spawning season an abundance index is developed for each index survey reach using the “area under the curve” (AUC) approach (Ames 1984 @ames_1984; Irvine et al. 1993). The sum of the individual abundance index values from an individual escapement estimation unit (usually a river basin) are then multiplied by a historical “base year” basin-total escapement estimate developed from a mark-recapture study. The resulting value is divided by the base year index of abundance calculated for the same survey reaches that were monitored in the current escapement year, to produce the basin-total escapement estimate for the current year.
+The Base-Year Index method allows expansion of an annual index of abundance developed from serial field counts of live or dead salmon, collected in a relatively small fraction of the total freshwater habitat to an estimate of basin or region-total escapement.  A series of point counts of live Coho abundance are made in several fixed-location survey reaches, distributed throughout each major river basin or region. At the end of the spawning season an abundance index is developed for each index survey reach using the “area under the curve” (AUC) approach [@Ames_1984; @Irvine_et_al_1993]. The sum of the individual abundance index values from an individual escapement estimation unit (usually a river basin) are then multiplied by a historical “base year” basin-total escapement estimate developed from a mark-recapture study. The resulting value is divided by the base year index of abundance calculated for the same survey reaches that were monitored in the current escapement year, to produce the basin-total escapement estimate for the current year.
 
-In the Hood Canal MU, escapements are estimated in 10 survey reaches covering 9 miles (14.5 km) (Haymes 2008).  In addition, natural smolt production and adult escapements are intensively monitored by WDFW at the Big Beef Creek Research Station and 3 nearby tributaries that enter Hood Canal on the Kitsap Peninsula northeast of Bremerton. A permanent WDFW upstream/downstream migrant weir is located on Big Beef Cr. just upstream of the estuary, and  juvenile fence traps are installed annually on 3 smaller adjacent tributaries (WRIAs 15.0377, 15.0400, and 15.0404).  The adult escapement information collected at this weir is used as an index abundance adjustment scalar in the Base-Year Index escapement estimation process for the MU. Spawning redd enumeration-based accounting of adult escapement is currently conducted on the three study streams adjacent to Big Beef that are being monitored for juvenile production as part of an ongoing habitat productivity study (Volkhardt et al. 2007).  Historical trends in escapement for the Hood Canal MU are provided in Table 5 3 and Figure 4 2. Known distribution of spawners within the basin is depicted in Figure 4 3.
+In the Hood Canal MU, escapements are estimated in 10 survey reaches covering 9 miles (14.5 km) [@Haymes_2008].  In addition, natural smolt production and adult escapements are intensively monitored by WDFW at the Big Beef Creek Research Station and 3 nearby tributaries that enter Hood Canal on the Kitsap Peninsula northeast of Bremerton. A permanent WDFW upstream/downstream migrant weir is located on Big Beef Cr. just upstream of the estuary, and  juvenile fence traps are installed annually on 3 smaller adjacent tributaries (WRIAs 15.0377, 15.0400, and 15.0404).  The adult escapement information collected at this weir is used as an index abundance adjustment scalar in the Base-Year Index escapement estimation process for the MU. Spawning redd enumeration-based accounting of adult escapement is currently conducted on the three study streams adjacent to Big Beef that are being monitored for juvenile production as part of an ongoing habitat productivity study [@Volkhardt_et_al_2007].  Historical trends in escapement for the Hood Canal MU are provided in Table 5 3 and Figure 4 2. Known distribution of spawners within the basin is depicted in Figure 4 3.
 
 ToDo --> add figure 4.2
 
@@ -1612,10 +1611,9 @@ ToDo --> add figure 4.3
 
 A fundamental requirement of abundance-based Coho Salmon management under the PST is that all fishery impacts on individual MUs be monitored with respect to both number of fish caught and CWTs. This requires basic reporting of total impacts by fishery and the capacity to estimate each fishery’s MU-specific impacts. Total fishing mortalities for each MU must be estimated to enable managers the ability to evaluate the annual exploitation rate relative to the PST-prescribed impact limits. Assessments of total fishing mortalities for each MU must include both directed and incidentally-landed catch as well as estimates of non-landed mortalities. These estimates may be obtained through monitoring programs or, in some cases, generated through the use of algorithms built into the Fishery Regulation Assessment Model (FRAM). Monitoring programs may involve test fisheries or data collected directly from fishers (e.g., through creel survey interviews and other fisher-reported techniques, such as log books or fish-tickets).  Estimation of non-landed fishing mortality requires annual estimates of encounter rates by fishery and gear.
 
-Management-Unit-specific impacts are generally evaluated using the coast-wide CWT system. This system manages information on the release and recovery of coded-wire tags. The volume of tags recovered for a given MU will depend on tagging rates, marine survival rates, exploitation and escapement rates, and sampling rates in fisheries and escapements. A recent review of the coastwide CWT program (PSCCWTW 2008) recommends target sampling rates of 20% for the landed catch and 20% for escapements, with a minimum of 10 tags collected in each fishery or escapement stratum. 
+Management-Unit-specific impacts are generally evaluated using the coast-wide CWT system. This system manages information on the release and recovery of coded-wire tags. The volume of tags recovered for a given MU will depend on tagging rates, marine survival rates, exploitation and escapement rates, and sampling rates in fisheries and escapements. A recent review of the coastwide CWT program [@PSCCWTW_2008] recommends target sampling rates of 20% for the landed catch and 20% for escapements, with a minimum of 10 tags collected in each fishery or escapement stratum. 
 
 Post-season exploitation rate estimates are also generated using the Post-Season FRAM Model. Post-season estimates of catch and escapement are entered into the updated FRAM model with the same fishery regulation and effort package used for preseason modeling to generate post-season exploitation rate estimates.
-
 
 ##### Enhancement
 
@@ -1839,115 +1837,7 @@ gt(static$glossary)
 *internal inline links direct here, individual refs themselves will have external links as '(pdf)[urls_of_raw.pdf]' for reader to click*
 
 
-Conrad, B.  1995.  Memorandum to B. Hayman and B. McClure, Skagit System Cooperative, subject: Re-analysis of 1977 coho tagging data, July 6, 1995.  Northwest Indian Fisheries Commission, Olympia, WA.
-
-
-
-Ford, M. J., editor.  2011.  Status review update for Pacific salmon and steelhead listed under the Endangered Species Act: Pacific Northwest.  U.S. Department of Commerce, NOAA Technical Memo NMFS-NWFSC-113.
-
-Hayman, R. A., and E. A. Beamer.  1987.  1986 Skagit coho spawning assessment study. Coho study Progress Report No. 4. Skagit System Cooperative. LaConner, WA. 
-
-Hayman.  1995.  (needed)
-
-Haymes, J.  2008.  Review of natural escapements, exploitation rates, and natural production and exploitation rate monitoring methodologies for Washington Pacific Salmon Treaty Coho Management Units.  Washington Department of Fish and Wildlife memo to tribal comanagers, dated Dec. 8, 2008. (Available from WDFW, 600 Capitol Way N, Olympia, WA, 98501).
-
-HCJTC (Hood Canal Joint Technical Committee).  1994.  Hood Canal natural coho MSH escapement estimate and escapement goals.  Point No Point Treaty Council, Washington Department of Fish and Wildlife, U.S. Fish and Wildlife Service. 
-
-Hobday, A. J., and G. W. Boehlert.  2001.  The role of coastal ocean variation in spatial and temporal patterns in survival and size of coho salmon (Oncorhynchus kisutch).  Canadian Journal of Fisheries and Aquatic Sciences 58:2021-2036.
-
-Irvine, J., J. Morris, and L. Cobb.  1993. Area-under-the-curve salmon escapement estimation manual.  Canadian Fisheries and Aquatic Sciences Technical Report 1932. 
-
-Johnson, S. L.  1988.  The effects of the 1983 El Niño on Oregon's coho (Oncorhynchus kisutch) and chinook (O. tshawytscha) salmon.  Fisheries Research 6:105-123.
-
-Kinsel, C., M. Zimmerman, L. Kishimoto, and P. Topping.  2008.  2007 Skagit River salmon production evaluation.  Annual Report.  State of Washington, Department of Fish and Wildlife, Olympia, Washington. 
-
-Kinsel, C., P. Hanratty, M. Zimmerman, B. Glaser, S. Gray, T. Hillson, D. Rawding, and S. VanderPloeg.  2009.  Intensively monitored watersheds: 2008 fish population studies in the Hood Canal and Lower Columbia stream complexes. FPA 09-12, Washington Department of Fish and Wildlife, Olympia, Washington.
- 
-LaCroix, J. J., A. C. Wertheimer, J. A. Orsi, M. V. Sturdevant, E. A. Fergusson, and N. A. Bond.  2009.  A top-down survival mechanism during early marine residency explains coho salmon year-class strength in Southeast Alaska.  Deep-Sea Research Part II: Topical Studies in Oceanography A56:2560–2569.
-
-Logerwell, E. A., N. J. Mantua, P. W. Lawson, R. C. Francis, and V. N. Agostini.  2003.  Tracking environmental processes in the coastal zone for understanding and predicting Oregon coho (Oncorhynchus kisutch) marine survival.  Fisheries Oceanography 12:554-568.
-
-Malick, M. J., M. D. Adkison, and A. C. Wertheimer.  2009.  Variable effects of biological and environmental processes on coho salmon marine survival in Southeast Alaska.  Transactions of the American Fisheries Society 138:846–860.
-
-Mathews, S. B., and F. W. Olson.  1980.  Factors affecting Puget Sound coho salmon (Oncorhynchus kisutch) runs. Canadian Journal of Fisheries and Aquatic Sciences 37:1373-1378.
-
-*Morgan, C. A., B. R. Beckman, L. A. Weitkamp, and K. L. Fresh. 2019.  Recent Ecosystem Disturbance in the Northern California Current.  Fisheries 44(10):465-474, doi: 10.1002/fsh.10273.*
-
-NOAA Fisheries.  2009.  Endangered Species Act status of West Coast salmon and steelhead.  NOAA National Marine Fisheries Service Updated July 1, 2009.  Available online at <http://www.nwr.noaa.gov>.
-
-Pearcy, W. G.  1992.  Ocean ecology of North Pacific salmonids. Washington Sea Grant, Seattle, 179 p.
-
-Peterson W. T., and F. B. Schwing.  2003.  A new climate regime in northeast pacific ecosystems. Geophysical Research Letters, 30, doi:10.1029/2003GL017528.
-
-PFMC (Pacific Fishery Management Council).  2013a.  Review of the 2012 ocean salmon fisheries.  PFMC, Portland, OR.  Available online at <http://www.pcouncil.org>.
-
-PFMC (Pacific Fishery Management Council).  2013b.  Preseason report I: stock abundance analysis and environmental assessment Part 1 for 2013 ocean salmon fishery regulations.  PFMC, Portland, OR, February 2013.  Available online at <http://www.pcouncil.org>.
-
-Pinnix, W. D.  1999.  Climate and coho: a Puget Sound perspective.  Master’s thesis.  University of Washington, Seattle.
-
-Port Gamble S’Klallam Tribe.  2003.  Port Gamble coho net pens hatchery and genetic management plan.  Plan submitted March 17, 2003 to NOAA Fisheries.  Port Gamble S’Klallam Tribe, Kingston, Washington. 
-
-PSC (Pacific Salmon Commission).  2009.  Treaty between the government of Canada and the Government of the United States of America concerning Pacific salmon.  Last updated January 27, 2009.  Available online at <http://www.psc.org/pubs/Treaty.org>. 
-
-PSCCWTW (Pacific Salmon Commission Coded Wire Tag Workgroup).  2008.  An action plan in response to Coded Wire Tag (CWT) Expert Panel recommendations.  Pacific Salmon Commission Technical Report 25: 170 p.  Available online at <http://www.psc.org>.
-
-PSSSRG (Puget Sound Salmon Stock Review Group).  1992.  Assessment of the status of five stocks of Puget Sound chinook and coho as required under the PFMC definition of overfishing; summary report for the Pacific Fisheries Management Council.  Unprocessed report.
-
-Quinn, T. P., B. R. Dickerson, and L. A. Vøllestad.  2005.  Marine survival and distribution patterns of two Puget Sound hatchery populations of coho (Oncorhynchus kisutch) and chinook (Oncorhynchus tshawytscha) salmon.  Fisheries Research 76:209-220.
-
-Quinn, T. P., and N. P. Peterson.  1996.  The influence of habitat complexity and fish size on over-winter survival and growth of individually marked juvenile coho salmon (Oncorhynchus kisutch) in Big Beef Creek, Washington.  Canadian Journal of Fisheries and Aquatic Sciences 53:1996.
-
-RMISD (Regional Mark Information System Database).  Continuously since 1977.  Online database.  Pacific States Marine Fisheries Commission, Regional Mark Processing Center, Portland, OR. URL:<http://www.rmpc.org>.
-
-Rupp, D. E., T. C. Wainwright, P. W. Lawson, and W. T. Peterson.  2011.  Marine environment-based forecasting of coho salmon (Oncorhynchus kisutch) adult recruitment.  Fisheries Oceanography doi:10.1111/j.1365-2419.2011.00605.x.
-
-Ryding, K., and J. Skalski.  1999.  Multivariate regression relationships between ocean conditions and early marine survival of coho salmon (Oncorhynchus kisutch).  Canadian Journal of Fisheries and Aquatic Sciences 56:2374-2384.
-
-Seber, G. A. F.  1973.  The estimation of animal abundance.  Charles Griffin and Company Limited, London.
-
-Seiler, D., P. Hanratty, S. Neuhauser, P. Topping, M. Ackley, and L. E. Kishimoto.  1995.  Wild salmon production and survival evaluation annual performance report: October 1993 - September 1994. Washington Department of Fish and Wildlife Progress Report, Olympia, Washington. 113 pp.
-
-SFEC (Selective Fishery Evaluation Committee).  1999.  1998 annual report.  Pacific Salmon Commission, Report SFEC (99)-1.
-
-Sharma, R., and R. Hilborn.  2001.  Empirical relationships between watershed characteristics and coho salmon (Oncorhynchus kisutch) smolt abundance in 14 western Washington streams. Canadian Journal of Fisheries and Aquatic Sciences 58:1453-1463.
-
-Skokomish Tribe.  2003.  Quilcene coho net pen hatchery and genetic management plan.  Plan submitted March 17, 2003 to NOAA Fisheries.  Skokomish Tribe, Shelton Washington.
-
-Smoker, W. A.  1955.  Effects of stream flow on silver salmon production in western Washington. Doctoral dissertation. University of Washington, Seattle, Washington, 175p.
-
-Stockley.  1963.  1961 Skagit River silver salmon run: progress report.  Washington State Department of Fisheries, Research Division.
-
-Teo, S. L., L. W. Botsford, and A. Hastings.  2009.  Spatio-temporal covariability in coho salmon (Oncorhynchus kisutch) survival, from California to southeast Alaska. Deep-Sea Research, Part II 56:2570-2578.
-
-Volkhardt, G. C., S. L. Johnson, B. A. Miller, T. E. Nickelson, and D. E. Seiler.  2007.  Rotary screw traps and inclined plane screen traps.  Pages 235-266 in D. H. Johnson, B. M. Shrier, J. S. O'Neal, J. A. Knutzen, X. Augerot, T. A. O-Neil, and T. N. Pearsons, editors.  Salmonid field protocols handbook: techniques for assessing status and trends in salmon and trout populations.  American Fisheries Society, Bethesda, Maryland.
-
-Volkhardt, G. C., and D. E. Seiler.  2001.  Revised forecast analysis for the WDFW and Conrad forecast models.  Memo to the Hood Canal Forecast Review Group, October 22, 2001. 
-
-USFWS (U.S. Fish and Wildlife Service).  1999.  Quilcene National Fish Hatchery coho program hatchery and genetic management plan.  Plan submitted December 1999 to NOAA Fisheries.  U.S. Fish and Wildlife Service, Quilcene, Washington.
-
-USFWS.  2007.  Comprehensive hatchery management plan for the Quilcene National Fish Hatchery. U.S. Fish and Wildlife Service, Quilcene National Fish Hatchery, Quilcene, Washington.
-
-WDF (Washington Department of Fisheries).  1985.  A review of coho escapement goal methodologies: a Skagit River case study. Tech Rpt. 86 (unpublished). Washington Department of Fisheries, Olympia, WA. 
-
-WDFW (Washington Department of Fish and Wildlife).  2003a.  Marblemount coho program hatchery and genetic management plan.  Plan submitted March 17, 2003 to NOAA Fisheries.  Washington Department of Fish and Wildlife, Olympia, WA. 
-
-WDFW.  2003b.  Oak Harbor net pen Coho program hatchery and genetic management plan.  Plan submitted March 17, 2003 to NOAA Fisheries.  Washington Department of Fish and Wildlife, Olympia, WA.
-
-WDFW (Washington Department of Fish and Wildlife).  2003.  George Adams coho yearling program hatchery and genetic management plan.  Plan submitted March 2003 to NOAA Fisheries.  Washington Department of Fish and Wildlife, Olympia, WA.
-
-WDFW.  2011.  2010 Ocean selective fishery sampling report.  Draft dated 2/14/2011.  WDFW, Olympia.
- 
-WDFW and WWTIT (Washington Department of Fish and Wildlife and Western Washington Treaty Indian Tribes).  1994.  1992 Washington state salmon and steelhead stock inventory: Appendix one, Puget Sound stocks Hood Canal and Strait of Juan de Fuca volume.  Unprocessed report. Olympia, WA.
-
-Weitkamp, L. A., T. C. Wainwright, G. J. Bryant, G. B. Milner, D. J. Teel, R. G. Kope, and R. S. Waples.  1995.  Status review of coho salmon from Washington, Oregon, and California.  U.S. Department of Commerce, NOAA Technical Memo NMFS NWFFSC 24, 268 p.
-
-Weitkamp, L. A., J. A. Orsi, K. W. Myers, and R. C. Francis.  2011.  Contrasting early marine ecology of Chinook salmon and coho salmon in Southeast Alaska: Insight into factors affecting marine survival.  Marine and Coastal Fisheries: Dynamics, Management, and Ecosystem Science 3:233-249.
-
-Zillges, G.  1977.  Methodology for determining Puget Sound coho escapement estimates, pre-season run size prediction, and in-season run assessment.  WDF Technical Report 28, WDFW, Olympia WA.
-
-
-
-# Appendix: Annual CoTC reports on Estimates of Exploitation Rates
+# Appendix: Annual CoTC reports of Estimates of Exploitation Rates
 
 [General archive of public CoTC reports](https://www.psc.org/publications/technical-reports/technical-committee-reports/coho/)
 
