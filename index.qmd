@@ -1038,88 +1038,63 @@ psc |>
 
 ## MU Specific Assessment/Performance
 
-
 ### Lower Fraser
-
 #### Biological & Geographic Description
-
-#### Management 
-
-##### Objectives
-
-##### Assessment
-
-###### Marking and tagging
-
+#### Management Framework
+##### Management Objectives
+##### Stock Assessment
+###### Indicator Stocks
+###### Forecast Methods
 ###### Escapement Monitoring
-
 ###### Fishery Monitoring
-
 ##### Enhancement
-
-#### Status (MU-specific figures, tables, etc.)
-
-- includes historical/base period info, current fisheries
-
+#### Management Performance (MU-specific figures, tables, etc.)
 
 ```{r}
 plot_abund_bar("Lower Fraser")
 ```
+##### Forecast Evaluation
+##### Fishery Mortality and Escapement
+##### Historical Overview of Status of Management Unit
 
 ### Interior Fraser
-
 #### Biological & Geographic Description
-
-#### Management 
-
-##### Objectives
-
-##### Assessment
-
-###### Marking and tagging
-
+#### Management Framework
+##### Management Objectives
+##### Stock Assessment
+###### Indicator Stocks
+###### Forecast Methods
 ###### Escapement Monitoring
-
 ###### Fishery Monitoring
-
 ##### Enhancement
-
-#### Status (MU-specific figures, tables, etc.)
-
-- includes historical/base period info, current fisheries
-
+#### Management Performance 
 
 ```{r}
 plot_abund_bar("Interior Fraser")
 ```
+##### Forecast Evaluation
+##### Fishery Mortality and Escapement
+##### Historical Overview of Status of Management Unit
 
 ### Strait of Georgia
 
 #### Biological & Geographic Description
-
-#### Management 
-
-##### Objectives
-
-##### Assessment
-
-###### Marking and tagging
-
+#### Management  Framework
+##### Management Objectives
+##### Stock Assessment
+###### Indicator Stocks
+###### Forecast Methods
 ###### Escapement Monitoring
-
 ###### Fishery Monitoring
-
 ##### Enhancement
-
-#### Status (MU-specific figures, tables, etc.)
-
-- includes historical/base period info, current fisheries
-
+#### Management Performance 
 
 ```{r}
 plot_abund_bar("Strait of Georgia")
 ```
-
+##### Forecast Evaluation
+##### Fishery Mortality and Escapement
+##### Historical Overview of Status of Management Unit
 
 ### Skagit
 
@@ -1151,7 +1126,7 @@ Numerous salmon hatchery facilities exist within the Skagit Basin, including sma
 
 +	Coho are also reared in net pens within the Oak Harbor Marina [@WDFW_2003b]. This Coho program is a marine net pen program operated by WDFW and local sport angling groups and usually receives stock from the Marblemount Hatchery and is operated as an isolated program with an annual goal of releasing 30,000 smolts. The purpose of this program is to provide harvest opportunity for sport and commercial fishers.
 
-#### Management framework 
+#### Management Framework 
 
 ##### Objectives
 
@@ -1331,11 +1306,11 @@ static$releases |>
 ```
 
 
-#### Management performance (MU-specific figures, tables, etc.)
+#### Management Performance (MU-specific figures, tables, etc.)
 
 - includes historical/base period info, current fisheries
 
-##### Forecast evaluation
+##### Forecast Evaluation
 
 A comparison of preseason adult ocean age-3 recruit forecasts with post-season estimates derived from Backwards FRAM run reconstruction have been mixed, with some forecasts over estimating abundances and others underestimating it (Table 4 2).  During catch years 2004–2013, predicted cohort size (without natural mortality) ranged from a low of 26,799 (2007) to a high of 155,814 (2004), while post-season estimates ranged from 11,521 (2006) to 145,283 (2004) (Table 4 2).  Accordingly, the difference between preseason and post-season estimates varied from -210% (2007) to +89% (2006) of the preseason estimates. 
 
@@ -1349,7 +1324,32 @@ The base period for the FRAM defines the temporal and spatial distributions of s
 
 During the base period, Coho production from the Skagit MU contributed to U.S. and Canadian marine sport and commercial fisheries in southern British Columbia, the northern Washington coast, Strait of Juan de Fuca, and inner Puget Sound (Figure 5 1; Appendix C).  Terminal tribal and non-tribal set and drift-net Coho net fisheries occur in commercial fishery management area 8 and the lower Skagit River.  Moderate-sized Coho sport fisheries occur in sport fishery management area 8.1, the mainstem Skagit River, and the Cascade River.  The terminal fishery co-managers are WDFW, and the Upper Skagit, Sauk-Suiattle, and Swinomish Tribes.  
 
-To-do --> add figure 5-1
+```{r func_plot_abund_bar}
+plot_abund_bar <- function(stknm = "Skagit"){
+  psc |> 
+    filter(PSC_StockName==stknm, RunYear > 2003) |>
+    distinct(RunYear, PSC_StockName, 
+             Harvest = mort_sum, Escapement = escp, Abundance = abund, 
+             low_mod_abund, mod_abd_abund) |> 
+    pivot_longer(names_to = "var", values_to = "val",
+                 -c(RunYear, PSC_StockName, low_mod_abund, mod_abd_abund)) |> 
+    mutate(across(ends_with("_abund"), ~if_else(var == "Abundance", ., NA_real_))) |> 
+    ggplot(aes(RunYear, val, fill = var, color = var)) + 
+    geom_col(width = 0.7) + 
+    geom_hline(aes(yintercept = low_mod_abund), color = "orange", linetype = 5, linewidth = 1.2) +
+    geom_hline(aes(yintercept = mod_abd_abund), color = "orange", linetype = 5) +
+    geom_vline(xintercept = 2010, linetype = 3, alpha = 0.5) +
+    geom_smooth(formula = y ~ x, method = "lm", se = F, linewidth = 0.5, linetype = 2) +
+    scale_fill_grey("", start = 0.3, end = 0.7, aesthetics = c("fill", "color")) +
+    scale_x_continuous(breaks = seq(1998, 2040, by = 3), guide = guide_axis(n.dodge = 2)) +
+    scale_y_continuous("", labels = scales::comma) +
+    facet_wrap(~var, nrow = 1) +
+    theme(legend.position = "none") +
+    labs(subtitle = stknm)
+}
+
+#plot_abund_bar()
+```
 
 **Average exploitation rates by fishing area.  The stacked bars represent the rates estimated by gear type during the FRAM base period, catch years 1986–1992.  The line represents the average annual total exploitation rate by fishing area during catch years ??, all gears combined.**
 
@@ -1376,11 +1376,10 @@ Estimated total abundance and escapement in the Skagit MU has been quite variabl
 
 #### Biological & Geographic Description
 
-The Stillaguamish MU is one of the U.S. Inside MUs and includes
+The Stillaguamish MU is one of the U.S. Inside MUs and includes....
 
-#### Management 
-
-##### Objectives
+#### Management Framework
+##### Management Objectives
 
 **Current Stillaguamish MU ocean abundance breakpoints and maximum total exploitation rates by PSC and Council status categories.**
 
@@ -1392,24 +1391,20 @@ The Stillaguamish MU is one of the U.S. Inside MUs and includes
 | Abundant/Normal	|	> 	|	36% – 60% |
 |---------------------------------------------------------|
 
-##### Assessment
-
-###### Marking and tagging
-
+##### Stock Assessment
+###### Indicator Stocks
+###### Forecast Methods
 ###### Escapement Monitoring
-
 ###### Fishery Monitoring
-
 ##### Enhancement
-
-#### Status (MU-specific figures, tables, etc.)
-
-- includes historical/base period info, current fisheries
+#### Management Performance 
 
 ```{r}
 plot_abund_bar("Stillaguamish")
 ```
-
+##### Forecast Evaluation
+##### Fishery Mortality and Escapement
+##### Historical Overview of Status of Management Unit
 
 ### Snohomish
 
@@ -1417,9 +1412,9 @@ plot_abund_bar("Stillaguamish")
 
 The Snohomish MU is one of the U.S. Inside MUs and includes
 
-#### Management 
+#### Management Framework
+##### Management Objectives
 
-##### Objectives
 
 **Current Snohomish MU ocean abundance breakpoints and maximum total exploitation rates by PSC and Council status categories.**
 
@@ -1431,25 +1426,20 @@ The Snohomish MU is one of the U.S. Inside MUs and includes
 | Abundant/Normal	|	> 	|	36% – 60% |
 |---------------------------------------------------------|
 
-##### Assessment
-
-###### Marking and tagging
-
+##### Stock Assessment
+###### Indicator Stocks
+###### Forecast Methods
 ###### Escapement Monitoring
-
 ###### Fishery Monitoring
-
 ##### Enhancement
-
-#### Status (MU-specific figures, tables, etc.)
-
-- includes historical/base period info, current fisheries
-
+#### Management Performance 
 
 ```{r}
 plot_abund_bar("Snohomish")
 ```
-
+##### Forecast Evaluation
+##### Fishery Mortality and Escapement
+##### Historical Overview of Status of Management Unit
 
 ### Hood Canal
 
@@ -1491,7 +1481,8 @@ A number of salmon hatchery facilities exist within the Hood Canal MU and listed
 
 Both of these programs are operated through a partnership between the Skokomish Tribe and Tacoma Power. The Saltwater Park Sockeye Hatchery is located next to the powerhouse on the shores of Hood Canal and have raised and released only Sockeye Salmon, beginning with BY 2016 fish. Spring Chinook Salmon, Coho Salmon, and steelhead are raised and released from the North Fork Salmon Hatchery which is located on the southern shore of Lake Kokanee. Coho Salmon have been released from this hatchery beginning with BY 2013. 
 
-#### Management Objectives
+#### Management Framework
+##### Management Objectives
 
 Under the Comprehensive Coho Management Plan [@CCW_1998], mainstem Hood Canal wild Coho is the primary (key) management unit and other aggregate (Area 9A [Port Gamble Net Pens and Area 9A wild], Area 12A [Area 12A wild, Quilcene NFH, Quilcene Bay net pens], and George Adams Hatchery) production are auxiliary management units [@CCW_1998]. Under this plan, primary management units are controlling units in the sense that predefined management actions will be undertaken under specified abundance conditions, auxiliary management units are those managed to meet or exceed a minimum escapement, and secondary units are passively managed in mixed stock fisheries. Therefore, Hood Canal Coho are managed for natural production. 
 
@@ -1515,7 +1506,7 @@ Once a preseason forecast of ocean age-3 adult coho has been made, the forecast 
 
 ##### Stock Assessment
 
-###### Marking and tagging
+###### Indicator Stocks
 
 The Hood Canal MU has several indicator stocks [@CoTC_2011]. These indicator stocks are: Quilcene NFH, Quilcene Net Pens, Port Gamble Net Pens, and George Adams hatchery. Big Beef Creek is also a wild indicator stock.
 
@@ -1531,7 +1522,7 @@ In addition to wild stock tagging at Big Beef Creek, coded-wire-tag recovery-bas
 
 The Big Quilcene NFH and George Adams CWT releases are Double Index Tag (DIT) programs (DIT groups are marked and unmarked pairs of CWT Coho). The exploitation rate values for the non-ad clipped+CWT Coho from these programs provide a surrogate measure of exploitation for natural-origin Coho from this region, particularly for non-terminal fisheries. Terminal harvest rates on these stocks are more intensive than for Hood Canal natural Coho in aggregate because of the intensive extreme terminal area fisheries targeted at returns to these programs. The DIT groups released for the Hood Canal MU are provided here (ToDo --> cross reference).
 
-**Forecast Methods and Performance**
+###### Forecast Methods
 
 Since 1996, WDFW and tribal biologists have developed forecasts of wild Coho run size for all primary and most secondary management units in Puget Sound and the Washington coast [@Zimmerman_2013]. These annual forecasts are described in the Pacific Fishery Management Council’s Preseason Forecast I document available each February [@PFMC_2013b; www.pcouncil.org].  These forecasts rely on estimates of wild Coho production (i.e., smolts) paired with estimates of marine survival. Wild Coho production estimates for each of the primary and secondary management units in Puget Sound were derived from results of juvenile trapping studies conducted in the Skagit, Stillaguamish, Snohomish, Green, Nisqually, East Kitsap, and Deschutes rivers as well as in tributaries to Lake Washington and Hood Canal. Analyses of these long-term data sets have demonstrated that wild Coho smolt production is limited by a combination of factors including seeding levels (i.e., escapement), environmental effects (flows, marine derived nutrients), and habitat degradation [@Zimmerman_2013].
 
@@ -1619,8 +1610,9 @@ Post-season exploitation rate estimates are also generated using the Post-Season
 
 ToDo --> what do we want here??  Graph of releases over time?  Tables?
 
-#### Stock Status and Fishery Impacts
-##### Historical Stock Distribution and Exploitation
+#### Management Performance
+##### Forecast Evaluation
+##### Fishery Mortality and Escapement
 
 The base period for the FRAM defines the temporal and spatial distributions of salmon fishing mortalities from each MU. The current FRAM base period for Coho Salmon includes catch years 1986-1992. During this period, fishing effort, tagging, and fishery sampling of Coho Salmon was high, allowing relatively fine-scale discrimination between salmon distributions. Coded-wire-tag codes used to develop the base period for the Hood Canal MU are provided in (To-do --> add reference to table here) and average base period exploitation rates by individual fisheries are provided here (To-do --> add base period fishery impacts).
 
@@ -1647,6 +1639,7 @@ to-do --> move this to the appropriate spot
 ```{r}
 plot_abund_bar("Hood Canal")
 ```
+##### Historical Overview of Status of Management Unit
 
 
 ### US Strait of Juan de Fuca (JDF)
@@ -1655,9 +1648,8 @@ plot_abund_bar("Hood Canal")
 
 The US Strait JDF MU is one of the U.S. Inside MUs and includes
 
-#### Management 
-
-##### Objectives
+#### Management Framework
+##### Management Objectives
 
 **Current US Strait JDF MU ocean abundance breakpoints and maximum total exploitation rates by PSC and Council status categories.**
 
@@ -1669,141 +1661,103 @@ The US Strait JDF MU is one of the U.S. Inside MUs and includes
 | Abundant/Normal	|	> 	|	36% – 60% |
 |---------------------------------------------------------|
 
-##### Assessment
-
-###### Marking and tagging
-
+##### Stock Assessment
+###### Indicator Stocks
+###### Forecast Methods
 ###### Escapement Monitoring
-
 ###### Fishery Monitoring
-
 ##### Enhancement
-TBD
-
-#### Status (MU-specific figures, tables, etc.)
-
-- includes historical/base period info, current fisheries
-
+#### Management Performance 
 
 ```{r}
 plot_abund_bar("US Strait JDF")
 ```
-
+##### Forecast Evaluation
+##### Fishery Mortality and Escapement
+##### Historical Overview of Status of Management Unit
 
 ### Quillayute
 
 *Note that Quillayute and Queets values are those from the FRAM database and have not yet been extracted from the relevant TAMM cells for each year*
 
 #### Biological & Geographic Description
-
-#### Management 
-
-##### Objectives
-
-##### Assessment
-
-###### Marking and tagging
-
+#### Management Framework
+##### Management Objectives
+##### Stock Assessment
+###### Indicator Stocks
+###### Forecast Methods
 ###### Escapement Monitoring
-
 ###### Fishery Monitoring
-
 ##### Enhancement
-TBD
-#### Status (MU-specific figures, tables, etc.)
-
-- includes historical/base period info, current fisheries
-
+#### Management Performance 
 
 ```{r}
 plot_abund_bar("Quillayute")
 ```
-
+##### Forecast Evaluation
+##### Fishery Mortality and Escapement
+##### Historical Overview of Status of Management Unit
 
 ### Hoh
-
 #### Biological & Geographic Description
-
-#### Management 
-
-##### Objectives
-
-##### Assessment
-
-###### Marking and tagging
-
+#### Management Framework
+##### Management Objectives
+##### Stock Assessment
+###### Indicator Stocks
+###### Forecast Methods
 ###### Escapement Monitoring
-
 ###### Fishery Monitoring
-
 ##### Enhancement
-TBD
-#### Status (MU-specific figures, tables, etc.)
-
-- includes historical/base period info, current fisheries
+#### Management Performance 
 
 ```{r}
 plot_abund_bar("Hoh")
 ```
-
+##### Forecast Evaluation
+##### Fishery Mortality and Escapement
+##### Historical Overview of Status of Management Unit
 
 ### Queets
 
 *Note that Quillayute and Queets values are those from the FRAM database and have not yet been extracted from the relevant TAMM cells for each year*
 
 #### Biological & Geographic Description
-
-#### Management 
-
-##### Objectives
-
-##### Assessment
-
-###### Marking and tagging
-
+#### Management Framework
+##### Management Objectives
+##### Stock Assessment
+###### Indicator Stocks
+###### Forecast Methods
 ###### Escapement Monitoring
-
 ###### Fishery Monitoring
-
 ##### Enhancement
-TBD
-#### Status (MU-specific figures, tables, etc.)
-
-- includes historical/base period info, current fisheries
-
+#### Management Performance 
 
 ```{r}
 plot_abund_bar("Queets")
 ```
-
+##### Forecast Evaluation
+##### Fishery Mortality and Escapement
+##### Historical Overview of Status of Management Unit
 
 ### Grays Harbor
 
 #### Biological & Geographic Description
-
-#### Management 
-
-##### Objectives
-
-##### Assessment
-
-###### Marking and tagging
-
+#### Management Framework
+##### Management Objectives
+##### Stock Assessment
+###### Indicator Stocks
+###### Forecast Methods
 ###### Escapement Monitoring
-
 ###### Fishery Monitoring
-
 ##### Enhancement
-TBD
-#### Status (MU-specific figures, tables, etc.)
-
-- includes historical/base period info, current fisheries
-
+#### Management Performance 
 
 ```{r}
 plot_abund_bar("Grays Harbor")
 ```
-
+##### Forecast Evaluation
+##### Fishery Mortality and Escapement
+##### Historical Overview of Status of Management Unit
 
 # Members
 
