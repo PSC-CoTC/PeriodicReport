@@ -1372,39 +1372,173 @@ To-do --> add Table 7.1
 
 Estimated total abundance and escapement in the Skagit MU has been quite variable during 1986–2011, with a downward trend in total abundance and a slightly trend in escapement during this period.  Total abundance has varied from low of 14,123 fish (2006) to a high of 397,120 fish (1986) and has exceeded 100,000 fish in 14 of 26 years between 1986 and 2011, and six times since 2000 (Table 5 1). Estimated escapement has averaged 54,275 during the entire time period and 55,364 during 2000–2011. It has varied from a low of 7,702 fish (2006) and a high of 118,220 (2004) (Table 5 1).
 
+Question for Dan --> put these tables in?  Or pull from the static table called "Status" in Excel file?
+
+|---------------------------------------------|
+|**Catch Year** | **Status of MU** ||
+|		| **Preseason** |**Post-season** |
+|---------------------------------------------|
+|2004 |	Abundant |	Abundant |
+|2005 |	Moderate |	Moderate |
+|2006 |	Abundant |	Low |
+|2007 |	Moderate |	Abundant |
+|2008 |	Moderate |	Moderate |
+|2009 |	Moderate |	Abundant |
+|2010 |	Abundant |	Moderate |
+|2011 |	Abundant |	Abundant |
+|2012 |	Moderate |	Abundant |
+|2013 |	Abundant |	Abundant |
+|2014 |	Abundant |	Moderate | 
+|2015 |	Abundant |	Low |
+|2016 |	Low |	Moderate |
+|2017 |	Low |	Low |
+|2018 |	Moderate |	Moderate |
+|2019 |	Moderate |	Moderate |
+|2020 |	Moderate |	Moderate |
+|2021 |	Moderate |	Abundant |
+|---------------------------------------------|
+
+
 ### Stillaguamish
 
 #### Biological & Geographic Description
 
-The Stillaguamish MU is one of the U.S. Inside MUs and includes....
+The Stillaguamish MU is one of the U.S. Inside MUs (refer to figure of inside MUs) and consists of the Stillaguamish River and its major tributaries, the North and South Forks (Figure x). Coho Salmon make use of all available habitat within the watershed not constrained by barriers to migration. The MU is made up of a single stock (Stillaguamish Coho Salmon), managed for natural production and for the purpose of achieving a desired spawning escapement objective.  Stillaguamish River Coho Salmon belong to the larger Puget Sound/Strait of Georgia Coho Salmon evolutionarily significant unit [ESU; @Weitkamp_et_al_1995]. This ESU is currently a species of concern under the U.S. Endangered Species Act [@NOAA_Fisheries_2009].
+
+The Stillaguamish River basin drains the north-central Cascade Mountains, flowing westward and entering Puget Sound at Port Susan, near the town of Stanwood.  The basin is 685 mi2 (1774 km2) in area, with 975 linear miles (1,569 km) of mainstem and tributary habitat [@Nelson_&_Lucchetti_1997]. The North Fork Stillaguamish sub-basin has the highest quality Coho spawning and rearing habitat in the MU. The South Fork Stillaguamish basin is characterized by higher gradient habitat with lower average water temperatures that is less suitable for optimal Coho production, particularly upstream of approximately river mile 25 (KM 40), near the town of Jordan. The two forks unite at the city of Arlington in northwestern Snohomish County.  The combined stream flows west, entering the north end of Port Susan, an arm of Puget Sound, approximately 10 miles (16 km) west of Arlington.
+The North and South Fork Stillaguamish mainstems have two periods of peak flow, first during winter rain and snowmelt events, and the second during peak snow runoff in spring and early summer. The smaller tributaries are largely rain-fed, and have most peak flow events during the winter season. 
+
+Recreational, environmental conservation, and commercial forest activities are prevalent in the mid and upper basin. The lower and mid-basin areas have significant habitat impacts from agricultural and residential/commercial development in the floodplain and surrounding uplands, and flood control activities. Residential developments and agricultural lands rim the Port Susan estuary.
+
+There are no major dams or other large man-made fish passage impediments located in the MU. Granite Falls on the South Fork Stillaguamish River was considered to be a natural migration block to all anadromous salmonids except summer steelhead (C. Kraemer, WDFW retired, personal communication).  In 1956, the Washington Department of Fish and Wildlife (WDFW) constructed a fish ladder at the falls to allow consistent anadromous salmonid access to the upper South Fork [@WDFW_2001].  
 
 #### Management Framework
 ##### Management Objectives
+
+Under the Comprehensive Coho Management Plan [@CCW_1998], Stillaguamish River wild Coho is the primary (key) management unit, and off-station production is a secondary management unit.  Under this plan, primary management units are controlling units in the sense that predefined management actions will be undertaken under specified abundance conditions, auxiliary management units are those managed to meet or exceed a minimum escapement, and secondary units are passively managed in mixed stock fisheries.
+
+The Stillaguamish MU consists of just one stock, managed for natural production and for the purpose of achieving a desired spawning escapement objective [@PFMC_2011]. Stillaguamish Coho Salmon are a primary management unit for Puget Sound under the Pacific Fishery Management Council. Other primary MUs in this region are eastern Juan de Fuca, Hood Canal, Skagit, Snohomish, and South Puget Sound (hatchery) Coho [@PFMC_2011]. The Council’s conservation objectives for these MUs are based on the Puget Sound Salmon Management Plan, which defines management objectives and long-term goals for these stocks as developed by representatives from Federal, state, and tribal agencies.  Conservation objectives for specific stocks are based on either maximum sustainable production for stocks managed primarily for natural production or on hatchery escapement needs for stocks managed for artificial production.  The original conservation objectives were developed by a State/Tribal Management Plan Development Team following the Boldt Decision (384 F. Supp. 312 [W.D. Wash. 1974]) with the goal for natural spawning stocks defined as "the adult spawning population that will, on the average, maximize biomass of juvenile outmigrants subsequent to incubation and freshwater rearing under average environmental conditions."  Assessments of the quantity and quality of rearing habitat and the number of adult spawners required to fully seed the habitat were used to develop the management objectives.  Some objectives have subsequently been modified by the U.S. District Court Fisheries Advisory Board and the WDFW/Tribal Technical Committee.  However, annual natural management objectives may vary from the Fishery Management Plan (FMP) conservation objectives if agreed to by WDFW and the treaty Indian tribes under the provisions of U.S. versus Washington (384 F. Supp. 312 [W.D. Wash. 1974]) and subsequent U.S. District Court orders. 
+
+In 2009, the Council adopted annual management objectives for Puget Sound Coho as recommended by WDFW and tribal co-managers under provisions of U.S. versus Washington. The annual objectives were based on the PSC categorical status and associated maximum exploitation rate limits. The Council formally adopted exploitation rate management objectives for Puget Sound Coho which were consistent with PSC objectives in November 2009. The current PST/Council exploitation rate ceilings for the Stillaguamish MU natural Coho population are provided in the table below. The current corresponding ocean abundance breakpoints are 20,000 and 9,385 [@PFMC_2012]. Prior to adoption of exploitation rate-based management for this MU in domestic and international management processes, natural Stillaguamish River origin Coho were managed for a fixed escapement goal of 17,000. This goal was derived from a freshwater juvenile carrying capacity model [@Zillges_1977].
 
 **Current Stillaguamish MU ocean abundance breakpoints and maximum total exploitation rates by PSC and Council status categories.**
 
 |---------------------------------------------------------|
 | **Status(PSC/Council)**  | **Ocean Abundance** </br> **Breakpoint**  |**Total Exploitation Rate** |
 |--------------------------|:--------------------------------------|:-----------------------:|
-| Low/Critical	|	< 	|	Up to 20% |
-| Moderate/Low	|		|	21% – 35% |
-| Abundant/Normal	|	> 	|	36% – 60% |
+| Low/Critical	|	< 9,385	|	Up to 20% |
+| Moderate/Low	|	9,386 – 20,000	|	21% – 35% |
+| Abundant/Normal	|	> 20,000	|	36% – 60% |
 |---------------------------------------------------------|
 
 ##### Stock Assessment
 ###### Indicator Stocks
+
+The Stillaguamish MU relies on the following two indicator stocks releases in the Snohomish MU: Bernie Gobin Hatchery (Tulalip Creek) and Wallace River Hatchery (Skykomish) (CoTC 2011).  Wallace River fish were double index tagged during brood years 1996–2009.  
+
+Coded-wire tagging programs have been limited within the basin. A smolt trapping study conducted by the Stillaguamish Tribe on brood years 1984–87 is the only source of wild tagging data from the Stillaguamish Watershed (Figure 4 4). A small scale CWT program associated with an enhancement project has been conducted in more recent years (Haymes 2008); however, tagged fish have only been released from brood years 1991–1998 and 2007 (RMISD 1977). There are no direct estimates of marine survival or exploitation for this MU due to the limited numbers of CWTs released from the enhancement projects, and lack of formal escapement accounting for the returning tagged Coho. Tagged hatchery and wild fish released in the Snohomish MU are used as surrogates for the Stillaguamish MU.
+
 ###### Forecast Methods
+Each year, a preseason abundance forecast of age-3 ocean recruits for Stillaguamish Coho Salmon is developed jointly by the Stillaguamish and Tulalip Tribes and WDFW by February.  These annual forecasts are described in the Pacific Fishery Management Council’s Preseason Forecast I document each February (PFMC 2012; www.pcouncil.org).  This is part of a larger WDFW-tribal effort to develop forecasts of wild Coho run size for all primary and most secondary management units in Puget Sound and the Washington coast (Seiler et al. 1995; Zimmerman 2011).  These forecasts rely on estimates of wild Coho Salmon production (i.e., smolts) paired with estimates of marine survival.  Wild Coho Salmon production estimates for each of the primary and secondary management units in Puget Sound were derived from results of juvenile trapping studies conducted in the Skagit, Stillaguamish, Snohomish, Green, Nisqually, and Deschutes rivers, as well as in tributaries to Lake Washington and Hood Canal.  Analysis of these long-term data sets have demonstrated that wild Coho smolt production is limited by a combination of factors including seeding levels (i.e., escapement), environmental effects (flows, marine derived nutrients), and habitat degradation (Zimmerman 2011). 
+
+WDFW’s Wild Salmon Production Evaluation (WSPE) Unit measured Coho production of brood years 1979 through 1981 in the Stillaguamish River.  During these years, the watershed was considered to be adequately seeded.  A juvenile trap was operated upstream of river mile 16 between 1981 and 1983.  Basin-wide production was the sum of estimated production above the trap and expanded production below the trap.  The average production estimate above the trap was 284,000 smolts (Seiler et al. 1984), 42.9% of the predicted production potential for this portion of the watershed (Zillges 1977).  Expanded production below the trap (86,000 smolts) was calculated by applying the ratio of measured to potential production above the trap (42.9%) to the potential production below the trap (201,520 smolts).  Estimated smolt production has been quite consistent in the Stillaguamish MU, averaging 397,000 smolts annually during 1990-2000 and 362,000 during 2000-2011.  Smolt production has varied from a low of 144,000 in 2008 to a high of 555,000 in 2010 (Table 4 1).  
+
+Marine survival rates of wild Coho stocks have been measured using wild CWT indicator stocks in four geographic regions of Puget Sound: Big Beef Creek, Deschutes River, South Fork Skykomish River, and Baker River (Zimmerman 2011).  These populations are assumed to be representative of the different Puget Sound regions. Marine survival rates for wild Stillaguamish Coho are estimated from the S.F. Skykomish in the Snohomish MU. Marine survival for this indicator population has averaged 12.7% during return years 1986-2011, with a high of 23.6% in 1994 and a low of 3.6% in 2006 (Figure 4 1).    
+
+add table or figure of outmigrating smolts
+
 ###### Escapement Monitoring
+
+The method used for estimating natural Coho escapements in this MU is the Base-Year Index approach (Haymes 2008). This approach is used to estimate annual Coho escapements to most of the major river basins and geographically associated aggregations of smaller independent tributaries in the Puget Sound region, exclusive of the Strait of Juan de Fuca. The Base-Year Index approach was adopted for estimating Coho escapements in this region because the distribution of Coho spawners is geographically broad in each river basin. Because of this, an approach is required that is not dependent on the direct census of a large portion of the total spawning habitat. In addition, assessments of serial live and/or dead fish observations are needed instead of spawning redd enumeration because the multiple species overlap and/or high spawning densities often make Coho redd enumeration impractical.
+
+The Base-Year Index method allows expansion of an annual index of abundance developed from serial field counts of live or dead salmon, collected in a relatively small fraction of the total freshwater habitat, to an estimate of basin or region-total escapement. A series of point counts of live Coho abundance are made in several fixed-location survey reaches, distributed throughout each major river basin or region. At the end of the spawning season an abundance index is developed for each index survey reach using the “area under the curve” (AUC) approach (Ames 1984; Irvine et al. 1993). The sum of the individual abundance index values from an individual escapement estimation unit (usually a river basin) are then multiplied by a historical “base year” basin-total escapement estimate developed from a mark-recapture study. The resulting value is divided by the base year index of abundance calculated for the same survey reaches that were monitored in the current escapement year, to produce the basin-total escapement estimate for the current year. In the Stillaguamish River basin, Coho escapement is estimated from 17 index reaches covering 10.7 miles (17.2 km) (Haymes 2008). Historical trends in escapement for the Stillaguamish MU are provided in Table 4 3 and Figure 4 2. Known distribution of spawners within the basin is depicted in Figure 4 3.
+
+**Spawner distribution of Coho Salmon in the Stillaguamish River (figure modified from WDFW’s Salmonid Stock Inventory (SaSI) located at: http://wdfw.wa.gov/conservation/fisheries/sasi/). **
+
 ###### Fishery Monitoring
+
+A fundamental requirement of abundance-based Coho Salmon management under the PST is that all fishery impacts on individual MUs be annually monitored with respect to both number of fish caught and CWTs.  This requires basic reporting of total impacts by fishery and the capacity to estimate each fishery’s MU-specific impacts.  Total fishing mortalities for each MU must be estimated to enable managers the ability to evaluate the annual exploitation rate relative to the PST-prescribed impact limits.
+
+Assessments of total fishing mortalities for each MU must include both directed and incidentally-landed catch as well as estimates of non-landed mortalities.  These estimates may be obtained through monitoring programs or, in some cases, generated through the use of algorithms built into the Fisheries Regulation Assessment Model (FRAM).  Monitoring programs may involve test fisheries or data collected directly from fishers (e.g., through creel survey interviews, and other fisher-reported techniques, such as log books or fish-tickets).  Estimation of non-landed fishing mortality requires annual estimates of encounter rates by fishery and gear.
+
+Management-Unit-specific impacts are generally evaluated using the coast-wide CWT system.  This system manages information on the release and recovery of coded-wire tags.  The volume of tags recovered for a given MU will depend on tagging rates, marine survival rates, exploitation and escapement rates, and sampling rates in fisheries and escapements.  A recent review of CWT methods (PSCCWTW 2008) recommends target sampling rates of 20% for the landed catch and 20% for escapements, with a minimum of 10 tags collected in each fishery or escapement stratum. 
+
+Mark selective fisheries have been intensively monitored to collect data to estimate key parameters characterizing MSF fisheries and their impacts on unmarked salmon.  Sampling activities include dockside creel sampling, on-water observation, and a Voluntary Trip Report (VTR) system.  Data collected from this sampling is used to estimate key parameters necessary to manage fisheries and integrate MSFs in FRAM.  These parameters include the following:  
+•	mark rate of the targeted Coho populations;
+•	total number of Coho harvested by mark-status, including an estimate of angler compliance rate with Coho MSF regulations;
+•	total number of Coho released (by size/mark-status);
+•	the coded-wire tag-stock composition of landed Coho; and
+•	total mortality of marked and unmarked Coho.   
+Estimates of observed encounter rates or mortality can then be compared to preseason FRAM projections (WDFW 2011).  
+
+Post-season exploitation rate estimates are also generated using the Post-Season FRAM Model.  Post-season estimates of catch and escapement are entered into the updated FRAM model with the same fishery regulation and effort package used for preseason modeling to generate post-season exploitation rate estimates.
+
+
 ##### Enhancement
+
+The following hatcheries are located within the Stillaguamish watershed:
+- Harvey Creek Hatchery is operated by the Stillaguamish Tribe and is located 2 miles upstream of the mouth of Harvey/Armstrong Creek, which is located 15.3 miles upstream of the mouth of the Stillaguamish main stem.
+- North Fork/Johnson Creek Hatchery is also operated by the Stillaguamish Tribe and is located approximately 2.5 miles upstream of the mouth of Johnson Creek located on the North Fork Stillaguamish (Stillaguamish Tribe 2004) (Figure x).  
+
+A Coho program at the US Navy’s hatchery at Jim Creek has been terminated. In the past the Stillaguamish Tribe propagated Coho at the Tribe’s Harvey Creek and Johnson Creek Hatcheries and at a satellite facility at the Navy’s Jim Creek Hatchery. Wild broodstock and the progeny of wild broodstock were captured at the respective sites. Small to moderate numbers of juvenile Coho produced from a wild broodstock collection program were released annually into selected lower Stillaguamish River tributaries for enhancement purposes since the 1993 brood year. Fish were collected with stick weirs and other approaches from lower river tributaries, then spawned and reared at Jim Creek Hatchery, a small incubation and rearing facility located on a lower river tributary and operated by the Stillaguamish Tribe.  
+
+The Stillaguamish Coho program is an integrated harvest/recovery program with the following goals: 1) providing for a limited selective terminal area fishery for tribal members during years when natural escapement requirements would not normally allow for a tribal fishery; and 2) to provide for a natural origin broodstock program for restoration activities within the basin (Stillaguamish 2004).
+
+Approximately 26,000 hatchery fish have been released within the basin annually since brood year 1985 (Figure 6 1).  Hatchery releases have been slowly decreasing since 1986, from a high of 138,750 fish released from brood year 1986 to a low of 2,802 fish from brood year 2002.  
+
+With the advent of technology to automatically remove adipose fins and/or insert CWTs using mobile “tagging trailers”, mass marking of hatchery fish was implemented for Coho Salmon in the mid-1990s (SFEC 1999). Mass marking allows mark selective fisheries (MSFs) for Coho Salmon in which marked hatchery fish can be retained and unmarked wild fish released, resulting in higher harvest rates on hatchery fish than wild fish. Mass marking was implemented for Coho Salmon from the Columbia River, Washington Coast, and Puget Sound beginning with the 1994 brood, including both mass marking (adipose fin clip) the vast majority of hatchery fish and the use of select double index tag (DIT) groups (unclipped fish with CWTs) (SFEC 1999). Mass marking of hatchery fish within the Stillaguamish began with the 2004 brood (Figure 6 1). There are no DIT programs within the Stillaguamish MU; however, DIT groups from the Snohomish are used as a surrogate and are listed in Appendix A. 
+
 #### Management Performance 
 
 ```{r}
 plot_abund_bar("Stillaguamish")
 ```
+
+**Total exploitation rate (ER) by the U.S. and Canada and escapement for the Stillaguamish MU for catch years 1986 to ????.  Exploitation rate (ER) estimates from 1986 to 1997 are based on CWT recoveries and were generated using the Mixed-Stock Model and cohort reconstruction process.  A post-season FRAM assessment technique was used to estimate ERs beginning with catch year 1998.** 
+
 ##### Forecast Evaluation
+
+add table of pre vs post season forecasts of abundance
+
+The forecasts of Stillaguamish Coho abundance have generally been higher than postseason estimates. During catch years 2004–2010, predicted cohort size (without natural mortality) ranged from a low of 13,400 (2009) to a high of 69,200 (2007) while post-season estimates ranged from 10,808 (2006) to 73,935 (2004) (CoTC 2011) (Table 4 2). Accordingly, the difference between preseason forecasts and post-season estimates varied from -130% (2009) to +77% (2006). 
+
+
 ##### Fishery Mortality and Escapement
+
+The base period for the Fisheries Regulation Assessment Model (FRAM) defines the temporal and spatial distributions of salmon fishing mortalities from each MU.  The current FRAM base period for Coho Salmon includes catch years 1986–1992.  During this period, fishing effort, tagging, and fishery sampling of Coho Salmon was high, allowing relatively fine-scale discrimination between salmon distributions.  Coded-wire-tag codes used during the base period for the Stillaguamish MU are provided in Appendix B and average base period exploitation rates by individual fisheries are provided in Appendix C.
+
+During the base period, Coho production from the MU contributed to US and Canadian marine sport and commercial fisheries in southern BC, the northern Washington coast, Strait of Juan de Fuca, and inner Puget Sound (Haymes 2008) (Figure 5 1; Appendix C).  Terminal tribal and non-tribal set and drift-net Coho net fisheries occur in commercial Marine Management Areas (MMAs) 8A (Port Susan/Possession Sound) and 8D (Tulalip Bay).  No directed commercial salmon fisheries typically occur in the Stillaguamish River, though there may periodically be tribal ceremonial and subsistence fisheries.  A substantial marine sport fishery occurs in sport MMA 8.2 (Port Susan/Possession Sound), and small freshwater Coho sport fishery occurs in the Stillaguamish River basin.  The terminal fishery co-managers are WDFW, and the Tulalip and Stillaguamish Tribes. 
+
+Total exploitation rates have generally declined since 1986 having averaged 71% during 1986–1993, then gradually falling to an extended period of low exploitation rates (10%) during 2002–2004 (Table 4 3; Figure 4 1).  Exploitation rates have increased since 2004, averaging 23% during 2005–2009.  Up until 1997 the exploitation rate by Canadian fishers averaged 26%, but has since declined to an average of less than 1.0% (Appendix D). 
+
+A comparison of exploitation rates by major fisheries during the base period and the most recent five years (2006–2010) is provided in Figure 5 1, while exploitation rates by major fisheries by year since 1986 are given in Appendix D.  Individual fishery management areas within Washington State are depicted in Figure 5 2.
+
 ##### Historical Overview of Status of Management Unit
+
+|---------------------------------------------|
+|**Catch Year** | **Status of MU** ||
+|		| **Preseason** |**Post-season** |
+|---------------------------------------------|
+2004	Abundant	Abundant
+2005	Abundant	Abundant
+2006	Abundant	Moderate
+2007	Abundant	Abundant
+2008	Abundant	Moderate
+2009	Moderate	Abundant
+2010	Abundant	Moderate
+2011	Abundant	--
+2012	Abundant	--
+2013
+2014
+2015
+2016
+2017
+2018
+2019
+2020
+2021
+|---------------------------------------------|
+
 
 ### Snohomish
 
@@ -1440,6 +1574,12 @@ plot_abund_bar("Snohomish")
 ##### Forecast Evaluation
 ##### Fishery Mortality and Escapement
 ##### Historical Overview of Status of Management Unit
+
+Since catch year 2004, the post-season status of the Stillaguamish MU has been “moderate” or “abundant” (Table 7 1).  The 2012 preliminary preseason forecast of 47,510 age-3 ocean recruits (Table 4 2) places Stillaguamish natural Coho in the “abundant” status category (under the 2002 PST Southern Coho Management Plan).
+Table 7 1.	Pre- and post-season status determinations of the Stillaguamish Management Unit.  These determinations are based on estimates of age-3 ocean recruits.
+
+
+
 
 ### Hood Canal
 
