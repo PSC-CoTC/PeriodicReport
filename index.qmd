@@ -10,6 +10,7 @@ number-depth: 4
 crossref:
   chapters: true
 bibliography: references.bib
+csl: american-fisheries-society.csl
 params:
   static_tables: StaticTables.xlsx
   mdb: ~/O/code/coho/fram_mdbs/PSC_CoTC_PostSeason_CohoFRAMDB_thru2021_021523.mdb
@@ -32,9 +33,13 @@ editor_options:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 
+# #biblio CSL (following AFS) from:
+# https://github.com/citation-style-language/styles/blob/master/american-fisheries-society.csl
+# dropped 'text-case="capitalize-first"' on L164
+
 library("tidyverse", quietly = T)
 library("readxl")
-library("kableExtra")
+library("kableExtra", quietly = T)
 library("gt")
 theme_set(theme_light())
 
@@ -74,6 +79,8 @@ static <- list(
     select(out_year = `Out-migration Year`, everything(), -Reference) |> 
     pivot_longer(cols = -out_year, names_to = "mu_name", values_to = "n") |> 
     drop_na(n)
+  ,
+  status = readxl::read_excel(params$static_tables, sheet = "Status")  
 )
 
 levels <- list(
@@ -218,13 +225,19 @@ psc <- left_join(
 # rm(params, static, fram, fram_mdb_reader)
 # save.image("PeriodicReport_envi.RData")
 
-write_csv(psc, "psc_postfram_1998_2021.csv")
+##write_csv(psc, "psc_postfram_1998_2021.csv")
 
 ```
 
 *Note that Quillayute and Queets values are those from the FRAM database and have not yet been extracted from the relevant TAMM cells for each year*
 
 ```{r func_plot_abund_bar}
+# #export these data for CCT to have for text summaries
+# psc |> 
+#   filter(RunYear > 2003) |> 
+#   split(~PSC_StockName) |> 
+#   writexl::write_xlsx("psc_mort_escp_abund_data.xlsx")
+
 plot_abund_bar <- function(stknm = "Skagit"){
   psc |> 
     filter(PSC_StockName==stknm, RunYear > 2003) |>
@@ -283,7 +296,72 @@ plot_smolts <- function(stknm = "Skagit"){
     )
 }
 
-plot_smolts()
+#plot_smolts()
+```
+
+```{r func_plot_status}
+plot_status <- function(mu = "Skagit"){
+  # static$status |> 
+  # pivot_longer(cols = c(`Pre-season`, `Post-Season`), names_to = "prepost", values_to = "status_fct") |> 
+  #   mutate(
+  #     status_fct = factor(status_fct, levels = c("Low","Moderate","Abundant"))
+  #   ) |> 
+  #   filter(MU == mu) |> 
+  #   ggplot() +
+  #   geom_point(aes(`Catch Year`, status_fct, color = prepost), 
+  #              position = position_dodge(width = 0.3), alpha = 0.7) +
+  #   scale_color_grey()
+  
+  # static$status |>
+  #   filter(MU == mu) |>
+  #   mutate(
+  #     mgmt = case_when(
+  #       `Pre-season`=="Abundant" & `Post-Season`=="Abundant" ~ "stay Abundant",
+  #       `Pre-season`!="Abundant" & `Post-Season`=="Abundant" ~ "up to Abundant",
+  #       
+  #       `Pre-season`=="Moderate" & `Post-Season`=="Moderate" ~ "stay Moderate",
+  #       `Pre-season`=="Abundant" & `Post-Season`=="Moderate" ~ "down to Moderate",
+  #       `Pre-season`=="Low" & `Post-Season`=="Moderate" ~ "up to Moderate",
+  #       
+  #       `Pre-season`=="Low" & `Post-Season`=="Low" ~ "stay Low",
+  #       `Pre-season`!="Low" & `Post-Season`=="Low" ~ "down to Low",
+  #     ) |> 
+  #       factor(levels = rev(c(
+  #          "stay Abundant", "up to Abundant",
+  #          "stay Moderate", "up to Moderate", "down to Moderate",
+  #          "stay Low", "down to Low"
+  #       )))
+  #   ) |> 
+  #   ggplot() +
+  #   geom_point(aes(`Catch Year`, mgmt)) +
+  #   scale_x_continuous(breaks = seq(2004, 2021, by=3)) +
+  #   scale_y_discrete("") +
+  #   labs(subtitle = paste("Pre- to post status", mu))
+
+  static$status |>
+    filter(MU == mu) |>
+    mutate(
+      across(c(`Pre-season`,`Post-Season`),
+             ~factor(., levels = c("Low","Moderate","Abundant"))
+             ),
+      mgmt = case_when(
+        as.integer(`Pre-season`) == as.integer(`Post-Season`) ~ "no change",
+        as.integer(`Pre-season`) >  as.integer(`Post-Season`) ~ "decrease",
+        as.integer(`Pre-season`) < as.integer(`Post-Season`) ~ "increase"
+      ) |> 
+        factor(levels = c("decrease","no change","increase"))
+    ) |> 
+    ggplot() +
+    geom_point(aes(`Catch Year`, `Post-Season`, shape = mgmt, color = mgmt, fill = mgmt), size = 3) +
+    scale_x_continuous(breaks = seq(2004, 2021, by=2)) +
+    scale_y_discrete("") +
+    scale_shape_manual(values = c(25,21,24)) +
+    scale_fill_manual(values = c("orange","darkgreen","green"), aesthetics = c("fill","color")) +
+    labs(subtitle = paste("Pre- to post status", mu))
+
+}
+
+#plot_status()
 ```
 
 
@@ -429,7 +507,7 @@ The biological impacts of these temperature swings and marine heat waves are doc
 
 Overall, the marine heat wave in 2014–2016 had the most drastic impact on marine ecosystems in 2015, with lingering effects into 2016 and 2017. Conditions had somewhat returned to “normal” in 2018 and again in 2021, but marine heat waves in coastal waters in 2019 and 2022 set off a series of marine ecosystem changes across the North Pacific. Here we provide a brief summary of some of the largest biological impacts recent ocean conditions that were observed. 
 
-*Primary Producers*. One of the most dramatic impacts to coastal waters was the largest bloom of the diatom Pseudo-nitzschia ever recorded in 2015 [@Bates_et_al_2018). It stretched from Southern California to the Aleutian Islands in Alaska. Pseudo-nitzschia produces domoic acid, a neurotoxin that causes amnesic shellfish poisoning, which is potentially fatal in mammals (including humans) and seabirds, but apparently does not affect fish.  The 2015 bloom caused high domoic acid levels, resulting in fishery closures for razor clams and Dungeness crab and the death of hundreds of seabirds and marine mammals. Continuing (but much smaller) Pseudo-nitzschia blooms have continued across to flare up along the coasts from California to British Columbia ever since. 
+*Primary Producers*. One of the most dramatic impacts to coastal waters was the largest bloom of the diatom Pseudo-nitzschia ever recorded in 2015 [@Bates_et_al_2018]. It stretched from Southern California to the Aleutian Islands in Alaska. Pseudo-nitzschia produces domoic acid, a neurotoxin that causes amnesic shellfish poisoning, which is potentially fatal in mammals (including humans) and seabirds, but apparently does not affect fish.  The 2015 bloom caused high domoic acid levels, resulting in fishery closures for razor clams and Dungeness crab and the death of hundreds of seabirds and marine mammals. Continuing (but much smaller) Pseudo-nitzschia blooms have continued across to flare up along the coasts from California to British Columbia ever since. 
 
 *Lower Trophic Levels*. Marine heatwaves also dramatically altered the lower trophic levels, resulting in decreases in high quality prey such as lipid-rich copepods and krill, and increases in gelatinous organisms (jellyfish, pelagic tunicates), which have low nutritional value. This shift to poor prey quality was expected to cause poor survival for juvenile fish and seabirds which rely on these prey types. The year 2017 also saw an explosion of *Pyrosoma atlanticum*, from California to SE Alaska. These normally tropical species are rare north of Southern California but spread north starting in 2013, peaking in 2017, and largely absent north of California by 2019. Pyrosomes are a low-quality, high-fiber prey, but were observed in the stomachs of dozens of species, including juvenile and adult Pacific salmon. Lower trophic levels rebounded in 2021, but less so in 2022 due to inconsistent upwelling.
 
@@ -1050,11 +1128,13 @@ psc |>
 ##### Enhancement
 #### Management Performance (MU-specific figures, tables, etc.)
 
-```{r}
-plot_abund_bar("Lower Fraser")
-```
 ##### Forecast Evaluation
 ##### Fishery Mortality and Escapement
+
+```{r f_abund_bar_lfras}
+plot_abund_bar("Lower Fraser")
+```
+
 ##### Historical Overview of Status of Management Unit
 
 ### Interior Fraser
@@ -1069,11 +1149,13 @@ plot_abund_bar("Lower Fraser")
 ##### Enhancement
 #### Management Performance 
 
-```{r}
-plot_abund_bar("Interior Fraser")
-```
 ##### Forecast Evaluation
 ##### Fishery Mortality and Escapement
+
+```{r f_abund_bar_ifras}
+plot_abund_bar("Interior Fraser")
+```
+
 ##### Historical Overview of Status of Management Unit
 
 ### Strait of Georgia
@@ -1089,11 +1171,13 @@ plot_abund_bar("Interior Fraser")
 ##### Enhancement
 #### Management Performance 
 
-```{r}
-plot_abund_bar("Strait of Georgia")
-```
 ##### Forecast Evaluation
 ##### Fishery Mortality and Escapement
+
+```{r f_abund_bar_strgrg}
+plot_abund_bar("Strait of Georgia")
+```
+
 ##### Historical Overview of Status of Management Unit
 
 ### Skagit
@@ -1324,31 +1408,8 @@ The base period for the FRAM defines the temporal and spatial distributions of s
 
 During the base period, Coho production from the Skagit MU contributed to U.S. and Canadian marine sport and commercial fisheries in southern British Columbia, the northern Washington coast, Strait of Juan de Fuca, and inner Puget Sound (Figure 5 1; Appendix C).  Terminal tribal and non-tribal set and drift-net Coho net fisheries occur in commercial fishery management area 8 and the lower Skagit River.  Moderate-sized Coho sport fisheries occur in sport fishery management area 8.1, the mainstem Skagit River, and the Cascade River.  The terminal fishery co-managers are WDFW, and the Upper Skagit, Sauk-Suiattle, and Swinomish Tribes.  
 
-```{r func_plot_abund_bar}
-plot_abund_bar <- function(stknm = "Skagit"){
-  psc |> 
-    filter(PSC_StockName==stknm, RunYear > 2003) |>
-    distinct(RunYear, PSC_StockName, 
-             Harvest = mort_sum, Escapement = escp, Abundance = abund, 
-             low_mod_abund, mod_abd_abund) |> 
-    pivot_longer(names_to = "var", values_to = "val",
-                 -c(RunYear, PSC_StockName, low_mod_abund, mod_abd_abund)) |> 
-    mutate(across(ends_with("_abund"), ~if_else(var == "Abundance", ., NA_real_))) |> 
-    ggplot(aes(RunYear, val, fill = var, color = var)) + 
-    geom_col(width = 0.7) + 
-    geom_hline(aes(yintercept = low_mod_abund), color = "orange", linetype = 5, linewidth = 1.2) +
-    geom_hline(aes(yintercept = mod_abd_abund), color = "orange", linetype = 5) +
-    geom_vline(xintercept = 2010, linetype = 3, alpha = 0.5) +
-    geom_smooth(formula = y ~ x, method = "lm", se = F, linewidth = 0.5, linetype = 2) +
-    scale_fill_grey("", start = 0.3, end = 0.7, aesthetics = c("fill", "color")) +
-    scale_x_continuous(breaks = seq(1998, 2040, by = 3), guide = guide_axis(n.dodge = 2)) +
-    scale_y_continuous("", labels = scales::comma) +
-    facet_wrap(~var, nrow = 1) +
-    theme(legend.position = "none") +
-    labs(subtitle = stknm)
-}
-
-#plot_abund_bar()
+```{r f_abund_bar_skagit}
+plot_abund_bar("Skagit")
 ```
 
 **Average exploitation rates by fishing area.  The stacked bars represent the rates estimated by gear type during the FRAM base period, catch years 1986–1992.  The line represents the average annual total exploitation rate by fishing area during catch years ??, all gears combined.**
@@ -1359,10 +1420,6 @@ To-do --> Add Table 5.1
 
 **Historical summary of annual total abundance (January age-3 without natural mortality), adult escapement, marine survival (Baker River Wild), and exploitation rates (ER) of the Skagit Management Unit; since 1986. **
 
-```{r}
-plot_abund_bar("Skagit")
-```
-
 ##### Historical Overview of Status of Management Unit
 
 Since catch year 2004, the post-season status of the Skagit MU has been “Moderate” or “Abundant”, except in 2006 when the estimate of age-3 ocean recruits was less than 12,000 fish (Table 7 1).
@@ -1372,31 +1429,9 @@ To-do --> add Table 7.1
 
 Estimated total abundance and escapement in the Skagit MU has been quite variable during 1986–2011, with a downward trend in total abundance and a slightly trend in escapement during this period.  Total abundance has varied from low of 14,123 fish (2006) to a high of 397,120 fish (1986) and has exceeded 100,000 fish in 14 of 26 years between 1986 and 2011, and six times since 2000 (Table 5 1). Estimated escapement has averaged 54,275 during the entire time period and 55,364 during 2000–2011. It has varied from a low of 7,702 fish (2006) and a high of 118,220 (2004) (Table 5 1).
 
-Question for Dan --> put these tables in?  Or pull from the static table called "Status" in Excel file?
-
-|---------------------------------------------|
-|**Catch Year** | **Status of MU** ||
-|		| **Preseason** |**Post-season** |
-|---------------------------------------------|
-|2004 |	Abundant |	Abundant |
-|2005 |	Moderate |	Moderate |
-|2006 |	Abundant |	Low |
-|2007 |	Moderate |	Abundant |
-|2008 |	Moderate |	Moderate |
-|2009 |	Moderate |	Abundant |
-|2010 |	Abundant |	Moderate |
-|2011 |	Abundant |	Abundant |
-|2012 |	Moderate |	Abundant |
-|2013 |	Abundant |	Abundant |
-|2014 |	Abundant |	Moderate | 
-|2015 |	Abundant |	Low |
-|2016 |	Low |	Moderate |
-|2017 |	Low |	Low |
-|2018 |	Moderate |	Moderate |
-|2019 |	Moderate |	Moderate |
-|2020 |	Moderate |	Moderate |
-|2021 |	Moderate |	Abundant |
-|---------------------------------------------|
+```{r f_plot_status_skagit}
+plot_status("Skagit")
+```
 
 
 ### Stillaguamish
@@ -1486,10 +1521,6 @@ With the advent of technology to automatically remove adipose fins and/or insert
 
 #### Management Performance 
 
-```{r}
-plot_abund_bar("Stillaguamish")
-```
-
 **Total exploitation rate (ER) by the U.S. and Canada and escapement for the Stillaguamish MU for catch years 1986 to ????.  Exploitation rate (ER) estimates from 1986 to 1997 are based on CWT recoveries and were generated using the Mixed-Stock Model and cohort reconstruction process.  A post-season FRAM assessment technique was used to estimate ERs beginning with catch year 1998.** 
 
 ##### Forecast Evaluation
@@ -1505,35 +1536,19 @@ The base period for the Fisheries Regulation Assessment Model (FRAM) defines the
 
 During the base period, Coho production from the MU contributed to US and Canadian marine sport and commercial fisheries in southern BC, the northern Washington coast, Strait of Juan de Fuca, and inner Puget Sound (Haymes 2008) (Figure 5 1; Appendix C).  Terminal tribal and non-tribal set and drift-net Coho net fisheries occur in commercial Marine Management Areas (MMAs) 8A (Port Susan/Possession Sound) and 8D (Tulalip Bay).  No directed commercial salmon fisheries typically occur in the Stillaguamish River, though there may periodically be tribal ceremonial and subsistence fisheries.  A substantial marine sport fishery occurs in sport MMA 8.2 (Port Susan/Possession Sound), and small freshwater Coho sport fishery occurs in the Stillaguamish River basin.  The terminal fishery co-managers are WDFW, and the Tulalip and Stillaguamish Tribes. 
 
+```{r f_abund_bar_stillaguamish}
+plot_abund_bar("Stillaguamish")
+```
+
 Total exploitation rates have generally declined since 1986 having averaged 71% during 1986–1993, then gradually falling to an extended period of low exploitation rates (10%) during 2002–2004 (Table 4 3; Figure 4 1).  Exploitation rates have increased since 2004, averaging 23% during 2005–2009.  Up until 1997 the exploitation rate by Canadian fishers averaged 26%, but has since declined to an average of less than 1.0% (Appendix D). 
 
 A comparison of exploitation rates by major fisheries during the base period and the most recent five years (2006–2010) is provided in Figure 5 1, while exploitation rates by major fisheries by year since 1986 are given in Appendix D.  Individual fishery management areas within Washington State are depicted in Figure 5 2.
 
 ##### Historical Overview of Status of Management Unit
 
-|---------------------------------------------|
-|**Catch Year** | **Status of MU** ||
-|		| **Preseason** |**Post-season** |
-|---------------------------------------------|
-2004	Abundant	Abundant
-2005	Abundant	Abundant
-2006	Abundant	Moderate
-2007	Abundant	Abundant
-2008	Abundant	Moderate
-2009	Moderate	Abundant
-2010	Abundant	Moderate
-2011	Abundant	--
-2012	Abundant	--
-2013
-2014
-2015
-2016
-2017
-2018
-2019
-2020
-2021
-|---------------------------------------------|
+```{r f_plot_status_stilly}
+plot_status("Stillaguamish")
+```
 
 
 ### Snohomish
@@ -1564,17 +1579,19 @@ The Snohomish MU is one of the U.S. Inside MUs and includes
 ##### Enhancement
 #### Management Performance 
 
-```{r}
+##### Forecast Evaluation
+
+##### Fishery Mortality and Escapement
+
+```{r f_abund_bar_snohomish}
 plot_abund_bar("Snohomish")
 ```
-##### Forecast Evaluation
-##### Fishery Mortality and Escapement
+
 ##### Historical Overview of Status of Management Unit
 
-Since catch year 2004, the post-season status of the Stillaguamish MU has been “moderate” or “abundant” (Table 7 1).  The 2012 preliminary preseason forecast of 47,510 age-3 ocean recruits (Table 4 2) places Stillaguamish natural Coho in the “abundant” status category (under the 2002 PST Southern Coho Management Plan).
-Table 7 1.	Pre- and post-season status determinations of the Stillaguamish Management Unit.  These determinations are based on estimates of age-3 ocean recruits.
-
-
+```{r f_plot_status_sno}
+plot_status("Snohomish")
+```
 
 
 ### Hood Canal
@@ -1756,25 +1773,19 @@ During the base period, Coho production from the Hood Canal MU contributed to sp
 
 A species-selective commercial beach seine fishery occurs in Area 12A to allow harvest of Coho during the ESA protected summer chum run. A marine Coho sport fishery occurs in sport fishery management area 12, and significant freshwater Coho sport fisheries occur in the Dewatto, Tahuya, Skokomish and Big Quilcene rivers. The terminal fishery co-managers are WDFW, the Point No Point Treaty Council/Port Gamble S’Klallam Tribe, Jamestown S’klallam Tribe, Lower Elwha Klallam Tribe, and the Skokomish Tribe. 
 
-To-do --> add Figure 5.1.
+```{r f_abund_bar_hc}
+plot_abund_bar("Hood Canal")
+```
 
 **Average exploitation rates by fishing area for the Hood Canal MU. The stacked bars represent the rates estimated by gear type during the FRAM base period, catch years 1986-1992. The line represents the estimated total exploitation rate by fishing area during catch years 2005-2010, all gears combined.**
 
 Total exploitation rates have generally declined, averaging 72% between 1986 and 1996 then gradually falling to an extended period of low exploitation rates (27%) during 1997-2004 (Table 5.1; Figure 4.2).  Exploitation rates have increased since 2004, averaging 59% during 2005-2009.  Up until 1996, the exploitation rate by Canadian fishers averaged 40%, but has since declined to an average of less than 1.5%.
 
-To-do --> add Table 5.1 (Catch Year	Total Abundance	Escapement	Marine Survival	Estimated Exploitation Rates
-				U.S.	   Canada	Total)
-
 **Historical summary of annual total abundance (January age-3 without natural mortality), adult escapement, marine survival (Big Beef Creek), and exploitation rates (ER) of the Hood Canal Management Unit; since 1986.**
-
 
 A comparison of exploitation rates by major fisheries during the base period and the most recent five years (2006-2010) is provided in Figure 5.1. Individual commercial fishery management areas within Washington State are depicted in Figure 5.2 and 5.3.
 
-to-do --> move this to the appropriate spot
 
-```{r}
-plot_abund_bar("Hood Canal")
-```
 ##### Historical Overview of Status of Management Unit
 
 
@@ -1805,9 +1816,10 @@ The US Strait JDF MU is one of the U.S. Inside MUs and includes
 ##### Enhancement
 #### Management Performance 
 
-```{r}
+```{r f_abund_bar_jdf}
 plot_abund_bar("US Strait JDF")
 ```
+
 ##### Forecast Evaluation
 ##### Fishery Mortality and Escapement
 ##### Historical Overview of Status of Management Unit
@@ -1827,14 +1839,16 @@ plot_abund_bar("US Strait JDF")
 ##### Enhancement
 #### Management Performance 
 
-```{r}
+```{r f_abund_bar_quill}
 plot_abund_bar("Quillayute")
 ```
+
 ##### Forecast Evaluation
 ##### Fishery Mortality and Escapement
 ##### Historical Overview of Status of Management Unit
 
 ### Hoh
+
 #### Biological & Geographic Description
 #### Management Framework
 ##### Management Objectives
@@ -1846,9 +1860,10 @@ plot_abund_bar("Quillayute")
 ##### Enhancement
 #### Management Performance 
 
-```{r}
+```{r f_abund_bar_hoh}
 plot_abund_bar("Hoh")
 ```
+
 ##### Forecast Evaluation
 ##### Fishery Mortality and Escapement
 ##### Historical Overview of Status of Management Unit
@@ -1868,9 +1883,10 @@ plot_abund_bar("Hoh")
 ##### Enhancement
 #### Management Performance 
 
-```{r}
+```{r f_abund_queets}
 plot_abund_bar("Queets")
 ```
+
 ##### Forecast Evaluation
 ##### Fishery Mortality and Escapement
 ##### Historical Overview of Status of Management Unit
@@ -1888,9 +1904,10 @@ plot_abund_bar("Queets")
 ##### Enhancement
 #### Management Performance 
 
-```{r}
+```{r f_abund_bar_gh}
 plot_abund_bar("Grays Harbor")
 ```
+
 ##### Forecast Evaluation
 ##### Fishery Mortality and Escapement
 ##### Historical Overview of Status of Management Unit
