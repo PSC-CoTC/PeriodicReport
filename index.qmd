@@ -637,18 +637,6 @@ The Juan de Fuca Coho Salmon stock was declared overfished in 2018. The target y
 | Low                  | Between 11,679 and 27,445| 40% | 
 | Critical             | 11,679 or less           | 20% |
 
-### Queets Management Unit 
-
-The Queets Coho Salmon stock was declared overfished in 2018. The target year for rebuilding Queets coho is 2019. The harvest control rule during the rebuilding period for Queets Coho is the abundance-based stepped harvest rate of: 
-
-**Queets stepped harvest rates**
-
-| **Abundance category** | **Age-3 ocean abundance** | **Total allowable exploitation rate** |
-|:--------------------:|:------------------------:|:-----------------------------------:|
-| Normal               | Greater than 9,667       | 65% |
-| Low                  | Between 7,250 and 9,667  | 40% | 
-| Critical             | 7,250 or less            | 20% |
-
 
 ### Snohomish Management Unit
 
@@ -2005,15 +1993,21 @@ Management goals for Washington coastal Coho stocks include achieving natural sp
 
 The current PST total exploitation rate ceiling for the natural Coho population is defined as the maximum rate that will meet the minimum escapement goal of 5,800  when applied to the pre-season ocean abundance forecast (Haymes 2008).  The basin is currently managed in US fisheries for a natural fall Coho escapement goal range of 5,800 to 14,500, and annual egg take objectives at the Salmon River Hatchery.  The current PST exploitation rate ceilings for the Queets MU Coho population are listed below.
 
-**Current Queets MU ocean abundance reference breakpoints and maximum total exploitation rates by PSC and Council status categories.**
+The Queets Coho Salmon stock was declared overfished in 2018. The target year for rebuilding Queets coho is 2019. The harvest control rule during the rebuilding period for Queets Coho is the abundance-based stepped harvest rate of: 
+
+**Queets MU ocean abundance reference breakpoints and maximum total exploitation rates by PSC and Council status categories.**
 
 |---------------------------------------------------------|
-| **Status(PSC/Council)**  | **Ocean Abundance** </br> **Reference Breakpoint**  |**Total Exploitation Rate** |
+| **Status(PSC/Council)**  | **Ocean Abundance** </br> **Reference Breakpoint**  |**Total Allowable Exploitation Rate** |
 |--------------------------|:--------------------------------------|:-----------------------:|
-| Low/Critical	           |	< 7,250 	        |	Up to 20% |
+| Low/Critical	           |	<= 7,250 	        |	Up to 20% |
 | Moderate/Low	           |	7,250 – 9,667	        |	21% – 35% |
 | Abundant/Normal	   |	> 9,667	                |	36% – 60% |
 |---------------------------------------------------------|
+
+
+
+
 
 
 ##### Stock Assessment
