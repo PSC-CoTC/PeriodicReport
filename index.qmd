@@ -2,21 +2,25 @@
 title: "Joint Coho Technical Committee Periodic Report"
 author: "PSC Joint Coho Technical Committee"
 date: "`r Sys.Date()`"
-toc: true
-toc-depth: 4
-toc-expand: 1
-number-sections: true
-number-depth: 4
-crossref:
-  chapters: true
 bibliography: references.bib
 csl: american-fisheries-society.csl
 params:
   static_tables: StaticTables.xlsx
   mdb: ~/O/code/coho/fram_mdbs/PSC_CoTC_PostSeason_CohoFRAMDB_thru2021_021523.mdb
-linkcolor: blue
 editor_options:
   chunk_output_type: console
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    toc-expand: 1
+    number-sections: true
+    number-depth: 4
+    crossref:
+      chapters: true
+    linkcolor: blue
+  docx:
+    reference-doc: /Users/auerbdaa/O/code/quarto_template.docx
 ---
 
 <header style="color: #ff4000; font-weight: bold; font-size: 40px; text-align:center">
@@ -301,42 +305,6 @@ plot_smolts <- function(stknm = "Skagit"){
 
 ```{r func_plot_status}
 plot_status <- function(mu = "Skagit"){
-  # static$status |> 
-  # pivot_longer(cols = c(`Pre-season`, `Post-Season`), names_to = "prepost", values_to = "status_fct") |> 
-  #   mutate(
-  #     status_fct = factor(status_fct, levels = c("Low","Moderate","Abundant"))
-  #   ) |> 
-  #   filter(MU == mu) |> 
-  #   ggplot() +
-  #   geom_point(aes(`Catch Year`, status_fct, color = prepost), 
-  #              position = position_dodge(width = 0.3), alpha = 0.7) +
-  #   scale_color_grey()
-  
-  # static$status |>
-  #   filter(MU == mu) |>
-  #   mutate(
-  #     mgmt = case_when(
-  #       `Pre-season`=="Abundant" & `Post-Season`=="Abundant" ~ "stay Abundant",
-  #       `Pre-season`!="Abundant" & `Post-Season`=="Abundant" ~ "up to Abundant",
-  #       
-  #       `Pre-season`=="Moderate" & `Post-Season`=="Moderate" ~ "stay Moderate",
-  #       `Pre-season`=="Abundant" & `Post-Season`=="Moderate" ~ "down to Moderate",
-  #       `Pre-season`=="Low" & `Post-Season`=="Moderate" ~ "up to Moderate",
-  #       
-  #       `Pre-season`=="Low" & `Post-Season`=="Low" ~ "stay Low",
-  #       `Pre-season`!="Low" & `Post-Season`=="Low" ~ "down to Low",
-  #     ) |> 
-  #       factor(levels = rev(c(
-  #          "stay Abundant", "up to Abundant",
-  #          "stay Moderate", "up to Moderate", "down to Moderate",
-  #          "stay Low", "down to Low"
-  #       )))
-  #   ) |> 
-  #   ggplot() +
-  #   geom_point(aes(`Catch Year`, mgmt)) +
-  #   scale_x_continuous(breaks = seq(2004, 2021, by=3)) +
-  #   scale_y_discrete("") +
-  #   labs(subtitle = paste("Pre- to post status", mu))
 
   static$status |>
     filter(MU == mu) |>
@@ -344,7 +312,7 @@ plot_status <- function(mu = "Skagit"){
       across(c(`Pre-season`,`Post-Season`),
              ~factor(., levels = c("Low","Moderate","Abundant"))
              ),
-      mgmt = case_when(
+      pre_to_post = case_when(
         as.integer(`Pre-season`) == as.integer(`Post-Season`) ~ "no change",
         as.integer(`Pre-season`) >  as.integer(`Post-Season`) ~ "decrease",
         as.integer(`Pre-season`) < as.integer(`Post-Season`) ~ "increase"
@@ -352,12 +320,13 @@ plot_status <- function(mu = "Skagit"){
         factor(levels = c("decrease","no change","increase"))
     ) |> 
     ggplot() +
-    geom_point(aes(`Catch Year`, `Post-Season`, shape = mgmt, color = mgmt, fill = mgmt), size = 3) +
+    geom_line(aes(`Catch Year`, `Post-Season`, group = MU), linetype = 2, linewidth = 0.3) +
+    geom_point(aes(`Catch Year`, `Post-Season`, shape = pre_to_post, color = pre_to_post, fill = pre_to_post), size = 3) +
     scale_x_continuous(breaks = seq(2004, 2021, by=2)) +
-    scale_y_discrete("") +
+    scale_y_discrete("", breaks = c("Low","Moderate","Abundant")) +
     scale_shape_manual(values = c(25,21,24)) +
     scale_fill_manual(values = c("orange","darkgreen","green"), aesthetics = c("fill","color")) +
-    labs(subtitle = paste("Pre- to post status", mu))
+    labs(subtitle = paste(mu, "post-season status, relative to preseason"))
 
 }
 
@@ -1461,10 +1430,9 @@ To-do --> add Table 7.1
 
 Estimated total abundance and escapement in the Skagit MU has been quite variable during 1986–2011, with a downward trend in total abundance and a slightly trend in escapement during this period.  Total abundance has varied from low of 14,123 fish (2006) to a high of 397,120 fish (1986) and has exceeded 100,000 fish in 14 of 26 years between 1986 and 2011, and six times since 2000 (Table 5 1). Estimated escapement has averaged 54,275 during the entire time period and 55,364 during 2000–2011. It has varied from a low of 7,702 fish (2006) and a high of 118,220 (2004) (Table 5 1).
 
-```{r f_plot_status_skagit}
+```{r f_plot_status_skagit, fig.height=3}
 plot_status("Skagit")
 ```
-
 
 ### Stillaguamish
 
@@ -1587,7 +1555,7 @@ A comparison of exploitation rates by major fisheries during the base period and
 
 ##### Historical Overview of Status of Management Unit
 
-```{r f_plot_status_stilly}
+```{r f_plot_status_stilly, fig.height=3}
 plot_status("Stillaguamish")
 ```
 
@@ -1680,7 +1648,7 @@ plot_abund_bar("Snohomish")
 
 ##### Historical Overview of Status of Management Unit
 
-```{r f_plot_status_sno}
+```{r f_plot_status_sno, fig.height=3}
 plot_status("Snohomish")
 ```
 
@@ -1884,6 +1852,9 @@ A comparison of exploitation rates by major fisheries during the base period and
 
 ##### Historical Overview of Status of Management Unit
 
+```{r f_plot_status_hood, fig.height=3}
+plot_status("Hood Canal")
+```
 
 ### US Strait of Juan de Fuca (JDF)
 
@@ -1955,6 +1926,10 @@ plot_abund_bar("US Strait JDF")
 ##### Fishery Mortality and Escapement
 ##### Historical Overview of Status of Management Unit
 
+```{r f_plot_status_jdf, fig.height=3}
+plot_status("US Strait JDF")
+```
+
 ### Quillayute
 
 *Note that Quillayute and Queets values are those from the FRAM database and have not yet been extracted from the relevant TAMM cells for each year*
@@ -2021,6 +1996,10 @@ plot_abund_bar("Quillayute")
 ##### Fishery Mortality and Escapement
 ##### Historical Overview of Status of Management Unit
 
+```{r f_plot_status_quill, fig.height=3}
+plot_status("Quillayute")
+```
+
 ### Hoh
 
 #### Biological & Geographic Description
@@ -2075,6 +2054,10 @@ plot_abund_bar("Hoh")
 ##### Forecast Evaluation
 ##### Fishery Mortality and Escapement
 ##### Historical Overview of Status of Management Unit
+
+```{r f_plot_status_hoh, fig.height=3}
+plot_status("Hoh")
+```
 
 ### Queets
 
@@ -2146,6 +2129,10 @@ plot_abund_bar("Queets")
 
 ##### Historical Overview of Status of Management Unit
 
+```{r f_plot_status_queets, fig.height=3}
+plot_status("Queets")
+```
+
 ### Grays Harbor
 
 #### Biological & Geographic Description
@@ -2213,6 +2200,10 @@ plot_abund_bar("Grays Harbor")
 ##### Forecast Evaluation
 ##### Fishery Mortality and Escapement
 ##### Historical Overview of Status of Management Unit
+
+```{r f_plot_status_gh, fig.height=3}
+plot_status("Grays Harbor")
+```
 
 # Members
 
