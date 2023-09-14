@@ -385,7 +385,10 @@ Under the Agreement, the Parties are required to establish escapement goals or E
 |  Moderate  |          21% - 40%          |
 |  Abundant  |          41% - 65%          |
 
-Annual ER caps are established for each of the MUs based on the level of abundance and health of the natural stocks. These caps are then apportioned between the Parties. Constraints for Canadian fisheries on U.S. MUs are determined by formulas that specify sharing of allowable ERs as well as a composite rule, which together adjust caps according to the number of U.S. MUs that fall within a given category. Constraints for U.S. fisheries on Canadian MUs depend on the status of the Interior Fraser MU until the biological status of the other Canadian MUs has been determined. Canada is currently working to develop the information (smolt to adult survival rates, escapements) needed to apply the status determination method used for the Interior Fraser coho MU to the Lower Fraser and Strait of Georgia MUs. Details as to how exploitation rate constraints are established based on the status of MUs under the SCMP are contained in Annex IV Chapter 5 Section 9.b-c (Canadian exploitation rate caps on inside and outside U.S. MUs) and Section 9.d (U.S. exploitation rate caps on Canadian MUs).
+Annual ER caps are established for each of the MUs based on the level of abundance and health of the natural stocks. These caps are then apportioned between the Parties. Constraints for Canadian fisheries on U.S. MUs are determined by formulas that specify sharing of allowable ERs as well as a composite rule, which together adjust caps according to the number of U.S. MUs that fall within a given category. The composite rule adjusts constraints for Canadian fishery exploitation rates based on the number of U.S. management units which fall in a given category. For example, if only one Washington coastal or Puget Sound coho management unit is in low status, Canadian fisheries are constrained to a total exploitation rate on that unit of 12%; if two or more Washington coastal management units are in low status, the constraint becomes 10%. The most restrictive exploitation
+rate limit for Canadian fishery impacts on U.S. coho management units is 10%. 
+
+Constraints for U.S. fisheries on Canadian MUs depend on the status of the Interior Fraser MU until the biological statuses of the other Canadian MUs have been determined. Canada is currently working to develop the information (smolt to adult survival rates, escapements) needed to apply the status determination method used for the Interior Fraser coho MU to the Lower Fraser and Strait of Georgia MUs. Details as to how exploitation rate constraints are established based on the status of MUs under the SCMP are contained in Annex IV Chapter 5 Section 9.b-c (Canadian exploitation rate caps on inside and outside U.S. MUs) and Section 9.d (U.S. exploitation rate caps on Canadian MUs).
 
 ## Management Unit Overview
 
@@ -613,6 +616,47 @@ Estimated ocean age-3 cohort abundances for Inside and Outside U.S. MUs are depi
 
 **Estimated Ocean Age-3 Abundances of U.S. Outside Coho Salmon Management Units; Catch Years 1986-2021.**
 
+### U.S. Management Units 2023 Preseason Forecasts of Abundance
+
+
+For 2023, Puget Sound and Washington coast coho constraints are as follows [@PFMC_3_2023]:
+
+**Fishery Management Plan (FMP)**
+|-----|| | 
+|**FMP Stock** | **Total Exploitation Rate Constraint** |  **Categorical Status** |
+|-----|| | 
+| Skagit | 35% | Low |
+| Stillaguamish | 50% | Normal | 
+| Snohomish | 40% | Low | 
+| Hood Canal | 45% | Low | 
+| Strait of Juan de Fuca | 40% | Low | 
+| Quillayute Fall | 59% | | 
+| Hoh | 65% | | 
+| Queets | 65% | | 
+| Grays Harbor | 65% | | 
+|-----|| | 
+|**PST Southern Coho Management Plan**|||
+|-----|| | 
+|**U.S. Management Unit**| **Total Exploitation Rate Constraint**|  **Categorical Status**|
+|-----|| | 
+| Skagit | 35% | Moderate | 
+| Stillaguamish | 50% | Abundant | 
+| Snohomish | 40% | Moderate | 
+| Hood Canal | 45% | Moderate | 
+| Strait of Juan de Fuca | 40% | Moderate | 
+| Quillayute Fall |  53% | Abundant | 
+| Hoh | 69% | Abundant | 
+| Queets |  53% | Abundant |  
+| Grays Harbor | 69% | Abundant | 
+|-----|| | 
+
+FMP total ER constraint is preliminary. For Puget Sound stocks, the exploitation rate constraints and categorical status (Normal, Low, Critical) reflect application of Comprehensive Coho Agreement rules, as adopted in the FMP. For Washington Coast stocks, exploitation rate constraints represent MFMT. Note that under U.S. v. Washington and Hoh v. Baldrige case law, the management objectives can differ from FMP objectives provided there is an annual agreement among the state and tribal comanagers; therefore, the exploitation rates used to report categorical status do not necessarily represent maximum allowable rates for these stocks.
+
+PST Southern Coho Management Plan constraint is Preliminary. For Puget Sound and Washington Coast management units, the exploitation rate constraints reflect application of the 2019 PST Southern Coho Management Plan.
+
+Under the PST Southern Coho Management Plan, categories (Abundant, Moderate, Low) correspond to the general exploitation rate ranges depicted in paragraph 8(b)(iii) of the 2019 PST Southern Coho Management Plan. For Washington Coast stocks, categorical status is determined by the exploitation rate associated with meeting the escapement goal (or the lower end of the escapement goal range). As Washington Coast stocks are managed to achieve agreed escapement goals, this exploitation rate also becomes an approximation of the maximum allowable rate unless the stock is in the "Low" status. In that case, an ER of up to 20% is allowed.
+
+Grays Harbor constraints are based on projected natural area spawners (wild plus hatchery strays) and MSP escapement goal of 35,400. Exploitation rate constraint subject to change should comanagers agree to a modified escapement goal under U.S. v. Washington and Hoh v. Baldrige case law.
 
 
 # Annual Implementation of the Southern Coho Management Plan
