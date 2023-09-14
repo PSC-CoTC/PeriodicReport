@@ -826,7 +826,7 @@ At present, the utility of the DIT program and the CWT program in general for Co
 
 Most MUs in the U.S. have CWT indicator stocks and DIT programs. However, some of the programs have been eliminated in recent years due to budgetary constraints. **Canada has discontinued all of their DIT programs**. The current Coho CWT indicator stocks for each MU and the brood years with DIT groups are listed in **ToDo**. The tag codes used to represent each MU in the MSM for catch years 1986-1997 are listed in **Appendix B**. All DIT groups released to date for each MU are listed in **Appendix C**.
 
-**Coded-wire-tag indicator stocks and brood years with single index tag (SIT) and double index tag (DIT) groups for each Coho Management Unit (MU), beginning with brood year 1983. Indicator stocks are hatchery-produced Coho unless specified as "Wild" (Release data downloaded from RMIS 1-10-203). SIT groups may be either marked or unmarked releases of CWT Coho. DIT groups are marked (adipose-fin clipped) and unmarked pairs of CWT Coho.**
+**Coded-wire-tag indicator stocks and brood years with single index tag (SIT) and double index tag (DIT) groups for each Coho Management Unit (MU), beginning with brood year 1983. Indicator stocks are hatchery-produced Coho unless specified as "Wild" (Release data downloaded from RMIS 1-10-2023). SIT groups may be either marked or unmarked releases of CWT Coho. DIT groups are marked (adipose-fin clipped) and unmarked pairs of CWT Coho.**
 
 | **Management Unit**                | **Indicator Stock**                   |**Brood Yr**</br>**SIT** |**Brood Yr**</br>**DIT**|
 |------------------------------------|:--------------------------------------|:-----------------------:|:----------------------:|
@@ -1327,7 +1327,7 @@ static$releases |>
 
 Since 1996, WDFW and tribal biologists have developed forecasts of wild Coho run size for all primary and most secondary management units in Puget Sound and the Washington coast [@Zimmerman_2013]. These annual forecasts are described in the Pacific Fishery Management Council’s Preseason Forecast I document available each February [e.g., @PFMC_2013b; www.pcouncil.org]. These forecasts rely on estimates of wild Coho production (i.e., smolts) paired with estimates of marine survival. Wild Coho production estimates for each of the primary and secondary management units in Puget Sound were derived from results of juvenile trapping studies conducted in the Skagit, Stillaguamish, Snohomish, Green, Nisqually, and Deschutes rivers as well as in tributaries to Lake Washington and Hood Canal.  Analyses of these long-term data sets have demonstrated that wild Coho smolt production is limited by a combination of factors including seeding levels (i.e., escapement), environmental effects (flows, marine derived nutrients), and habitat degradation [@Zimmerman_2012]. 
 
-Estimates of wild Coho production in the Skagit Basin are based on catch of wild Coho smolts in a juvenile trapping program on the lower mainstem Skagit River. A scoop-and-screw trap combination is operated by WDFW in the lower Skagit River mainstem, located at RM 17 from the river mouth. Trapping began in 1990 and the juvenile trap is calibrated using recaptures of wild yearling Coho marked and released from an upstream tributary (Mannser Creek, RM 35). Coho abundance is calculated using a Petersen estimator with Chapman modification [@Seber_1973; @Volkhardt_et_al_2007]. Estimated smolt production has been quite consistent in the Skagit MU, averaging 1,060,823 smolts annually during 1990–2012 and 1,127,564 during 2000–2012. Smolt production has varied from a low of 426,963 in 2008 to a high of 1,885,000 in 2002 and has exceeded 1,000,000 smolts in 13 of the last 23 years (Table 4 1).  Freshwater productivity (smolts/female) during this period was a function of Coho spawner abundance. The smolt-spawner function derived based on Skagit Coho estimates is comparable to systems with census counts, lending further credibility to the Skagit juvenile and adult estimates. Natural smolt production numbers have also been estimated for the 1984 to 1990 out-migration years by back-calculating from the number of coded-wire tags (CWTs) recovered from wild origin fish in terminal fisheries [@Hayman_1995].
+Estimates of wild Coho production in the Skagit Basin are based on catch of wild Coho smolts in a juvenile trapping program on the lower mainstem Skagit River. A scoop-and-screw trap combination is operated by WDFW in the lower Skagit River mainstem, located at RM 17 from the river mouth. Trapping began in 1990 and the juvenile trap is calibrated using recaptures of wild yearling Coho marked and released from an upstream tributary (Mannser Creek, RM 35). Coho abundance is calculated using a Petersen estimator with Chapman modification [@Seber_1973; @Volkhardt_et_al_2007]. Estimated smolt production has been quite consistent in the Skagit MU, averaging 1.1 million smolts annually from 1990 to 2022. Smolt production has varied from a low of 426,963 in 2008 to a high of 1,885,000 in 2002 and has exceeded 1,000,000 smolts in 20 of the last 33 years (Table 4 1).  Freshwater productivity (smolts/female) during this period was a function of Coho spawner abundance. The smolt-spawner function derived based on Skagit Coho estimates is comparable to systems with census counts, lending further credibility to the Skagit juvenile and adult estimates. Natural smolt production numbers have also been estimated for the 1984 to 1990 out-migration years by back-calculating from the number of coded-wire tags (CWTs) recovered from wild origin fish in terminal fisheries [@Hayman_1995].
 
 Marine survival rates of wild Coho stocks have been measured using wild CWT indicator stocks in four geographic regions of Puget Sound: Big Beef Creek, Deschutes River, South Fork Skykomish River, and Baker River [@Zimmerman_2012]. These populations are assumed to be representative of the different Puget Sound regions. In the Baker River, a tributary to the Skagit River, marine survival of Coho smolts has averaged 7.9% (range of 1% and 14%) over 19 brood years (1989–1997, 2003–2009), with a high of 13.9% for return year 1989 and a low of 1.1% for return year 2003 *(Figure 4 1)*. Although the long term trend in marine survival is downwards, high survival (>10%) in 2009 and 2012 is encouraging.
 
@@ -1504,10 +1504,14 @@ The Stillaguamish MU relies on the following two indicator stocks releases in th
 
 Coded-wire tagging programs have been limited within the basin. A smolt trapping study conducted by the Stillaguamish Tribe on brood years 1984–87 is the only source of wild tagging data from the Stillaguamish Watershed (Figure 4 4). A small scale CWT program associated with an enhancement project has been conducted in more recent years [@Haymes_2008]; however, tagged fish have only been released from brood years 1991–1998 and 2007 [@RMISD_1977]. There are no direct estimates of marine survival or exploitation for this MU due to the limited numbers of CWTs released from the enhancement projects, and lack of formal escapement accounting for the returning tagged Coho. Tagged hatchery and wild fish released in the Snohomish MU are used as surrogates for the Stillaguamish MU.
 
-###### Forecast Methods
-Each year, a preseason abundance forecast of age-3 ocean recruits for Stillaguamish Coho Salmon is developed jointly by the Stillaguamish and Tulalip Tribes and WDFW by February.  These annual forecasts are described in the Pacific Fishery Management Council’s Preseason Forecast I document each February [@PFMC_2012; www.pcouncil.org]. This is part of a larger WDFW-tribal effort to develop forecasts of wild Coho run size for all primary and most secondary management units in Puget Sound and the Washington coast [@Seiler_et_al_1995; @Zimmerman_2011]. These forecasts rely on estimates of wild Coho Salmon production (i.e., smolts) paired with estimates of marine survival.  Wild Coho Salmon production estimates for each of the primary and secondary management units in Puget Sound were derived from results of juvenile trapping studies conducted in the Skagit, Stillaguamish, Snohomish, Green, Nisqually, and Deschutes rivers, as well as in tributaries to Lake Washington and Hood Canal. Analysis of these long-term data sets have demonstrated that wild Coho smolt production is limited by a combination of factors including seeding levels (i.e., escapement), environmental effects (flows, marine derived nutrients), and habitat degradation [@Zimmerman_2011]. 
 
-WDFW’s Wild Salmon Production Evaluation (WSPE) Unit measured Coho production of brood years 1979 through 1981 in the Stillaguamish River.  During these years, the watershed was considered to be adequately seeded. A juvenile trap was operated upstream of river mile 16 between 1981 and 1983.  Basin-wide production was the sum of estimated production above the trap and expanded production below the trap. The average production estimate above the trap was 284,000 smolts [@Seiler_et_al_1984], 42.9% of the predicted production potential for this portion of the watershed [@Zillges_1977]. Expanded production below the trap (86,000 smolts) was calculated by applying the ratio of measured to potential production above the trap (42.9%) to the potential production below the trap (201,520 smolts). Estimated smolt production has been quite consistent in the Stillaguamish MU, averaging 397,000 smolts annually during 1990-2000 and 362,000 during 2000-2011. Smolt production has varied from a low of 144,000 in 2008 to a high of 555,000 in 2010 (Table 4 1).  
+
+###### Forecast Methods
+Each year, a preseason abundance forecast of age-3 ocean recruits for Stillaguamish Coho Salmon is developed jointly by the Stillaguamish and Tulalip Tribes and WDFW by February. These annual forecasts are described in the Pacific Fishery Management Council’s Preseason Forecast I document each February [@PFMC_2012; www.pcouncil.org]. This is part of a larger WDFW-tribal effort to develop forecasts of wild Coho run size for all primary and most secondary management units in Puget Sound and the Washington coast [@Seiler_et_al_1995; @Zimmerman_2011]. These forecasts rely on estimates of wild Coho Salmon production (i.e., smolts) paired with estimates of marine survival.  Wild Coho Salmon production estimates for each of the primary and secondary management units in Puget Sound were derived from results of juvenile trapping studies conducted in the Skagit, Stillaguamish, Snohomish, Green, Nisqually, and Deschutes rivers, as well as in tributaries to Lake Washington and Hood Canal. Analysis of these long-term data sets have demonstrated that wild Coho smolt production is limited by a combination of factors including seeding levels (i.e., escapement), environmental effects (flows, marine derived nutrients), and habitat degradation [@Zimmerman_2011]. 
+
+WDFW’s Wild Salmon Production Evaluation (WSPE) Unit measured Coho production of brood years 1979 through 1981 in the Stillaguamish River. During these years, the watershed was considered to be adequately seeded. A juvenile trap was operated upstream of river mile 16 between 1981 and 1983. Basin-wide production was the sum of estimated production above the trap and expanded production below the trap. The average production estimate above the trap was 284,000 smolts [@Seiler_et_al_1984], 42.9% of the predicted production potential for this portion of the watershed [@Zillges_1977]. Expanded production below the trap (86,000 smolts) was calculated by applying the ratio of measured to potential production above the trap (42.9%) to the potential production below the trap (201,520 smolts). 
+
+Estimated smolt production has been quite consistent in the Stillaguamish MU, averaging 355,000 smolts annually during 1995 to 2022. Smolt production has varied from a low of 115,000 in 2016 to a high of 555,000 in 2010 (Table 4 1).  
 
 Marine survival rates of wild Coho stocks have been measured using wild CWT indicator stocks in four geographic regions of Puget Sound: Big Beef Creek, Deschutes River, South Fork Skykomish River, and Baker River [@Zimmerman_2011]. These populations are assumed to be representative of the different Puget Sound regions. Marine survival rates for wild Stillaguamish Coho are estimated from the S.F. Skykomish in the Snohomish MU. Marine survival for this indicator population has averaged 12.7% during return years 1986-2011, with a high of 23.6% in 1994 and a low of 3.6% in 2006.    
 
@@ -1638,6 +1642,16 @@ In more recent years, estimated smolt production has been quite consistent in th
 ###### Indicator Stocks
 ###### Forecast Methods
 
+Since 1996, WDFW and tribal biologists have developed forecasts of wild Coho run size for all primary and most secondary management units in Puget Sound and the Washington coast (Seiler 1996, Zimmerman 2011).  These annual forecasts are described in the Pacific Fishery Management Council’s Preseason Forecast I document each February (PFMC 2012; www.pcouncil.org).  These forecasts rely on estimates of wild Coho production (i.e., smolts) paired with estimates of marine survival.  Wild Coho production estimates for each of the primary and secondary management units in Puget Sound were derived from results of juvenile trapping studies conducted in the Skagit, Stillaguamish, Snohomish, Green, Nisqually, and Deschutes rivers as well as in tributaries to Lake Washington and Hood Canal.  Analysis of these long-term data sets have demonstrated that wild Coho smolt production is limited by a combination of factors including seeding levels (i.e., escapement), environmental effects (flows, marine derived nutrients), and habitat degradation (Zimmerman 2012). 
+
+Estimates of wild Coho production in the Snohomish Basin are based on catch of wild Coho in a juvenile trapping program on the Skykomish River.  Between 1978 and 1986, WDFW operated a juvenile trap below Sunset Falls on the South Fork Skykomish River (Zimmerman 2011).  Coho production estimates were generated with a back-calculation method (Petersen-Chapman estimator).  For a given brood year, the back-calculation applied the incidence of coded-wire tag returns to the Sunset Falls adult trap to the number of tagged Coho smolts released from the juvenile trap.  The back-calculation method accounts for South Fork Skykomish Coho production above and below the trap.  
+
+Between 1978 and 1983, average production was 276,000 smolts (range = 212,000 to 354,000 smolts) and inter annual variation in smolt production was not correlated with spawner abundance.  Between 1982 and 1984 (corresponding to the 1984 to 1986 outmigration), escapement was experimentally reduced in order to determine whether smolt production could be limited by lower escapements.  For these three years, limited escapement (1,000 to 3,000 females) reduced Coho production to an average of 198,000 smolts.  A basin-wide estimate for these years was derived by expanding average Coho production in the South Fork Skykomish by 20.7%, the portion of the Snohomish system’s drainage area represented by the South Fork Skykomish sub-basin.  With this method, average Coho production for the Snohomish Basin is 1,333,000 smolts (Seiler 1996).  This estimate was subsequently reduced to 1,000,000 smolts to account for the portions of the watershed that are not accessible to anadromous fish (i.e., 450 mi2 or 26%; Seiler 1999).  
+
+Estimated smolt production has averaged approximately 1.27 million smolts annually during 1995–2022 (Table or figure?).  Smolt production has varied from a low of 720,000 in 2008 to a high of 2,200,000 in 2014, exceeding 1 million smolts in 21 of the last 28 years. 
+
+
+
 **2023 Forecast**
 The natural forecast is based on production of 2022 out-migrant smolts estimated from a mark-recapture estimate of smolt abundance from two smolt traps, one operated on the Skykomish River (river mile 26.5)
 and the second on the Snoqualmie River (river mile 12.2) [@PFMC_1_2023]. The 2022 out-migrant smolt estimate for the Skykomish trap is based on the recent (four year) average percent production in the Snoqualmie relative
@@ -1646,7 +1660,11 @@ to the Skykomish. Smolt trap estimates for the Skykomish and Snoqualmie rivers a
 The 2023 Snohomish natural Ocean Age 3 (OA3) abundance forecast is 76,500, compared to the 2022 preseason forecast of 64,200. This forecast classifies the stock abundance as "Moderate" under the 2019 PST Southern Coho Management Plan and “Low” under the FMP. This results in an allowable total exploitation rate of no more than 40% under both the Council-adopted exploitation rate matrix and the 2019 PST Southern Coho Management Plan.
 
 ###### Escapement Monitoring
+
+
 ###### Fishery Monitoring
+
+
 ##### Enhancement
 The Bernie Kai-Kai Gobin Hatchery and the Wallace River Hatchery operate within the Snohomish Basin (Figure x).  The Bernie Kai-Kai Gobin Hatchery opened in 1983 and is located at the juncture of the east and west Forks of Tulalip Creek and is operated by the Tulalip Tribes (Tulalip Tribes 2004).  This coho program is an isolated program and the purpose of this program is to provide coho salmon for harvest by Tulalip Tribal members in a terminal area fishery.  Production from this program is also available for harvest by the non- Indian sport fishery and contributes to other directed and incidental harvest of coho salmon in other preterminal fisheries.  The Wallace River Hatchery is located at RM 4 on the Wallace River (07.0940) at the confluence with May Creek (07.0943) and is operated by WDFW (WDFW 2003).  Salmonids have been reared at the Wallace River site since 1907.  The current Wallace River Hatchery Coho program is an integrated program with the goal of providing fish for harvest opportunity (WDFW 2003).  Adults are collected at the following two collection facilities: 1) an instream trap located on May Creek; and 2) with the use of a weir placed across the Wallace River from June until October 1st.
 
@@ -1756,11 +1774,11 @@ For Hood Canal MU, natural smolt production and adult escapements are intensivel
 	
 Production is not directly measured in all Hood Canal tributaries; therefore estimates are based on an expansion of the measured production. Three approaches have been used to expand measured production at Big Beef Creek and neighboring tributaries to a Hood Canal estimate [@Zimmerman_2012]. The first approach assumes that Coho production from four tributaries (Little Anderson, Big Beef, Seabeck, and Stavis creeks) is 5.9% that of the entire Hood Canal [@Zillges_1977]. A subsequent review by the Hood Canal Joint Technical Committee (HCJTC) estimated that Coho production from these same four tributaries to be 7.6% that of Hood Canal [@HCJTC_1994]. A third approach [@Volkhardt_&_Seiler_2001], based on the HCJTC forecast review in summer of 2001, estimated that Coho production from Big Beef Creek was 4.56% that of Hood Canal.  
 
-*ToDo - update data* Estimated smolt production in the Hood Canal MU averaged 566,000 smolts annually during 1995-2001 and 665,000 during 2002-2012.  Smolt production has varied from a low of 323,000 in 2012 to a high of 995,000 in 2009 (Table 4.1).  
+Estimated smolt production in the Hood Canal MU averaged 538,000 smolts annually during 1995 to 2022.  Smolt production has varied from a low of 67,000 in 2021 to a high of 995,000 in 2009 (Table 4.1).  
 
 **Hood Canal MU natural smolt production, 1995-2012 out-migration years [@Zimmerman_2012; @Zimmerman_2013].**
 
-|**Out-migration Year**|	**Smolt Production**|
+|**Out-migration Year**| **Smolt Production**|
 |----------------------|----------------------|
 | 1995	| 392,000 |
 | 1996	| 511,000 |
@@ -1780,16 +1798,16 @@ Production is not directly measured in all Hood Canal tributaries; therefore est
 | 2010	| 535,000 |
 | 2011	| 804,000 |
 | 2012	| 323,000 |
-| 2013  |  |
-| 2014  |  |
-| 2015  |  |
-| 2016  |  |
-| 2017  |  |
-| 2018  |  |
-| 2019  |  |
-| 2020  |  |
-| 2021  |  |
-| 2022  |  |
+| 2013  | 490,000 |
+| 2014  | 889,000 |
+| 2015  | 163,000 |
+| 2016  | 386,000 |
+| 2017  | 359,000 |
+| 2018  | 386,000 |
+| 2019  | 430,000 |
+| 2020  | 320,000 |
+| 2021  | 67,000  |
+| 2022  | 295,000 |
 |----------------------|----------------------|
 
 Marine survival rates of wild Coho stocks have been measured using wild CWT indicator stocks in four geographic regions of Puget Sound: Big Beef Creek, Deschutes River, South Fork Skykomish River, and Baker River [@Zimmerman_2013]. These populations are assumed to be representative of the different Puget Sound regions. Marine survival of Big Beef Coho (Hood Canal) was correlated with jack return rates. Between 1977 and 1996, the ratio of adult to jack return rates averaged 11.3 (range = 6 to 18) and was remarkably consistent among years. During these years, 78% of the variation in age-3 Coho marine survival could be predicted from jack return rates. Over the past decade, the ratio of adult to jack returns has increased (average = 26.8). During this period, jack return rates explain 70% of the variation in marine survival of Big Beef Coho.  
