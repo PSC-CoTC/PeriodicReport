@@ -618,47 +618,7 @@ Estimated ocean age-3 cohort abundances for Inside and Outside U.S. MUs are depi
 
 **Estimated Ocean Age-3 Abundances of U.S. Outside Coho Salmon Management Units; Catch Years 1986-2021.**
 
-### U.S. Management Units 2023 Preseason Forecasts of Abundance
 
-
-For 2023, Puget Sound and Washington coast coho constraints are as follows [@PFMC_3_2023]:
-
-**Fishery Management Plan (FMP)**
-|-----|| | 
-|**FMP Stock** | **Total Exploitation Rate Constraint** |  **Categorical Status** |
-|-----|| | 
-| Skagit | 35% | Low |
-| Stillaguamish | 50% | Normal | 
-| Snohomish | 40% | Low | 
-| Hood Canal | 45% | Low | 
-| Strait of Juan de Fuca | 40% | Low | 
-| Quillayute Fall | 59% | | 
-| Hoh | 65% | | 
-| Queets | 65% | | 
-| Grays Harbor | 65% | | 
-|-----|| | 
-|**PST Southern Coho Management Plan**|||
-|-----|| | 
-|**U.S. Management Unit**| **Total Exploitation Rate Constraint**|  **Categorical Status**|
-|-----|| | 
-| Skagit | 35% | Moderate | 
-| Stillaguamish | 50% | Abundant | 
-| Snohomish | 40% | Moderate | 
-| Hood Canal | 45% | Moderate | 
-| Strait of Juan de Fuca | 40% | Moderate | 
-| Quillayute Fall |  53% | Abundant | 
-| Hoh | 69% | Abundant | 
-| Queets |  53% | Abundant |  
-| Grays Harbor | 69% | Abundant | 
-|-----|| | 
-
-FMP total ER constraint is preliminary. For Puget Sound stocks, the exploitation rate constraints and categorical status (Normal, Low, Critical) reflect application of Comprehensive Coho Agreement rules, as adopted in the FMP. For Washington Coast stocks, exploitation rate constraints represent MFMT. Note that under U.S. v. Washington and Hoh v. Baldrige case law, the management objectives can differ from FMP objectives provided there is an annual agreement among the state and tribal comanagers; therefore, the exploitation rates used to report categorical status do not necessarily represent maximum allowable rates for these stocks.
-
-PST Southern Coho Management Plan constraint is Preliminary. For Puget Sound and Washington Coast management units, the exploitation rate constraints reflect application of the 2019 PST Southern Coho Management Plan.
-
-Under the PST Southern Coho Management Plan, categories (Abundant, Moderate, Low) correspond to the general exploitation rate ranges depicted in paragraph 8(b)(iii) of the 2019 PST Southern Coho Management Plan. For Washington Coast stocks, categorical status is determined by the exploitation rate associated with meeting the escapement goal (or the lower end of the escapement goal range). As Washington Coast stocks are managed to achieve agreed escapement goals, this exploitation rate also becomes an approximation of the maximum allowable rate unless the stock is in the "Low" status. In that case, an ER of up to 20% is allowed.
-
-Grays Harbor constraints are based on projected natural area spawners (wild plus hatchery strays) and MSP escapement goal of 35,400. Exploitation rate constraint subject to change should comanagers agree to a modified escapement goal under U.S. v. Washington and Hoh v. Baldrige case law.
 
 
 # Annual Implementation of the Southern Coho Management Plan
@@ -730,6 +690,55 @@ Throughout this process, the January post season, Pre I-III reports are provided
 ### U.S. Inseason Management
 
 Inseason changes to planned U.S fisheries are limited, but have been implemented under some specific conditions. When ocean area/fishery specific quotas are not being caught in an ocean area then part of the quota may be transferred to another ocean area/fishery, based upon FRAM estimates of neutral impacts to the limiting stock(s); this may include adjustments to bag limits, seasons, and/or MSF regulations. The preseason planned prosecution of some fisheries is dependent upon the results of test fisheries, i.e. the Fraser Panel Sockeye directed commercial fisheries. Emergency closures due to attaining or exceeding planned catch quotas or in response to indications of reduced abundance.
+
+### U.S. Management Units 2023 Exploitation Rate Constraints
+
+For 2023, Puget Sound and Washington coast coho constraints are as follows [@PFMC_3_2023]:
+
+**Fishery Management Plan (FMP)**
+|-----|| | 
+|**FMP Stock** | **Total Exploitation Rate Constraint** |  **Categorical Status** |
+|-----|| | 
+| Skagit | 35% | Low |
+| Stillaguamish | 50% | Normal | 
+| Snohomish | 40% | Low | 
+| Hood Canal | 45% | Low | 
+| Strait of Juan de Fuca | 40% | Low | 
+| Quillayute Fall | 59% | | 
+| Hoh | 65% | | 
+| Queets | 65% | | 
+| Grays Harbor | 65% | | 
+|-----|| | 
+|**PST Southern Coho Management Plan**|||
+|-----|| | 
+|**U.S. Management Unit**| **Total Exploitation Rate Constraint**|  **Categorical Status**|
+|-----|| | 
+| Skagit | 35% | Moderate | 
+| Stillaguamish | 50% | Abundant | 
+| Snohomish | 40% | Moderate | 
+| Hood Canal | 45% | Moderate | 
+| Strait of Juan de Fuca | 40% | Moderate | 
+| Quillayute Fall |  53% | Abundant | 
+| Hoh | 69% | Abundant | 
+| Queets |  53% | Abundant |  
+| Grays Harbor | 69% | Abundant | 
+|-----|| | 
+
+FMP total ER constraint is preliminary. For Puget Sound stocks, the exploitation rate constraints and categorical status (Normal, Low, Critical) reflect application of Comprehensive Coho Agreement rules, as adopted in the FMP. For Washington Coast stocks, exploitation rate constraints represent MFMT. Note that under U.S. v. Washington and Hoh v. Baldrige case law, the management objectives can differ from FMP objectives provided there is an annual agreement among the state and tribal comanagers; therefore, the exploitation rates used to report categorical status do not necessarily represent maximum allowable rates for these stocks.
+
+PST Southern Coho Management Plan constraint is Preliminary. For Puget Sound and Washington Coast management units, the exploitation rate constraints reflect application of the 2019 PST Southern Coho Management Plan.
+
+Under the PST Southern Coho Management Plan, categories (Abundant, Moderate, Low) correspond to the general exploitation rate ranges depicted in paragraph 8(b)(iii) of the 2019 PST Southern Coho Management Plan. For Washington Coast stocks, categorical status is determined by the exploitation rate associated with meeting the escapement goal (or the lower end of the escapement goal range). As Washington Coast stocks are managed to achieve agreed escapement goals, this exploitation rate also becomes an approximation of the maximum allowable rate unless the stock is in the "Low" status. In that case, an ER of up to 20% is allowed.
+
+Grays Harbor constraints are based on projected natural area spawners (wild plus hatchery strays) and MSP escapement goal of 35,400. Exploitation rate constraint subject to change should comanagers agree to a modified escapement goal under U.S. v. Washington and Hoh v. Baldrige case law.
+
+Key considerations for Canadian fishery management for coho in 2023 are expected to include: 
+(1) meeting domestic conservation obligations for Interior Fraser (including Thompson River) coho; 
+(2) coho harvests by First Nations fisheries; 
+(3) incidental impacts during commercial and First Nations fisheries directed atChinook, chum, and especially Fraser sockeye salmon which will see a dominant late run return in 2023 [@PFMC_3_2023].
+
+The Canadian fishery regimes affecting coho are expected to be driven by Canadian domestic allowable impacts on the Thompson River component of the Interior Fraser management unit, Fraser Chinook
+concerns and Fraser sockeye stocks of concern co-migrating with the late run. In years prior to 2014, Canadian fisheries were managed so as not to exceed a three percent maximum exploitation rate. In May 2014, Canada decided to permit up to a 16 percent exploitation rate on upper Fraser coho in Canadian fisheries to allow for impacts in fisheries directed at a record Fraser sockeye forecast. Since 2015, upper Fraser coho in Canadian fisheries have been managed per low status limitations. The projected status of Canadian coho management units in 2023 indicates continuing concerns for the condition of Interior Fraser coho. The Interior Fraser coho management unit is anticipated to remain in low abundance status, resulting in a requirement to constrain the total mortality fishery exploitation rate for 2023 Southern U.S. fisheries to a maximum of 10.0%.
 
 ## Canadian Fishery Planning Process
 
