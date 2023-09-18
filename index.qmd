@@ -1225,13 +1225,12 @@ The current PST/Council exploitation rate ceilings for the Skagit MU natural Coh
 
 **Current Skagit MU ocean abundance reference breakpoints and maximum total exploitation rates by PSC and Council status categories.**
 
-|---------------------------------------------------------|
 | **Status(PSC/Council)**  | **Ocean Abundance** </br> **Reference Breakpoint**  |**Total Exploitation Rate** |
-|--------------------------|:--------------------------------------|:-----------------------:|
-| Low/Critical	           |	<= 22,857	|	Up to 20% |
+|:--------------------------|:--------------------------------------:|:-----------------------:|
+| Low/Critical	           |	< 22,858	|	Up to 20% |
 | Moderate/Low	           |	22,858 – 62,500	|	21% – 35% |
 | Abundant/Normal   	   |	> 62,500	|	36% – 60% |
-|---------------------------------------------------------|
+
 
 ##### Stock Assessment
 
@@ -1457,13 +1456,13 @@ In 2009, the Council adopted annual management objectives for Puget Sound Coho a
 
 **Current Stillaguamish MU ocean abundance reference breakpoints and maximum total exploitation rates by PSC and Council status categories.**
 
-|---------------------------------------------------------|
+
 | **Status(PSC/Council)**  | **Ocean Abundance** </br> **Reference Breakpoint**  |**Total Exploitation Rate** |
-|--------------------------|:--------------------------------------|:-----------------------:|
-| Low/Critical	           |	<= 9,385        |	Up to 20% |
+|:--------------------------|:--------------------------------------:|:-----------------------:|
+| Low/Critical	           |	< 9,386        |	Up to 20% |
 | Moderate/Low	           |	9,386 – 20,000	|	21% – 35% |
 | Abundant/Normal  	   |	> 20,000	|	36% – 60% |
-|---------------------------------------------------------|
+
 
 ##### Stock Assessment
 ###### Indicator Stocks
@@ -1588,13 +1587,13 @@ The current PST/Council exploitation rate ceilings for the Snohomish MU natural 
 
 **Current Snohomish MU ocean abundance reference breakpoints and maximum total exploitation rates by PSC and Council status categories.**
 
-|---------------------------------------------------------|
+
 | **Status(PSC/Council)**  | **Ocean Abundance** </br> **Reference Breakpoint**  |**Total Exploitation Rate** |
-|--------------------------|:--------------------------------------|:-----------------------:|
-| Low/Critical	           |	<= 51,667	|	Up to 20% |
+|:--------------------------|:--------------------------------------:|:-----------------------:|
+| Low/Critical	           |	< 51,668	|	Up to 20% |
 | Moderate/Low	           | 51,668 – 125,000	|	21% – 40% |
 | Abundant/Normal	   |	> 125,000       |	41% – 60% |
-|---------------------------------------------------------|
+
 
 Queets River natural coho, Strait of Juan de Fuca natural coho, and Snohomish River natural coho were found to meet the criteria for being classified as overfished in the PFMC Review of 2017 Ocean Salmon Fisheries, released in February 2018. Snohomish natural Coho Salmon now meet the criteria for rebuilt status based on the most recent three-year geometric mean of escapement estimates (2019-2021) [@PFMC_3_2023].
 
@@ -1706,13 +1705,13 @@ The current PST/Council exploitation rate ceilings for the Hood Canal MU natural
 
 **Current Hood Canal MU ocean abundance reference breakpoints and maximum total exploitation rates by PSC and Council status categories.**
 
-|---------------------------------------------------------|
+
 | **Status(PSC/Council)**  | **Ocean Abundance** </br> **Reference Breakpoint**  |**Total Exploitation Rate** |
-|--------------------------|:--------------------------------------|:-----------------------:|
-| Low/Critical	           |	<= 19,545	|	Up to 20% |
+|:--------------------------|:--------------------------------------:|:-----------------------:|
+| Low/Critical	           |	< 19,546	|	Up to 20% |
 | Moderate/Low	           |	19,546 – 41,000	|	21% – 45% |
 | Abundant/Normal	   |	> 41,000	|	46% – 65% |
-|---------------------------------------------------------|
+
 
 Once a preseason forecast of ocean age-3 adult coho has been made, the forecast abundance is assessed relative to the prescribe abundance breakpoints; from these breakpoints, the status is assigned. For the Hood Canal MU, forecast abundances at or below 19,545 have “low” (PSC) or “critical" (Council) status, those between 19,545 and 41,000 are “moderate” (PSC) or “low” (Council) status, and those above 41,000 are “abundant” (PSC) or “normal” (Council) status [@PFMC_1_2013].
 
@@ -1888,13 +1887,13 @@ In 2009, the Pacific Fishery Management Council adopted annual management object
 
 **Current US Strait JDF MU ocean abundance reference breakpoints and maximum total exploitation rates by PSC and Council status categories.**
 
-|---------------------------------------------------------|
+
 | **Status(PSC/Council)**  | **Ocean Abundance** </br> **Breakpoint**  |**Total Exploitation Rate** |
-|--------------------------|:--------------------------------------|:-----------------------:|
-| Low/Critical	           |	<= 11,679 	        |	Up to 20% |
+|:--------------------------|:--------------------------------------:|:-----------------------:|
+| Low/Critical	           |	< 11,680 	        |	Up to 20% |
 | Moderate/Low	           |	11,680 – 27,445	        |	21% – 40% |
 | Abundant/Normal	   |	> 27,445	        |	41% – 60% |
-|---------------------------------------------------------|
+
 
 Queets River natural coho, Strait of Juan de Fuca natural coho, and Snohomish River natural coho were found to meet the criteria for being classified as overfished in the PFMC Review of 2017 Ocean Salmon Fisheries, released in February 2018. Strait of Juan de Fuca natural coho have met the criteria for not overfished/rebuilding status [@PFMC_3_2023].
 
@@ -1960,13 +1959,13 @@ There is no PST management objective for the summer Coho run.  The Quillayute MU
 
 **Current Quillayute MU ocean abundance reference breakpoints and maximum total exploitation rates by PSC and Council status categories.**
 
-|---------------------------------------------------------|
+
 | **Status(PSC/Council)**  | **Ocean Abundance** </br> **Reference Breakpoint**  |**Total Exploitation Rate** |
-|--------------------------|:--------------------------------------|:-----------------------:|
+|:--------------------------|:--------------------------------------:|:-----------------------:|
 | Low/Critical	           |	< 7,875 	        |	Up to 20% |
 | Moderate/Low	           |	7,875 – 10,500	        |	21% – 40% |
 | Abundant/Normal	   |	> 10,500	        |	> 40% (footnote)     |
-|---------------------------------------------------------|
+
 footnote - Limit of 59% (maximum fishery mortality threshold) under Amendment 16 (see Appendix E of The Ad Hoc Salmon Amendment Committee 2011).
 
 ##### Stock Assessment
@@ -2022,13 +2021,13 @@ The current PST total exploitation rate ceiling for the natural Coho population 
 
 **Current Hoh MU ocean abundance reference breakpoints and maximum total exploitation rates by PSC and Council status categories.**
 
-|---------------------------------------------------------|
+
 | **Status(PSC/Council)**  | **Ocean Abundance** </br> **Reference Breakpoint**  |**Total Exploitation Rate** |
-|--------------------------|:--------------------------------------|:-----------------------:|
+|:--------------------------|:--------------------------------------:|:-----------------------:|
 | Low/Critical	           |	< 2,500 	        |	Up to 20% |
 | Moderate/Low	           |	2,500 – 3,333	        |	21% – 35% |
 | Abundant/Normal	   |	> 3,333	                |	36% – 60% |
-|---------------------------------------------------------|
+
 
 ##### Stock Assessment
 ###### Indicator Stocks
@@ -2085,17 +2084,11 @@ Queets River natural coho, Strait of Juan de Fuca natural coho, and Snohomish Ri
 
 **Queets MU ocean abundance reference breakpoints and maximum total exploitation rates by PSC and Council status categories.**
 
-|---------------------------------------------------------|
 | **Status(PSC/Council)**  | **Ocean Abundance** </br> **Reference Breakpoint**  |**Total Allowable Exploitation Rate** |
-|--------------------------|:--------------------------------------|:-----------------------:|
-| Low/Critical	           |	<= 7,250 	        |	Up to 20% |
+|:--------------------------|:--------------------------------------:|:-----------------------:|
+| Low/Critical	           |	< 7,250 	        |	Up to 20% |
 | Moderate/Low	           |	7,250 – 9,667	        |	21% – 35% |
 | Abundant/Normal	   |	> 9,667	                |	36% – 60% |
-|---------------------------------------------------------|
-
-
-
-
 
 
 ##### Stock Assessment
@@ -2159,13 +2152,13 @@ The current PST total exploitation rate ceiling for the Grays Harbor natural Coh
 
 **Current Grays Harbor MU ocean abundance reference breakpoints and maximum total exploitation rates by PSC and Council status categories.**
 
-|---------------------------------------------------------|
+
 | **Status(PSC/Council)**  | **Ocean Abundance** </br> **Reference Breakpoint**  |**Total Exploitation Rate** |
-|--------------------------|:--------------------------------------|:-----------------------:|
+|:--------------------------|:--------------------------------------:|:-----------------------:|
 | Low/Critical	           |	< 44,250 	        |	Up to 20% |
 | Moderate/Low	           |	44,250 – 58,000	        |	21% – 35% |
 | Abundant/Normal	   |	> 58,000	        |	36% – 60% |
-|---------------------------------------------------------|
+
 
 
 ##### Stock Assessment
