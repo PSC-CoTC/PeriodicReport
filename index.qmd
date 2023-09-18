@@ -1746,7 +1746,7 @@ Estimated smolt production in the Hood Canal MU averaged 538,000 smolts annually
 **Hood Canal MU natural smolt production, 1995-2012 out-migration years [@Zimmerman_2012; @Zimmerman_2013].**
 
 |**Out-migration Year**| **Smolt Production**|
-|----------------------|----------------------|
+|:----------------------:|:----------------------:|
 | 1995	| 392,000 |
 | 1996	| 511,000 |
 | 1997	| 672,000 |
@@ -1775,7 +1775,7 @@ Estimated smolt production in the Hood Canal MU averaged 538,000 smolts annually
 | 2020  | 320,000 |
 | 2021  | 67,000  |
 | 2022  | 295,000 |
-|----------------------|----------------------|
+
 
 Marine survival rates of wild Coho stocks have been measured using wild CWT indicator stocks in four geographic regions of Puget Sound: Big Beef Creek, Deschutes River, South Fork Skykomish River, and Baker River [@Zimmerman_2013]. These populations are assumed to be representative of the different Puget Sound regions. Marine survival of Big Beef Coho (Hood Canal) was correlated with jack return rates. Between 1977 and 1996, the ratio of adult to jack return rates averaged 11.3 (range = 6 to 18) and was remarkably consistent among years. During these years, 78% of the variation in age-3 Coho marine survival could be predicted from jack return rates. Over the past decade, the ratio of adult to jack returns has increased (average = 26.8). During this period, jack return rates explain 70% of the variation in marine survival of Big Beef Coho.  
 
@@ -1972,6 +1972,8 @@ footnote - Limit of 59% (maximum fishery mortality threshold) under Amendment 16
 ###### Indicator Stocks
 ###### Forecast Methods
 
+The estimated number of total fall smolts averaged 350,000 annually from 1995 to 2022, with a high of 655,000 in 2011 and a low of 135,000 in 1999.  
+
 **2023 Forecast**
 The natural coho forecast is based on coho smolt data measured in the Quillayute watershed in 2022 by West Fork Environmental and the Quileute Nation [@PFMC_1_2023]. A total of 339,000 Coho smolts are estimated to have emigrated from the Quillayute River system in 2022. Smolt abundance from the Dickey River was estimated to be 80,568 wild coho smolts (746 smolts/mi2). Smolt abundance from the Bogachiel, Calawah, and Sol Duc rivers was estimated to be 258,416 wild coho smolts (496 smolts/mi2). 
 
@@ -2032,6 +2034,9 @@ The current PST total exploitation rate ceiling for the natural Coho population 
 ##### Stock Assessment
 ###### Indicator Stocks
 ###### Forecast Methods
+
+The estimated number of total smolts averaged 162,000 annually from 2000 to 2022, with a high of 286,000 in 2011 and a low of 69,000 in 2015.  
+
 
 **2023 Forecast**
 The natural Coho forecast is based on estimated average smolt production per square mile of watershed from the Clearwater tributary which lies between the Queets River mainstem and the Hoh River [@PFMC_1_2023]. The Quinault Fisheries Department has a long-standing trapping program on the Clearwater River to estimate smolt production; it is assumed the two rivers produce smolts at a comparable rate per square mile of watershed. In 2022, the Clearwater produced 38,019 smolts at the rate of 272 smolts/mi2. Applying that rate to the Hoh watershed of 299 mi2 yields 81,328 natural Coho smolts emigrating from the Hoh River in 2022 [@Litz_2023].
@@ -2094,6 +2099,8 @@ Queets River natural coho, Strait of Juan de Fuca natural coho, and Snohomish Ri
 ##### Stock Assessment
 ###### Indicator Stocks
 ###### Forecast Methods
+
+The estimated number of total smolts averaged 286,000 annually from 2000 to 2022, with a high of 444,000 in 2004 and a low of 136,000 in 2022.  
 
 **2023 Forecast**
 The natural forecast was developed by multiplying the 2022 smolt outmigration of 135,678 by the predicted marine survival rate of 10.291%, which results in an abundance prediction of 13,963 January Age 3 (JA3) [@PFMC_1_2023]. The model uses run reconstructions developed by the Quinault Department of Fisheries (QDFi) as a response, which includes FRAM natural and incidental mortality, but does not include estimates of mark-selective fishery
@@ -2164,6 +2171,8 @@ The current PST total exploitation rate ceiling for the Grays Harbor natural Coh
 ##### Stock Assessment
 ###### Indicator Stocks
 ###### Forecast Methods
+
+The estimated number of total smolts averaged 2.5 million annually from 2000 to 2022, with a high of 3.6 million in 2017 and a low of 203,000 in 2002.  
 
 **2023 Forecast**
 Preseason abundance forecasts are made for natural fish throughout the system and for hatchery fish returning to three freshwater rearing complexes and three saltwater net-pen sites [@PFMC_1_2023]. The forecasts include fish
