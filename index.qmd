@@ -336,7 +336,7 @@ plot_status <- function(mu = "Skagit"){
 
 This report based on `r basename(params$mdb)`
 
-![](images/CohoPic.png){width=120% fig-alt="Coho Picture"}
+![](images/CohoPic2.png){width=120% fig-alt="Coho Picture"}
 
 # Introduction
 
