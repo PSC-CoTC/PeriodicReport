@@ -827,37 +827,38 @@ Most MUs in the U.S. have CWT indicator stocks and DIT programs. However, some o
 |                                    | Puntledge R. H.[^16]                  |  83-97,99-02,09-10,19   |         --         |
 |                                    | Black Creek (Wild)[^17]               |          83-17          |         NA         |
 | **U.S. Inside MUs**                |                                       |                         |                    |
-| Skagit                             | Marblemount H. (Skagit R.)            |          83-93          |       94-20        |
+| Skagit                             | Marblemount H. (Skagit R.)            |          83-93          |       94-21        |
 |                                    | Baker River (Wild)[^18]               |       83-97,00-22       |         NA         |
-| Stillaguamish[^19]                 | Wallace R. H. (Skykomish R.)          |          83-95          |       96-20        |
+| Stillaguamish[^19]                 | Wallace R. H. (Skykomish R.)          |          83-95          |       96-21        |
 |                                    | Stillaguamish R. (Wild)               |          84-87          |         NA         |
-| Snohomish                          | Wallace R. H. (Skykomish R.)          |          83-95          |       96-20        |
-|                                    | Bernie Gobin H. (Tulalip Cr.)[^20]    |          83-20          |         --         |
-| Hood Canal                         | Quilcene NFH                          |          87-95          |       96-20        |
+| Snohomish                          | Wallace R. H. (Skykomish R.)          |          83-95          |       96-21        |
+|                                    | Bernie Gobin H. (Tulalip Cr.)[^20]    |          83-21          |         --         |
+| Hood Canal                         | Quilcene NFH                          |          87-95          |       96-21        |
 |                                    | Quilcene Bay Sea Pens                 | 88,90,93,95,02-11,13-14 |       96-01        |
-|                                    | Port Gamble Bay Pens                  |       83-95,04-20       |       96-03        |
-|                                    | George Adams H. (Skokomish R.)        |        83-94,96         |      95,97-20      |
-|                                    | Big Beef Creek (Wild)[^21]            |          83-20          |         NA         |
+|                                    | Port Gamble Bay Pens                  |       83-95,04-21       |       96-03        |
+|                                    | George Adams H. (Skokomish R.)        |        83-94,96         |      95,97-21      |
+|                                    | Big Beef Creek (Wild)[^21]            |          83-21          |         NA         |
 | Strait of Juan de Fuca             | Lower Elwha H.[^22]                   |     85-94,12,15,18      |95-11,13-14,16-17,09-20|
 |                                    | Dungeness H.                          |83,86,89,91-94,05-08,18-20 |         --       |
 |                                    | Hoko Falls H.                         |          18-20          |         --         |
 |                                    | Hoko and Salmon Creek (Wild)          |        84-87,08         |         NA         |
 | **U.S. Outside MUs**               |                                       |                         |                    |
-| Quillayute                         | Sol Duc H.                            |       83-88,90-95       |       96-20        |
+| Quillayute                         | Sol Duc H.                            |       83-88,90-95       |       96-21        |
 |                                    | Various Tributaries (Wild)[^23]       |       83-86,88-92       |                    |
 | Hoh                                | Chalaat Creek H.                      |        84,86-89         |         --         |
 |                                    | Canyon Springs Pond                   |          86-87          |         --         |
 |                                    | Sol Duc H.                            |          85,87          |         --         |
 |                                    | Hoh River (Wild)[^24]                 |     83-87,03,05-12      |         NA         |
 | Queets                             | Quinault Lake H.                      |       83-84,90-92       |         --         |
-|                                    | Salmon R. Fish Culture                |        83, 85-94        |       95-20        |
+|                                    | Salmon R. Fish Culture                |        83, 85-94        |       95-21        |
 |                                    | Queets/Clearwater wild[^25]           |       83-11,13-20       |         NA         |
-| Grays Harbor                       | Bingham Creek H.                      |          83-94          |       95-20        |
+| Grays Harbor                       | Bingham Creek H.                      |          83-94          |       95-21        |
 |                                    | Aberdeen Net Pens                     |       88-90,92-94       |         --         |
 |                                    | Humptulips H. (Stevens Cr.)           |  83-94,06,10-12,19-20   |       95-96        |
 |                                    | Bingham Creek (Wild)[^26]             |          83-20          |         NA         |
 |                                    | Stevens & Scatter Creek (Wild)        |       83-90,92-93       |         NA         |
 |                                    | Chehalis Upriver (Wild)[^27]          |       83-97,00-20       |         NA         |
+|                                    | Skookumchuck Hatchery                 | 83,89,98,06-07,09, 11-12  |       98         |
 
 [^1]: Beginning BY 1996, all tagged releases were unmarked.
 [^2]: BYs 1997 and 1998, all tagged releases were unmarked; fry released BYs 84-90 and 93.
@@ -1465,12 +1466,8 @@ In 2009, the Council adopted annual management objectives for Puget Sound Coho a
 ##### Stock Assessment
 ###### Indicator Stocks
 
-The Stillaguamish MU relies on the following two indicator stocks releases in the Snohomish MU: Bernie Gobin Hatchery (Tulalip Creek) and Wallace River Hatchery (Skykomish) (CoTC 2011).  Wallace River fish were double index tagged during brood years 1996–2009.  
-
-Coded-wire tagging programs have been limited within the basin. A smolt trapping study conducted by the Stillaguamish Tribe on brood years 1984–87 is the only source of wild tagging data from the Stillaguamish Watershed (Figure 4 4). A small scale CWT program associated with an enhancement project has been conducted in more recent years [@Haymes_2008]; however, tagged fish have only been released from brood years 1991–1998 and 2007 [@RMISD_1977]. There are no direct estimates of marine survival or exploitation for this MU due to the limited numbers of CWTs released from the enhancement projects, and lack of formal escapement accounting for the returning tagged Coho. Tagged hatchery and wild fish released in the Snohomish MU are used as surrogates for the Stillaguamish MU.
-
-
-
+Hatchery and wild coded-wire tagging programs have been limited within the Stillaguamish basin. A smolt trapping study conducted by the Stillaguamish Tribe on brood years 1984–87, where approximately 47,000 Coho smolts were captured, clipped and tagged, and released annually, is the only source of wild tagging data from the Stillaguamish Watershed. Highly variable numbers of coded-wire-tagged and ad-clipped fish have been released from Harvey Creek and North Fork hatcheries that are still in operation, and Jim Creek Hatchery. On average, 57,000 coded-wire-tagged fish have been released annually from Harvey Creek when the program has been implemented.  Since 1986, this hatchery has reported releases for 20 broods, however, tagged fish have been released for only 8 of these brood years. The North Fork Hatchery has released Coho smolts in 10 years during the period of 1988 to 2011; however, tagged fish were released for only BYs 2009 through 2011. Due to a lack of consistent tagging programs within the MU, analysts have used the following two indicator stocks releases in the Snohomish MU as surrogates in the development of the FRAM base period and subsequent CWT-based exploitation rate analyses: Bernie Gobin Hatchery (Tulalip Creek) and Wallace River Hatchery (Skykomish) (CoTC 2011). Wallace River fish have been double index tagged starting with brood year 1996.
+  
 ###### Forecast Methods
 Each year, a preseason abundance forecast of age-3 ocean recruits for Stillaguamish Coho Salmon is developed jointly by the Stillaguamish and Tulalip Tribes and WDFW by February. These annual forecasts are described in the Pacific Fishery Management Council’s Preseason Forecast I document each February [@PFMC_1_2012; www.pcouncil.org]. This is part of a larger WDFW-tribal effort to develop forecasts of wild Coho run size for all primary and most secondary management units in Puget Sound and the Washington coast [@Seiler_et_al_1995; @Zimmerman_2011]. These forecasts rely on estimates of wild Coho Salmon production (i.e., smolts) paired with estimates of marine survival.  Wild Coho Salmon production estimates for each of the primary and secondary management units in Puget Sound were derived from results of juvenile trapping studies conducted in the Skagit, Stillaguamish, Snohomish, Green, Nisqually, and Deschutes rivers, as well as in tributaries to Lake Washington and Hood Canal. Analysis of these long-term data sets have demonstrated that wild Coho smolt production is limited by a combination of factors including seeding levels (i.e., escapement), environmental effects (flows, marine derived nutrients), and habitat degradation [@Zimmerman_2011]. 
 
