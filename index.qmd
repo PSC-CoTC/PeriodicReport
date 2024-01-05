@@ -830,6 +830,7 @@ Most MUs in the U.S. have CWT indicator stocks and DIT programs. However, some o
 | Skagit                             | Marblemount H. (Skagit R.)            |          83-93          |       94-21        |
 |                                    | Baker River (Wild)[^18]               |       83-97,00-22       |         NA         |
 | Stillaguamish[^19]                 | Wallace R. H. (Skykomish R.)          |          83-95          |       96-21        |
+|                                    | Harvey Creek H.                       |      91,07,14,16-20     |         --         |
 |                                    | Stillaguamish R. (Wild)               |          84-87          |         NA         |
 | Snohomish                          | Wallace R. H. (Skykomish R.)          |          83-95          |       96-21        |
 |                                    | Bernie Gobin H. (Tulalip Cr.)[^20]    |          83-21          |         --         |
@@ -858,7 +859,7 @@ Most MUs in the U.S. have CWT indicator stocks and DIT programs. However, some o
 |                                    | Bingham Creek (Wild)[^26]             |          83-20          |         NA         |
 |                                    | Stevens & Scatter Creek (Wild)        |       83-90,92-93       |         NA         |
 |                                    | Chehalis Upriver (Wild)[^27]          |       83-97,00-20       |         NA         |
-|                                    | Skookumchuck Hatchery                 | 83,89,98,06-07,09, 11-12  |       98         |
+|                                    | Skookumchuck H.                       | 83,89,98,06-07,09, 11-12  |       98         |
 
 [^1]: Beginning BY 1996, all tagged releases were unmarked.
 [^2]: BYs 1997 and 1998, all tagged releases were unmarked; fry released BYs 84-90 and 93.
