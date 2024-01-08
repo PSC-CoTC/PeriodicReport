@@ -1815,7 +1815,9 @@ Post-season exploitation rate estimates are also generated using the Post-Season
 
 ##### Enhancement
 
-ToDo --> what do we want here??  Graph of releases over time?  Tables?
+Hatchery production within the Hood Canal MU is large, averaging 1.7 million Coho Salmon released annually for broods 1983 through 2020. These releases are from numerous small cooperative programs and a few larger hatchery programs within the MU, including net pens. The largest programs currently in operation include Quilcene National Fish Hatchery (34% of the total released 1983-2020), George Adams Hatchery (28%), Port Gamble Net Pens (26%), and Quilcene Net Pens (9%). Coho Salmon were released from Hoodsport Hatchery in South Hood Canal for broods 1983 through 1994 and average 119,000 per year during this period. A new program at the NF Skokomish Hatchery began in 2013 and has released an average of 9,000 fish since its inception.  
+
+Mass marking in the MU began with brood 1995 and has averaged 962,000 marked Coho Salmon annually.
 
 #### Management Performance
 ##### Forecast Evaluation
