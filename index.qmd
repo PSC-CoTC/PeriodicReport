@@ -56,7 +56,8 @@ theme_set(theme_light())
 # load("PeriodicReport_envi.RData")
 
 #but to deal with WA Coast stocks from TAMM spreadsheets, among other reasons
-psc <- readr::read_csv("psc_postfram_1998_2021.csv")
+psc <- readr::read_csv("psc_postfram_1998_2021.csv") |> 
+  rename(`Catch Year` = RunYear)
 
 static <- list(
   members = readxl::read_excel(params$static_tables, sheet = "members") |> 
@@ -77,7 +78,7 @@ static <- list(
   #field Indicator defines evaluated CWT release groups (as "Y")
   releases = readxl::read_excel(
     params$static_tables, sheet = "Releases",
-    col_types = c(rep('text',9), 'numeric', 'text', rep('numeric',6))
+    col_types = c(rep('text',9), 'numeric', 'text', rep('numeric',7))
     ) |> 
     mutate(across(where(is.character), ~replace_na(.,"")))
   ,
@@ -249,14 +250,14 @@ psc <- left_join(
 
 plot_abund_bar <- function(stknm = "Skagit"){
   psc |> 
-    filter(PSC_StockName==stknm, RunYear > 2003) |>
-    distinct(RunYear, PSC_StockName, 
+    filter(PSC_StockName==stknm, `Catch Year` > 2003) |>
+    distinct(`Catch Year`, PSC_StockName, 
              Harvest = mort_sum, Escapement = escp, Abundance = abund, 
              low_mod_abund, mod_abd_abund) |> 
     pivot_longer(names_to = "var", values_to = "val",
-                 -c(RunYear, PSC_StockName, low_mod_abund, mod_abd_abund)) |> 
+                 -c(`Catch Year`, PSC_StockName, low_mod_abund, mod_abd_abund)) |> 
     mutate(across(ends_with("_abund"), ~if_else(var == "Abundance", ., NA_real_))) |> 
-    ggplot(aes(RunYear, val, fill = var, color = var)) + 
+    ggplot(aes(`Catch Year`, val, fill = var, color = var)) + 
     geom_col(width = 0.7) + 
     geom_hline(aes(yintercept = low_mod_abund), color = "orange", linetype = 5, linewidth = 1.2) +
     geom_hline(aes(yintercept = mod_abd_abund), color = "orange", linetype = 5) +
@@ -277,14 +278,15 @@ plot_abund_bar <- function(stknm = "Skagit"){
 plot_ns_msf <- function(stknm = "Skagit"){
   psc |> 
     filter(PSC_StockName==stknm) |> 
-    distinct(RunYear, PSC_StockName, NS = mort_ns_sum, MSF = mort_msf_sum) |> 
-    pivot_longer(names_to = "var", values_to = "val", -c(RunYear, PSC_StockName)) |> 
-    ggplot(aes(RunYear, val, fill = var)) +
-    geom_col(width = 0.7, show.legend = F) +
+    distinct(`Catch Year`, PSC_StockName, NS = mort_ns_sum, MSF = mort_msf_sum) |> 
+    pivot_longer(names_to = "var", values_to = "val", -c(`Catch Year`, PSC_StockName)) |> 
+    ggplot(aes(`Catch Year`, val, fill = var)) +
+    geom_col(width = 0.7, show.legend = T) +
     scale_fill_grey() +
     scale_x_continuous(breaks = seq(1998, 2040, by = 3), guide = guide_axis(n.dodge = 2)) +
     scale_y_continuous("Mortality", labels = scales::comma) +
-    facet_wrap(~var, nrow = 1) +
+    #facet_wrap(~var, nrow = 1) +
+    theme(legend.title = element_blank(), legend.position = "top") +
     labs(subtitle = stknm)
 }
 
@@ -341,7 +343,7 @@ plot_status <- function(mu = "Skagit"){
 
 This report based on `r basename(params$mdb)`
 
-![](images/CohoPic2.png){width=120% fig-alt="Coho Picture"}
+![](images/coho_pic2.png){width=120% fig-alt="Coho Picture"}
 
 # Introduction
 
@@ -1018,7 +1020,7 @@ static$releases |>
 
 ```{r gt_annual_abund}
 psc |> 
-  distinct(RunYear, PSC_Region, PSC_StockName, abund, low_mod_abund, mod_abd_abund) |> 
+  distinct(`Catch Year`, PSC_Region, PSC_StockName, abund, low_mod_abund, mod_abd_abund) |> 
   mutate(
     PSC_Region = factor(PSC_Region, levels = c("Canada","US Inside","US Outside")),
     abd = case_when(
@@ -1034,7 +1036,7 @@ psc |>
       ),
     abund = NULL
   ) |> 
-  pivot_wider(names_from = RunYear, values_from = abd) |> 
+  pivot_wider(names_from = `Catch Year`, values_from = abd) |> 
   arrange(PSC_Region) |> 
   gt(
     groupname_col = "PSC_Region", 
@@ -1076,8 +1078,8 @@ psc |>
 
 ```{r gt_annual_ER}
 psc |> 
-  distinct(RunYear, PSC_Region, PSC_StockName, mort_sum_er) |> 
-  pivot_wider(names_from = RunYear, values_from = mort_sum_er) |> 
+  distinct(`Catch Year`, PSC_Region, PSC_StockName, mort_sum_er) |> 
+  pivot_wider(names_from = `Catch Year`, values_from = mort_sum_er) |> 
   gt(
     groupname_col = "PSC_Region",
     caption = "Annual FRAM-estimated Exploitation Rates as harvest / abundance"
@@ -1097,8 +1099,8 @@ Illustrating 25th, median and 75th quantile of post-2010 ERs by FRAM fishery.
 #or join above in "psc" object creation before first group_by?
 
 psc |> 
-  select(RunYear:FisheryName, mort_er) |> 
-  filter(RunYear > 2009) |> 
+  select(`Catch Year`:FisheryName, mort_er) |> 
+  filter(`Catch Year` > 2009) |> 
   unite("sid_nm", PSC_StockID, PSC_StockName) |> 
   unite("fid_nm", FisheryID, FisheryName) |> 
   group_by(sid_nm, fid_nm) |>
@@ -1141,6 +1143,10 @@ psc |>
 plot_abund_bar("Lower Fraser")
 ```
 
+```{r f_ns_msf_lfras}
+plot_ns_msf("Lower Fraser")
+```
+
 ##### Historical Overview of Status of Management Unit
 
 ### Interior Fraser
@@ -1160,6 +1166,10 @@ plot_abund_bar("Lower Fraser")
 
 ```{r f_abund_bar_ifras}
 plot_abund_bar("Interior Fraser")
+```
+
+```{r f_ns_msf_ifras}
+plot_ns_msf("Interior Fraser")
 ```
 
 ##### Historical Overview of Status of Management Unit
@@ -1182,6 +1192,10 @@ plot_abund_bar("Interior Fraser")
 
 ```{r f_abund_bar_strgrg}
 plot_abund_bar("Strait of Georgia")
+```
+
+```{r f_ns_msf_strgrg}
+plot_ns_msf("Strait of Georgia")
 ```
 
 ##### Historical Overview of Status of Management Unit
@@ -1417,6 +1431,11 @@ During the base period, Coho production from the Skagit MU contributed to U.S. a
 plot_abund_bar("Skagit")
 ```
 
+```{r f_ns_msf_skagit}
+plot_ns_msf("Skagit")
+```
+
+
 **Average exploitation rates by fishing area.  The stacked bars represent the rates estimated by gear type during the FRAM base period, catch years 1986–1992.  The line represents the average annual total exploitation rate by fishing area during catch years ??, all gears combined.**
 
 Total exploitation rates have generally declined, averaging 59% between 1986 and 1995 then gradually falling to an extended period of low exploitation rates (26%) during 1998–2004 (Table 5 1; Figure 4 2).  Exploitation rates have increased somewhat since 2005, averaging 36% during 2005–2011.  Up until 1997 the exploitation rate by Canadian fishers averaged 36%, but has since declined to an average of less than 1.5%.  A comparison of exploitation rates by major fisheries during the base period and the most recent five years (2006–2010) is provided in Figure 5 1, while exploitation rates by major fisheries by year since 1986 are listed in Appendix D.  Individual fishery management areas within Washington State are depicted in Figure 5 2 and Figure 5 3.
@@ -1545,6 +1564,10 @@ During the base period, Coho production from the MU contributed to US and Canadi
 plot_abund_bar("Stillaguamish")
 ```
 
+```{r f_ns_msf_stillaguamish}
+plot_ns_msf("Stillaguamish")
+```
+
 Total exploitation rates have generally declined since 1986 having averaged 71% during 1986–1993, then gradually falling to an extended period of low exploitation rates (10%) during 2002–2004 (Table 4 3; Figure 4 1).  Exploitation rates have increased since 2004, averaging 23% during 2005–2009.  Up until 1997 the exploitation rate by Canadian fishers averaged 26%, but has since declined to an average of less than 1.0% (Appendix D). 
 
 A comparison of exploitation rates by major fisheries during the base period and the most recent five years (2006–2010) is provided in Figure 5 1, while exploitation rates by major fisheries by year since 1986 are given in Appendix D.  Individual fishery management areas within Washington State are depicted in Figure 5 2.
@@ -1648,6 +1671,10 @@ Mass marking within the MU began with the 1996 brood and has averaged 738,000 ma
 
 ```{r f_abund_bar_snohomish}
 plot_abund_bar("Snohomish")
+```
+
+```{r f_ns_msf_snohomish}
+plot_ns_msf("Snohomish")
 ```
 
 ##### Historical Overview of Status of Management Unit
@@ -1845,6 +1872,10 @@ A species-selective commercial beach seine fishery occurs in Area 12A to allow h
 plot_abund_bar("Hood Canal")
 ```
 
+```{r f_ns_msf_hc}
+plot_ns_msf("Hood Canal")
+```
+
 **Average exploitation rates by fishing area for the Hood Canal MU. The stacked bars represent the rates estimated by gear type during the FRAM base period, catch years 1986-1992. The line represents the estimated total exploitation rate by fishing area during catch years 2005-2010, all gears combined.**
 
 Total exploitation rates have generally declined, averaging 72% between 1986 and 1996 then gradually falling to an extended period of low exploitation rates (27%) during 1997-2004 (Table 5.1; Figure 4.2).  Exploitation rates have increased since 2004, averaging 59% during 2005-2009.  Up until 1996, the exploitation rate by Canadian fishers averaged 40%, but has since declined to an average of less than 1.5%.
@@ -1924,13 +1955,18 @@ Hatchery production within this MU has averaged 1.3 million Coho Salmon released
  
 #### Management Performance 
 
+##### Forecast Evaluation
+
+##### Fishery Mortality and Escapement
+
 ```{r f_abund_bar_jdf}
 plot_abund_bar("US Strait JDF")
 ```
 
-##### Forecast Evaluation
+```{r f_ns_msf_jdf}
+plot_ns_msf("US Strait JDF")
+```
 
-##### Fishery Mortality and Escapement
 ##### Historical Overview of Status of Management Unit
 
 ```{r f_plot_status_jdf, fig.height=3}
@@ -1997,12 +2033,19 @@ A few salmon hatchery facilities exist within the basin; however, only one curre
 
 #### Management Performance 
 
+##### Forecast Evaluation
+
+##### Fishery Mortality and Escapement
+
 ```{r f_abund_bar_quill}
 plot_abund_bar("Quillayute")
 ```
 
-##### Forecast Evaluation
-##### Fishery Mortality and Escapement
+```{r f_ns_msf_quill}
+plot_ns_msf("Quillayute")
+```
+
+
 ##### Historical Overview of Status of Management Unit
 
 ```{r f_plot_status_quill, fig.height=3}
@@ -2059,12 +2102,17 @@ The 2023 Hoh River natural Coho forecast is 6,531 Ocean Age 3 (OA3) recruits, an
 There is currently no hatchery Coho production present in the MU. The Chalaat Creek Hatchery is run by the Hoh Indian Tribe and formerly produced Coho Salmon.  There have been periodic releases of hatchery Coho Salmon from other coastal basins.
 #### Management Performance 
 
+##### Forecast Evaluation
+##### Fishery Mortality and Escapement
+
 ```{r f_abund_bar_hoh}
 plot_abund_bar("Hoh")
 ```
 
-##### Forecast Evaluation
-##### Fishery Mortality and Escapement
+```{r f_ns_msf_hoh}
+plot_ns_msf("Hoh")
+```
+
 ##### Historical Overview of Status of Management Unit
 
 ```{r f_plot_status_hoh, fig.height=3}
@@ -2126,13 +2174,16 @@ The 2023 Queets natural Coho forecast is 12,414 Ocean Age 3 (OA3) recruits, whic
 The Salmon River Hatchery, located on a tributary to the Queets River and operated by the Quinault Tribe is the primary Coho adult broodstock collection, incubation, and rearing program in the MU (Haymes 2008).  Coho juveniles were also periodically reared, coded wire tagged, and released at several other locations in the basin as part of a long-term natural production enhancement program operated by the Quinault tribe, using juveniles produced from wild origin adult Coho collected with wild broodstock capture programs.
 #### Management Performance 
 
-
-
 ##### Forecast Evaluation
+
 ##### Fishery Mortality and Escapement
 
 ```{r f_abund_queets}
 plot_abund_bar("Queets")
+```
+
+```{r f_ns_msf_queets}
+plot_ns_msf("Queets")
 ```
 
 ##### Historical Overview of Status of Management Unit
@@ -2203,12 +2254,18 @@ There are up to several net pen rearing projects operating in the Chehalis River
 
 #### Management Performance 
 
+##### Forecast Evaluation
+
+##### Fishery Mortality and Escapement
+
 ```{r f_abund_bar_gh}
 plot_abund_bar("Grays Harbor")
 ```
 
-##### Forecast Evaluation
-##### Fishery Mortality and Escapement
+```{r f_ns_msf_gh}
+plot_ns_msf("Grays Harbor")
+```
+
 ##### Historical Overview of Status of Management Unit
 
 ```{r f_plot_status_gh, fig.height=3}
