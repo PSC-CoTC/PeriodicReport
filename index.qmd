@@ -33,10 +33,6 @@ format:
 
 </header>
 
-Jan 8th, 2024 additions by Gary (this is a placeholder for these items)
--Total interceptions of mass marked fish by country across all MUs (need to check if this is all US and Canadian fish or just the MUs in the treaty)
-
-
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
@@ -339,29 +335,49 @@ plot_status <- function(mu = "Skagit"){
 #plot_status()
 ```
 
+This report is based on data in `r basename(params$mdb)`
 
-This report based on `r basename(params$mdb)`
-
-![](images/coho_pic2.png){width=120% fig-alt="Coho Picture"}
+![](images/coho_pic2.png){width=100% fig-alt="Coho Picture"}
 
 # Introduction
 
 In response to a decline in natural Coho Salmon (*Onchorynchus kisutch*) abundance, the Pacific Salmon Commission established a Southern Coho abundance-based management regime (CoABM) in 1999 [@PSC_1999]. This Southern Coho Management Plan (SCMP, also referred to as ABM, or 'abundance based management') aimed to conserve Coho Salmon Management Units (MUs of naturally-spawning Coho Salmon in southern British Columbia and Washington/Oregon) based on abundance status and escapement goals. The SCMP set out to constrain exploitation rates (ERs; defined as total fishing mortality divided by total fishing mortality plus escapement) below maximum levels (caps) on selected management units in order to achieve long-term Maximum Sustainable Harvests (MSH). These constraints are implemented by specifying ER caps for the individual MUs dependent on annual abundance status. During their respective preseason planning processes, the Parties use management reference points to classify the status of each MU as low, moderate, or abundant. The parties then exchange these status determinations as a key factor in development of pre-season plans.
 
-When a new Coho Management Plan was reached in 2008 (implemented 2009 through 2018; [@PSC_2009]) and the latest agreement finalized (applies to the period from 2019 through 2028; [@PSC_2022]), modifications were made to the list of specified MUs and to the manner in which exploitation rate caps are established. This periodic report presents information for the MUs identified in the most current Pacific Salmon Treaty's (PST) Southern Coho Management Plan (Chapter 5 of Annex IV in the current PST). In the 2008 SCMP abundance-based management regimes were established to constrain exploitation rates (ERs) on the 13 Management Units (MUs) of naturally-spawning Coho Salmon originating in rivers along the Washington/British Columbia (B.C.) border listed below. Within the most recent Management Plan [@PSC_2022], the Georgia Strait Vancouver Island and the Georgia Strait Mainland Management Units are now combined into the Strait of Georgia Management Unit. 
+When a new Coho Management Plan was reached in 2008 (implemented 2009 through 2018; [@PSC_2009]) and the latest agreement finalized (applies to the period from 2019 through 2028; [@PSC_2022]), modifications were made to the list of specified MUs and to the manner in which exploitation rate caps are established. This periodic report presents information for the MUs identified in the most current Pacific Salmon Treaty's (PST) Southern Coho Management Plan (Chapter 5 of Annex IV in the current PST). In the 2008 SCMP abundance-based management regimes were established to constrain exploitation rates (ERs) on the 13 Management Units (MUs) of naturally-spawning Coho Salmon originating in rivers along the Washington/British Columbia (BC) border listed below. Within the most recent Management Plan [@PSC_2022], the Georgia Strait Vancouver Island and the Georgia Strait Mainland Management Units are now combined into the Strait of Georgia Management Unit. 
+
+```{r old_mu_table}
+tibble(
+  `Southern BC` = c("Interior Fraser", "Lower Fraser", "Georgia Strait Vancouver Island", "Georgia Strait Mainland", ""),
+  `US Inside` = c("Skagit", "Stillaguamish", "Snohomish", "Hood Canal", "US Strait JDF"),
+  `US Outside` = c("Quillayute", "Hoh", "Queets", "Grays Harbor", "")
+  ) |> 
+  gt() |> 
+  tab_options(table.width = px(400)) |> 
+  tab_style(locations = cells_column_labels(), style = cell_text(align = "center", weight = "bold")) |> 
+  tab_style(locations = cells_body(), style = cell_text(align = "left")) |> 
+  tab_header(title = "Management Units in the 2008 Pacific Salmon Treaty Southern Coho Management Plan")
+
+```
+
+
 
 The objective of the SCMP, as described in the Treaty, is to manage the fisheries impact on Southern coho stocks by limiting the total fishery exploitation and allow the different MUs to produce long-term Maximum Sustainable Harvest (MSH), while maintaining the genetic and ecological diversity of the individual populations. In addition, the plan is designed to improve the prospect of sustaining healthy fisheries for both parties over the long-term. The plan is intended to be cost-effective and flexible to available technical capacity and information, while providing a predictable framework for planning fisheries impacts and allowing for objective monitoring, evaluation and modification.
 
 Under the Agreement, the Parties are required to establish escapement goals or ERs that achieve MSH, determine MSH ERs for each MU, and establish ERs for each MU and status category (low, moderate, and abundant). Until such time as the Parties provide MU-specific ER targets, the SCMP identified default ER ceilings for the following MU status categories:
 
+<div align="center">
+
+|:----------:|:---------------------------:|
 | **Status** | **Total Exploitation Rate** |
 |:----------:|:---------------------------:|
 |    Low     |          Up to 20%          |
 |  Moderate  |          21% - 40%          |
 |  Abundant  |          41% - 65%          |
+|:----------:|:---------------------------:|
 
-Annual ER caps are established for each of the MUs based on the level of abundance and health of the natural stocks. These caps are then apportioned between the Parties. Constraints for Canadian fisheries on U.S. MUs are determined by formulas that specify sharing of allowable ERs as well as a composite rule, which together adjust caps according to the number of U.S. MUs that fall within a given category. The composite rule adjusts constraints for Canadian fishery exploitation rates based on the number of U.S. management units which fall in a given category. For example, if only one Washington coastal or Puget Sound coho management unit is in low status, Canadian fisheries are constrained to a total exploitation rate on that unit of 12%; if two or more Washington coastal management units are in low status, the constraint becomes 10%. The most restrictive exploitation
-rate limit for Canadian fishery impacts on U.S. coho management units is 10%. 
+</div>
+
+Annual ER caps are established for each of the MUs based on the level of abundance and health of the natural stocks. These caps are then apportioned between the Parties. Constraints for Canadian fisheries on U.S. MUs are determined by formulas that specify sharing of allowable ERs as well as a composite rule, which together adjust caps according to the number of U.S. MUs that fall within a given category. The composite rule adjusts constraints for Canadian fishery exploitation rates based on the number of U.S. management units which fall in a given category. For example, if only one Washington coastal or Puget Sound coho management unit is in low status, Canadian fisheries are constrained to a total exploitation rate on that unit of 12%; if two or more Washington coastal management units are in low status, the constraint becomes 10%. The most restrictive exploitation rate limit for Canadian fishery impacts on U.S. coho management units is 10%. 
 
 Constraints for U.S. fisheries on Canadian MUs depend on the status of the Interior Fraser MU until the biological statuses of the other Canadian MUs have been determined. Canada is currently working to develop the information (smolt to adult survival rates, escapements) needed to apply the status determination method used for the Interior Fraser coho MU to the Lower Fraser and Strait of Georgia MUs. Details as to how exploitation rate constraints are established based on the status of MUs under the SCMP are contained in Annex IV Chapter 5 Section 9.b-c (Canadian exploitation rate caps on inside and outside U.S. MUs) and Section 9.d (U.S. exploitation rate caps on Canadian MUs).
 
@@ -379,21 +395,21 @@ The U.S. Outside MUs consist of naturally-spawning populations from the Quillayu
 #   arrange(Region) |>  
 #   mutate(Region = str_replace(Region, "Canada", "Southern B.C.")) |> 
 #   gt(groupname_col = "Region") |> 
-#   tab_options(table.width = px(250)) |> 
+#   tab_options(table.width = px(300)) |> 
 #   tab_style(locations = cells_column_labels(), style = cell_text(align = "center")) |> 
 #   tab_style(locations = cells_row_groups(), style = cell_text(align = "left", weight = "bold")) |> 
 #   tab_style(locations = cells_body(), style = cell_text(align = "right"))
 
 tibble(
   `Southern BC` = c("Interior Fraser", "Lower Fraser", "Strait of Georgia", "", ""),
-  `US Outside` = c("Skagit", "Stillaguamish", "Snohomish", "Hood Canal", "US Strait JDF"),
-  `US Inside` = c("Quillayute", "Hoh", "Queets", "Grays Harbor", "")
-) |> 
+  `US Inside` = c("Skagit", "Stillaguamish", "Snohomish", "Hood Canal", "US Strait JDF"),
+  `US Outside` = c("Quillayute", "Hoh", "Queets", "Grays Harbor", "")
+  ) |> 
   gt() |> 
   tab_options(table.width = px(400)) |> 
   tab_style(locations = cells_column_labels(), style = cell_text(align = "center", weight = "bold")) |> 
   tab_style(locations = cells_body(), style = cell_text(align = "left")) |> 
-  tab_header(title = "Management Units")
+  tab_header(title = "Management Units within the current Pacific Salmon Treaty Southern Coho Management Plan")
 
 ```
 
