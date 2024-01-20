@@ -34,7 +34,6 @@ format:
 </header>
 
 Jan 8th, 2024 additions by Gary (this is a placeholder for these items)
--Mark Selective Fishery impacts
 -Total interceptions of mass marked fish by country across all MUs (need to check if this is all US and Canadian fish or just the MUs in the treaty)
 
 
@@ -578,7 +577,7 @@ knitr::kable(
 
 ## U.S. Management Units Federal Status 
 
-Coho Salmon were the first Pacific salmon species for which coast-wide evolutionarily significant units (ESUs) were delineated [@Ford_et_al_2011]. Based on genetic and life history information, the U.S. MUs belong to three different Coho Salmon ESUs, the Puget Sound/Strait of Georgia, the Olympic Peninsula, and the Southwest Washington ESUs. The Puget Sound/Strait of Georgia Coho ESU is currently a species of concern under the U.S. Endangered Species Act [ESA; @Ford_et_al_2011; Species of Concern 4/15/04, 69FR19975]. The Olympic Peninsula ESU was evaluated for listing under the ESA and it was determined to be not warranted [@Weitkamp_et_al_1995]. The Southwest Washington ESU is currently categorized as "undetermined".  Puget Sound/Strait of Georgia Coho are not currently candidates for listing in Washington as State Endangered, Threatened, or Sensitive [@WDFW_2020_state].
+Coho Salmon were the first Pacific salmon species for which coast-wide evolutionarily significant units (ESUs) were delineated [@Ford_2011]. Based on genetic and life history information, the U.S. MUs belong to three different Coho Salmon ESUs, the Puget Sound/Strait of Georgia, the Olympic Peninsula, and the Southwest Washington ESUs. The Puget Sound/Strait of Georgia Coho ESU is currently a species of concern under the U.S. Endangered Species Act [ESA; @Ford_2011; Species of Concern 4/15/04, 69FR19975]. The Olympic Peninsula ESU was evaluated for listing under the ESA and it was determined to be not warranted [@Weitkamp_et_al_1995]. The Southwest Washington ESU is currently categorized as "undetermined".  Puget Sound/Strait of Georgia Coho are not currently candidates for listing in Washington as State Endangered, Threatened, or Sensitive [@WDFW_2020_state].
 
 At the federal level, species of concern do not have formal protection under the ESA. The primary purpose of identifying species of concern is to prevent the need to list them as threatened or endangered under the ESA. This purpose can be achieved by the following actions: (1) identifying species potentially at risk; (2) increasing public awareness about those species; (3) identifying data deficiencies and uncertainties in species' status and threats; (4) stimulating cooperative research efforts to obtain the information necessary to evaluate species' status and threats; and, (5) fostering voluntary efforts to conserve the species before listing becomes warranted.
 
