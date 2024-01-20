@@ -600,14 +600,19 @@ Estimated ocean age-3 cohort abundances for Inside and Outside U.S. MUs are depi
 
 The Coho Fisheries Regulation Assessment Model (Coho FRAM, Model Evaluation Workgroup (MEW). 2008) has been the tool used to plan U.S. preseason fisheries and also to evaluate, postseason, exploitation rates (ERs) by the fisheries of both Parties on the naturally spawning Coho management units (MUs) specified by the CoABM. Canada has not been using Coho FRAM preseason, instead using a combination of a ‘domestic model’ for planning marine fisheries and a ‘decay model’ for planning Fraser River fisheries. 
 
-Each country manages the Coho harvest within its ER cap through its own domestic fisheries management processes and annual fisheries plans. For Canada, the annual domestic planning process is documented in the salmon Integrated Fisheries Management Plan (IFMP). For the U.S., the North of Cape Falcon ocean salmon fishing plans are reported in Preseason Report III (PFMC documents). For U.S. Inside MUs, the 2019 PST uses the exploitation rate thresholds and stepped harvest rate goals from the Comprehensive Coho Agreement and adopted as (Fishery Management Plan) FMP conservation objectives in 2009. For U.S. Outside MUs, exploitation rate constraints represent the Maximum Fishing Mortality Threshold (MFMT).  For U.S. domestic purposes, the Pacific Fishery Management Council MU status categories are “critical”, “low”, and “normal”, which correspond to the PSC categories of “low”, “moderate” and “abundant”, respectively [@PMFC_2013].   
+Each country manages the Coho harvest within its ER cap through its own domestic fisheries management processes and annual fisheries plans. For Canada, the annual domestic planning process is documented in the salmon Integrated Fisheries Management Plan (IFMP). For the U.S., the North of Cape Falcon ocean salmon fishing plans are reported in Preseason Report III (PFMC documents). For U.S. Inside MUs, the 2019 PST uses the exploitation rate thresholds and stepped harvest rate goals from the Comprehensive Coho Agreement and adopted as (Fishery Management Plan) FMP conservation objectives in 2009. For U.S. Outside MUs, exploitation rate constraints represent the Maximum Fishing Mortality Threshold (MFMT).  For U.S. domestic purposes, the Pacific Fishery Management Council MU status categories are “critical”, “low”, and “normal”, which correspond to the PSC categories of “low”, “moderate” and “abundant”, respectively [@PFMC_2022b].   
 
 The U.S. FMP includes status determination criteria (SDC) for overfishing, approaching an overfished condition, overfished, not overfished/rebuilding, and rebuilt [@PFMC_1_2023]. These criteria are:
+
 - Overfishing occurs when a single year exploitation rate exceeds the maximum fishing mortality
 threshold (MFMT), which is based on the maximum sustainable yield exploitation rate (FMSY);
+
 - Approaching an overfished condition occurs when the geometric mean of the two most recent postseason estimates of spawning escapement, and the current preseason forecast of spawning escapement, is less than the minimum stock size threshold (MSST);
+
 - Overfished status occurs when the most recent 3-year geometric mean spawning escapement is less than the MSST;
+
 - Not overfished/rebuilding status occurs when a stock has been classified as overfished and has not yet been rebuilt, and the most recent 3-year geometric mean spawning escapement is greater than the MSST but less than SMSY;
+
 - A stock is rebuilt when the most recent 3-year geometric mean spawning escapement exceeds SMSY.
 
 Queets natural coho, Strait of Juan de Fuca natural coho, and Snohomish natural coho salmon stocks were classified as overfished in 2018, and the Council adopted rebuilding plans for these stocks in
@@ -621,13 +626,16 @@ Strait of Juan de Fuca natural coho was reported to have met the criteria for no
 The U.S. annual salmon fishery planning process starts in January with a Stock and Fishery Evaluation (SAFE) report on fisheries and escapements from previous years and concludes in early April when preseason fishing plans for US fisheries are developed. Outlined below are the Coho FRAM inputs used within the US domestic process to plan annual Coho fisheries, and postseason data needed to evaluate the preseason plan.
 
   *Preseason FRAM inputs:
+
     +Stocks’ abundance forecasts
     +Fishery inputs by Coho FRAM time period (e.g., season structure, gear and retention restrictions, quota levels, fishery harvest rate scalars) 
     
   *Inseason:
+
     +FRAM fishery adjustments 
     
   *Postseason FRAM inputs:
+
     +Stocks’ observed escapement
     +Fisheries’ observed catch and non-retention mortality by FRAM time period
 
@@ -707,10 +715,11 @@ Under the PST Southern Coho Management Plan, categories (Abundant, Moderate, Low
 
 Grays Harbor constraints are based on projected natural area spawners (wild plus hatchery strays) and MSP escapement goal of 35,400. Exploitation rate constraint subject to change should comanagers agree to a modified escapement goal under U.S. v. Washington and Hoh v. Baldrige case law.
 
-Key considerations for Canadian fishery management for coho in 2023 are expected to include: 
-(1) meeting domestic conservation obligations for Interior Fraser (including Thompson River) coho; 
-(2) coho harvests by First Nations fisheries; 
-(3) incidental impacts during commercial and First Nations fisheries directed atChinook, chum, and especially Fraser sockeye salmon which will see a dominant late run return in 2023 [@PFMC_3_2023].
+Key considerations for Canadian fishery management for Coho in 2023 are expected to include:
+
+1) meeting domestic conservation obligations for Interior Fraser (including Thompson River) coho; 
+2) coho harvests by First Nations fisheries; 
+3) incidental impacts during commercial and First Nations fisheries directed atChinook, chum, and especially Fraser sockeye salmon which will see a dominant late run return in 2023 [@PFMC_3_2023].
 
 The Canadian fishery regimes affecting coho are expected to be driven by Canadian domestic allowable impacts on the Thompson River component of the Interior Fraser management unit, Fraser Chinook
 concerns and Fraser sockeye stocks of concern co-migrating with the late run. In years prior to 2014, Canadian fisheries were managed so as not to exceed a three percent maximum exploitation rate. In May 2014, Canada decided to permit up to a 16 percent exploitation rate on upper Fraser coho in Canadian fisheries to allow for impacts in fisheries directed at a record Fraser sockeye forecast. Since 2015, upper Fraser coho in Canadian fisheries have been managed per low status limitations. The projected status of Canadian coho management units in 2023 indicates continuing concerns for the condition of Interior Fraser coho. The Interior Fraser coho management unit is anticipated to remain in low abundance status, resulting in a requirement to constrain the total mortality fishery exploitation rate for 2023 Southern U.S. fisheries to a maximum of 10.0%.
@@ -726,16 +735,19 @@ In the domestic process, initial planning scenarios are developed based on discu
 The U.S. preseason Coho FRAM modeling requires Canadian inputs to complete the model for the U.S. domestic planning and this also enables the pre to post season Coho FRAM evaluation of both Parties’ fisheries. The Canadian data used to inform Coho FRAM for annual U.S. preseason planning and joint postseason evaluation are outlined below:
 
   *Preseason:
-    +Stocks’ abundance forecasts, or
-    +Regional expected marine survival rates, based on CWT indicator stocks
+
+    +Stocks’ abundance forecasts, or;
+    +Regional expected marine survival rates, based on CWT indicator stocks;
     +FRAM fishery scalars by coho FRAM time period from postseason analysis of a fishery plan similar to anticipated fishing patterns 
     
   *Inseason:
+
     +FRAM fishery adjustments or significant deviations in expected abundance / catch
     
   *Postseason:
-    +Stocks’ observed escapement, or
-    +Regional observed marine survival rates
+
+    +Stocks’ observed escapement, or;
+    +Regional observed marine survival rates;
     +Fisheries’ observed catch by FRAM time period
 
 **Canadian FRAM Stock Abundance Inputs:**
