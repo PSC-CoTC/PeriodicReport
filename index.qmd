@@ -413,6 +413,21 @@ tibble(
 
 ```
 
+<div align="center">
+
+|:-----------------:|:-------------:|:--------------:|
+| **Southern BC**   | **US Inside** | **US Outside** |
+|:-----------------:|:-------------:|:--------------:|
+|Interior Fraser    |Skagit         |Quillayute      |
+|Lower Fraser       |Stillaguamish  |Hoh             |
+|Strait of Georgia  |Snohomish      |Queets          |
+|                   |Hood Canal     |Grays Harbor    |
+|                   |US Strait JDF  |                |
+|:-----------------:|:-------------:|:--------------:|
+
+</div>
+
+
 ## Fishery Overview
 
 Under the CoABM regime, each Party is required to regulate its fisheries so as not to exceed exploitation rate (ER) constraints on MUs. Fishery Management Areas for British Columbia (@fig-dfomap), Washington (@fig-wdfwmap), and Oregon (@fig-odfwmap) are shown below.
