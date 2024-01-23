@@ -764,21 +764,21 @@ In the domestic process, initial planning scenarios are developed based on discu
 
 The U.S. preseason Coho FRAM modeling requires Canadian inputs to complete the model for the U.S. domestic planning and this also enables the pre to post season Coho FRAM evaluation of both Parties’ fisheries. The Canadian data used to inform Coho FRAM for annual U.S. preseason planning and joint postseason evaluation are outlined below:
 
-  *Preseason:
+  *Preseason:*
 
-    +Stocks’ abundance forecasts, or;
-    +Regional expected marine survival rates, based on CWT indicator stocks;
-    +FRAM fishery scalars by coho FRAM time period from postseason analysis of a fishery plan similar to anticipated fishing patterns 
+    - Stocks’ abundance forecasts, or;
+    - Regional expected marine survival rates, based on CWT indicator stocks;
+    - FRAM fishery scalars by coho FRAM time period from postseason analysis of a fishery plan similar to anticipated fishing patterns 
     
-  *Inseason:
+  *Inseason:*
 
-    +FRAM fishery adjustments or significant deviations in expected abundance / catch
+    - FRAM fishery adjustments or significant deviations in expected abundance / catch
     
-  *Postseason:
+  *Postseason:*
 
-    +Stocks’ observed escapement, or;
-    +Regional observed marine survival rates;
-    +Fisheries’ observed catch by FRAM time period
+    - Stocks’ observed escapement, or;
+    - Regional observed marine survival rates;
+    - Fisheries’ observed catch by FRAM time period
 
 **Canadian FRAM Stock Abundance Inputs:**
 U.S. FRAM preseason modeling requires forecasts of Canadian stocks. Forecast development commences every year in early March, and is provided to US FRAM modelers in mid to late March for use at the second NOF meeting, prior to the April PFMC meeting.
@@ -792,9 +792,9 @@ To obtain these values Canadian forecast methodology uses the following informat
   5) Base Period marine survival
   6) Base Period FRAM stock abundance values
 
-Estimates of freshwater production (smolt out-migrants) for hatchery produced Coho, by FRAM production region, are scaled to Base Period production. Next the annual expected regional marine survival (m.s.) is scaled to Base Period marine survival. Both ratios are applied to a stock’s Base Period abundance to produce the annual adult abundance forecasts. To illustrate (by stock):
+Estimates of freshwater production (smolt out-migrants) for hatchery produced Coho, by FRAM production region, are scaled to Base Period production. Next the annual expected regional marine survival (MS) is scaled to Base Period marine survival. Both ratios are applied to a stock’s Base Period Abundance to produce the annual adult abundance forecasts. To illustrate (by stock):
 
-  *(annual H smolts)/(base H smolts) X (expected m.s.)/(base m.s.) X Base Adults = Adult H Abundance
+  (Annual H Smolts) / (Base H Smolts) X (Expected MS) / (Base MS) X Base Adult Abundance = Adult H Abundance
 
 Hatchery smolt data are obtained from the Canadian Salmon Enhancement Program. Where naturally produced smolt out-migrant estimates exists (2 of 14 Canadian production regions), the values are used. For the production regions where naturally produced smolt data are not available (the remaining 12 of 14 Canadian production regions), the default production starting values has been the same as the annual hatchery output for the same FRAM production region, assuming similar smolt abundance trends between naturally produced and hatchery smolts. As hatchery production has been reduced over time it has become necessary to find other means to obtain the surrogates for naturally produced smolt production.
 
@@ -810,10 +810,9 @@ Preseason FRAM’s anticipated fishery related mortality for Canadian Coho reten
 
 Canadian fishery planning process generally concludes in June, with the fisheries directed upon Fraser River salmon (Pinks, Sockeye, and Chum) driven by test fisheries. This later planning process can produce anticipated fishery impacts that diverge from the postseason Canadian fishery scalars used for the US domestic modeling the previous April. In such cases the April PFMC FRAM model run can be “updated” to evaluate both Parties compliance with the Coho Agreement.
 
-###2023 Preseason Forecasts and MU Status
+### 2023 Preseason Forecasts and MU Status  (Placeholder)
 
-*should we provide a table of 2023 pre-season forecasts and MU status for all MUs here?
-
+*Does the SP want us to provide a table of 2023 pre-season forecasts and MU status for all MUs here?*
 
 ## Joint Canadian and U.S. Postseason Evaluations
 
@@ -827,7 +826,9 @@ The Backwards Coho FRAM provides two estimates of cohort abundance, termed “Oc
 
 These estimates of cohort abundance, catches and escapements are used to generate estimates of ERs and determine MU status for post season reporting to the Southern Panel.
 
-# Post-2010 (2004?) Performance of Abundance Based Management Regime
+# Performance of Abundance Based Management Regime 
+
+The summaries found within this report focus on catch years beginning with 2010 through the year with the most recent ER evaluation.
 
 ## Overview of Coded Wire Tag Use
 
