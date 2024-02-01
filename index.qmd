@@ -27,7 +27,7 @@ format:
 
 <p>
 
-!! DRAFT DOCUMENT UNDER DEVELOPMENT !!
+!! Jan 2024 DRAFT DOCUMENT UNDER DEVELOPMENT !!
 
 </p>
 
@@ -812,7 +812,7 @@ Canadian fishery planning process generally concludes in June, with the fisherie
 
 ### 2023 Preseason Forecasts and MU Status  (Placeholder)
 
-*Does the SP want us to provide a table of 2023 pre-season forecasts and MU status for all MUs here?*
+* does the SP wish us to describe forecasts for the year we have not assessed post-season?*  
 
 ## Joint Canadian and U.S. Postseason Evaluations
 
@@ -828,11 +828,9 @@ These estimates of cohort abundance, catches and escapements are used to generat
 
 # Performance of Abundance Based Management Regime 
 
-The summaries found within this report focus on catch years beginning with 2010 through the year with the most recent ER evaluation.
+The summaries found within this focus on catch years beginning with 2010 through the year with the most recent ER evaluation.  However, some summaries begin with catch year 2004.
 
 ## Overview of Coded Wire Tag Use
-
-*do we wish to link sections of the other report, or just repeat it here?*
 
 The coded-wire tag (CWT) indicator stock program provides the primary data for predicting, monitoring, and modeling harvest impacts on individual Coho Salmon populations. The Joint Coho Technical Committee (CoTC) uses CWT recoveries from the indicator stocks to reconstruct cohorts coastwide. While a few indicator tag groups are naturally-spawning fish, the vast majority consist of hatchery fish intended to represent each MU. Hatchery indicator stocks are selected on the basis of brood stock, rearing, and release strategies and are assumed to be surrogates for the naturally-spawning fish. The indicator program assumes that tagged and untagged fish experience similar trends in marine survival and similar exploitation patterns. Coastwide, approximately eight million juvenile Coho Salmon are coded-wire tagged annually [@Nandor_et_al_2010].
 
@@ -1057,6 +1055,12 @@ static$releases |>
 
 
 ## Multi-MU Assessment
+
+### Forecast Performance
+
+*see StaticTable file for example figures to include here and Dan's*
+
+
 
 ### Abundance Overview (placeholder table)
 
