@@ -1171,9 +1171,17 @@ psc |>
 
 ### Forecast Performance
 
-Pre-season forecasts of all of the MUs over the catch years 2004 through 2021 have largely been within the abundance based categories assigned post-season (63%). Forecasts were too high 24% of the time and too low 13% of the time. The forecasts for catch years 2005 and 2011 were very good, resulting in no change in abundance categories from pre- to post-season estimates of abundance.  
+Forecasts are integral to Coho Salmon management in the Pacific Northwest. These forecasts, as described earlier, are used in pre-season assessments to determine allowable fishing mortality on stocks of concern. In the absence of in-season management controls, forecasts that are too high may yield higher than agreed to exploitation of management units of concern. Forecasts that are too low may yield losses in fishing opportunities.  
 
-Focusing on the period from catch years 2010 through 2021, 
+Pre-season forecasts of all of the MUs over the catch years 2004 through 2021 have often (63%) been within the abundance based categories assigned post-season. Forecasts were too high 24% of the time and too low 13% of the time. The forecasts for catch years 2005 and 2011 were very good, resulting in no change in abundance categories from pre- to post-season estimates of abundance. Forecasts were poor for catch years 2006, 2015, and 2021, where less than 50% of the forecasted MUs were within the abundance category assigned post-season. There does not appear to be an obvious trend in forecast performance of abundance categories across all MUs with available forecasts over catch years 2004 through 2021.
+
+![](images/MU_forecast_perf.png){width=100% fig-alt="MU Forecast Performance"}
+
+Pre-season forecasts for the five U.S. Inside MUs over catch years 2004 through 2021 were within the abundance based categories assigned post-season 54% of the time, too high 28% of the time, and too low 18% of the time. Forecasting was poor for catch years 2006 and 2010, where only 1 MU was forecasted within the abundance category assigned post-season. In addition, only two of the five forecasted MUs were within the abundance category assigned post-season in eight additional catch years.    
+
+![](images/MU_forecast_perf.png){width=100% fig-alt="MU Forecast Performance"}
+
+Pre-season forecasts for the four U.S. Outside MUs over catch years 2004 through 2021 were within the abundance based categories assigned post-season 64% of the time, too high 25% of the time, and too low 11% of the time. The forecasts for catch years 2005, 2009-2011, and 2014 were very good, resulting in no change in abundance categories from pre- to post-season estimates of abundance. Forecasting performance was poor for catch years 2006, 2015, and 2021.
 
 ![](images/MU_forecast_perf.png){width=100% fig-alt="MU Forecast Performance"}
 
