@@ -1171,11 +1171,13 @@ psc |>
 
 ### Forecast Performance
 
-*see StaticTable file for example figures to include here and Dan's*
+Pre-season forecasts of all of the MUs over the catch years 2004 through 2021 have largely been within the abundance based categories assigned post-season (63%). Forecasts were too high 24% of the time and too low 13% of the time. The forecasts for catch years 2005 and 2011 were very good, resulting in no change in abundance categories from pre- to post-season estimates of abundance.  
 
+Focusing on the period from catch years 2010 through 2021, 
 
 ![](images/MU_forecast_perf.png){width=100% fig-alt="MU Forecast Performance"}
 
+*A question for Southern Panel Members --> Would you like to see summaries using abundances in addition to abundance categories?*  
 
 ## MU Specific Assessment/Performance
 
