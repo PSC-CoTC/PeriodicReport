@@ -1056,11 +1056,7 @@ static$releases |>
 
 ## Multi-MU Assessment
 
-### Forecast Performance
-
-*see StaticTable file for example figures to include here and Dan's*
-
-
+In an attempt to evaluate the implementation of Abundance Based Management of Coho Salmon stocks of concern under the PST, summaries on abundance categories, exploitation, and forecast performance are provided below.  Catch years summarized include 2004 through 2021 and abundance category and forecast performance summaries are limited to U.S. and Interior Fraser River MUs.  
 
 ### Abundance Overview (placeholder table)
 
@@ -1120,6 +1116,11 @@ psc |>
 
 ```
 
+
+![](images/MU_Status_by_yr.png){width=100% fig-alt="MU Abundance Status by Year"}
+
+
+
 ### ER Overview (placeholder table & fig)
 
 ```{r gt_annual_ER}
@@ -1167,6 +1168,14 @@ psc |>
   facet_wrap(~sid_nm, scales = "free", ncol = 2)
 
 ```
+
+### Forecast Performance
+
+*see StaticTable file for example figures to include here and Dan's*
+
+
+![](images/MU_forecast_perf.png){width=100% fig-alt="MU Forecast Performance"}
+
 
 ## MU Specific Assessment/Performance
 
