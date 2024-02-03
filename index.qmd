@@ -1177,13 +1177,13 @@ Pre-season forecasts of all of the MUs over the catch years 2004 through 2021 ha
 
 ![](images/MU_forecast_perf.png){width=100% fig-alt="MU Forecast Performance"}
 
-Pre-season forecasts for the five U.S. Inside MUs over catch years 2004 through 2021 were within the abundance based categories assigned post-season 54% of the time, too high 28% of the time, and too low 18% of the time. Forecasting was poor for catch years 2006 and 2010, where only 1 MU was forecasted within the abundance category assigned post-season. In addition, only two of the five forecasted MUs were within the abundance category assigned post-season in eight additional catch years.    
+Pre-season forecasts for the five U.S. Inside MUs over catch years 2004 through 2021 were within the abundance based categories assigned post-season 54% of the time, too high 28% of the time, and too low 18% of the time. Forecasting was poor for catch years 2006 and 2010, where only 1 MU was forecasted within the abundance category assigned post-season. In addition, only two of the five forecasted MUs were within the abundance category assigned post-season in each of eight additional catch years. Forecasts were more often correct (72% of the years) for the Hood Canal MU, followed by the U.S. Strait of Juan de Fuca MU (56%), Skagit and Stillaguamish MUs (50%), and least correct for the Snohomish MU (44% of the years).  
 
-![](images/MU_forecast_perf.png){width=100% fig-alt="MU Forecast Performance"}
+![](images/US_Inside_forecast_perf.png){width=100% fig-alt="US Inside MU Forecast Performance"}
 
-Pre-season forecasts for the four U.S. Outside MUs over catch years 2004 through 2021 were within the abundance based categories assigned post-season 64% of the time, too high 25% of the time, and too low 11% of the time. The forecasts for catch years 2005, 2009-2011, and 2014 were very good, resulting in no change in abundance categories from pre- to post-season estimates of abundance. Forecasting performance was poor for catch years 2006, 2015, and 2021.
+Forecasts for the U.S. Outside MUs performed better, on average, than the U.S. Inside forecasts of abundance categories. Pre-season forecasts for the four U.S. Outside MUs over catch years 2004 through 2021 were within the abundance based categories assigned post-season 64% of the time, too high 25% of the time, and too low 11% of the time. The forecasts for catch years 2005, 2009-2011, and 2014 were very good, resulting in no change in abundance categories from pre- to post-season estimates of abundance. Forecasting performance was poor for catch years 2006, 2015, and 2021. Forecasts were more often correct (72% of the years) for the Hoh and Quillayute MUs, followed by the Queets MU (61%), and least correct for the Grays Harbor MU (50% of the years).
 
-![](images/MU_forecast_perf.png){width=100% fig-alt="MU Forecast Performance"}
+![](images/US_Outside_forecast_perf.png){width=100% fig-alt="US Outside MU Forecast Performance"}
 
 *A question for Southern Panel Members --> Would you like to see summaries using abundances in addition to abundance categories?*  
 
