@@ -1185,11 +1185,11 @@ Forecasts for the U.S. Outside MUs performed better, on average, than the U.S. I
 
 ![](images/US_Outside_forecast_perf.png){width=100% fig-alt="US Outside MU Forecast Performance"}
 
-*A question for Southern Panel Members --> Would you like to see summaries using abundances in addition to abundance categories?*  
+*A question for Southern Panel Members --> Would you like to see summaries using forecasted and post-season abundances in addition to abundance categories?*  
 
-## MU Specific Assessment/Performance
+## Management Unit Descriptions and Assessment
 
-### Lower Fraser
+### Lower Fraser (PLACEHOLDER)
 #### Biological & Geographic Description
 #### Management Framework
 ##### Management Objectives
@@ -1214,7 +1214,7 @@ plot_ns_msf("Lower Fraser")
 
 ##### Historical Overview of Status of Management Unit
 
-### Interior Fraser
+### Interior Fraser (PLACEHOLDER)
 #### Biological & Geographic Description
 #### Management Framework
 ##### Management Objectives
@@ -1239,7 +1239,7 @@ plot_ns_msf("Interior Fraser")
 
 ##### Historical Overview of Status of Management Unit
 
-### Strait of Georgia
+### Strait of Georgia (PLACEHOLDER)
 
 #### Biological & Geographic Description
 #### Management  Framework
