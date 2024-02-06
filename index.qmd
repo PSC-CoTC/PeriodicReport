@@ -1055,9 +1055,9 @@ static$releases |>
 
 # Performance of Abundance Based Management Regime 
 
-In an attempt to evaluate the implementation of Abundance Based Management of Coho Salmon stocks of concern under the PST, summaries on abundance categories, exploitation, and forecast performance are provided below.  Catch years summarized include 2004 through 2021 and abundance category and forecast performance summaries are limited to U.S. and Interior Fraser River MUs.
+In an attempt to evaluate the implementation of Abundance Based Management of Coho Salmon stocks of concern under the PST, summaries on abundance categories, exploitation, and forecast performance are provided below. Catch years summarized include 2004 through 2021 and abundance category and forecast performance summaries are limited to U.S. and Interior Fraser River MUs. A single year of post-season estimates of MU abundances, fishery exploitation, and escapement is first completed two years following each catch year. For example, an assessment of catch year 2022 will be completed in February of 2024. This report has been referred to as the Annual ER Report. This assessment is presented to the Southern Panel at the PSC's Annual Meeting and the reports are posted on the CoTC's and Southern Panel's Sharepoint sites. These annual reports can also be found *here*. The best available data and the most current FRAM base period and Terminal Area Management Modules (TAMMs) are used to evaluate the catch year; however, data and the FRAM base period is updated or corrected on occasion. These corrections and additions are carried forward and are included in the post-season evaluations of MUs below, sometimes resulting in changes from the annual reports in estimates of exploitation rates, escapement numbers, and Ocean Age-3 abundances.  
 
-## Management Unit Post-season Abundances 
+## Management Unit Post-season Abundances and Categories
 
 
 
