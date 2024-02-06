@@ -1016,9 +1016,11 @@ static$releases |>
   
 ```
 
+*Question for the Southern Panel --> do you wish to see an assessment of CWTs recovered in fisheries (pre-terminal and terminal) for each MU (hatchery vs wild) over time?  We ask this because it may give the reader a sense of the data limitations when trying to employ the mixed-stock model*
+
 ### Total Hatchery Production
 
-Reported hatchery production across the MUs varies widely, from very little in the Stillaguamish and Hoh MUs, to more than an average of 4 million smolts released into the Strait of Georgia annually in recent years.  Prior to the advent of mass marking, hatchery fish were released coded-wire-tagged with their adipose-fin clipped to identify it as a tagged fish, or unclipped and untagged.  Beginning in 1995, DIT programs began and their associated releases were mass-marked. Now, almost all of the hatchery production released into the MUs in the U.S. are mass-marked.
+Reported hatchery production across the MUs varies widely, from very little in the Stillaguamish and Hoh MUs, to more than an average of 4 million smolts released into the Strait of Georgia annually in recent years. Prior to the advent of mass marking, some hatchery fish were released coded-wire-tagged with their adipose-fin clipped to identify it as a tagged fish, while the remaining fish were released unclipped and untagged. Beginning in 1995, DIT programs began and their associated releases were mass-marked. Now, almost all of the hatchery production released into the MUs in the U.S. are mass-marked.
 
 **Total number of hatchery Coho Salmon smolts released by tag and clip status for each MU over brood years 1983 through 2020 (data downloaded from RMIS 9-6-2023). "CWT_Unclipped_DIT" refer to tagged fish that are released with an intact adipose fin and are associated with a clipped release group. "CWT_Unclipped" are tagged fish that are unclipped but not associated with another tagged release group. These fish are often associated with new hatchery programs. **
 
@@ -1055,9 +1057,11 @@ static$releases |>
 
 In an attempt to evaluate the implementation of Abundance Based Management of Coho Salmon stocks of concern under the PST, summaries on abundance categories, exploitation, and forecast performance are provided below.  Catch years summarized include 2004 through 2021 and abundance category and forecast performance summaries are limited to U.S. and Interior Fraser River MUs.
 
-## Abundance Overview (placeholder table)
+## Management Unit Post-season Abundances 
 
 
+
+** Post-season estimates of Ocean Age-3 total abundances and their associated status categories [A = abundanct, M = moderate, L= low] by MU for catch years 2004 through 2021.  Management Units in the Abundant category have green highlighted cells, Moderate ones are not highlighted, and those in Low status are highlighted orange.**  (need to make table fit unto a single page in Word)
 
 ```{r gt_annual_abund}
 psc |> 
