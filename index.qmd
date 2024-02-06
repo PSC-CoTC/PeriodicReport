@@ -805,26 +805,22 @@ The Backwards Coho FRAM provides two estimates of cohort abundance, termed “Oc
 
 These estimates of cohort abundance, catches and escapements are used to generate estimates of ERs and determine MU status for post season reporting to the Southern Panel.
 
-# Performance of Abundance Based Management Regime 
-
-The summaries within this report focus on catch years 2010 though the year with the most recent ER evaluation.  However, some summaries begin with catch year 2004.
-
 ## Overview of Coded Wire Tag Use
 
-The coded-wire tag (CWT) indicator stock program provides the primary data for predicting, monitoring, and modeling harvest impacts on individual Coho Salmon populations. The Joint Coho Technical Committee (CoTC) uses CWT recoveries from the indicator stocks to reconstruct cohorts coastwide. While a few indicator tag groups are naturally-spawning fish, the vast majority consist of hatchery fish intended to represent each MU. Hatchery indicator stocks are selected on the basis of brood stock, rearing, and release strategies and are assumed to be surrogates for the naturally-spawning fish. The indicator program assumes that tagged and untagged fish experience similar trends in marine survival and similar exploitation patterns. Coastwide, approximately eight million juvenile Coho Salmon are coded-wire tagged annually [@Nandor_et_al_2010].
+The use of the term indicator stock within this report does not imply a set list of agreed to indicator stocks. Instead, the CoTC assesses all available CWT data for inclusion in the Mixed-Stock Model (MSM), cohort reconstructions, and other processes. With the base period spanning many years, it is beneficial if a stock is well tagged and well sampled over a long period of time. The coded-wire tag indicator stocks provide the primary data for predicting, monitoring, and modeling harvest impacts on individual Coho Salmon populations. The Joint Coho Technical Committee (CoTC) uses CWT recoveries from the indicator stocks to reconstruct cohorts coastwide. While a few indicator tag groups are naturally-spawning fish, the vast majority consist of hatchery fish intended to represent each MU. Hatchery indicator stocks are selected on the basis of brood stock, rearing, and release strategies and are assumed to be surrogates for the naturally-spawning fish. The indicator program assumes that tagged and untagged fish experience similar trends in marine survival and similar exploitation patterns. Coastwide, approximately eight million juvenile Coho Salmon are coded-wire tagged annually [@Nandor_et_al_2010].
 
 Some major changes in the CWT indicator stock program have occurred since the Pacific Salmon Treaty was signed in 1985. One of the most notable changes is the mass marking of hatchery fish in the Pacific Northwest. For many years, an adipose fin clip was used as an external mark to identify fish (natural spawning or hatchery) with a CWT. However, since brood year 1995 in the U.S. and 1996 in Canada, the adipose fin clip has been used as a mass mark to identify hatchery-origin fish and no longer uniquely indicates a coded-wire-tagged fish. With the advent of mark-selective fishing, marked (adipose fin-clipped) and unmarked fish do not have the same patterns of exploitation, violating the fundamental assumption of the indicator tag program. These changes in marking and fishing have resulted in the development and use of double index tag (DIT) releases in the indicator tag programs. The DIT group consists of two groups of hatchery fish, each 100% tagged with its own unique CWT. The two groups are presumed to be identical, except that one tagged group is unmarked and the other group is marked with an adipose fin clip. In a MSF, catches of marked fish will be retained whereas catches of unmarked fish will be released. The difference in return rates to the hatchery reflects the difference in ocean ERs in selective fisheries. A DIT group is recommended when the stock of interest is expected to be exploited by a mark-selective fishery (MSF). Unpaired (non-DIT) tag groups are either marked or unmarked and are considered single index tag (SIT) groups in this document.
 
 To obtain unbiased estimates of fishery-specific impacts on individual stocks, a known proportion of both the catch and escapement must be sampled for CWTs throughout the migratory range of the stock and the proportion sampled must be adequate to produce a statistically reliable expansion of sampled Coho. Mass marking creates the following two additional complexities for sampling of CWTs: (1) DIT stocks are unmarked but contain CWTs; and (2) marked fish do not necessarily contain CWTs. Therefore, all fish, not just marked fish (with an adipose fin-clip), must be sampled for CWTs. Detection of CWTs in unmarked fish requires electronic sampling using wands or tubes. Detection of CWTs in marked fish requires either field-based electronic sampling or collection of snouts for processing in the laboratory. For complete accounting, fish must be sampled throughout their range, in catch and escapement. Electronic sampling of both unmarked and marked Coho places an additional burden of time and expense on agencies
 
-At present, the utility of the DIT program and the CWT program in general for Coho is reduced due to low tagging rates, insufficient MU representation, low recovery rates, and incomplete coastwide coverage of electronic sampling programs [@PSCCWTW_2008]. In addition, the CWT program: (1) currently provides overall differences in ocean ERs -- can't discriminate individual fisheries; (2) has sample sizes that are generally small, so confidence limits are wide and estimates of differential impacts are imprecise; (3) is expensive and agencies are reluctant to fund tagging programs; and (4) unmarked DIT fish are unavailable for harvest in MSFs.
+At present, the utility of the DIT programs and the CWT programs in general for Coho is reduced due to low tagging rates, insufficient MU representation, low recovery rates, and incomplete coastwide coverage of electronic sampling programs [@PSCCWTW_2008]. In addition, the CWT programs: (1) currently provide overall differences in ocean ERs -- can't discriminate individual fisheries; (2) have sample sizes that are generally small, so confidence limits are wide and estimates of differential impacts are imprecise; (3) are expensive and agencies are reluctant to fund tagging programs; and (4) unmarked DIT fish are unavailable for harvest in MSFs.
 
-Most MUs in the U.S. have CWT indicator stocks and DIT programs. However, some of the programs have been eliminated in recent years due to budgetary constraints. **Canada has discontinued all of their DIT programs**. The current Coho CWT indicator stocks for each MU and the brood years with DIT groups are listed in **ToDo**. The tag codes used to represent each MU in the MSM for catch years 1986-1997 are listed in **Appendix B**. All DIT groups released to date for each MU are listed in **Appendix C**.
+Most MUs in the U.S. have CWT indicator stocks and DIT programs. However, some of the programs have been eliminated in recent years due to budgetary constraints. Canada has discontinued all of their Coho Salmon DIT programs. The current Coho CWT indicator stocks for each MU and the brood years with DIT groups are listed below. The tag codes used to represent each MU in the Mixed-Stock-Model for catch years 1986-1997 are listed in **here**. All DIT groups released to date for each MU are listed in **here**.
 
 **Coded-wire-tag indicator stocks and brood years with single index tag (SIT) and double index tag (DIT) groups for each Coho Management Unit (MU), beginning with brood year 1983. Indicator stocks are hatchery-produced Coho unless specified as "Wild" (Release data downloaded from RMIS 1-10-2023). SIT groups may be either marked or unmarked releases of CWT Coho. DIT groups are marked (adipose-fin clipped) and unmarked pairs of CWT Coho.**
 
 | **Management Unit**               | **Indicator Stock**                   | **Brood Yr SIT**                | **Brood Yr DIT**       |
-|-----------------------------------|:--------------------------------------|:-------------------------------:|:----------------------:|
+|:-----------------------------------|:--------------------------------------|:-------------------------------:|:----------------------:|
 | **Southern B.C. MUs**             |                                       |                                 |                        |
 | Lower Fraser                      | Inch Creek Hatchery                   | 83-95,14-19                     | 96-13                  |
 |                                   | Salmon River (Wild)[^1]               | 84-99,01,03,05-07               | NA                     |
@@ -914,6 +910,11 @@ Most MUs in the U.S. have CWT indicator stocks and DIT programs. However, some o
 [^25]: Beginning BY 1996, all tagged releases were unmarked.
 [^26]: Beginning BY 1995, all tagged releases were unmarked.
 [^27]: Beginning BY 1995, all tagged releases were unmarked.
+
+
+When developing the FRAM base period, the CoTC used wild indicator stocks to represent an MU when the data was available. The figures below summarize all coded-wire-tagged wild Coho Salmon smolts released within the MUs that are currently reported in RMIS. Most of the reported wild stock tagging has occurred in the Grays Harbor, and Queets MUs; followed by Strait of Georgia, Hood Canal, Skagit, and Lower Fraser MUs.  However, no wild stock tagging has been reported in the Lower Fraser since brood year 2007.  Very little wild stock tagging has taken place in the remaining MUs.  
+
+**Total number of wild Coho Salmon smolts caught, tagged, and released by clip status for each Management Unit over brood years 1983 through 2020 (data downloaded from RMIS 9-6-2023).**  
 
 ```{r fig_wild_stock_tagging, fig.height=9, fig.width=8}
 static$releases |> 
@@ -1032,12 +1033,11 @@ static$releases |>
   
 ```
 
+# Performance of Abundance Based Management Regime 
 
-## Multi-MU Assessment
+In an attempt to evaluate the implementation of Abundance Based Management of Coho Salmon stocks of concern under the PST, summaries on abundance categories, exploitation, and forecast performance are provided below.  Catch years summarized include 2004 through 2021 and abundance category and forecast performance summaries are limited to U.S. and Interior Fraser River MUs.
 
-In an attempt to evaluate the implementation of Abundance Based Management of Coho Salmon stocks of concern under the PST, summaries on abundance categories, exploitation, and forecast performance are provided below.  Catch years summarized include 2004 through 2021 and abundance category and forecast performance summaries are limited to U.S. and Interior Fraser River MUs.  
-
-### Abundance Overview (placeholder table)
+## Abundance Overview (placeholder table)
 
 
 
