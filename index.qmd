@@ -948,6 +948,10 @@ static$releases |>
   
 ```
 
+When developing the FRAM base period, the CoTC used wild indicator stocks to represent an MU when the data was available. The figures below summarize all coded-wire-tagged wild Coho Salmon smolts released within the MUs that are currently reported in RMIS. Most of the reported wild stock tagging has occurred in the Grays Harbor, and Queets MUs; followed by Strait of Georgia, Hood Canal, Skagit, and Lower Fraser MUs.  However, no wild stock tagging has been reported in the Lower Fraser since brood year 2007.  Very little wild stock tagging has taken place in the remaining MUs.
+
+**Total number of wild Coho Salmon smolts caught, tagged, and released by clip status for each Management Unit over brood years 1983 through 2020 (data downloaded from RMIS 9-6-2023).**
+
 ```{r fig_hatch_stock_releases_all_cwt_only}
 static$releases |> 
   filter(
