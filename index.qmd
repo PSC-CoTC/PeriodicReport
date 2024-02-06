@@ -361,25 +361,19 @@ tibble(
 
 
 
-The objective of the SCMP, as described in the Treaty, is to manage the fisheries impact on Southern coho stocks by limiting the total fishery exploitation and allow the different MUs to produce long-term Maximum Sustainable Harvest (MSH), while maintaining the genetic and ecological diversity of the individual populations. In addition, the plan is designed to improve the prospect of sustaining healthy fisheries for both parties over the long-term. The plan is intended to be cost-effective and flexible to available technical capacity and information, while providing a predictable framework for planning fisheries impacts and allowing for objective monitoring, evaluation and modification.
+The objective of the SCMP, as described in the Treaty, is to manage the fisheries impact on Southern Coho stocks by limiting the total fishery exploitation and allow the different MUs to produce long-term Maximum Sustainable Harvest (MSH), while maintaining the genetic and ecological diversity of the individual populations. In addition, the plan is designed to improve the prospect of sustaining healthy fisheries for both parties over the long-term. The plan is intended to be cost-effective and flexible to available technical capacity and information, while providing a predictable framework for planning fisheries impacts and allowing for objective monitoring, evaluation and modification.
 
 Under the Agreement, the Parties are required to establish escapement goals or ERs that achieve MSH, determine MSH ERs for each MU, and establish ERs for each MU and status category (low, moderate, and abundant). Until such time as the Parties provide MU-specific ER targets, the SCMP identified default ER ceilings for the following MU status categories:
 
-<div align="center">
-
-|------------|-----------------------------|
 | **Status** | **Total Exploitation Rate** |
 |:----------:|:---------------------------:|
 |    Low     |          Up to 20%          |
 |  Moderate  |          21% - 40%          |
 |  Abundant  |          41% - 65%          |
-|------------|-----------------------------|
 
-</div>
+Annual ER caps are established for each of the MUs based on the level of abundance and health of the natural stocks. These caps are then apportioned between the Parties. Constraints for Canadian fisheries on U.S. MUs are determined by formulas that specify sharing of allowable ERs as well as a composite rule, which together adjust caps according to the number of U.S. MUs that fall within a given category. The composite rule adjusts constraints for Canadian fishery exploitation rates based on the number of U.S. management units which fall in a given category. For example, if only one Washington coastal or Puget Sound Coho management unit is in low status, Canadian fisheries are constrained to a total exploitation rate on that unit of 12%; if two or more Washington coastal management units are in low status, the constraint becomes 10%. The most restrictive exploitation rate limit for Canadian fishery impacts on U.S. Coho management units is 10%. 
 
-Annual ER caps are established for each of the MUs based on the level of abundance and health of the natural stocks. These caps are then apportioned between the Parties. Constraints for Canadian fisheries on U.S. MUs are determined by formulas that specify sharing of allowable ERs as well as a composite rule, which together adjust caps according to the number of U.S. MUs that fall within a given category. The composite rule adjusts constraints for Canadian fishery exploitation rates based on the number of U.S. management units which fall in a given category. For example, if only one Washington coastal or Puget Sound coho management unit is in low status, Canadian fisheries are constrained to a total exploitation rate on that unit of 12%; if two or more Washington coastal management units are in low status, the constraint becomes 10%. The most restrictive exploitation rate limit for Canadian fishery impacts on U.S. coho management units is 10%. 
-
-Constraints for U.S. fisheries on Canadian MUs depend on the status of the Interior Fraser MU until the biological statuses of the other Canadian MUs have been determined. Canada is currently working to develop the information (smolt to adult survival rates, escapements) needed to apply the status determination method used for the Interior Fraser coho MU to the Lower Fraser and Strait of Georgia MUs. Details as to how exploitation rate constraints are established based on the status of MUs under the SCMP are contained in Annex IV Chapter 5 Section 9.b-c (Canadian exploitation rate caps on inside and outside U.S. MUs) and Section 9.d (U.S. exploitation rate caps on Canadian MUs).
+Constraints for U.S. fisheries on Canadian MUs depend on the status of the Interior Fraser MU until the biological statuses of the other Canadian MUs have been determined. Canada is currently working to develop the information (smolt to adult survival rates, escapements) needed to apply the status determination method used for the Interior Fraser Coho MU to the Lower Fraser and Strait of Georgia MUs. Details as to how exploitation rate constraints are established based on the status of MUs under the SCMP are contained in Annex IV Chapter 5 Section 9.b-c (Canadian exploitation rate caps on inside and outside U.S. MUs) and Section 9.d (U.S. exploitation rate caps on Canadian MUs).
 
 ## Management Unit Overview
 
@@ -413,21 +407,6 @@ tibble(
 
 ```
 
-<div align="center">
-
-|:-----------------:|:-------------:|:--------------:|
-| **Southern BC**   | **US Inside** | **US Outside** |
-|:-----------------:|:-------------:|:--------------:|
-|Interior Fraser    |Skagit         |Quillayute      |
-|Lower Fraser       |Stillaguamish  |Hoh             |
-|Strait of Georgia  |Snohomish      |Queets          |
-|                   |Hood Canal     |Grays Harbor    |
-|                   |US Strait JDF  |                |
-|:-----------------:|:-------------:|:--------------:|
-
-</div>
-
-
 ## Fishery Overview
 
 Under the CoABM regime, each Party is required to regulate its fisheries so as not to exceed exploitation rate (ER) constraints on MUs. Fishery Management Areas for British Columbia (@fig-dfomap), Washington (@fig-wdfwmap), and Oregon (@fig-odfwmap) are shown below.
@@ -458,7 +437,7 @@ Since 2000, fisheries impacting naturally-spawning Coho from southern B.C., Wash
 
 ### U.S. Fisheries
 
-Current U.S. fisheries are constrained by domestic and PST conservation objectives. For the Puget Sound MUs, the 2008 PST Southern Coho Agreement of CoABM uses the thresholds and stepped harvest rate goals from the Comprehensive Coho Agreement [@CCW_1998], developed by Washington State and the Puget Sound tribes, and adopted by the Pacific Fishery Management Council as Fishery Management Plan conservation objectives in November 2009. Actual ER constraints for Canadian fisheries on U.S. Coho MUs are determined by formulas that specify sharing of allowable total ERs and a "composite rule". The composite rule adjusts constraints for Canadian fishery ERs based on the number of U.S. MUs that fall in a given category. For example, if only one Washington coastal Coho MU is in low status, Canadian fisheries are constrained to a total ER on that unit of 12%; if two or more Washington coastal MUs are in low status, the constraint becomes 10%. The most restrictive ER limit for Canadian fishery impacts on U.S. Coho MUs is 10%.
+Current U.S. fisheries are constrained by domestic and PST conservation objectives. For the Puget Sound MUs, the current PST Southern Coho Agreement of CoABM uses the thresholds and stepped harvest rate goals from the Comprehensive Coho Agreement [@CCW_1998], developed by Washington State and the Puget Sound tribes, and adopted by the Pacific Fishery Management Council as Fishery Management Plan conservation objectives in November 2009. Actual ER constraints for Canadian fisheries on U.S. Coho MUs are determined by formulas that specify sharing of allowable total ERs and a "composite rule". The composite rule adjusts constraints for Canadian fishery ERs based on the number of U.S. MUs that fall in a given category. For example, if only one Washington coastal Coho MU is in low status, Canadian fisheries are constrained to a total ER on that unit of 12%; if two or more Washington coastal MUs are in low status, the constraint becomes 10%. The most restrictive ER limit for Canadian fishery impacts on U.S. Coho MUs is 10%.
 
 Fisheries between Cape Falcon, Oregon and the U.S./Canada Border are constrained by four factors: (1) management objectives and treaty Indian obligations for individual stock U.S. MUs; (2) treaty Indian/non-Indian and ocean/in-river sharing agreements; (3) stocks listed under the ESA; and (4) requirements of the PST. The starting point for implementing these constraints is the forecasted January age-3 (JA3) abundance and the modeled ocean distribution of each Coho stock.
 
@@ -540,9 +519,9 @@ In Alaska, there was a strong east–west gradient in run size, with western Ala
 
 # Determination of MU Status Benchmarks and ER Caps
 
-## Canadian Management Units
+## Canadian Management Units  *(this needs to be updated)*
 
-Procedures for determining the pre-season status of Canadian MUs are being developed concurrently with determination of Conservation Unit (CU) status benchmarks required with implementation of the Canada Department of Fisheries and Oceans' (CDFO) Wild Salmon Policy. Methods have been approved through the CDFO's internal peer review process, Center for Scientific Advice - Pacific (CSAP) [@Holt_et_al_2009)**. Completion of benchmark determinations for Southern B.C. Coho MUs is scheduled for CSAP review in 2014.
+Procedures for determining the pre-season status of Canadian MUs are being developed concurrently with determination of Conservation Unit (CU) status benchmarks required with implementation of the Canada Department of Fisheries and Oceans' (CDFO) Wild Salmon Policy. Methods have been approved through the CDFO's internal peer review process, Center for Scientific Advice - Pacific (CSAP) [@Holt_et_al_2009). Completion of benchmark determinations for Southern B.C. Coho MUs is scheduled for CSAP review in 2014.
 
 Since 2002, in the absence of benchmarks, the CDFO Stock Assessment staff has provided a categorical outlook for the next year's salmon status. The [outlook](http://www.pac.dfo-mpo.gc.ca/fm-gp/species-especes/salmon-saumon/index-eng.htm) is intended to provide an objective and consistent context within which to initiate fisheries planning. The category reflects the current interpretation of existing quantitative and qualitative information, including pre-season forecasts if available, and the opinion of CDFO Area stock assessment staff. Where management targets for stocks have not been formally described, interim targets were either based on historical return levels or, if necessary, opinion of local staff.
 
@@ -550,7 +529,9 @@ Canadian Coho Salmon abundance has declined, particularly in southern B.C. Inter
 
 Because of the absence of programs to estimate total abundance and escapement for many Canadian MUs, the bilaterally-developed tool, Backwards Coho FRAM, is relied upon to generate estimates of ocean age-3 cohort abundance and ERs using post-season data. Cohort abundances (catch and escapement) of Canadian MUs, estimated by Backwards Coho FRAM, are depicted in Figure \@ref(fig:BCAbundance). Reduced abundances apparent since 1996 were a major consideration that led to the development of ABM regimes for management of southern Coho Salmon.
 
-```{r BCAbundance, echo = FALSE, fig.cap = "Estimated Ocean Age-3 Abundances of Southern B.C. Coho Salmon Management Units; Catch Years 1986-2020.", eval=FALSE}
+ASK DAN --> why is this figure not working?
+
+```{r BCAbundance, echo = FALSE, fig.cap = "Estimated Ocean Age-3 Abundances of Southern B.C. Coho Salmon Management Units; Catch Years 1986-2021.", eval=TRUE}
 PrePostBC <- openxlsx::read.xlsx("./data/CoTc_Output_File.xlsx", sheet = 3, detectDates = FALSE)
 
 PrePostBC <- tidyr::separate(PrePostBC[,-1], 3, c("Abundance", "Status"), sep = " ")
@@ -610,7 +591,7 @@ Coho Salmon were the first Pacific salmon species for which coast-wide evolution
 
 At the federal level, species of concern do not have formal protection under the ESA. The primary purpose of identifying species of concern is to prevent the need to list them as threatened or endangered under the ESA. This purpose can be achieved by the following actions: (1) identifying species potentially at risk; (2) increasing public awareness about those species; (3) identifying data deficiencies and uncertainties in species' status and threats; (4) stimulating cooperative research efforts to obtain the information necessary to evaluate species' status and threats; and, (5) fostering voluntary efforts to conserve the species before listing becomes warranted.
 
-In 2018, the National Marine Fisheries Service (NMFS) notified the Pacific Fishery Management Council (Council) that the Strait of Juan de Fuca, Queets, and Snohomish natural coho salmon stocks managed under the Council's Pacific Coast Salmon Fishery Management Plan (FMP) met the overfished criteria of the FMP and the Magnuson-Stevens Fishery Conservation and Management Act (MSA). NMFS determined that these stocks were overfished under the MSA, due to spawning escapement falling below the required level for the 3-year period 2014-2016. The MSA requires overfished stocks to be rebuilt, generally within 10 years. The overfished determinations were announced in the Federal Register on August 6, 2018 (83 FR 38292).  In response to the overfished determination, the Council developed rebuilding plans for these stocks and provided them to NMFS in 2019. In 2021, NMFS issued a final rule under the authority of the MSA to approve and implement rebuilding plans recommended by the Council for the three stocks (86 FR 9301; https://www.federalregister.gov/documents/2021/02/12/2021-02834/fisheries-off-west-coast-states-west-coast-salmon-fisheries-rebuilding-coho-salmon-stocks). This final rule adopts the existing harvest control rules, which use an annual abundance-based stepped harvest rate control rule with stock-specific abundance levels governing the total exploitation rates applied to forecast stock abundance levels. For Snohomish natural coho, this final rule amends the existing harvest control rule by adding a 10% buffer to the existing escapement goal and adjusting the abundance steps during the rebuilding period.  For all three coho salmon stocks, the Council's Salmon Technical Team's analysis determined that freshwater and marine habitat conditions were the primary cause of these stocks meeting the FMP's criteria for being overfished rather than fishing.    
+In 2018, the National Marine Fisheries Service (NMFS) notified the Pacific Fishery Management Council (Council) that the Strait of Juan de Fuca, Queets, and Snohomish natural Coho salmon stocks managed under the Council's Pacific Coast Salmon Fishery Management Plan (FMP) met the overfished criteria of the FMP and the Magnuson-Stevens Fishery Conservation and Management Act (MSA). NMFS determined that these stocks were overfished under the MSA, due to spawning escapement falling below the required level for the 3-year period 2014-2016. The MSA requires overfished stocks to be rebuilt, generally within 10 years. The overfished determinations were announced in the Federal Register on August 6, 2018 (83 FR 38292).  In response to the overfished determination, the Council developed rebuilding plans for these stocks and provided them to NMFS in 2019. In 2021, NMFS issued a final rule under the authority of the MSA to approve and implement rebuilding plans recommended by the Council for the three stocks (86 FR 9301; https://www.federalregister.gov/documents/2021/02/12/2021-02834/fisheries-off-west-coast-states-west-coast-salmon-fisheries-rebuilding-Coho-salmon-stocks). This final rule adopts the existing harvest control rules, which use an annual abundance-based stepped harvest rate control rule with stock-specific abundance levels governing the total exploitation rates applied to forecast stock abundance levels. For Snohomish natural Coho, this final rule amends the existing harvest control rule by adding a 10% buffer to the existing escapement goal and adjusting the abundance steps during the rebuilding period.  For all three Coho salmon stocks, the Council's Salmon Technical Team's analysis determined that freshwater and marine habitat conditions were the primary cause of these stocks meeting the FMP's criteria for being overfished rather than fishing.    
 
 ## U.S. Management Units Abundances 
 
@@ -644,9 +625,9 @@ threshold (MFMT), which is based on the maximum sustainable yield exploitation r
 
 - A stock is rebuilt when the most recent 3-year geometric mean spawning escapement exceeds SMSY.
 
-Queets natural coho, Strait of Juan de Fuca natural coho, and Snohomish natural coho salmon stocks were classified as overfished in 2018, and the Council adopted rebuilding plans for these stocks in
-2019 [@PFMC_3_2023]. In 2020, Snohomish natural coho was reported to have met the criteria for not overfishedrebuilding. In 2023, Snohomish natural coho was reported to have met the criteria for rebuilt and
-Strait of Juan de Fuca natural coho was reported to have met the criteria for not overfishedrebuilding. Queets natural coho continue to meet the criteria for overfished. Coho fisheries, particularly north of Cape Falcon, were shaped to minimize impacts on these stocks and meet the objectives of the rebuilding plans. Objectives of the rebuilding plans for Queets natural coho and Strait of Juan de Fuca natural coho are to manage the stock under status quo Smsy. 
+Queets natural Coho, Strait of Juan de Fuca natural Coho, and Snohomish natural Coho salmon stocks were classified as overfished in 2018, and the Council adopted rebuilding plans for these stocks in
+2019 [@PFMC_3_2023]. In 2020, Snohomish natural Coho was reported to have met the criteria for not overfishedrebuilding. In 2023, Snohomish natural Coho was reported to have met the criteria for rebuilt and
+Strait of Juan de Fuca natural Coho was reported to have met the criteria for not overfishedrebuilding. Queets natural Coho continue to meet the criteria for overfished. Coho fisheries, particularly north of Cape Falcon, were shaped to minimize impacts on these stocks and meet the objectives of the rebuilding plans. Objectives of the rebuilding plans for Queets natural Coho and Strait of Juan de Fuca natural Coho are to manage the stock under status quo Smsy. 
 
 ## Annual Determinations of Allowable Exploitation Rates for Management Units
 
@@ -654,21 +635,21 @@ Strait of Juan de Fuca natural coho was reported to have met the criteria for no
 
 The U.S. annual salmon fishery planning process starts in January with a Stock and Fishery Evaluation (SAFE) report on fisheries and escapements from previous years and concludes in early April when preseason fishing plans for US fisheries are developed. Outlined below are the Coho FRAM inputs used within the US domestic process to plan annual Coho fisheries, and postseason data needed to evaluate the preseason plan.
 
-  *Preseason FRAM inputs:
+*Preseason FRAM inputs:*
 
-    +Stocks’ abundance forecasts
-    +Fishery inputs by Coho FRAM time period (e.g., season structure, gear and retention restrictions, quota levels, fishery harvest rate scalars) 
+- Stocks’ abundance forecasts
+- Fishery inputs by Coho FRAM time period (e.g., season structure, gear and retention restrictions, quota levels, fishery harvest rate scalars) 
     
-  *Inseason:
+*Inseason:*
 
-    +FRAM fishery adjustments 
+- FRAM fishery adjustments 
     
-  *Postseason FRAM inputs:
+*Postseason FRAM inputs:*
 
-    +Stocks’ observed escapement
-    +Fisheries’ observed catch and non-retention mortality by FRAM time period
+- Stocks’ observed escapement
+- Fisheries’ observed catch and non-retention mortality by FRAM time period
 
-Because the domestic planning processes of the Parties are not synchronous, a single pre-season command file containing expectations for both Canada and the U.S. is not available prior to the conclusion of the PFMC process (U.S. pre-season fishery planning) in April. The pre-season command file used by the PFMC incorporates cohort abundance for both Canadian and U.S. MUs, but planned fishery regulations for U.S. fisheries only. Unless other information is available, Canadian regulations are assumed to be similar to those implemented in the previous year. Subsequent to this process, additional command files are generated to represent the actual Canadian fishing plans. Command files used in pre-season planning from 2004 to 2020 are detailed in Table 2.1. These files contain specific information used at the time to model fisheries along with the pre-season forecasts of stock abundances.
+Because the domestic planning processes of the Parties are not synchronous, a single pre-season command file containing expectations for both Canada and the U.S. is not available prior to the conclusion of the PFMC process (U.S. pre-season fishery planning) in April. The pre-season command file used by the PFMC incorporates cohort abundance for both Canadian and U.S. MUs, but planned fishery regulations for U.S. fisheries only. Unless other information is available, Canadian regulations are assumed to be similar to those implemented in the previous year. Subsequent to this process, additional command files are generated to represent the actual Canadian fishing plans. Command files used in pre-season planning from 2004 to 2023 are detailed in **Table X**. These files contain specific information used at the time to model fisheries along with the pre-season forecasts of stock abundances.
 
 ### U.S. Preseason Abundance Forecasts
 
@@ -676,7 +657,7 @@ The U.S. forecast development commences in January of every year. U.S. Forecasts
 
 The forecast methodologies for many U.S. stocks’ are generally based upon the products of two estimates specific to each production source: 1) number of smolts leaving freshwaters; and, 2) expected regional marine survival rates. Numbers of naturally produced smolts are estimated in a variety of ways but are based upon a large and widely distributed system of smolt traps. The number of smolts released from hatcheries are known. Marine survival is defined as, and calculated from, catch plus escapement from CWT data. Sibling relationships, between jack returns and subsequent return to the mature cohort, have also been used as an index to predict marine survival. Environmental conditions have been increasingly relied upon as predictors of anticipated survival from smolt to adults entering the fisheries.
 
-In recent years, a variety of preseason abundance estimators have been employed for Puget Sound and Washington coastal Coho stocks, primarily based on smolt production and survival [@PFMC_1_2023]. These estimators are used to forecast preseason abundance of adult Ocean Age 3 recruits. Forecasts for natural Puget Sound coho stocks were generally derived by measured or predicted smolt production from each major watershed or region, multiplied by stock-specific marine survival rate predictions based on a jack return model from the WDFW Big Beef Creek Research Station in Hood Canal, natural coho CWT tagging programs at Baker Lake (Skagit River basin) and South Fork Skykomish River, adult recruits/smolt data generated from the WDFW Deschutes River Research Station, or other information.
+In recent years, a variety of preseason abundance estimators have been employed for Puget Sound and Washington coastal Coho stocks, primarily based on smolt production and survival [@PFMC_1_2023]. These estimators are used to forecast preseason abundance of adult Ocean Age 3 recruits. Forecasts for natural Puget Sound Coho stocks were generally derived by measured or predicted smolt production from each major watershed or region, multiplied by stock-specific marine survival rate predictions based on a jack return model from the WDFW Big Beef Creek Research Station in Hood Canal, natural Coho CWT tagging programs at Baker Lake (Skagit River basin) and South Fork Skykomish River, adult recruits/smolt data generated from the WDFW Deschutes River Research Station, or other information.
 
 ### Development of U.S. Preseason FRAM Inputs
 U.S. fishery planning relies upon both the Coho and Chinook FRAM models. The process starts at the early March PFMC meeting, proceeds through March at a variety of regional meetings (including the NOF meetings), and concludes in early/mid April at the next PFMC meeting.
@@ -693,7 +674,7 @@ Expected fishery catch and/or mortality is the other major category of preseason
 
 During the course of March and early April US meetings, the North of Falcon (NOF) domestic planning refines fishery inputs to insure compliance with various agreements. These include the PFMC Salmon Framework Plan, domestic and international treaties; and the US Endangered Species Act which collectively establish constraints on fishery impacts upon US Coho and Chinook stocks.
 
-For the PFMC ocean fisheries the model inputs are Catch Quotas and regulations such as mark-selective fisheries, with the expectation that subsequent inseason monitoring will close fisheries without exceeding quotas. The model inputs for most sport and commercial US Puget Sound marine and terminal area fisheries are expected catch or expected harvest rates, generally based upon recent year averages and anticipated fisheries for Fraser sockeye, pink and chum salmon, and regulations such as mark selective fishing. In some cases the Catch Quota management approach is also used within Puget Sound with planned fishery closure as inseason observations indicate FRAM total fishery mortality estimates are being approached. The mortality associated with Coho non-retention is another class of fishery inputs.
+For the PFMC ocean fisheries the model inputs are Catch Quotas and regulations such as mark-selective fisheries, with the expectation that subsequent inseason monitoring will close fisheries without exceeding quotas. The model inputs for most sport and commercial US Puget Sound marine and terminal area fisheries are expected catch or expected harvest rates, generally based upon recent year averages and anticipated fisheries for Fraser Sockeye, Pink and Chum Salmon, and regulations such as mark selective fishing. In some cases the Catch Quota management approach is also used within Puget Sound with planned fishery closure as inseason observations indicate FRAM total fishery mortality estimates are being approached. The mortality associated with Coho non-retention is another class of fishery inputs.
 
 Through the month of March the NOF meetings shape inside fisheries (Washington Coastal terminal, Puget Sound marine and freshwater) for both Coho and Chinook for compliance with domestic and international requirements. The NOF planning informs the April PFMC meeting toward the development of the final set of ocean, inside, and terminal fisheries. The FRAM modeling results of the final adopted regulations for ocean fisheries are published in the PFMC Pre III Report, and submitted to the US Department of Commerce for confirmation of compliance with the US Endangered Species Act and other domestic obligations. Inside fisheries are formalized by regional agreements by state and tribal managers. There is virtually no ability to modify the regulations and agreements after they are adopted.
 
@@ -705,14 +686,12 @@ Inseason changes to planned U.S fisheries are limited, but have been implemented
 
 ### U.S. Management Units 2023 Exploitation Rate Constraints
 
-For 2023, Puget Sound and Washington coast coho constraints are as follows [@PFMC_3_2023]:
-
-
+For 2023, Puget Sound and Washington coast Coho Salmon constraints are as follows [@PFMC_3_2023]:
 
 **Fishery Management Plan (FMP)**
 
 |**FMP Stock** | **Total Exploitation Rate Constraint** | **Categorical Status** |
-|:-------------| --------------------------------------:|:----------------------:| 
+|:-------------|:--------------------------------------:|:----------------------:| 
 | Skagit | 35% | Low |
 | Stillaguamish | 50% | Normal | 
 | Snohomish | 40% | Low | 
@@ -726,7 +705,7 @@ For 2023, Puget Sound and Washington coast coho constraints are as follows [@PFM
 **PST Southern Coho Management Plan**
 
 |**U.S. Management Unit**|**Total Exploitation Rate Constraint**|**Categorical Status**|
-|:-----------------------| ------------------------------------:|:--------------------:| 
+|:-----------------------|:------------------------------------:|:--------------------:| 
 | Skagit | 35% | Moderate | 
 | Stillaguamish | 50% | Abundant | 
 | Snohomish | 40% | Moderate | 
@@ -747,38 +726,38 @@ Grays Harbor constraints are based on projected natural area spawners (wild plus
 
 Key considerations for Canadian fishery management for Coho in 2023 are expected to include:
 
-1) meeting domestic conservation obligations for Interior Fraser (including Thompson River) coho; 
-2) coho harvests by First Nations fisheries; 
-3) incidental impacts during commercial and First Nations fisheries directed atChinook, chum, and especially Fraser sockeye salmon which will see a dominant late run return in 2023 [@PFMC_3_2023].
+1) meeting domestic conservation obligations for Interior Fraser (including Thompson River) Coho; 
+2) Coho harvests by First Nations fisheries; 
+3) incidental impacts during commercial and First Nations fisheries directed atChinook, chum, and especially Fraser Sockeye salmon which will see a dominant late run return in 2023 [@PFMC_3_2023].
 
-The Canadian fishery regimes affecting coho are expected to be driven by Canadian domestic allowable impacts on the Thompson River component of the Interior Fraser management unit, Fraser Chinook
-concerns and Fraser sockeye stocks of concern co-migrating with the late run. In years prior to 2014, Canadian fisheries were managed so as not to exceed a three percent maximum exploitation rate. In May 2014, Canada decided to permit up to a 16 percent exploitation rate on upper Fraser coho in Canadian fisheries to allow for impacts in fisheries directed at a record Fraser sockeye forecast. Since 2015, upper Fraser coho in Canadian fisheries have been managed per low status limitations. The projected status of Canadian coho management units in 2023 indicates continuing concerns for the condition of Interior Fraser coho. The Interior Fraser coho management unit is anticipated to remain in low abundance status, resulting in a requirement to constrain the total mortality fishery exploitation rate for 2023 Southern U.S. fisheries to a maximum of 10.0%.
+The Canadian fishery regimes affecting Coho are expected to be driven by Canadian domestic allowable impacts on the Thompson River component of the Interior Fraser management unit, Fraser Chinook
+concerns and Fraser Sockeye stocks of concern co-migrating with the late run. In years prior to 2014, Canadian fisheries were managed so as not to exceed a three percent maximum exploitation rate. In May 2014, Canada decided to permit up to a 16 percent exploitation rate on upper Fraser Coho in Canadian fisheries to allow for impacts in fisheries directed at a record Fraser Sockeye Salmon forecast. Since 2015, upper Fraser Coho in Canadian fisheries have been managed per low status limitations. The projected status of Canadian Coho management units in 2023 indicates continuing concerns for the condition of Interior Fraser Coho. The Interior Fraser Coho management unit is anticipated to remain in low abundance status, resulting in a requirement to constrain the total mortality fishery exploitation rate for 2023 Southern U.S. fisheries to a maximum of 10.0%.
 
 ## Canadian Fishery Planning Process
 
 Annual Canadian fisheries are planned using a combination of two domestic models (marine fisheries and freshwater decay models) and tools focused upon Interior Fraser River (IFR) Coho. The planning process starts early in the year. A draft Integrated Salmon Fishery Management Plan (IFMP) is available for stakeholder comment in April, but the IFMP is not finalized until formally approved by the Fisheries Minister in June.
 
-In the domestic process, initial planning scenarios are developed based on discussions with Fishery Managers, preliminary salmon outlook for stock status (prepared in November of previous year), effort expectation (targeted or incidental impact on IFR coho) given ER constraints, and domestic allocation policy. Once stock abundance forecasts are available in March and timing and diversion forecasts for Fraser sockeye are available in June, the final Salmon IFMP is submitted to the Minister for approval. The Canadian domestic model does not use coho abundance forecasts directly, relying instead upon past relationships between fisheries’ effort and IFR ER, to estimate preseason projected ER for IFR. Depending on what species or fishery specific objectives are in place for the upcoming season, the domestic model is populated with anticipated effort based on trends in recent years and scaled to base period (1986–1997) effort. Multiple scenarios are run based on adjusting preliminary fishing plans (species, effort, month, gear, regulations) and results are reviewed by Fisheries Managers and evaluated for multiple objectives, in particular, meeting the preseason ER objectives for IFR coho.
+In the domestic process, initial planning scenarios are developed based on discussions with Fishery Managers, preliminary salmon outlook for stock status (prepared in November of previous year), effort expectation (targeted or incidental impact on IFR Coho) given ER constraints, and domestic allocation policy. Once stock abundance forecasts are available in March and timing and diversion forecasts for Fraser Sockeye are available in June, the final Salmon IFMP is submitted to the Minister for approval. The Canadian domestic model does not use Coho abundance forecasts directly, relying instead upon past relationships between fisheries’ effort and IFR ER, to estimate preseason projected ER for IFR. Depending on what species or fishery specific objectives are in place for the upcoming season, the domestic model is populated with anticipated effort based on trends in recent years and scaled to base period (1986–1997) effort. Multiple scenarios are run based on adjusting preliminary fishing plans (species, effort, month, gear, regulations) and results are reviewed by Fisheries Managers and evaluated for multiple objectives, in particular, meeting the preseason ER objectives for IFR Coho.
 
 ### Development of Canadian Preseason Coho FRAM Inputs
 
 The U.S. preseason Coho FRAM modeling requires Canadian inputs to complete the model for the U.S. domestic planning and this also enables the pre to post season Coho FRAM evaluation of both Parties’ fisheries. The Canadian data used to inform Coho FRAM for annual U.S. preseason planning and joint postseason evaluation are outlined below:
 
-  *Preseason:*
+*Preseason:*
 
-    - Stocks’ abundance forecasts, or;
-    - Regional expected marine survival rates, based on CWT indicator stocks;
-    - FRAM fishery scalars by coho FRAM time period from postseason analysis of a fishery plan similar to anticipated fishing patterns 
+- Stocks’ abundance forecasts, or;
+- Regional expected marine survival rates, based on CWT indicator stocks;
+- FRAM fishery scalars by Coho FRAM time period from postseason analysis of a fishery plan similar to anticipated fishing patterns 
     
-  *Inseason:*
+*Inseason:*
 
-    - FRAM fishery adjustments or significant deviations in expected abundance / catch
+- FRAM fishery adjustments or significant deviations in expected abundance / catch
     
-  *Postseason:*
+*Postseason:*
 
-    - Stocks’ observed escapement, or;
-    - Regional observed marine survival rates;
-    - Fisheries’ observed catch by FRAM time period
+- Stocks’ observed escapement, or;
+- Regional observed marine survival rates;
+- Fisheries’ observed catch by FRAM time period
 
 **Canadian FRAM Stock Abundance Inputs:**
 U.S. FRAM preseason modeling requires forecasts of Canadian stocks. Forecast development commences every year in early March, and is provided to US FRAM modelers in mid to late March for use at the second NOF meeting, prior to the April PFMC meeting.
@@ -792,19 +771,19 @@ To obtain these values Canadian forecast methodology uses the following informat
   5) Base Period marine survival
   6) Base Period FRAM stock abundance values
 
-Estimates of freshwater production (smolt out-migrants) for hatchery produced Coho, by FRAM production region, are scaled to Base Period production. Next the annual expected regional marine survival (MS) is scaled to Base Period marine survival. Both ratios are applied to a stock’s Base Period Abundance to produce the annual adult abundance forecasts. To illustrate (by stock):
+Estimates of freshwater production (smolt out-migrants) for hatchery produced Coho, by FRAM production region, are scaled to Base Period production. Next the annual expected regional marine survival (MS) is scaled to Base Period marine survival. Both ratios are applied to a stock’s Base Period Abundance to produce the annual adult abundance forecasts. To illustrate (*by stock*):
 
-  (Annual H Smolts) / (Base H Smolts) X (Expected MS) / (Base MS) X Base Adult Abundance = Adult H Abundance
+ Adult H Abundance = (*Annual H Smolts*) / (*Base H Smolts*) X (*Expected MS*) / (*Base MS*) X (*Base Adult Abundance)
 
 Hatchery smolt data are obtained from the Canadian Salmon Enhancement Program. Where naturally produced smolt out-migrant estimates exists (2 of 14 Canadian production regions), the values are used. For the production regions where naturally produced smolt data are not available (the remaining 12 of 14 Canadian production regions), the default production starting values has been the same as the annual hatchery output for the same FRAM production region, assuming similar smolt abundance trends between naturally produced and hatchery smolts. As hatchery production has been reduced over time it has become necessary to find other means to obtain the surrogates for naturally produced smolt production.
 
-Marine survival expectations have been based upon hatchery and wild indicator CWT returns. As the number of coho indicators has been reduced over time it has become necessary to use adjacent MU indicators to estimate marine survival for some MUs and use hatchery indicators to estimate survival of naturally spawning Coho.
+Marine survival expectations have been based upon hatchery and wild indicator CWT returns. As the number of Coho indicators has been reduced over time it has become necessary to use adjacent MU indicators to estimate marine survival for some MUs and use hatchery indicators to estimate survival of naturally spawning Coho.
 
-For IFR, where naturally produced smolt output is not available, the forecasted adult returns are used as inputs to Coho FRAM. This forecast is based on a naive model, usually an average of the previous three years estimated ocean adult abundance. However, the forecast may be “as observed last year” when it appears a longer term average is not appropriate; this was the case for the 2016 fishing year forecast. Several U.S. 2016 forecasts also used the “as observed last year” approach due to the extremely poor returns in 2015 and the observations that those same poor environmental conditions existed for the smolts entering the ocean in 2015 (i.e. the 2016 adults).
+For IFR, where naturally produced smolt output is not available, the forecasted adult returns are used as inputs to Coho FRAM. This forecast is based on a naive model, usually an average of the previous three years estimated ocean adult abundance. However, the forecast may be “as observed last year” when it appears a longer term average is not appropriate; this was the case for the 2016 fishing year forecast. Several U.S. 2016 forecasts also used the “as observed last year” approach due to the extremely poor returns in 2015 and the observations that those same poor environmental conditions existed for the smolts entering the ocean in 2015 (i.e., the 2016 adults).
 
 **Canadian FRAM Fishery Inputs:**
 
-Preseason FRAM’s anticipated fishery related mortality for Canadian Coho retention fisheries is modeled using Fishery Scalars (these Scalars essentially function as a harvest rate within the FRAM) taken from postseason Coho FRAM model runs with similar fishery plans and effort. For example, impacts of the Fraser River sockeye directed fisheries may be estimated from 4 years previous. The Fraser River pink directed fishery impacts are estimated from the fisheries 2 year previous. The impacts from the Chinook troll fishery are based on a year with a similar Chinook harvest guidelines. The mortality associated with Coho non-retention regulation is another class of fishery inputs, also taken from previous postseason FRAM model runs under the assumption of similar fishery plans and effort, and similar Coho abundance levels.
+Preseason FRAM’s anticipated fishery related mortality for Canadian Coho retention fisheries is modeled using Fishery Scalars (these Scalars essentially function as a harvest rate within the FRAM) taken from postseason Coho FRAM model runs with similar fishery plans and effort. For example, impacts of the Fraser River Sockeye directed fisheries may be estimated from 4 years previous. The Fraser River pink directed fishery impacts are estimated from the fisheries 2 year previous. The impacts from the Chinook troll fishery are based on a year with a similar Chinook harvest guidelines. The mortality associated with Coho non-retention regulation is another class of fishery inputs, also taken from previous postseason FRAM model runs under the assumption of similar fishery plans and effort, and similar Coho abundance levels.
 
 ### Canadian Inseason Management
 
@@ -812,7 +791,7 @@ Canadian fishery planning process generally concludes in June, with the fisherie
 
 ### 2023 Preseason Forecasts and MU Status  (Placeholder)
 
-* does the SP wish us to describe forecasts for the year we have not assessed post-season?*  
+*does the Southern Panel wish us to describe forecasts for the year we have not assessed post-season?*  
 
 ## Joint Canadian and U.S. Postseason Evaluations
 
@@ -822,13 +801,13 @@ Backwards Coho FRAM requires estimated mortalities by fishery strata (uses the B
 
 The Backwards Coho FRAM derives total cohort abundance of Coho FRAM stocks through an iterative process of estimating the set of stock abundance scalars that best explain observed escapements and reported catches. FRAM calculation of stock abundance scalars is the preferred method and occurs when escapement data are available (almost all US stocks). When escapement estimates are not available (almost all Canadian stocks), the stock abundance scalars are calculated externally and entered into FRAM; an estimate of “observed” marine survival has been used as a surrogate to recalculate Canadian stock abundances per the preseason method previously described. Consequently, FRAM’s iterative process of estimating a full set of stock abundance scalars is not possible and this has implications for backwards FRAM estimates of abundance for all stocks. Ideally total cohort abundance for each MU is derived by summing model estimated stock specific: pre-terminal catch, terminal catch, and escapement.
 
-The Backwards Coho FRAM provides two estimates of cohort abundance, termed “Ocean age-3” and “January age-3”. Ocean age-3 abundance includes escapement and fishery impacts. January age-3 includes escapement, fishery impacts, and natural mortality. Ocean age-3 is the basis for Pacific Salmon Treaty stock status and is therefore the measure provided in the tables and figures in the Management Unit Status section the Periodic Report, and in the annual postseason evaluations.
+The Backwards Coho FRAM provides two estimates of cohort abundance, termed “Ocean age-3” and “January age-3”. Ocean age-3 abundance includes escapement and fishery impacts. January age-3 includes escapement, fishery impacts, and natural mortality. Ocean age-3 is the basis for Pacific Salmon Treaty stock status and is therefore the measure provided in the tables and figures in this report, and in the annual postseason evaluations.
 
 These estimates of cohort abundance, catches and escapements are used to generate estimates of ERs and determine MU status for post season reporting to the Southern Panel.
 
 # Performance of Abundance Based Management Regime 
 
-The summaries found within this focus on catch years beginning with 2010 through the year with the most recent ER evaluation.  However, some summaries begin with catch year 2004.
+The summaries within this report focus on catch years 2010 though the year with the most recent ER evaluation.  However, some summaries begin with catch year 2004.
 
 ## Overview of Coded Wire Tag Use
 
@@ -1059,6 +1038,8 @@ static$releases |>
 In an attempt to evaluate the implementation of Abundance Based Management of Coho Salmon stocks of concern under the PST, summaries on abundance categories, exploitation, and forecast performance are provided below.  Catch years summarized include 2004 through 2021 and abundance category and forecast performance summaries are limited to U.S. and Interior Fraser River MUs.  
 
 ### Abundance Overview (placeholder table)
+
+
 
 ```{r gt_annual_abund}
 psc |> 
@@ -1431,7 +1412,7 @@ swifd |>
 
 *CCT: this is canned language used in all of the MUs.  should we include real data here - like fishery sample rates on fisheries that impact this stock?*
 
-*DA: I think canned/uniform langauge around pre-term mixed stock monitoring, i.e. PSSP, belongs ahead of individual MUs, but terminal/freshwater creel can/should go here...and/but that requires either writing it or pulling from multi-year coho-centric MSF-monitoring report generated by Ty for NOF22*
+*DA: I think canned/uniform langauge around pre-term mixed stock monitoring, i.e. PSSP, belongs ahead of individual MUs, but terminal/freshwater creel can/should go here...and/but that requires either writing it or pulling from multi-year Coho-centric MSF-monitoring report generated by Ty for NOF22*
 
 A fundamental requirement of abundance-based Coho Salmon management under the PST is that all fishery impacts on individual MUs be annually monitored with respect to both number of fish caught and CWTs. This requires basic reporting of total impacts by fishery and the capacity to estimate each fishery’s MU-specific impacts. Total fishing mortalities for each MU must be estimated to enable managers the ability to evaluate the annual exploitation rate relative to the PST-prescribed impact limits.
 
@@ -1570,7 +1551,7 @@ Marine survival rates of wild Coho stocks have been measured using wild CWT indi
 add table or figure of outmigrating smolts
 
 **2023 Forecast**
-Regressing annual coho smolt trap CPUE (total fish/total hours fished) against terminal run size one year later generates a relationship that could be used to predict Stillaguamish adult returns [@PFMC_1_2023]. However, due to the high variability in marine survival (MS), coho smolt numbers at the trap are not a very precise predictor of adult returns one year later. Therefore, the Stillaguamish smolt trap CPUE was corrected with the SF Skykomish MS estimate for each brood and log transformed the data, which tightened the regression relationship with the terminal run. The natural coho marine survival rate is estimated at 5.7%, based on recent 5-year SF Skykomish marine survival estimates. Due to consecutive years of low returns, discussion with the co-managers concluded that a marine survival of 5.7% is most risk-averse for harvest management purposes.
+Regressing annual Coho smolt trap CPUE (total fish/total hours fished) against terminal run size one year later generates a relationship that could be used to predict Stillaguamish adult returns [@PFMC_1_2023]. However, due to the high variability in marine survival (MS), Coho smolt numbers at the trap are not a very precise predictor of adult returns one year later. Therefore, the Stillaguamish smolt trap CPUE was corrected with the SF Skykomish MS estimate for each brood and log transformed the data, which tightened the regression relationship with the terminal run. The natural Coho marine survival rate is estimated at 5.7%, based on recent 5-year SF Skykomish marine survival estimates. Due to consecutive years of low returns, discussion with the co-managers concluded that a marine survival of 5.7% is most risk-averse for harvest management purposes.
 
 The 2023 Stillaguamish natural Ocean Age 3 (OA3) abundance forecast is 30,238, compared to the 2022 preseason forecast of 24,892. This forecast classifies the stock abundance as "Abundant" under the 2019 PST Southern Coho Management Plan and “Normal” under the FMP. This results in an allowable total exploitation rate of no more than 50% under both the Council-adopted exploitation rate matrix and the 2019 PST Southern Coho Management Plan.
 
@@ -1680,7 +1661,7 @@ The current PST/Council exploitation rate ceilings for the Snohomish MU natural 
 | Abundant/Normal	   |	> 125,000       |	41% – 60% |
 
 
-Queets River natural coho, Strait of Juan de Fuca natural coho, and Snohomish River natural coho were found to meet the criteria for being classified as overfished in the PFMC Review of 2017 Ocean Salmon Fisheries, released in February 2018. Snohomish natural Coho Salmon now meet the criteria for rebuilt status based on the most recent three-year geometric mean of escapement estimates (2019-2021) [@PFMC_3_2023].
+Queets River natural Coho, Strait of Juan de Fuca natural Coho, and Snohomish River natural Coho were found to meet the criteria for being classified as overfished in the PFMC Review of 2017 Ocean Salmon Fisheries, released in February 2018. Snohomish natural Coho Salmon now meet the criteria for rebuilt status based on the most recent three-year geometric mean of escapement estimates (2019-2021) [@PFMC_3_2023].
 
 ##### Stock Assessment
 Since 1996, WDFW and tribal biologists have developed forecasts of wild Coho run size for all primary and most secondary management units in Puget Sound and the Washington coast (Seiler 1996, Zimmerman 2011).  These annual forecasts are described in the Pacific Fishery Management Council’s Preseason Forecast I document each February (PFMC 2012; www.pcouncil.org).  These forecasts rely on estimates of wild Coho production (i.e., smolts) paired with estimates of marine survival.  Wild Coho production estimates for each of the primary and secondary management units in Puget Sound were derived from results of juvenile trapping studies conducted in the Skagit, Stillaguamish, Snohomish, Green, Nisqually, and Deschutes rivers as well as in tributaries to Lake Washington and Hood Canal.  Analysis of these long-term data sets have demonstrated that wild Coho smolt production is limited by a combination of factors including seeding levels (i.e., escapement), environmental effects (flows, marine derived nutrients), and habitat degradation (Zimmerman 2012). 
@@ -1712,7 +1693,7 @@ Estimated smolt production has averaged approximately 1.27 million smolts annual
 **2023 Forecast**
 The natural forecast is based on production of 2022 out-migrant smolts estimated from a mark-recapture estimate of smolt abundance from two smolt traps, one operated on the Skykomish River (river mile 26.5)
 and the second on the Snoqualmie River (river mile 12.2) [@PFMC_1_2023]. The 2022 out-migrant smolt estimate for the Skykomish trap is based on the recent (four year) average percent production in the Snoqualmie relative
-to the Skykomish. Smolt trap estimates for the Skykomish and Snoqualmie rivers are summed and further expanded for rearing downstream of the trap locations in the Snohomish River. A marine survival rate of 5.4%, the average marine survival for brood year 2016-2017 Snohomish smolt coho, was applied to the total smolt production estimate for the Snohomish watershed of 1,417,000 smolts. The resulting forecast was rounded to the nearest hundred to account for co-manager agreed-to precision.
+to the Skykomish. Smolt trap estimates for the Skykomish and Snoqualmie rivers are summed and further expanded for rearing downstream of the trap locations in the Snohomish River. A marine survival rate of 5.4%, the average marine survival for brood year 2016-2017 Snohomish smolt Coho, was applied to the total smolt production estimate for the Snohomish watershed of 1,417,000 smolts. The resulting forecast was rounded to the nearest hundred to account for co-manager agreed-to precision.
 
 The 2023 Snohomish natural Ocean Age 3 (OA3) abundance forecast is 76,500, compared to the 2022 preseason forecast of 64,200. This forecast classifies the stock abundance as "Moderate" under the 2019 PST Southern Coho Management Plan and “Low” under the FMP. This results in an allowable total exploitation rate of no more than 40% under both the Council-adopted exploitation rate matrix and the 2019 PST Southern Coho Management Plan.
 
@@ -1724,7 +1705,7 @@ The 2023 Snohomish natural Ocean Age 3 (OA3) abundance forecast is 76,500, compa
 
 ##### Enhancement
 
-Hatchery production within the Snohomish MU is much larger than the Skagit and Stillaguamish MUs, averaging 1.5 million Coho released annually over brood years 1983 to 2020. Most of the production is from the Bernie Kai-Kai Gobin Hatchery (822,000 annually; 54% of total hatchery releases) and the Wallace River Hatchery (581,000 annually; 38% of total hatchery releases), both of which are located within the Snohomish Basin (Figure x). The Bernie Kai-Kai Gobin Hatchery opened in 1983 and is located at the juncture of the east and west Forks of Tulalip Creek and is operated by the Tulalip Tribes (Tulalip Tribes 2004). This coho program is an isolated program and the purpose of this program is to provide coho salmon for harvest by Tulalip Tribal members in a terminal area fishery. Production from this program is also available for harvest by the non- Indian sport fishery and contributes to other directed and incidental harvest of coho salmon in other preterminal fisheries. The Wallace River Hatchery is located at RM 4 on the Wallace River (07.0940) at the confluence with May Creek (07.0943) and is operated by WDFW (WDFW 2003). Salmonids have been reared at the Wallace River site since 1907. The current Wallace River Hatchery Coho program is an integrated program with the goal of providing fish for harvest opportunity (WDFW 2003). Adults are collected at the following two collection facilities: 1) an instream trap located on May Creek; and 2) with the use of a weir placed across the Wallace River from June until October 1st.
+Hatchery production within the Snohomish MU is much larger than the Skagit and Stillaguamish MUs, averaging 1.5 million Coho released annually over brood years 1983 to 2020. Most of the production is from the Bernie Kai-Kai Gobin Hatchery (822,000 annually; 54% of total hatchery releases) and the Wallace River Hatchery (581,000 annually; 38% of total hatchery releases), both of which are located within the Snohomish Basin (Figure x). The Bernie Kai-Kai Gobin Hatchery opened in 1983 and is located at the juncture of the east and west Forks of Tulalip Creek and is operated by the Tulalip Tribes (Tulalip Tribes 2004). This Coho program is an isolated program and the purpose of this program is to provide Coho salmon for harvest by Tulalip Tribal members in a terminal area fishery. Production from this program is also available for harvest by the non- Indian sport fishery and contributes to other directed and incidental harvest of Coho salmon in other preterminal fisheries. The Wallace River Hatchery is located at RM 4 on the Wallace River (07.0940) at the confluence with May Creek (07.0943) and is operated by WDFW (WDFW 2003). Salmonids have been reared at the Wallace River site since 1907. The current Wallace River Hatchery Coho program is an integrated program with the goal of providing fish for harvest opportunity (WDFW 2003). Adults are collected at the following two collection facilities: 1) an instream trap located on May Creek; and 2) with the use of a weir placed across the Wallace River from June until October 1st.
 
 Mass marking within the MU began with the 1996 brood and has averaged 738,000 marked fish released annually through brood 2020.
 
@@ -1781,7 +1762,7 @@ A number of salmon hatchery facilities exist within the Hood Canal MU and listed
 
 - Little Boston Hatchery is a fall Chum Salmon hatchery program located at the mouth of Little Boston Creek on Port Gamble Bay and is operated by the Port Gamble S’Klallam Tribe. The hatchery is an isolated harvest program to support local fall Chum Salmon fishing opportunities. This program enhances the stability and viability of treaty and non-treaty fisheries. Up to 1300 adult Chum Salmon are collected each fall in order to release 950,000 fry during the following spring.
 
-- The Port Gamble Net Pens are anchored at the northern end of Port Gamble Bay (commercial MMA 9A) in northern Hood Canal. This is a cooperative effort with the Washington Department of Fish and Wildlife and U.S. Fish and Wildlife Service. The net pens are operated by the Port Gamble S’Klallam Tribe and began releasing Coho smolts in 1981 [@Port_Gamble_SKlallam_Tribe_2003]. Eggs are collected from QNFH broodstock and transferred to George Adams Hatchery where they are hatched and the fry are reared to smolts before transfer to the Port Gamble Net Pens. The Port Gamble S’Klallam Tribe operates and maintains the net pens, and fish food is provided by WDFW. Around 425,000 yearling coho salmon are released each year after April 15. The program is intended to be an isolated harvest program and the production goal is to release 400,000 Coho smolts annually. *update new release goals due to SRKW increases here*
+- The Port Gamble Net Pens are anchored at the northern end of Port Gamble Bay (commercial MMA 9A) in northern Hood Canal. This is a cooperative effort with the Washington Department of Fish and Wildlife and U.S. Fish and Wildlife Service. The net pens are operated by the Port Gamble S’Klallam Tribe and began releasing Coho smolts in 1981 [@Port_Gamble_SKlallam_Tribe_2003]. Eggs are collected from QNFH broodstock and transferred to George Adams Hatchery where they are hatched and the fry are reared to smolts before transfer to the Port Gamble Net Pens. The Port Gamble S’Klallam Tribe operates and maintains the net pens, and fish food is provided by WDFW. Around 425,000 yearling Coho salmon are released each year after April 15. The program is intended to be an isolated harvest program and the production goal is to release 400,000 Coho smolts annually. *update new release goals due to SRKW increases here*
 
 - The newest hatcheries within the Canal include Saltwater Park Sockeye Hatchery and the North Fork Salmon Hatchery. 
 
@@ -1810,7 +1791,7 @@ The current PST/Council exploitation rate ceilings for the Hood Canal MU natural
 | Abundant/Normal	   |	> 41,000	|	46% – 65% |
 
 
-Once a preseason forecast of ocean age-3 adult coho has been made, the forecast abundance is assessed relative to the prescribe abundance breakpoints; from these breakpoints, the status is assigned. For the Hood Canal MU, forecast abundances at or below 19,545 have “low” (PSC) or “critical" (Council) status, those between 19,545 and 41,000 are “moderate” (PSC) or “low” (Council) status, and those above 41,000 are “abundant” (PSC) or “normal” (Council) status [@PFMC_1_2013].
+Once a preseason forecast of ocean age-3 adult Coho has been made, the forecast abundance is assessed relative to the prescribe abundance breakpoints; from these breakpoints, the status is assigned. For the Hood Canal MU, forecast abundances at or below 19,545 have “low” (PSC) or “critical" (Council) status, those between 19,545 and 41,000 are “moderate” (PSC) or “low” (Council) status, and those above 41,000 are “abundant” (PSC) or “normal” (Council) status [@PFMC_1_2013].
 
 ##### Stock Assessment
 
@@ -1881,7 +1862,7 @@ Marine survival for the indicator stock for the Hood Canal MU, Big Beef Creek, h
 *ToDo* Figure 4.1 --> Marine survival of Big Beef Creek Coho Salmon and the average marine survival of Puget Sound indicator stocks by year [data from @Zimmerman_2012; M. Zimmerman, WDFW, unpublished data]. 
 
 **2023 Forecast**
-The natural forecast is based on a linear regression model that related the return of tagged natural jack coho at Big Beef Creek to Hood Canal December age-2 recruits in the subsequent run year, using brood years 1983-1998 and 2002-2018 [@PFMC_1_2023]. This forecast was then converted to Ocean Age 3 (OA3). The 1999-2001 broods were excluded because of the unusually high recruit-per-tagged jack ratio, which is not expected to occur this year. For 2023, as was done since 2016, the co-managers agreed to apply a conservative bias correction for forecasting natural coho in Hood Canal.
+The natural forecast is based on a linear regression model that related the return of tagged natural jack Coho at Big Beef Creek to Hood Canal December age-2 recruits in the subsequent run year, using brood years 1983-1998 and 2002-2018 [@PFMC_1_2023]. This forecast was then converted to Ocean Age 3 (OA3). The 1999-2001 broods were excluded because of the unusually high recruit-per-tagged jack ratio, which is not expected to occur this year. For 2023, as was done since 2016, the co-managers agreed to apply a conservative bias correction for forecasting natural Coho in Hood Canal.
 
 The 2023 Hood Canal natural OA3 abundance forecast is 37,888, compared to the 2022 preseason forecast of 20,196. This forecast classifies the stock abundance as "Moderate" under the 2019 PST Southern Coho Management Plan and “Low” under the FMP. This results in an allowable total exploitation rate of no more than 45% under both the Council-adopted exploitation rate matrix and the 2019 PST Southern Coho Management Plan. 
 
@@ -2001,7 +1982,7 @@ In 2009, the Pacific Fishery Management Council adopted annual management object
 | Abundant/Normal	   |	> 27,445	        |	41% – 60% |
 
 
-Queets River natural coho, Strait of Juan de Fuca natural coho, and Snohomish River natural coho were found to meet the criteria for being classified as overfished in the PFMC Review of 2017 Ocean Salmon Fisheries, released in February 2018. Strait of Juan de Fuca natural coho have met the criteria for not overfished/rebuilding status [@PFMC_3_2023].
+Queets River natural Coho, Strait of Juan de Fuca natural Coho, and Snohomish River natural Coho were found to meet the criteria for being classified as overfished in the PFMC Review of 2017 Ocean Salmon Fisheries, released in February 2018. Strait of Juan de Fuca natural Coho have met the criteria for not overfished/rebuilding status [@PFMC_3_2023].
 
 ##### Stock Assessment
 ###### Indicator Stocks
@@ -2010,7 +1991,7 @@ Wild stock tagging within this MU was only implemented on small numbers of Coho 
 ###### Forecast Methods
 
 **2023 Forecast**
-The natural forecast includes both Eastern and Western Strait of Juan de Fuca drainages [@PFMC_1_2023]. January Age 3 ocean recruits were predicted as the product of the estimated 2022 coho smolt outmigration from all independent tributaries of the Strait of Juan de Fuca, and a predicted marine survival rate (6.29%). The marine survival rate was predicted by a linear regression model using the NOAA copepod community index during the year of smolt outmigration. The linear relationship that this model solved for is highly significant (P=0.0037) and has an r-squared value of 0.34. The 2023 Strait of Juan de Fuca natural OA3 abundance forecast is 15,625 compared to the 2022 preseason forecast of 7,297. This ocean abundance forecast for natural coho classifies the MU as "Moderate" under the 2019 PST Southern Coho Management Plan and “Low” under the FMP. This results in an allowable total exploitation rate of no more than 40% under both the Council adopted exploitation rate matrix and the 2019 PST Southern Coho Management Plan.
+The natural forecast includes both Eastern and Western Strait of Juan de Fuca drainages [@PFMC_1_2023]. January Age 3 ocean recruits were predicted as the product of the estimated 2022 Coho smolt outmigration from all independent tributaries of the Strait of Juan de Fuca, and a predicted marine survival rate (6.29%). The marine survival rate was predicted by a linear regression model using the NOAA copepod community index during the year of smolt outmigration. The linear relationship that this model solved for is highly significant (P=0.0037) and has an r-squared value of 0.34. The 2023 Strait of Juan de Fuca natural OA3 abundance forecast is 15,625 compared to the 2022 preseason forecast of 7,297. This ocean abundance forecast for natural Coho classifies the MU as "Moderate" under the 2019 PST Southern Coho Management Plan and “Low” under the FMP. This results in an allowable total exploitation rate of no more than 40% under both the Council adopted exploitation rate matrix and the 2019 PST Southern Coho Management Plan.
 
 ###### Escapement Monitoring
 ###### Fishery Monitoring
@@ -2044,7 +2025,7 @@ plot_status("US Strait JDF")
 
 #### Biological & Geographic Description
 
-The Quillayute MU consists of naturally-produced fall run Coho Salmon in the Quillayute River basin and its tributaries (Dickey, Sol Duc, Sitkum, Calawah, and Bogachiel rivers) (Figure 1.3). The Quillayute River has two unique populations of Coho, a summer run and a fall run (Haymes 2008).  The summer Coho run has a peak river entry from the last week of August to the first week of September.  The fall Coho run has a run timing typical of other coastal Coho populations, with peak river entry in mid-October.  There is a hatchery and natural-origin production component to each population.  The Quillayute River MU consists of the natural-origin fall run.  Quillayute Coho belong to the Olympic Peninsula evolutionarily significant unit (ESU) (Weitkamp et al. 1995).  This ESU was deemed “not warranted” for listing under the U.S. Endangered Species Act (Ford 2011).
+The Quillayute MU consists of naturally-produced fall run Coho Salmon in the Quillayute River basin and its tributaries (Dickey, Sol Duc, Sitkum, Calawah, and Bogachiel rivers) (Figure 1.3). The Quillayute River has two unique populations of Coho, a summer run and a fall run (@Haymes_2008).  The summer Coho run has a peak river entry from the last week of August to the first week of September.  The fall Coho run has a run timing typical of other coastal Coho populations, with peak river entry in mid-October.  There is a hatchery and natural-origin production component to each population.  The Quillayute River MU consists of the natural-origin fall run.  Quillayute Coho belong to the Olympic Peninsula evolutionarily significant unit (ESU) (Weitkamp et al. 1995).  This ESU was deemed “not warranted” for listing under the U.S. Endangered Species Act (Ford 2011).
 
 The Quillayute MU consists of five primary tributaries and numerous smaller tributaries that join to form the Quillayute River (Haymes 2008; Hunter 2006).  The Quillayute River has a short mainstem of 5.5 river miles (RM).  At RM 5 the Bogachiel and Sol Duc river systems combine to form the Quillayute.  The upper reaches of the Sol Duc, Calawah, and Bogachiel rivers originate inside the Olympic National Park, draining the northwest and western slopes of the Olympic Mountains.  These tributaries flow westward to converge and enter the Pacific Ocean at the town of La Push.  The Dickey River drains the coastal hills to the north of the Quillayute River, flowing southward to join the lower mainstem Quillayute one mile from the Pacific Ocean near the town of La Push. 
 
@@ -2084,11 +2065,11 @@ footnote - Limit of 59% (maximum fishery mortality threshold) under Amendment 16
 The estimated number of total fall smolts averaged 350,000 annually from 1995 to 2022, with a high of 655,000 in 2011 and a low of 135,000 in 1999.  
 
 **2023 Forecast**
-The natural coho forecast is based on coho smolt data measured in the Quillayute watershed in 2022 by West Fork Environmental and the Quileute Nation [@PFMC_1_2023]. A total of 339,000 Coho smolts are estimated to have emigrated from the Quillayute River system in 2022. Smolt abundance from the Dickey River was estimated to be 80,568 wild coho smolts (746 smolts/mi2). Smolt abundance from the Bogachiel, Calawah, and Sol Duc rivers was estimated to be 258,416 wild coho smolts (496 smolts/mi2). 
+The natural Coho forecast is based on Coho smolt data measured in the Quillayute watershed in 2022 by West Fork Environmental and the Quileute Nation [@PFMC_1_2023]. A total of 339,000 Coho smolts are estimated to have emigrated from the Quillayute River system in 2022. Smolt abundance from the Dickey River was estimated to be 80,568 wild Coho smolts (746 smolts/mi2). Smolt abundance from the Bogachiel, Calawah, and Sol Duc rivers was estimated to be 258,416 wild Coho smolts (496 smolts/mi2). 
 
-Total smolts were separated into summer and fall natural coho smolts by the relative number of natural brood year 2020 spawners, 10.84% and 89.16%, respectively. Results from this separation yield estimates of 37,000 natural summer coho smolts and 302,000 natural fall coho smolts. The January Age 3 (JA3) natural marine survival estimate is 5.49% (4.46% Ocean Age 3 (OA3)) for the Quillayute system natural coho. This is the past 10-year JA3 mean marine survival for Quillayute System wild stocks (JA3 recruits survival = 1.232 * OA3 recruits survival, this calculation of JA3 ocean survival was used beginning for 2016 coho forecast instead of the previous year’s estimate methodology using OA3 recruitment to the fishery). This compares with a Quillayute marine survival of 6.6% OA3 (8.13% JA3) predicted by WDFW [@Litz_2023].
+Total smolts were separated into summer and fall natural Coho smolts by the relative number of natural brood year 2020 spawners, 10.84% and 89.16%, respectively. Results from this separation yield estimates of 37,000 natural summer Coho smolts and 302,000 natural fall Coho smolts. The January Age 3 (JA3) natural marine survival estimate is 5.49% (4.46% Ocean Age 3 (OA3)) for the Quillayute system natural Coho. This is the past 10-year JA3 mean marine survival for Quillayute System wild stocks (JA3 recruits survival = 1.232 * OA3 recruits survival, this calculation of JA3 ocean survival was used beginning for 2016 Coho forecast instead of the previous year’s estimate methodology using OA3 recruitment to the fishery). This compares with a Quillayute marine survival of 6.6% OA3 (8.13% JA3) predicted by WDFW [@Litz_2023].
 
-The summer natural coho forecast is based on the estimated total summer coho smolt production (36,754) and a JA3 projected marine survival rate of 5.491%. The forecast for the natural component of the fall run was based on the estimated total fall coho smolt production (302,230) multiplied by an expected marine survival rate of 5.491%, the same survival rate used to forecast summer natural returns. The 2023 Quillayute River summer natural forecast is 1,638 OA3 recruits, which is higher than the 2022 forecast of 912. The 2023 Quillayute River fall natural forecast is 13,475 OA3 recruits, which is higher than the 2022 forecast of 12,479. The ocean abundance forecast for Quillayute fall natural coho classifies the stock abundance as "Abundant" under the 2019 PST Southern Coho Management Plan. 
+The summer natural Coho forecast is based on the estimated total summer Coho smolt production (36,754) and a JA3 projected marine survival rate of 5.491%. The forecast for the natural component of the fall run was based on the estimated total fall Coho smolt production (302,230) multiplied by an expected marine survival rate of 5.491%, the same survival rate used to forecast summer natural returns. The 2023 Quillayute River summer natural forecast is 1,638 OA3 recruits, which is higher than the 2022 forecast of 912. The 2023 Quillayute River fall natural forecast is 13,475 OA3 recruits, which is higher than the 2022 forecast of 12,479. The ocean abundance forecast for Quillayute fall natural Coho classifies the stock abundance as "Abundant" under the 2019 PST Southern Coho Management Plan. 
 
 ###### Escapement Monitoring
 ###### Fishery Monitoring
@@ -2157,7 +2138,7 @@ The estimated number of total smolts averaged 162,000 annually from 2000 to 2022
 **2023 Forecast**
 The natural Coho forecast is based on estimated average smolt production per square mile of watershed from the Clearwater tributary which lies between the Queets River mainstem and the Hoh River [@PFMC_1_2023]. The Quinault Fisheries Department has a long-standing trapping program on the Clearwater River to estimate smolt production; it is assumed the two rivers produce smolts at a comparable rate per square mile of watershed. In 2022, the Clearwater produced 38,019 smolts at the rate of 272 smolts/mi2. Applying that rate to the Hoh watershed of 299 mi2 yields 81,328 natural Coho smolts emigrating from the Hoh River in 2022 [@Litz_2023].
 
-A marine survival estimate to January Age 3 (JA3) of 9.89% was applied to the total natural smolt production estimate to predict the 2023 return of Hoh River wild coho. This rate is the mean of two marine survival estimates of wild stocks that are to the north and south of the Hoh River: the Queets wild Coho to the south with a marine survival estimate of 10.29% JA3 (Jurasin, QDFi) and Strait of Juan de Fuca wild Coho to the north with a marine survival estimate of 9.48% JA3. The average marine survival rate of 9.89% JA3 (8.03% OA3) is within 2% of the OA3 survival of 6.6% predicted in the 2023 Wild Coho Forecasts for other Washington Coast coho stocks.
+A marine survival estimate to January Age 3 (JA3) of 9.89% was applied to the total natural smolt production estimate to predict the 2023 return of Hoh River wild Coho. This rate is the mean of two marine survival estimates of wild stocks that are to the north and south of the Hoh River: the Queets wild Coho to the south with a marine survival estimate of 10.29% JA3 (Jurasin, QDFi) and Strait of Juan de Fuca wild Coho to the north with a marine survival estimate of 9.48% JA3. The average marine survival rate of 9.89% JA3 (8.03% OA3) is within 2% of the OA3 survival of 6.6% predicted in the 2023 Wild Coho Forecasts for other Washington Coast Coho stocks.
 
 The 2023 Hoh River natural Coho forecast is 6,531 Ocean Age 3 (OA3) recruits, an increase compared to the 2022 forecast of 4,679. This abundance classifies this stock’s status as “Abundant” under the 2019 PST Southern Coho Management Plan. 
 
@@ -2206,7 +2187,7 @@ Management goals for Washington coastal Coho stocks include achieving natural sp
 
 The current PST total exploitation rate ceiling for the natural Coho population is defined as the maximum rate that will meet the minimum escapement goal of 5,800  when applied to the pre-season ocean abundance forecast (Haymes 2008). The basin is currently managed in US fisheries for a natural fall Coho escapement goal range of 5,800 to 14,500, and annual egg take objectives at the Salmon River Hatchery.  The current PST exploitation rate ceilings for the Queets MU Coho population are listed below.
 
-Queets River natural coho, Strait of Juan de Fuca natural coho, and Snohomish River natural coho were found to meet the criteria for being classified as overfished in the PFMC Review of 2017 Ocean Salmon Fisheries, released in February 2018. Queets River natural coho continue to meet the criteria for overfished status [@PFMC_3_2023].  The harvest control rule during the rebuilding period for Queets Coho is the abundance-based stepped harvest rate of: 
+Queets River natural Coho, Strait of Juan de Fuca natural Coho, and Snohomish River natural Coho were found to meet the criteria for being classified as overfished in the PFMC Review of 2017 Ocean Salmon Fisheries, released in February 2018. Queets River natural Coho continue to meet the criteria for overfished status [@PFMC_3_2023].  The harvest control rule during the rebuilding period for Queets Coho is the abundance-based stepped harvest rate of: 
 
 **Queets MU ocean abundance reference breakpoints and maximum total exploitation rates by PSC and Council status categories.**
 
@@ -2302,12 +2283,12 @@ The estimated number of total smolts averaged 2.5 million annually from 2000 to 
 Preseason abundance forecasts are made for natural fish throughout the system and for hatchery fish returning to three freshwater rearing complexes and three saltwater net-pen sites [@PFMC_1_2023]. The forecasts include fish
 originating from numerous volunteer production projects.
 
-The natural forecast is the sum of the Chehalis River natural, Humptulips River natural, and South Bay tributary natural forecasts. An Ocean Age 3 (OA3) coho marine survival prediction was developed by dividing the Quinault Department of Fisheries prediction of Queets coho JA3 marine survival by the natural mortality rate of 1.23169. The Chehalis wild coho smolt production estimate was developed by scaling the 2022 Queets River natural coho smolt production to the Chehalis River production based on the relationship between the Backward FRAM OA3 ocean abundances of Queets and Chehalis natural coho abundances during the past 15 years. The Humptulips and South Bay tributary forecasts are based on recruit densities scaled from Clearwater and Chehalis basins, respectively. 
+The natural forecast is the sum of the Chehalis River natural, Humptulips River natural, and South Bay tributary natural forecasts. An Ocean Age 3 (OA3) Coho marine survival prediction was developed by dividing the Quinault Department of Fisheries prediction of Queets Coho JA3 marine survival by the natural mortality rate of 1.23169. The Chehalis wild Coho smolt production estimate was developed by scaling the 2022 Queets River natural Coho smolt production to the Chehalis River production based on the relationship between the Backward FRAM OA3 ocean abundances of Queets and Chehalis natural Coho abundances during the past 15 years. The Humptulips and South Bay tributary forecasts are based on recruit densities scaled from Clearwater and Chehalis basins, respectively. 
 
 The 2023 Grays Harbor natural OA3 abundance forecast is 102,841, compared to a 2022 preseason forecast of 120,381. This abundance classifies this stock's status as “Abundant” under the 2019 PST Southern Coho Management Plan. 
 
-The exploitation rate associated with the overfishing limit (OFL) is defined in terms of spawner escapement (SOFL). Potential Grays Harbor coho natural area spawner abundance was derived by adding the current forecast of natural origin coho OA3 abundance, 102,841, to the predicted abundance of OA3 hatchery origin coho spawning in natural areas. The forecast of OA3 naturally spawning hatchery origin coho is 10,586 and was calculated by multiplying the OA3
-hatchery coho abundance forecast, 111,430, by the most recent 5-year average stray rate (2017-2021 average = 0.095). Annual stray rates were estimated by dividing the number of hatchery origin spawners in natural areas by the total hatchery origin escapement. For Grays Harbor natural coho MFMT = 0.65 and the OFL is SOFL = 113,427 × (1-0.65) = 39,699. The preseason SOFL will also be recalculated with postseason abundance estimates (when available) to assess OFL compliance.
+The exploitation rate associated with the overfishing limit (OFL) is defined in terms of spawner escapement (SOFL). Potential Grays Harbor Coho natural area spawner abundance was derived by adding the current forecast of natural origin Coho OA3 abundance, 102,841, to the predicted abundance of OA3 hatchery origin Coho spawning in natural areas. The forecast of OA3 naturally spawning hatchery origin Coho is 10,586 and was calculated by multiplying the OA3
+hatchery Coho abundance forecast, 111,430, by the most recent 5-year average stray rate (2017-2021 average = 0.095). Annual stray rates were estimated by dividing the number of hatchery origin spawners in natural areas by the total hatchery origin escapement. For Grays Harbor natural Coho MFMT = 0.65 and the OFL is SOFL = 113,427 × (1-0.65) = 39,699. The preseason SOFL will also be recalculated with postseason abundance estimates (when available) to assess OFL compliance.
 
 ###### Escapement Monitoring
 ###### Fishery Monitoring
