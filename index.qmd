@@ -912,7 +912,9 @@ Most MUs in the U.S. have CWT indicator stocks and DIT programs. However, some o
 [^27]: Beginning BY 1995, all tagged releases were unmarked.
 
 
-When developing the FRAM base period, the CoTC used wild indicator stocks to represent an MU when the data was available. The figures below summarize all coded-wire-tagged wild Coho Salmon smolts released within the MUs that are currently reported in RMIS. Most of the reported wild stock tagging has occurred in the Grays Harbor, and Queets MUs; followed by Strait of Georgia, Hood Canal, Skagit, and Lower Fraser MUs.  However, no wild stock tagging has been reported in the Lower Fraser since brood year 2007.  Very little wild stock tagging has taken place in the remaining MUs.  
+### Wild Stock Tagging programs
+
+When developing the FRAM base period, the CoTC used wild indicator stocks to represent a MU when the data was available. The figures below summarize data currently reported in RMIS on coded-wire-tagged wild Coho Salmon smolts released within the MUs. Most of the reported wild stock tagging has occurred in the Grays Harbor, and Queets MUs; followed by Strait of Georgia, Hood Canal, Skagit, and Lower Fraser MUs.  However, no wild stock tagging has been reported in the Lower Fraser since brood year 2007.  Very little wild stock tagging has taken place in the remaining MUs. Not all of the data depicted was used in the MSM and subsequest cohort reconstructions.
 
 **Total number of wild Coho Salmon smolts caught, tagged, and released by clip status for each Management Unit over brood years 1983 through 2020 (data downloaded from RMIS 9-6-2023).**  
 
@@ -948,9 +950,11 @@ static$releases |>
   
 ```
 
-When developing the FRAM base period, the CoTC used wild indicator stocks to represent an MU when the data was available. The figures below summarize all coded-wire-tagged wild Coho Salmon smolts released within the MUs that are currently reported in RMIS. Most of the reported wild stock tagging has occurred in the Grays Harbor, and Queets MUs; followed by Strait of Georgia, Hood Canal, Skagit, and Lower Fraser MUs.  However, no wild stock tagging has been reported in the Lower Fraser since brood year 2007.  Very little wild stock tagging has taken place in the remaining MUs.
+### Hatchery Tagging Programs
 
-**Total number of wild Coho Salmon smolts caught, tagged, and released by clip status for each Management Unit over brood years 1983 through 2020 (data downloaded from RMIS 9-6-2023).**
+When wild stock tagging was insufficient to represent a MU, the CoTC used hatchery indicator stocks to represent the MU. The figures below summarize all coded-wire-tagged hatchery Coho Salmon smolts released within the MUs that are currently reported in RMIS. The total number of hatchery coded-wire-tagged fish released annually within the MUs has varied over the years, with a low of approximately 1.4 million for brood year 2003 and a high of over 3 million for brood year 2020. With the advent of mass-marking in the 1990s, hatcheries began to release unmarked tag groups as early as brood year 1993. Most of these unmarked and tagged fish are part of a DIT program. 
+
+**Total number of hatchery Coho Salmon smolts released by clip status for all Management Units combined over brood years 1983 through 2020 (data downloaded from RMIS 9-6-2023). "CWT_Unclipped_DIT" refer to tagged fish that are released with an intact adipose fin and are associated with a clipped release group. "CWT_Unclipped" are tagged fish that are unclipped but not associated with another tagged release group.  These fish are often associated with new hatchery programs **
 
 ```{r fig_hatch_stock_releases_all_cwt_only}
 static$releases |> 
@@ -978,6 +982,10 @@ static$releases |>
   )
   
 ```
+
+Hatchery stock tagging has consistently occurred in every MU, with the exception of the Stillaguamish and the Hoh MUs where very few hatchery fish are released. Double-index-tagging programs were implemented in all MUs but the Stillaguamish and the Hoh MU; however, DIT programs currently exist only in the U.S. MUs.
+
+**Total number of tagged hatchery Coho Salmon smolts released by clip status for each MU over brood years 1983 through 2020 (data downloaded from RMIS 9-6-2023). "CWT_Unclipped_DIT" refer to tagged fish that are released with an intact adipose fin and are associated with a clipped release group. "CWT_Unclipped" are tagged fish that are unclipped but not associated with another tagged release group.  These fish are often associated with new hatchery programs. **
 
 ```{r fig_hatch_stock_releases_mu_cwt_only, fig.height=9, fig.width=8}
 static$releases |> 
@@ -1007,6 +1015,12 @@ static$releases |>
   )
   
 ```
+
+### Total Hatchery Production
+
+Reported hatchery production across the MUs varies widely, from very little in the Stillaguamish and Hoh MUs, to more than an average of 4 million smolts released into the Strait of Georgia annually in recent years.  Prior to the advent of mass marking, hatchery fish were released coded-wire-tagged with their adipose-fin clipped to identify it as a tagged fish, or unclipped and untagged.  Beginning in 1995, DIT programs began and their associated releases were mass-marked. Now, almost all of the hatchery production released into the MUs in the U.S. are mass-marked.
+
+**Total number of hatchery Coho Salmon smolts released by tag and clip status for each MU over brood years 1983 through 2020 (data downloaded from RMIS 9-6-2023). "CWT_Unclipped_DIT" refer to tagged fish that are released with an intact adipose fin and are associated with a clipped release group. "CWT_Unclipped" are tagged fish that are unclipped but not associated with another tagged release group. These fish are often associated with new hatchery programs. **
 
 ```{r fig_hatch_stock_releases_mu, fig.height=9, fig.width=8}
 static$releases |> 
