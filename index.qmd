@@ -815,7 +815,7 @@ To obtain unbiased estimates of fishery-specific impacts on individual stocks, a
 
 At present, the utility of the DIT programs and the CWT programs in general for Coho is reduced due to low tagging rates, insufficient MU representation, low recovery rates, and incomplete coastwide coverage of electronic sampling programs [@PSCCWTW_2008]. In addition, the CWT programs: (1) currently provide overall differences in ocean ERs -- can't discriminate individual fisheries; (2) have sample sizes that are generally small, so confidence limits are wide and estimates of differential impacts are imprecise; (3) are expensive and agencies are reluctant to fund tagging programs; and (4) unmarked DIT fish are unavailable for harvest in MSFs.
 
-Most MUs in the U.S. have CWT indicator stocks and DIT programs. However, some of the programs have been eliminated in recent years due to budgetary constraints. Canada has discontinued all of their Coho Salmon DIT programs. The current Coho CWT indicator stocks for each MU and the brood years with DIT groups are listed below. The tag codes used in the Mixed-Stock-Model to develop the FRAM base period for catch years 1986-1997 are also listed below. All DIT groups released to date for each MU are listed within the next section of the report.
+Most MUs in the U.S. have CWT indicator stocks and DIT programs. However, some of the programs have been eliminated in recent years due to budgetary constraints. Canada has discontinued all of their Coho Salmon DIT programs. The current Coho CWT indicator stocks for each MU and the brood years with DIT groups are listed below. The tag codes used in the Mixed-Stock-Model to develop the FRAM base period for catch years 1986-1997 are also listed below. All DIT groups released within U.S. MUs to date are also listed below.
 
 **Coded-wire-tag indicator stocks and brood years with single index tag (SIT) and double index tag (DIT) groups for each Coho Management Unit (MU), beginning with brood year 1983. Indicator stocks are hatchery-produced Coho unless specified as "Wild" (Release data downloaded from RMIS 1-10-2023). SIT groups may be either marked or unmarked releases of CWT Coho. DIT groups are marked (adipose-fin clipped) and unmarked pairs of CWT Coho.**
 
@@ -914,7 +914,7 @@ Most MUs in the U.S. have CWT indicator stocks and DIT programs. However, some o
 
 ** Coded-wire-tag codes used in the Mixed-Stock Model to create the current FRAM base period. "NA" under hatchery denotes wild stock tagging programs**
 
-| State | Region | Basin | Brood Year | Release Location | Hatchery | Stock | Tag Code |
+|** State **|** Region **|** Basin **|** Brood Year **|** Release Location **|** Hatchery **|** Stock **|** Tag Code **|
 |:------|:-------|:------|:----------:|:-----------------|:---------|:------|:--------:|
 |	AK	|	CHIL	|	CHILG	|	1983	|	CHILKAT PONDS 115-32	|	NA	|	CHILKAT R 115-32	|	042310	|
 |	AK	|	CHIL	|	CHILG	|	1983	|	CHILKAT PONDS 115-32	|	NA	|	CHILKAT R 115-32	|	042362	|
@@ -3706,7 +3706,6 @@ Most MUs in the U.S. have CWT indicator stocks and DIT programs. However, some o
 |	WA	|	WILP	|	WILR	|	1986	|	FORK CR      24.0356	|	FORKS CREEK HATCHERY	|	FORK CR      24.0356	|	634447	|
 
 
-
 ### Wild Stock Tagging programs
 
 When developing the FRAM base period, the CoTC used wild indicator stocks to represent a MU when the data was available. The figures below summarize data currently reported in RMIS on coded-wire-tagged wild Coho Salmon smolts released within the MUs. Most of the reported wild stock tagging has occurred in the Grays Harbor, and Queets MUs; followed by Strait of Georgia, Hood Canal, Skagit, and Lower Fraser MUs.  However, no wild stock tagging has been reported in the Lower Fraser since brood year 2007.  Very little wild stock tagging has taken place in the remaining MUs. Not all of the data depicted was used in the MSM and subsequest cohort reconstructions.
@@ -3810,6 +3809,630 @@ static$releases |>
   )
   
 ```
+
+** Double-index-tag codes released within each U.S. MU (data downloaded from RMIS 9-6-2023).**
+|** Management Unit **|** Brood Year **|** Hatchery **|** DIT Group ID **|** Tag Code **|** Mark **|** No. Released **|
+|:--------------------|:--------------:|:-------------|:----------------:|:------------:|:--------:|-----------------:|
+|	Skagit	|	1994	|	MARBLEMOUNT HATCHERY	|	04199600000211	|	635909	|	Clipped	|	 99,623 	|
+|	Skagit	|	1994	|	MARBLEMOUNT HATCHERY	|	04199600000211	|	635906	|	Unclipped	|	 45,865 	|
+|	Skagit	|	1995	|	MARBLEMOUNT HATCHERY	|	04199700000212	|	636158	|	Clipped	|	 42,489 	|
+|	Skagit	|	1995	|	MARBLEMOUNT HATCHERY	|	04199700000212	|	636201	|	Unclipped	|	 42,566 	|
+|	Skagit	|	1996	|	MARBLEMOUNT HATCHERY	|	04199800000196	|	630545	|	Clipped	|	 43,348 	|
+|	Skagit	|	1996	|	MARBLEMOUNT HATCHERY	|	04199800000196	|	630546	|	Unclipped	|	 45,089 	|
+|	Skagit	|	1997	|	MARBLEMOUNT HATCHERY	|	04199900000195	|	630554	|	Clipped	|	 42,299 	|
+|	Skagit	|	1997	|	MARBLEMOUNT HATCHERY	|	04199900000195	|	636211	|	Unclipped	|	 41,906 	|
+|	Skagit	|	1998	|	MARBLEMOUNT HATCHERY	|	04200000000209	|	631107	|	Clipped	|	 40,398 	|
+|	Skagit	|	1998	|	MARBLEMOUNT HATCHERY	|	04200000000209	|	631108	|	Unclipped	|	 40,525 	|
+|	Skagit	|	1999	|	MARBLEMOUNT HATCHERY	|	04200100000199	|	630299	|	Clipped	|	 45,831 	|
+|	Skagit	|	1999	|	MARBLEMOUNT HATCHERY	|	04200100000199	|	630298	|	Unclipped	|	 45,052 	|
+|	Skagit	|	2000	|	MARBLEMOUNT HATCHERY	|	04200200000200	|	630950	|	Clipped	|	 10,582 	|
+|	Skagit	|	2000	|	MARBLEMOUNT HATCHERY	|	04200200000200	|	630387	|	Clipped	|	 10,777 	|
+|	Skagit	|	2000	|	MARBLEMOUNT HATCHERY	|	04200200000200	|	630946	|	Clipped	|	 10,783 	|
+|	Skagit	|	2000	|	MARBLEMOUNT HATCHERY	|	04200200000200	|	630948	|	Clipped	|	 10,861 	|
+|	Skagit	|	2000	|	MARBLEMOUNT HATCHERY	|	04200200000200	|	630386	|	Unclipped	|	 10,988 	|
+|	Skagit	|	2000	|	MARBLEMOUNT HATCHERY	|	04200200000200	|	630947	|	Unclipped	|	 10,969 	|
+|	Skagit	|	2000	|	MARBLEMOUNT HATCHERY	|	04200200000200	|	630949	|	Unclipped	|	 10,935 	|
+|	Skagit	|	2000	|	MARBLEMOUNT HATCHERY	|	04200200000200	|	630945	|	Unclipped	|	 10,988 	|
+|	Skagit	|	2001	|	MARBLEMOUNT HATCHERY	|	04200300000206	|	631257	|	Clipped	|	 10,745 	|
+|	Skagit	|	2001	|	MARBLEMOUNT HATCHERY	|	04200300000206	|	631259	|	Clipped	|	 11,240 	|
+|	Skagit	|	2001	|	MARBLEMOUNT HATCHERY	|	04200300000206	|	631253	|	Clipped	|	 9,013 	|
+|	Skagit	|	2001	|	MARBLEMOUNT HATCHERY	|	04200300000206	|	631255	|	Clipped	|	 9,975 	|
+|	Skagit	|	2001	|	MARBLEMOUNT HATCHERY	|	04200300000206	|	631254	|	Unclipped	|	 7,472 	|
+|	Skagit	|	2001	|	MARBLEMOUNT HATCHERY	|	04200300000206	|	631069	|	Unclipped	|	 6,887 	|
+|	Skagit	|	2001	|	MARBLEMOUNT HATCHERY	|	04200300000206	|	631256	|	Unclipped	|	 9,063 	|
+|	Skagit	|	2001	|	MARBLEMOUNT HATCHERY	|	04200300000206	|	631258	|	Unclipped	|	 8,999 	|
+|	Skagit	|	2002	|	MARBLEMOUNT HATCHERY	|	04200400000192	|	632090	|	Clipped	|	 11,046 	|
+|	Skagit	|	2002	|	MARBLEMOUNT HATCHERY	|	04200400000192	|	632088	|	Clipped	|	 10,781 	|
+|	Skagit	|	2002	|	MARBLEMOUNT HATCHERY	|	04200400000192	|	632089	|	Clipped	|	 6,947 	|
+|	Skagit	|	2002	|	MARBLEMOUNT HATCHERY	|	04200400000192	|	632091	|	Clipped	|	 10,861 	|
+|	Skagit	|	2002	|	MARBLEMOUNT HATCHERY	|	04200400000192	|	632092	|	Unclipped	|	 10,967 	|
+|	Skagit	|	2002	|	MARBLEMOUNT HATCHERY	|	04200400000192	|	632094	|	Unclipped	|	 10,878 	|
+|	Skagit	|	2002	|	MARBLEMOUNT HATCHERY	|	04200400000192	|	632093	|	Unclipped	|	 9,781 	|
+|	Skagit	|	2002	|	MARBLEMOUNT HATCHERY	|	04200400000192	|	632095	|	Unclipped	|	 11,100 	|
+|	Skagit	|	2003	|	MARBLEMOUNT HATCHERY	|	04200500000191	|	631997	|	Clipped	|	 46,348 	|
+|	Skagit	|	2003	|	MARBLEMOUNT HATCHERY	|	04200500000191	|	632289	|	Unclipped	|	 46,823 	|
+|	Skagit	|	2004	|	MARBLEMOUNT HATCHERY	|	04200600000183	|	633099	|	Clipped	|	 47,305 	|
+|	Skagit	|	2004	|	MARBLEMOUNT HATCHERY	|	04200600000183	|	633197	|	Unclipped	|	 41,300 	|
+|	Skagit	|	2005	|	MARBLEMOUNT HATCHERY	|	04200700000184	|	633571	|	Clipped	|	 43,100 	|
+|	Skagit	|	2005	|	MARBLEMOUNT HATCHERY	|	04200700000184	|	633572	|	Unclipped	|	 43,575 	|
+|	Skagit	|	2006	|	MARBLEMOUNT HATCHERY	|	04200800000187	|	633691	|	Clipped	|	 47,072 	|
+|	Skagit	|	2006	|	MARBLEMOUNT HATCHERY	|	04200800000187	|	633690	|	Unclipped	|	 47,206 	|
+|	Skagit	|	2007	|	MARBLEMOUNT HATCHERY	|	04200900000180	|	634484	|	Clipped	|	 44,174 	|
+|	Skagit	|	2007	|	MARBLEMOUNT HATCHERY	|	04200900000180	|	634485	|	Unclipped	|	 44,604 	|
+|	Skagit	|	2008	|	MARBLEMOUNT HATCHERY	|	04201000000181	|	634495	|	Clipped	|	 43,359 	|
+|	Skagit	|	2008	|	MARBLEMOUNT HATCHERY	|	04201000000181	|	634496	|	Unclipped	|	 43,568 	|
+|	Skagit	|	2009	|	MARBLEMOUNT HATCHERY	|	04201100000213	|	635381	|	Clipped	|	 44,465 	|
+|	Skagit	|	2009	|	MARBLEMOUNT HATCHERY	|	04201100000213	|	635382	|	Unclipped	|	 43,354 	|
+|	Skagit	|	2010	|	MARBLEMOUNT HATCHERY	|	04201200000215	|	635799	|	Clipped	|	 41,840 	|
+|	Skagit	|	2010	|	MARBLEMOUNT HATCHERY	|	04201200000215	|	635798	|	Unclipped	|	 42,100 	|
+|	Skagit	|	2011	|	MARBLEMOUNT HATCHERY	|	04201300000030	|	636377	|	Clipped	|	 45,068 	|
+|	Skagit	|	2011	|	MARBLEMOUNT HATCHERY	|	04201300000030	|	636376	|	Unclipped	|	 45,650 	|
+|	Skagit	|	2012	|	MARBLEMOUNT HATCHERY	|	04201400000080	|	636555	|	Clipped	|	 43,388 	|
+|	Skagit	|	2012	|	MARBLEMOUNT HATCHERY	|	04201400000080	|	636554	|	Unclipped	|	 43,163 	|
+|	Skagit	|	2013	|	MARBLEMOUNT HATCHERY	|	04201500000796	|	636697	|	Clipped	|	 47,575 	|
+|	Skagit	|	2013	|	MARBLEMOUNT HATCHERY	|	04201500000796	|	636696	|	Unclipped	|	 47,670 	|
+|	Skagit	|	2014	|	MARBLEMOUNT HATCHERY	|	04201600000837	|	636839	|	Clipped	|	 43,867 	|
+|	Skagit	|	2014	|	MARBLEMOUNT HATCHERY	|	04201600000837	|	636840	|	Unclipped	|	 43,868 	|
+|	Skagit	|	2015	|	MARBLEMOUNT HATCHERY	|	04201700000878	|	636993	|	Clipped	|	 46,326 	|
+|	Skagit	|	2015	|	MARBLEMOUNT HATCHERY	|	04201700000878	|	636994	|	Unclipped	|	 46,309 	|
+|	Skagit	|	2016	|	MARBLEMOUNT HATCHERY	|	04201800000906	|	637089	|	Clipped	|	 36,508 	|
+|	Skagit	|	2016	|	MARBLEMOUNT HATCHERY	|	04201800000906	|	637088	|	Unclipped	|	 36,893 	|
+|	Skagit	|	2017	|	MARBLEMOUNT HATCHERY	|	04201900000951	|	637272	|	Clipped	|	 41,744 	|
+|	Skagit	|	2017	|	MARBLEMOUNT HATCHERY	|	04201900000951	|	637271	|	Unclipped	|	 41,842 	|
+|	Skagit	|	2018	|	MARBLEMOUNT HATCHERY	|	04202000001028	|	637555	|	Clipped	|	 44,326 	|
+|	Skagit	|	2018	|	MARBLEMOUNT HATCHERY	|	04202000001028	|	637554	|	Unclipped	|	 46,243 	|
+|	Skagit	|	2019	|	MARBLEMOUNT HATCHERY	|	04202100001068	|	637678	|	Clipped	|	 41,895 	|
+|	Skagit	|	2019	|	MARBLEMOUNT HATCHERY	|	04202100001068	|	637677	|	Unclipped	|	 42,653 	|
+|	Skagit	|	2020	|	MARBLEMOUNT HATCHERY	|	04202200001130	|	638003	|	Clipped	|	 40,507 	|
+|	Skagit	|	2020	|	MARBLEMOUNT HATCHERY	|	04202200001130	|	638002	|	Unclipped	|	 40,547 	|
+|	Skagit	|	2021	|	MARBLEMOUNT HATCHERY	|	04202300001147	|	638230	|	Clipped	|	 45,944 	|
+|	Skagit	|	2021	|	MARBLEMOUNT HATCHERY	|	04202300001147	|	638229	|	Unclipped	|	 45,747 	|
+|	Snohomish	|	1996	|	WALLACE R HATCHERY	|	04199800000223	|	636209	|	Clipped	|	 46,251 	|
+|	Snohomish	|	1996	|	WALLACE R HATCHERY	|	04199800000223	|	636210	|	Unclipped	|	 45,718 	|
+|	Snohomish	|	1997	|	WALLACE R HATCHERY	|	04199900000225	|	630810	|	Clipped	|	 45,004 	|
+|	Snohomish	|	1997	|	WALLACE R HATCHERY	|	04199900000225	|	630809	|	Unclipped	|	 45,091 	|
+|	Snohomish	|	1998	|	WALLACE R HATCHERY	|	04200000000230	|	631237	|	Clipped	|	 22,350 	|
+|	Snohomish	|	1998	|	WALLACE R HATCHERY	|	04200000000230	|	631223	|	Clipped	|	 20,665 	|
+|	Snohomish	|	1998	|	WALLACE R HATCHERY	|	04200000000230	|	631236	|	Unclipped	|	 22,524 	|
+|	Snohomish	|	1998	|	WALLACE R HATCHERY	|	04200000000230	|	631238	|	Unclipped	|	 23,049 	|
+|	Snohomish	|	1999	|	WALLACE R HATCHERY	|	04200100000226	|	631160	|	Clipped	|	 24,591 	|
+|	Snohomish	|	1999	|	WALLACE R HATCHERY	|	04200100000226	|	630466	|	Clipped	|	 23,171 	|
+|	Snohomish	|	1999	|	WALLACE R HATCHERY	|	04200100000227	|	630467	|	Unclipped	|	 21,154 	|
+|	Snohomish	|	1999	|	WALLACE R HATCHERY	|	04200100000227	|	631052	|	Unclipped	|	 21,698 	|
+|	Snohomish	|	2000	|	WALLACE R HATCHERY	|	04200200000229	|	631286	|	Clipped	|	 20,186 	|
+|	Snohomish	|	2000	|	WALLACE R HATCHERY	|	04200200000229	|	631287	|	Clipped	|	 19,372 	|
+|	Snohomish	|	2000	|	WALLACE R HATCHERY	|	04200200000229	|	631284	|	Unclipped	|	 19,384 	|
+|	Snohomish	|	2000	|	WALLACE R HATCHERY	|	04200200000229	|	631285	|	Unclipped	|	 19,960 	|
+|	Snohomish	|	2001	|	WALLACE R HATCHERY	|	04200300000237	|	631576	|	Clipped	|	 20,672 	|
+|	Snohomish	|	2001	|	WALLACE R HATCHERY	|	04200300000237	|	631578	|	Clipped	|	 18,935 	|
+|	Snohomish	|	2001	|	WALLACE R HATCHERY	|	04200300000237	|	631575	|	Unclipped	|	 22,377 	|
+|	Snohomish	|	2001	|	WALLACE R HATCHERY	|	04200300000237	|	631577	|	Unclipped	|	 21,263 	|
+|	Snohomish	|	2002	|	WALLACE R HATCHERY	|	04200400000236	|	632199	|	Clipped	|	 23,416 	|
+|	Snohomish	|	2002	|	WALLACE R HATCHERY	|	04200400000236	|	632196	|	Clipped	|	 23,036 	|
+|	Snohomish	|	2002	|	WALLACE R HATCHERY	|	04200400000236	|	632198	|	Unclipped	|	 23,379 	|
+|	Snohomish	|	2002	|	WALLACE R HATCHERY	|	04200400000236	|	632197	|	Unclipped	|	 23,280 	|
+|	Snohomish	|	2003	|	WALLACE R HATCHERY	|	04200500000238	|	632679	|	Clipped	|	 43,217 	|
+|	Snohomish	|	2003	|	WALLACE R HATCHERY	|	04200500000238	|	632678	|	Unclipped	|	 43,575 	|
+|	Snohomish	|	2004	|	WALLACE R HATCHERY	|	04200600000242	|	633266	|	Clipped	|	 30,182 	|
+|	Snohomish	|	2004	|	WALLACE R HATCHERY	|	04200600000242	|	633267	|	Unclipped	|	 30,300 	|
+|	Snohomish	|	2005	|	WALLACE R HATCHERY	|	04200700000240	|	633680	|	Clipped	|	 46,804 	|
+|	Snohomish	|	2005	|	WALLACE R HATCHERY	|	04200700000240	|	633681	|	Unclipped	|	 48,378 	|
+|	Snohomish	|	2006	|	WALLACE R HATCHERY	|	04200800000245	|	634176	|	Clipped	|	 44,693 	|
+|	Snohomish	|	2006	|	WALLACE R HATCHERY	|	04200800000245	|	634175	|	Unclipped	|	 45,883 	|
+|	Snohomish	|	2007	|	WALLACE R HATCHERY	|	04200900000246	|	634493	|	Clipped	|	 45,604 	|
+|	Snohomish	|	2007	|	WALLACE R HATCHERY	|	04200900000246	|	634494	|	Unclipped	|	 45,310 	|
+|	Snohomish	|	2008	|	WALLACE R HATCHERY	|	04201000000219	|	634892	|	Clipped	|	 42,318 	|
+|	Snohomish	|	2008	|	WALLACE R HATCHERY	|	04201000000219	|	634893	|	Unclipped	|	 42,077 	|
+|	Snohomish	|	2009	|	WALLACE R HATCHERY	|	04201100000221	|	635895	|	Clipped	|	 42,851 	|
+|	Snohomish	|	2009	|	WALLACE R HATCHERY	|	04201100000221	|	635896	|	Unclipped	|	 42,508 	|
+|	Snohomish	|	2010	|	WALLACE R HATCHERY	|	04201200000217	|	635988	|	Clipped	|	 44,305 	|
+|	Snohomish	|	2010	|	WALLACE R HATCHERY	|	04201200000217	|	635990	|	Unclipped	|	 45,293 	|
+|	Snohomish	|	2011	|	WALLACE R HATCHERY	|	04201300000034	|	636383	|	Clipped	|	 44,056 	|
+|	Snohomish	|	2011	|	WALLACE R HATCHERY	|	04201300000034	|	636384	|	Unclipped	|	 44,425 	|
+|	Snohomish	|	2012	|	WALLACE R HATCHERY	|	04201400000690	|	636593	|	Clipped	|	 44,397 	|
+|	Snohomish	|	2012	|	WALLACE R HATCHERY	|	04201400000690	|	636594	|	Unclipped	|	 44,658 	|
+|	Snohomish	|	2013	|	WALLACE R HATCHERY	|	04201500000852	|	636881	|	Clipped	|	 44,229 	|
+|	Snohomish	|	2013	|	WALLACE R HATCHERY	|	04201500000852	|	636880	|	Unclipped	|	 44,451 	|
+|	Snohomish	|	2014	|	WALLACE R HATCHERY	|	04201600000838	|	636843	|	Clipped	|	 44,744 	|
+|	Snohomish	|	2014	|	WALLACE R HATCHERY	|	04201600000838	|	636844	|	Unclipped	|	 44,802 	|
+|	Snohomish	|	2015	|	WALLACE R HATCHERY	|	04201700000883	|	637012	|	Clipped	|	 47,502 	|
+|	Snohomish	|	2015	|	WALLACE R HATCHERY	|	04201700000883	|	637013	|	Unclipped	|	 47,989 	|
+|	Snohomish	|	2016	|	WALLACE R HATCHERY	|	04201800000934	|	637264	|	Clipped	|	 46,727 	|
+|	Snohomish	|	2016	|	WALLACE R HATCHERY	|	04201800000934	|	637263	|	Unclipped	|	 47,068 	|
+|	Snohomish	|	2017	|	WALLACE R HATCHERY	|	04201900000947	|	637274	|	Clipped	|	 44,690 	|
+|	Snohomish	|	2017	|	WALLACE R HATCHERY	|	04201900000947	|	637275	|	Unclipped	|	 44,914 	|
+|	Snohomish	|	2018	|	WALLACE R HATCHERY	|	04202000001027	|	637557	|	Clipped	|	 45,340 	|
+|	Snohomish	|	2018	|	WALLACE R HATCHERY	|	04202000001027	|	637556	|	Unclipped	|	 45,693 	|
+|	Snohomish	|	2019	|	WALLACE R HATCHERY	|	04202100001069	|	637680	|	Clipped	|	 46,779 	|
+|	Snohomish	|	2019	|	WALLACE R HATCHERY	|	04202100001069	|	637681	|	Unclipped	|	 51,741 	|
+|	Snohomish	|	2020	|	WALLACE R HATCHERY	|	04202200001102	|	637914	|	Clipped	|	 41,466 	|
+|	Snohomish	|	2020	|	WALLACE R HATCHERY	|	04202200001102	|	637841	|	Unclipped	|	 41,726 	|
+|	Snohomish	|	2021	|	WALLACE R HATCHERY	|	04202300001148	|	638233	|	Clipped	|	 40,749 	|
+|	Snohomish	|	2021	|	WALLACE R HATCHERY	|	04202300001148	|	638232	|	Unclipped	|	 41,033 	|
+|	Hood Canal	|	1995	|	GEORGE ADAMS HATCHERY	|	04199700000253	|	636142	|	Clipped	|	 45,065 	|
+|	Hood Canal	|	1995	|	GEORGE ADAMS HATCHERY	|	04199700000253	|	636143	|	Unclipped	|	 45,242 	|
+|	Hood Canal	|	1996	|	PORT GAMBLE BAY PENS	|	1419989004	|	213106	|	Clipped	|	 50,017 	|
+|	Hood Canal	|	1996	|	PORT GAMBLE BAY PENS	|	1419989004	|	636162	|	Unclipped	|	 49,500 	|
+|	Hood Canal	|	1996	|	QUILCENE BAY SEA PEN	|	1419989006	|	054038	|	Clipped	|	 42,377 	|
+|	Hood Canal	|	1996	|	QUILCENE BAY SEA PEN	|	1419989006	|	055019	|	Unclipped	|	 44,859 	|
+|	Hood Canal	|	1996	|	QUILCENE NFH	|	071998WC15	|	055026	|	Clipped	|	 11,553 	|
+|	Hood Canal	|	1996	|	QUILCENE NFH	|	071998WC15	|	055028	|	Clipped	|	 11,211 	|
+|	Hood Canal	|	1996	|	QUILCENE NFH	|	071998WC15	|	055027	|	Clipped	|	 11,314 	|
+|	Hood Canal	|	1996	|	QUILCENE NFH	|	071998WC15	|	055025	|	Clipped	|	 11,333 	|
+|	Hood Canal	|	1996	|	QUILCENE NFH	|	071998WC15	|	630260	|	Unclipped	|	 10,455 	|
+|	Hood Canal	|	1996	|	QUILCENE NFH	|	071998WC15	|	630263	|	Unclipped	|	 10,397 	|
+|	Hood Canal	|	1996	|	QUILCENE NFH	|	071998WC15	|	630301	|	Unclipped	|	 10,194 	|
+|	Hood Canal	|	1996	|	QUILCENE NFH	|	071998WC15	|	630258	|	Unclipped	|	 9,815 	|
+|	Hood Canal	|	1997	|	GEORGE ADAMS HATCHERY	|	04199900000269	|	630526	|	Clipped	|	 20,817 	|
+|	Hood Canal	|	1997	|	GEORGE ADAMS HATCHERY	|	04199900000269	|	630528	|	Clipped	|	 22,279 	|
+|	Hood Canal	|	1997	|	GEORGE ADAMS HATCHERY	|	04199900000269	|	630527	|	Unclipped	|	 21,728 	|
+|	Hood Canal	|	1997	|	GEORGE ADAMS HATCHERY	|	04199900000269	|	630529	|	Unclipped	|	 22,312 	|
+|	Hood Canal	|	1997	|	QUILCENE NFH	|	071999WC35B2	|	051542	|	Clipped	|	 12,570 	|
+|	Hood Canal	|	1997	|	QUILCENE NFH	|	071999WC35B2	|	051323	|	Unclipped	|	 11,736 	|
+|	Hood Canal	|	1997	|	QUILCENE NFH	|	071999WC35B5	|	051543	|	Clipped	|	 12,234 	|
+|	Hood Canal	|	1997	|	QUILCENE NFH	|	071999WC35B5	|	051324	|	Unclipped	|	 11,305 	|
+|	Hood Canal	|	1997	|	QUILCENE NFH	|	071999WC35B8	|	051544	|	Clipped	|	 11,789 	|
+|	Hood Canal	|	1997	|	QUILCENE NFH	|	071999WC35B8	|	051325	|	Unclipped	|	 11,451 	|
+|	Hood Canal	|	1997	|	QUILCENE NFH	|	071999WC35D7	|	051552	|	Clipped	|	 11,820 	|
+|	Hood Canal	|	1997	|	QUILCENE NFH	|	071999WC35D7	|	051326	|	Unclipped	|	 11,743 	|
+|	Hood Canal	|	1997	|	QUILCENE BAY SEA PEN	|	141999DI02	|	051704	|	Clipped	|	 48,875 	|
+|	Hood Canal	|	1997	|	QUILCENE BAY SEA PEN	|	141999DI02	|	051331	|	Unclipped	|	 45,788 	|
+|	Hood Canal	|	1997	|	PORT GAMBLE BAY PENS	|	141999DI05	|	210133	|	Clipped	|	 49,420 	|
+|	Hood Canal	|	1997	|	PORT GAMBLE BAY PENS	|	141999DI05	|	636216	|	Unclipped	|	 52,593 	|
+|	Hood Canal	|	1998	|	GEORGE ADAMS HATCHERY	|	04200000000262	|	630918	|	Clipped	|	 42,496 	|
+|	Hood Canal	|	1998	|	GEORGE ADAMS HATCHERY	|	04200000000262	|	630917	|	Unclipped	|	 41,288 	|
+|	Hood Canal	|	1998	|	QUILCENE NFH	|	072000WC50B3	|	055159	|	Clipped	|	 12,031 	|
+|	Hood Canal	|	1998	|	QUILCENE NFH	|	072000WC50B3	|	055160	|	Unclipped	|	 11,602 	|
+|	Hood Canal	|	1998	|	QUILCENE NFH	|	072000WC50B5	|	055161	|	Clipped	|	 12,061 	|
+|	Hood Canal	|	1998	|	QUILCENE NFH	|	072000WC50B5	|	055162	|	Unclipped	|	 10,843 	|
+|	Hood Canal	|	1998	|	QUILCENE NFH	|	072000WC50B7	|	055163	|	Clipped	|	 11,978 	|
+|	Hood Canal	|	1998	|	QUILCENE NFH	|	072000WC50B7	|	055204	|	Unclipped	|	 9,900 	|
+|	Hood Canal	|	1998	|	QUILCENE NFH	|	072000WC50D5	|	055205	|	Clipped	|	 12,123 	|
+|	Hood Canal	|	1998	|	QUILCENE NFH	|	072000WC50D5	|	055206	|	Unclipped	|	 12,271 	|
+|	Hood Canal	|	1998	|	PORT GAMBLE BAY PENS	|	142000DI03	|	631157	|	Clipped	|	 49,346 	|
+|	Hood Canal	|	1998	|	PORT GAMBLE BAY PENS	|	142000DI03	|	210136	|	Unclipped	|	 49,077 	|
+|	Hood Canal	|	1998	|	QUILCENE BAY SEA PEN	|	142000DI06	|	055125	|	Clipped	|	 48,023 	|
+|	Hood Canal	|	1998	|	QUILCENE BAY SEA PEN	|	142000DI06	|	055126	|	Unclipped	|	 48,640 	|
+|	Hood Canal	|	1999	|	GEORGE ADAMS HATCHERY	|	04200100000268	|	630372	|	Clipped	|	 24,221 	|
+|	Hood Canal	|	1999	|	GEORGE ADAMS HATCHERY	|	04200100000268	|	630373	|	Clipped	|	 25,178 	|
+|	Hood Canal	|	1999	|	GEORGE ADAMS HATCHERY	|	04200100000268	|	630374	|	Unclipped	|	 25,207 	|
+|	Hood Canal	|	1999	|	GEORGE ADAMS HATCHERY	|	04200100000268	|	630371	|	Unclipped	|	 26,198 	|
+|	Hood Canal	|	1999	|	QUILCENE NFH	|	072001WC25B3	|	050378	|	Clipped	|	 12,468 	|
+|	Hood Canal	|	1999	|	QUILCENE NFH	|	072001WC25B3	|	050379	|	Unclipped	|	 9,387 	|
+|	Hood Canal	|	1999	|	QUILCENE NFH	|	072001WC25B5	|	050380	|	Clipped	|	 10,611 	|
+|	Hood Canal	|	1999	|	QUILCENE NFH	|	072001WC25B5	|	050381	|	Unclipped	|	 12,971 	|
+|	Hood Canal	|	1999	|	QUILCENE NFH	|	072001WC25B7	|	050382	|	Clipped	|	 11,113 	|
+|	Hood Canal	|	1999	|	QUILCENE NFH	|	072001WC25B7	|	050383	|	Unclipped	|	 9,020 	|
+|	Hood Canal	|	1999	|	QUILCENE NFH	|	072001WC25D5	|	050384	|	Clipped	|	 12,077 	|
+|	Hood Canal	|	1999	|	QUILCENE NFH	|	072001WC25D5	|	050385	|	Unclipped	|	 10,551 	|
+|	Hood Canal	|	1999	|	QUILCENE BAY SEA PEN	|	142001DI04	|	050295	|	Clipped	|	 41,710 	|
+|	Hood Canal	|	1999	|	QUILCENE BAY SEA PEN	|	142001DI04	|	050296	|	Unclipped	|	 42,407 	|
+|	Hood Canal	|	1999	|	PORT GAMBLE BAY PENS	|	142001DI05	|	210262	|	Clipped	|	 44,146 	|
+|	Hood Canal	|	1999	|	PORT GAMBLE BAY PENS	|	142001DI05	|	630297	|	Unclipped	|	 45,375 	|
+|	Hood Canal	|	2000	|	GEORGE ADAMS HATCHERY	|	04200200000270	|	630591	|	Clipped	|	 43,686 	|
+|	Hood Canal	|	2000	|	GEORGE ADAMS HATCHERY	|	04200200000270	|	630592	|	Unclipped	|	 43,518 	|
+|	Hood Canal	|	2000	|	QUILCENE NFH	|	072002WC80B3	|	050591	|	Clipped	|	 12,564 	|
+|	Hood Canal	|	2000	|	QUILCENE NFH	|	072002WC80B3	|	050592	|	Unclipped	|	 12,435 	|
+|	Hood Canal	|	2000	|	QUILCENE NFH	|	072002WC80B5	|	050593	|	Clipped	|	 11,659 	|
+|	Hood Canal	|	2000	|	QUILCENE NFH	|	072002WC80B5	|	050594	|	Unclipped	|	 11,863 	|
+|	Hood Canal	|	2000	|	QUILCENE NFH	|	072002WC80B8	|	050595	|	Clipped	|	 12,596 	|
+|	Hood Canal	|	2000	|	QUILCENE NFH	|	072002WC80B8	|	050596	|	Unclipped	|	 11,870 	|
+|	Hood Canal	|	2000	|	QUILCENE NFH	|	072002WC80D6	|	050597	|	Clipped	|	 12,494 	|
+|	Hood Canal	|	2000	|	QUILCENE NFH	|	072002WC80D6	|	050598	|	Unclipped	|	 12,625 	|
+|	Hood Canal	|	2000	|	QUILCENE BAY SEA PEN	|	142002DI04	|	050664	|	Clipped	|	 46,542 	|
+|	Hood Canal	|	2000	|	QUILCENE BAY SEA PEN	|	142002DI04	|	050599	|	Unclipped	|	 45,880 	|
+|	Hood Canal	|	2000	|	PORT GAMBLE BAY PENS	|	142002DI05	|	210193	|	Clipped	|	 44,707 	|
+|	Hood Canal	|	2000	|	PORT GAMBLE BAY PENS	|	142002DI05	|	630977	|	Unclipped	|	 45,664 	|
+|	Hood Canal	|	2001	|	GEORGE ADAMS HATCHERY	|	04200300000260	|	631518	|	Clipped	|	 21,359 	|
+|	Hood Canal	|	2001	|	GEORGE ADAMS HATCHERY	|	04200300000260	|	631517	|	Clipped	|	 22,260 	|
+|	Hood Canal	|	2001	|	GEORGE ADAMS HATCHERY	|	04200300000260	|	631473	|	Unclipped	|	 21,763 	|
+|	Hood Canal	|	2001	|	GEORGE ADAMS HATCHERY	|	04200300000260	|	631474	|	Unclipped	|	 21,881 	|
+|	Hood Canal	|	2001	|	QUILCENE NFH	|	072003UILB40440	|	051076	|	Clipped	|	 11,449 	|
+|	Hood Canal	|	2001	|	QUILCENE NFH	|	072003UILB40440	|	051077	|	Unclipped	|	 12,790 	|
+|	Hood Canal	|	2001	|	QUILCENE NFH	|	072003UILB60440	|	051078	|	Clipped	|	 11,640 	|
+|	Hood Canal	|	2001	|	QUILCENE NFH	|	072003UILB60440	|	051079	|	Unclipped	|	 12,017 	|
+|	Hood Canal	|	2001	|	QUILCENE NFH	|	072003UILB80440	|	051080	|	Clipped	|	 12,148 	|
+|	Hood Canal	|	2001	|	QUILCENE NFH	|	072003UILB80440	|	051081	|	Unclipped	|	 12,158 	|
+|	Hood Canal	|	2001	|	QUILCENE BAY SEA PEN	|	142003DI04	|	050999	|	Clipped	|	 23,000 	|
+|	Hood Canal	|	2001	|	QUILCENE BAY SEA PEN	|	142003DI04	|	051064	|	Unclipped	|	 20,000 	|
+|	Hood Canal	|	2001	|	PORT GAMBLE BAY PENS	|	142003DI05	|	210398	|	Clipped	|	 44,779 	|
+|	Hood Canal	|	2001	|	PORT GAMBLE BAY PENS	|	142003DI05	|	210399	|	Unclipped	|	 45,159 	|
+|	Hood Canal	|	2002	|	QUILCENE NFH	|	0720040500	|	051672	|	Clipped	|	 11,090 	|
+|	Hood Canal	|	2002	|	QUILCENE NFH	|	0720040500	|	051674	|	Clipped	|	 11,072 	|
+|	Hood Canal	|	2002	|	QUILCENE NFH	|	0720040500	|	051668	|	Clipped	|	 10,243 	|
+|	Hood Canal	|	2002	|	QUILCENE NFH	|	0720040500	|	051670	|	Clipped	|	 10,708 	|
+|	Hood Canal	|	2002	|	QUILCENE NFH	|	0720040500	|	051673	|	Unclipped	|	 11,118 	|
+|	Hood Canal	|	2002	|	QUILCENE NFH	|	0720040500	|	051675	|	Unclipped	|	 10,450 	|
+|	Hood Canal	|	2002	|	QUILCENE NFH	|	0720040500	|	051669	|	Unclipped	|	 11,785 	|
+|	Hood Canal	|	2002	|	QUILCENE NFH	|	0720040500	|	051671	|	Unclipped	|	 11,728 	|
+|	Hood Canal	|	2002	|	GEORGE ADAMS HATCHERY	|	04200400000273	|	632079	|	Clipped	|	 22,036 	|
+|	Hood Canal	|	2002	|	GEORGE ADAMS HATCHERY	|	04200400000273	|	632078	|	Clipped	|	 21,650 	|
+|	Hood Canal	|	2002	|	GEORGE ADAMS HATCHERY	|	04200400000273	|	632080	|	Unclipped	|	 21,612 	|
+|	Hood Canal	|	2002	|	GEORGE ADAMS HATCHERY	|	04200400000273	|	632081	|	Unclipped	|	 22,269 	|
+|	Hood Canal	|	2002	|	PORT GAMBLE BAY PENS	|	142004DI04	|	210427	|	Clipped	|	 45,343 	|
+|	Hood Canal	|	2002	|	PORT GAMBLE BAY PENS	|	142004DI04	|	631527	|	Unclipped	|	 45,397 	|
+|	Hood Canal	|	2003	|	GEORGE ADAMS HATCHERY	|	04200500000272	|	632290	|	Clipped	|	 41,584 	|
+|	Hood Canal	|	2003	|	GEORGE ADAMS HATCHERY	|	04200500000272	|	632672	|	Unclipped	|	 41,626 	|
+|	Hood Canal	|	2003	|	QUILCENE NFH	|	072005QL550B2	|	052296	|	Clipped	|	 11,221 	|
+|	Hood Canal	|	2003	|	QUILCENE NFH	|	072005QL550B2	|	052297	|	Unclipped	|	 11,145 	|
+|	Hood Canal	|	2003	|	QUILCENE NFH	|	072005QL550B4	|	052298	|	Clipped	|	 10,143 	|
+|	Hood Canal	|	2003	|	QUILCENE NFH	|	072005QL550B4	|	052299	|	Unclipped	|	 10,117 	|
+|	Hood Canal	|	2003	|	QUILCENE NFH	|	072005QL550B7	|	052364	|	Clipped	|	 10,404 	|
+|	Hood Canal	|	2003	|	QUILCENE NFH	|	072005QL550B7	|	052365	|	Unclipped	|	 10,272 	|
+|	Hood Canal	|	2003	|	QUILCENE NFH	|	072005QL550D6	|	052366	|	Clipped	|	 9,239 	|
+|	Hood Canal	|	2003	|	QUILCENE NFH	|	072005QL550D6	|	052367	|	Unclipped	|	 7,043 	|
+|	Hood Canal	|	2003	|	PORT GAMBLE BAY PENS	|	142005DI04	|	210554	|	Clipped	|	 43,342 	|
+|	Hood Canal	|	2003	|	PORT GAMBLE BAY PENS	|	142005DI04	|	632675	|	Unclipped	|	 43,110 	|
+|	Hood Canal	|	2004	|	QUILCENE NFH	|	0720060600	|	052699	|	Clipped	|	 11,263 	|
+|	Hood Canal	|	2004	|	QUILCENE NFH	|	0720060600	|	052765	|	Clipped	|	 11,502 	|
+|	Hood Canal	|	2004	|	QUILCENE NFH	|	0720060600	|	052767	|	Clipped	|	 12,562 	|
+|	Hood Canal	|	2004	|	QUILCENE NFH	|	0720060600	|	052769	|	Clipped	|	 12,467 	|
+|	Hood Canal	|	2004	|	QUILCENE NFH	|	0720060600	|	052768	|	Unclipped	|	 13,144 	|
+|	Hood Canal	|	2004	|	QUILCENE NFH	|	0720060600	|	052764	|	Unclipped	|	 11,591 	|
+|	Hood Canal	|	2004	|	QUILCENE NFH	|	0720060600	|	052766	|	Unclipped	|	 12,816 	|
+|	Hood Canal	|	2004	|	QUILCENE NFH	|	0720060600	|	052770	|	Unclipped	|	 11,540 	|
+|	Hood Canal	|	2004	|	GEORGE ADAMS HATCHERY	|	04200600000280	|	633265	|	Clipped	|	 44,965 	|
+|	Hood Canal	|	2004	|	GEORGE ADAMS HATCHERY	|	04200600000280	|	633264	|	Unclipped	|	 44,879 	|
+|	Hood Canal	|	2005	|	QUILCENE NFH	|	0720070635	|	053284	|	Clipped	|	 6,321 	|
+|	Hood Canal	|	2005	|	QUILCENE NFH	|	0720070635	|	053280	|	Clipped	|	 12,889 	|
+|	Hood Canal	|	2005	|	QUILCENE NFH	|	0720070635	|	053282	|	Clipped	|	 11,343 	|
+|	Hood Canal	|	2005	|	QUILCENE NFH	|	0720070635	|	053278	|	Clipped	|	 11,027 	|
+|	Hood Canal	|	2005	|	QUILCENE NFH	|	0720070635	|	053285	|	Unclipped	|	 6,408 	|
+|	Hood Canal	|	2005	|	QUILCENE NFH	|	0720070635	|	053283	|	Unclipped	|	 10,616 	|
+|	Hood Canal	|	2005	|	QUILCENE NFH	|	0720070635	|	053281	|	Unclipped	|	 12,160 	|
+|	Hood Canal	|	2005	|	QUILCENE NFH	|	0720070635	|	053279	|	Unclipped	|	 11,345 	|
+|	Hood Canal	|	2005	|	GEORGE ADAMS HATCHERY	|	04200700000283	|	633679	|	Clipped	|	 43,785 	|
+|	Hood Canal	|	2005	|	GEORGE ADAMS HATCHERY	|	04200700000283	|	633678	|	Unclipped	|	 43,193 	|
+|	Hood Canal	|	2006	|	QUILCENE NFH	|	0720080680	|	053972	|	Clipped	|	 8,566 	|
+|	Hood Canal	|	2006	|	QUILCENE NFH	|	0720080680	|	053976	|	Clipped	|	 9,569 	|
+|	Hood Canal	|	2006	|	QUILCENE NFH	|	0720080680	|	053965	|	Clipped	|	 6,832 	|
+|	Hood Canal	|	2006	|	QUILCENE NFH	|	0720080680	|	053974	|	Clipped	|	 9,172 	|
+|	Hood Canal	|	2006	|	QUILCENE NFH	|	0720080680	|	053977	|	Unclipped	|	 9,510 	|
+|	Hood Canal	|	2006	|	QUILCENE NFH	|	0720080680	|	053966	|	Unclipped	|	 6,923 	|
+|	Hood Canal	|	2006	|	QUILCENE NFH	|	0720080680	|	053973	|	Unclipped	|	 8,469 	|
+|	Hood Canal	|	2006	|	QUILCENE NFH	|	0720080680	|	053975	|	Unclipped	|	 9,445 	|
+|	Hood Canal	|	2006	|	GEORGE ADAMS HATCHERY	|	04200800000277	|	634168	|	Clipped	|	 45,482 	|
+|	Hood Canal	|	2006	|	GEORGE ADAMS HATCHERY	|	04200800000277	|	634167	|	Unclipped	|	 53,098 	|
+|	Hood Canal	|	2007	|	QUILCENE NFH	|	0720090775	|	054479	|	Clipped	|	 7,168 	|
+|	Hood Canal	|	2007	|	QUILCENE NFH	|	0720090775	|	054477	|	Clipped	|	 9,858 	|
+|	Hood Canal	|	2007	|	QUILCENE NFH	|	0720090775	|	054473	|	Clipped	|	 9,580 	|
+|	Hood Canal	|	2007	|	QUILCENE NFH	|	0720090775	|	054475	|	Clipped	|	 9,861 	|
+|	Hood Canal	|	2007	|	QUILCENE NFH	|	0720090775	|	054478	|	Unclipped	|	 9,647 	|
+|	Hood Canal	|	2007	|	QUILCENE NFH	|	0720090775	|	054480	|	Unclipped	|	 9,717 	|
+|	Hood Canal	|	2007	|	QUILCENE NFH	|	0720090775	|	054474	|	Unclipped	|	 9,578 	|
+|	Hood Canal	|	2007	|	QUILCENE NFH	|	0720090775	|	054476	|	Unclipped	|	 10,006 	|
+|	Hood Canal	|	2007	|	GEORGE ADAMS HATCHERY	|	04200900000278	|	634486	|	Clipped	|	 45,669 	|
+|	Hood Canal	|	2007	|	GEORGE ADAMS HATCHERY	|	04200900000278	|	634487	|	Unclipped	|	 45,669 	|
+|	Hood Canal	|	2008	|	QUILCENE NFH	|	0720100875	|	054765	|	Clipped	|	 8,422 	|
+|	Hood Canal	|	2008	|	QUILCENE NFH	|	0720100875	|	054769	|	Clipped	|	 9,919 	|
+|	Hood Canal	|	2008	|	QUILCENE NFH	|	0720100875	|	054771	|	Clipped	|	 9,691 	|
+|	Hood Canal	|	2008	|	QUILCENE NFH	|	0720100875	|	054767	|	Clipped	|	 9,903 	|
+|	Hood Canal	|	2008	|	QUILCENE NFH	|	0720100875	|	054770	|	Unclipped	|	 10,025 	|
+|	Hood Canal	|	2008	|	QUILCENE NFH	|	0720100875	|	054772	|	Unclipped	|	 9,935 	|
+|	Hood Canal	|	2008	|	QUILCENE NFH	|	0720100875	|	054766	|	Unclipped	|	 9,961 	|
+|	Hood Canal	|	2008	|	QUILCENE NFH	|	0720100875	|	054768	|	Unclipped	|	 10,405 	|
+|	Hood Canal	|	2008	|	GEORGE ADAMS HATCHERY	|	04201000000249	|	634887	|	Clipped	|	 44,613 	|
+|	Hood Canal	|	2008	|	GEORGE ADAMS HATCHERY	|	04201000000249	|	634888	|	Unclipped	|	 45,371 	|
+|	Hood Canal	|	2009	|	QUILCENE NFH	|	0720110975	|	055175	|	Clipped	|	 10,450 	|
+|	Hood Canal	|	2009	|	QUILCENE NFH	|	0720110975	|	055173	|	Clipped	|	 10,249 	|
+|	Hood Canal	|	2009	|	QUILCENE NFH	|	0720110975	|	055176	|	Unclipped	|	 10,126 	|
+|	Hood Canal	|	2009	|	QUILCENE NFH	|	0720110975	|	055174	|	Unclipped	|	 10,350 	|
+|	Hood Canal	|	2009	|	GEORGE ADAMS HATCHERY	|	04201100000255	|	635385	|	Clipped	|	 45,698 	|
+|	Hood Canal	|	2009	|	GEORGE ADAMS HATCHERY	|	04201100000255	|	635386	|	Unclipped	|	 45,815 	|
+|	Hood Canal	|	2010	|	QUILCENE NFH	|	0720121075	|	055464	|	Clipped	|	 24,936 	|
+|	Hood Canal	|	2010	|	QUILCENE NFH	|	0720121075	|	055334	|	Clipped	|	 9,817 	|
+|	Hood Canal	|	2010	|	QUILCENE NFH	|	0720121075	|	055328	|	Clipped	|	 9,429 	|
+|	Hood Canal	|	2010	|	QUILCENE NFH	|	0720121075	|	055465	|	Unclipped	|	 24,752 	|
+|	Hood Canal	|	2010	|	QUILCENE NFH	|	0720121075	|	055335	|	Unclipped	|	 10,012 	|
+|	Hood Canal	|	2010	|	QUILCENE NFH	|	0720121075	|	055329	|	Unclipped	|	 9,495 	|
+|	Hood Canal	|	2010	|	GEORGE ADAMS HATCHERY	|	04201200000258	|	635985	|	Clipped	|	 45,259 	|
+|	Hood Canal	|	2010	|	GEORGE ADAMS HATCHERY	|	04201200000258	|	635989	|	Unclipped	|	 45,568 	|
+|	Hood Canal	|	2011	|	QUILCENE NFH	|	0720131175	|	055484	|	Clipped	|	 71,292 	|
+|	Hood Canal	|	2011	|	QUILCENE NFH	|	0720131175	|	055483	|	Unclipped	|	 70,746 	|
+|	Hood Canal	|	2011	|	GEORGE ADAMS HATCHERY	|	04201300000032	|	636381	|	Clipped	|	 44,504 	|
+|	Hood Canal	|	2011	|	GEORGE ADAMS HATCHERY	|	04201300000032	|	636380	|	Unclipped	|	 45,042 	|
+|	Hood Canal	|	2012	|	QUILCENE NFH	|	0720141275	|	055308	|	Clipped	|	 72,256 	|
+|	Hood Canal	|	2012	|	QUILCENE NFH	|	0720141275	|	055478	|	Unclipped	|	 72,744 	|
+|	Hood Canal	|	2012	|	GEORGE ADAMS HATCHERY	|	04201400000081	|	636559	|	Clipped	|	 44,820 	|
+|	Hood Canal	|	2012	|	GEORGE ADAMS HATCHERY	|	04201400000081	|	636558	|	Unclipped	|	 44,820 	|
+|	Hood Canal	|	2013	|	QUILCENE NFH	|	0720151375	|	055306	|	Clipped	|	 73,938 	|
+|	Hood Canal	|	2013	|	QUILCENE NFH	|	0720151375	|	055307	|	Unclipped	|	 73,509 	|
+|	Hood Canal	|	2013	|	GEORGE ADAMS HATCHERY	|	04201500000798	|	636703	|	Clipped	|	 44,158 	|
+|	Hood Canal	|	2013	|	GEORGE ADAMS HATCHERY	|	04201500000798	|	636704	|	Unclipped	|	 43,284 	|
+|	Hood Canal	|	2014	|	QUILCENE NFH	|	0720161475	|	055751	|	Clipped	|	 71,079 	|
+|	Hood Canal	|	2014	|	QUILCENE NFH	|	0720161475	|	055680	|	Unclipped	|	 70,368 	|
+|	Hood Canal	|	2014	|	GEORGE ADAMS HATCHERY	|	04201600000839	|	636847	|	Clipped	|	 46,640 	|
+|	Hood Canal	|	2014	|	GEORGE ADAMS HATCHERY	|	04201600000839	|	636848	|	Unclipped	|	 46,999 	|
+|	Hood Canal	|	2015	|	QUILCENE NFH	|	0720171575	|	055895	|	Clipped	|	 79,057 	|
+|	Hood Canal	|	2015	|	QUILCENE NFH	|	0720171575	|	055896	|	Unclipped	|	 79,146 	|
+|	Hood Canal	|	2015	|	GEORGE ADAMS HATCHERY	|	04201700000879	|	636997	|	Clipped	|	 46,750 	|
+|	Hood Canal	|	2015	|	GEORGE ADAMS HATCHERY	|	04201700000879	|	636998	|	Unclipped	|	 46,375 	|
+|	Hood Canal	|	2016	|	QUILCENE NFH	|	0720181675	|	056037	|	Clipped	|	 70,322 	|
+|	Hood Canal	|	2016	|	QUILCENE NFH	|	0720181675	|	056038	|	Unclipped	|	 70,095 	|
+|	Hood Canal	|	2016	|	GEORGE ADAMS HATCHERY	|	04201800000900	|	637085	|	Clipped	|	 46,812 	|
+|	Hood Canal	|	2016	|	GEORGE ADAMS HATCHERY	|	04201800000900	|	637084	|	Unclipped	|	 47,018 	|
+|	Hood Canal	|	2017	|	QUILCENE NFH	|	0720191775	|	055904	|	Clipped	|	 82,296 	|
+|	Hood Canal	|	2017	|	QUILCENE NFH	|	0720191775	|	055905	|	Unclipped	|	 80,181 	|
+|	Hood Canal	|	2017	|	GEORGE ADAMS HATCHERY	|	04201900000948	|	637276	|	Clipped	|	 44,442 	|
+|	Hood Canal	|	2017	|	GEORGE ADAMS HATCHERY	|	04201900000948	|	637277	|	Unclipped	|	 45,313 	|
+|	Hood Canal	|	2018	|	QUILCENE NFH	|	0720201875	|	056166	|	Clipped	|	 79,847 	|
+|	Hood Canal	|	2018	|	QUILCENE NFH	|	0720201875	|	056167	|	Unclipped	|	 79,855 	|
+|	Hood Canal	|	2018	|	GEORGE ADAMS HATCHERY	|	04202000001038	|	637558	|	Clipped	|	 45,740 	|
+|	Hood Canal	|	2018	|	GEORGE ADAMS HATCHERY	|	04202000001038	|	637568	|	Unclipped	|	 45,574 	|
+|	Hood Canal	|	2019	|	QUILCENE NFH	|	0720211975	|	056330	|	Clipped	|	 77,453 	|
+|	Hood Canal	|	2019	|	QUILCENE NFH	|	0720211975	|	056331	|	Unclipped	|	 79,039 	|
+|	Hood Canal	|	2019	|	GEORGE ADAMS HATCHERY	|	04202100001066	|	637672	|	Clipped	|	 45,368 	|
+|	Hood Canal	|	2019	|	GEORGE ADAMS HATCHERY	|	04202100001066	|	637673	|	Unclipped	|	 45,368 	|
+|	Hood Canal	|	2020	|	QUILCENE NFH	|	0720222075	|	056527	|	Clipped	|	 78,013 	|
+|	Hood Canal	|	2020	|	QUILCENE NFH	|	0720222075	|	056526	|	Unclipped	|	 77,835 	|
+|	Hood Canal	|	2020	|	GEORGE ADAMS HATCHERY	|	04202200001131	|	638007	|	Clipped	|	 47,031 	|
+|	Hood Canal	|	2020	|	GEORGE ADAMS HATCHERY	|	04202200001131	|	638006	|	Unclipped	|	 46,772 	|
+|	Hood Canal	|	2021	|	QUILCENE NFH	|	0720232175	|	056679	|	Clipped	|	 75,411 	|
+|	Hood Canal	|	2021	|	QUILCENE NFH	|	0720232175	|	056678	|	Unclipped	|	 78,258 	|
+|	Hood Canal	|	2021	|	GEORGE ADAMS HATCHERY	|	04202300001150	|	638120	|	Clipped	|	 45,565 	|
+|	Hood Canal	|	2021	|	GEORGE ADAMS HATCHERY	|	04202300001150	|	638237	|	Unclipped	|	 45,712 	|
+|	SJDF	|	1995	|	LOWER ELWHA HATCHERY	|	1419979001	|	636221	|	Clipped	|	 48,511 	|
+|	SJDF	|	1995	|	LOWER ELWHA HATCHERY	|	1419979001	|	212923	|	Clipped	|	 29,639 	|
+|	SJDF	|	1995	|	LOWER ELWHA HATCHERY	|	1419979001	|	212615	|	Unclipped	|	 72,909 	|
+|	SJDF	|	1996	|	LOWER ELWHA HATCHERY	|	1419989002	|	213046	|	Clipped	|	 78,862 	|
+|	SJDF	|	1996	|	LOWER ELWHA HATCHERY	|	1419989002	|	213048	|	Unclipped	|	 75,203 	|
+|	SJDF	|	1997	|	LOWER ELWHA HATCHERY	|	141999DI03	|	213047	|	Clipped	|	 74,940 	|
+|	SJDF	|	1997	|	LOWER ELWHA HATCHERY	|	141999DI03	|	630814	|	Unclipped	|	 77,378 	|
+|	SJDF	|	1998	|	LOWER ELWHA HATCHERY	|	142000DI04	|	210220	|	Clipped	|	 79,438 	|
+|	SJDF	|	1998	|	LOWER ELWHA HATCHERY	|	142000DI04	|	631101	|	Unclipped	|	 76,733 	|
+|	SJDF	|	1999	|	LOWER ELWHA HATCHERY	|	142001DI06	|	210171	|	Clipped	|	 62,465 	|
+|	SJDF	|	1999	|	LOWER ELWHA HATCHERY	|	142001DI06	|	631105	|	Unclipped	|	 61,865 	|
+|	SJDF	|	2000	|	LOWER ELWHA HATCHERY	|	142002DI06	|	630965	|	Clipped	|	 70,742 	|
+|	SJDF	|	2000	|	LOWER ELWHA HATCHERY	|	142002DI06	|	210192	|	Unclipped	|	 71,362 	|
+|	SJDF	|	2001	|	LOWER ELWHA HATCHERY	|	142003DI06	|	210222	|	Clipped	|	 72,867 	|
+|	SJDF	|	2001	|	LOWER ELWHA HATCHERY	|	142003DI06	|	210409	|	Unclipped	|	 73,722 	|
+|	SJDF	|	2002	|	LOWER ELWHA HATCHERY	|	142004DI05	|	210426	|	Clipped	|	 74,683 	|
+|	SJDF	|	2002	|	LOWER ELWHA HATCHERY	|	142004DI05	|	210376	|	Unclipped	|	 75,185 	|
+|	SJDF	|	2003	|	LOWER ELWHA HATCHERY	|	142005DI05	|	210549	|	Clipped	|	 63,274 	|
+|	SJDF	|	2003	|	LOWER ELWHA HATCHERY	|	142005DI05	|	632680	|	Unclipped	|	 51,084 	|
+|	SJDF	|	2004	|	LOWER ELWHA HATCHERY	|	142006DI04	|	210587	|	Clipped	|	 77,661 	|
+|	SJDF	|	2004	|	LOWER ELWHA HATCHERY	|	142006DI04	|	632692	|	Unclipped	|	 78,779 	|
+|	SJDF	|	2005	|	LOWER ELWHA HATCHERY	|	142007DI004	|	210676	|	Clipped	|	 76,159 	|
+|	SJDF	|	2005	|	LOWER ELWHA HATCHERY	|	142007DI004	|	633187	|	Unclipped	|	 76,246 	|
+|	SJDF	|	2006	|	LOWER ELWHA HATCHERY	|	142008DI001	|	633980	|	Clipped	|	 78,303 	|
+|	SJDF	|	2006	|	LOWER ELWHA HATCHERY	|	142008DI001	|	210747	|	Unclipped	|	 79,887 	|
+|	SJDF	|	2007	|	LOWER ELWHA HATCHERY	|	142009000005	|	210785	|	Clipped	|	 78,972 	|
+|	SJDF	|	2007	|	LOWER ELWHA HATCHERY	|	142009000005	|	634375	|	Unclipped	|	 79,013 	|
+|	SJDF	|	2008	|	LOWER ELWHA HATCHERY	|	142010elwha0	|	210839	|	Clipped	|	 79,575 	|
+|	SJDF	|	2008	|	LOWER ELWHA HATCHERY	|	142010elwha0	|	635084	|	Unclipped	|	 79,897 	|
+|	SJDF	|	2009	|	LOWER ELWHA HATCHERY	|	142010elwhac	|	210904	|	Clipped	|	 80,405 	|
+|	SJDF	|	2009	|	LOWER ELWHA HATCHERY	|	142010elwhac	|	635190	|	Unclipped	|	 80,086 	|
+|	SJDF	|	2010	|	LOWER ELWHA HATCHERY	|	142010elwha1	|	210956	|	Clipped	|	 82,395 	|
+|	SJDF	|	2010	|	LOWER ELWHA HATCHERY	|	142010elwha1	|	635585	|	Unclipped	|	 83,081 	|
+|	SJDF	|	2011	|	LOWER ELWHA HATCH - HOUSE	|	142012elwha	|	211025	|	Clipped	|	 76,261 	|
+|	SJDF	|	2011	|	LOWER ELWHA HATCH - HOUSE	|	142012elwha	|	636189	|	Unclipped	|	 66,615 	|
+|	SJDF	|	2013	|	LOWER ELWHA HATCH - HOUSE	|	142013elwha	|	211086	|	Clipped	|	 78,416 	|
+|	SJDF	|	2013	|	LOWER ELWHA HATCH - HOUSE	|	142013elwha	|	636634	|	Unclipped	|	 75,654 	|
+|	SJDF	|	2014	|	LOWER ELWHA HATCH - HOUSE	|	142014elwha	|	211129	|	Clipped	|	 50,318 	|
+|	SJDF	|	2014	|	LOWER ELWHA HATCH - HOUSE	|	142014elwha	|	636774	|	Unclipped	|	 76,104 	|
+|	SJDF	|	2016	|	LOWER ELWHA HATCH - HOUSE	|	142016elwa	|	211207	|	Clipped	|	 76,635 	|
+|	SJDF	|	2016	|	LOWER ELWHA HATCH - HOUSE	|	142016elwa	|	637134	|	Unclipped	|	 77,346 	|
+|	SJDF	|	2017	|	LOWER ELWHA HATCH - HOUSE	|	142019ELWH	|	211295	|	Clipped	|	 76,577 	|
+|	SJDF	|	2017	|	LOWER ELWHA HATCH - HOUSE	|	142019ELWH	|	637320	|	Unclipped	|	 76,791 	|
+|	SJDF	|	2019	|	LOWER ELWHA HATCH - HOUSE	|	142021ELWHA2	|	211382	|	Clipped	|	 81,324 	|
+|	SJDF	|	2019	|	LOWER ELWHA HATCH - HOUSE	|	142021ELWHA2	|	637705	|	Unclipped	|	 83,328 	|
+|	SJDF	|	2020	|	LOWER ELWHA HATCH - HOUSE	|	142022ELWHA2	|	211499	|	Clipped	|	 77,209 	|
+|	SJDF	|	2020	|	LOWER ELWHA HATCH - HOUSE	|	142022ELWHA2	|	637710	|	Unclipped	|	 77,162 	|
+|	SJDF	|	2021	|	LOWER ELWHA HATCH - HOUSE	|	142023ELWHA2	|	211561	|	Clipped	|	 80,177 	|
+|	SJDF	|	2021	|	LOWER ELWHA HATCH - HOUSE	|	142023ELWHA2	|	638259	|	Unclipped	|	 80,277 	|
+|	Quillayute	|	1996	|	SOLDUC HATCHERY	|	04199800000401	|	636305	|	Clipped	|	 11,785 	|
+|	Quillayute	|	1996	|	SOLDUC HATCHERY	|	04199800000401	|	636303	|	Clipped	|	 11,894 	|
+|	Quillayute	|	1996	|	SOLDUC HATCHERY	|	04199800000401	|	636302	|	Clipped	|	 12,086 	|
+|	Quillayute	|	1996	|	SOLDUC HATCHERY	|	04199800000401	|	636301	|	Clipped	|	 12,070 	|
+|	Quillayute	|	1996	|	SOLDUC HATCHERY	|	04199800000401	|	636304	|	Clipped	|	 11,782 	|
+|	Quillayute	|	1996	|	SOLDUC HATCHERY	|	04199800000401	|	636306	|	Clipped	|	 11,716 	|
+|	Quillayute	|	1996	|	SOLDUC HATCHERY	|	04199800000401	|	636260	|	Unclipped	|	 12,339 	|
+|	Quillayute	|	1996	|	SOLDUC HATCHERY	|	04199800000401	|	636307	|	Unclipped	|	 12,192 	|
+|	Quillayute	|	1996	|	SOLDUC HATCHERY	|	04199800000401	|	636308	|	Unclipped	|	 12,294 	|
+|	Quillayute	|	1996	|	SOLDUC HATCHERY	|	04199800000401	|	636309	|	Unclipped	|	 12,446 	|
+|	Quillayute	|	1996	|	SOLDUC HATCHERY	|	04199800000401	|	636310	|	Unclipped	|	 12,059 	|
+|	Quillayute	|	1996	|	SOLDUC HATCHERY	|	04199800000401	|	636261	|	Unclipped	|	 12,368 	|
+|	Quillayute	|	1997	|	SOLDUC HATCHERY	|	04199900000399	|	630927	|	Clipped	|	 12,206 	|
+|	Quillayute	|	1997	|	SOLDUC HATCHERY	|	04199900000399	|	630928	|	Clipped	|	 12,166 	|
+|	Quillayute	|	1997	|	SOLDUC HATCHERY	|	04199900000399	|	630926	|	Clipped	|	 12,133 	|
+|	Quillayute	|	1997	|	SOLDUC HATCHERY	|	04199900000399	|	630924	|	Clipped	|	 12,183 	|
+|	Quillayute	|	1997	|	SOLDUC HATCHERY	|	04199900000399	|	630925	|	Clipped	|	 12,156 	|
+|	Quillayute	|	1997	|	SOLDUC HATCHERY	|	04199900000399	|	630929	|	Clipped	|	 12,290 	|
+|	Quillayute	|	1997	|	SOLDUC HATCHERY	|	04199900000399	|	630933	|	Unclipped	|	 12,288 	|
+|	Quillayute	|	1997	|	SOLDUC HATCHERY	|	04199900000399	|	630930	|	Unclipped	|	 12,375 	|
+|	Quillayute	|	1997	|	SOLDUC HATCHERY	|	04199900000399	|	630931	|	Unclipped	|	 12,223 	|
+|	Quillayute	|	1997	|	SOLDUC HATCHERY	|	04199900000399	|	630935	|	Unclipped	|	 8,360 	|
+|	Quillayute	|	1997	|	SOLDUC HATCHERY	|	04199900000399	|	630932	|	Unclipped	|	 12,341 	|
+|	Quillayute	|	1997	|	SOLDUC HATCHERY	|	04199900000399	|	630934	|	Unclipped	|	 12,398 	|
+|	Quillayute	|	1998	|	SOLDUC HATCHERY	|	04200000000397	|	631231	|	Clipped	|	 36,858 	|
+|	Quillayute	|	1998	|	SOLDUC HATCHERY	|	04200000000397	|	631217	|	Clipped	|	 34,895 	|
+|	Quillayute	|	1998	|	SOLDUC HATCHERY	|	04200000000397	|	631230	|	Unclipped	|	 36,134 	|
+|	Quillayute	|	1998	|	SOLDUC HATCHERY	|	04200000000397	|	631216	|	Unclipped	|	 36,032 	|
+|	Quillayute	|	1999	|	SOLDUC HATCHERY	|	04200100000400	|	630291	|	Clipped	|	 71,348 	|
+|	Quillayute	|	1999	|	SOLDUC HATCHERY	|	04200100000400	|	630574	|	Unclipped	|	 64,087 	|
+|	Quillayute	|	2000	|	SOLDUC HATCHERY	|	04200200000396	|	631181	|	Clipped	|	 47,890 	|
+|	Quillayute	|	2000	|	SOLDUC HATCHERY	|	04200200000396	|	631275	|	Clipped	|	 12,501 	|
+|	Quillayute	|	2000	|	SOLDUC HATCHERY	|	04200200000396	|	631277	|	Clipped	|	 12,140 	|
+|	Quillayute	|	2000	|	SOLDUC HATCHERY	|	04200200000396	|	631274	|	Unclipped	|	 12,226 	|
+|	Quillayute	|	2000	|	SOLDUC HATCHERY	|	04200200000396	|	631276	|	Unclipped	|	 12,016 	|
+|	Quillayute	|	2000	|	SOLDUC HATCHERY	|	04200200000396	|	631180	|	Unclipped	|	 48,872 	|
+|	Quillayute	|	2001	|	SOLDUC HATCHERY	|	04200300000390	|	631679	|	Clipped	|	 12,581 	|
+|	Quillayute	|	2001	|	SOLDUC HATCHERY	|	04200300000390	|	631564	|	Clipped	|	 50,964 	|
+|	Quillayute	|	2001	|	SOLDUC HATCHERY	|	04200300000390	|	631677	|	Clipped	|	 12,297 	|
+|	Quillayute	|	2001	|	SOLDUC HATCHERY	|	04200300000390	|	631678	|	Unclipped	|	 12,359 	|
+|	Quillayute	|	2001	|	SOLDUC HATCHERY	|	04200300000390	|	631565	|	Unclipped	|	 51,600 	|
+|	Quillayute	|	2001	|	SOLDUC HATCHERY	|	04200300000390	|	631680	|	Unclipped	|	 9,780 	|
+|	Quillayute	|	2002	|	SOLDUC HATCHERY	|	04200400000391	|	631988	|	Clipped	|	 47,031 	|
+|	Quillayute	|	2002	|	SOLDUC HATCHERY	|	04200400000391	|	632265	|	Clipped	|	 11,580 	|
+|	Quillayute	|	2002	|	SOLDUC HATCHERY	|	04200400000391	|	632266	|	Clipped	|	 11,778 	|
+|	Quillayute	|	2002	|	SOLDUC HATCHERY	|	04200400000391	|	632267	|	Unclipped	|	 11,884 	|
+|	Quillayute	|	2002	|	SOLDUC HATCHERY	|	04200400000391	|	632264	|	Unclipped	|	 11,482 	|
+|	Quillayute	|	2002	|	SOLDUC HATCHERY	|	04200400000391	|	631685	|	Unclipped	|	 48,379 	|
+|	Quillayute	|	2003	|	SOLDUC HATCHERY	|	04200500000389	|	632684	|	Clipped	|	 73,248 	|
+|	Quillayute	|	2003	|	SOLDUC HATCHERY	|	04200500000389	|	632690	|	Unclipped	|	 73,234 	|
+|	Quillayute	|	2004	|	SOLDUC HATCHERY	|	04200600000388	|	633189	|	Unclipped	|	 75,932 	|
+|	Quillayute	|	2004	|	SOLDUC HATCHERY	|	04200600000388	|	633190	|	Clipped	|	 74,508 	|
+|	Quillayute	|	2005	|	SOLDUC HATCHERY	|	04200700000395	|	633677	|	Clipped	|	 72,242 	|
+|	Quillayute	|	2005	|	SOLDUC HATCHERY	|	04200700000395	|	633676	|	Unclipped	|	 71,195 	|
+|	Quillayute	|	2006	|	SOLDUC HATCHERY	|	04200800000392	|	634091	|	Clipped	|	 76,439 	|
+|	Quillayute	|	2006	|	SOLDUC HATCHERY	|	04200800000392	|	634090	|	Unclipped	|	 76,684 	|
+|	Quillayute	|	2007	|	SOLDUC HATCHERY	|	04200900000394	|	633184	|	Clipped	|	 75,208 	|
+|	Quillayute	|	2007	|	SOLDUC HATCHERY	|	04200900000394	|	633183	|	Unclipped	|	 75,261 	|
+|	Quillayute	|	2008	|	SOLDUC HATCHERY	|	04201000000403	|	634968	|	Clipped	|	 77,081 	|
+|	Quillayute	|	2008	|	SOLDUC HATCHERY	|	04201000000403	|	634969	|	Unclipped	|	 77,549 	|
+|	Quillayute	|	2009	|	SOLDUC HATCHERY	|	04201100000402	|	635464	|	Clipped	|	 77,397 	|
+|	Quillayute	|	2009	|	SOLDUC HATCHERY	|	04201100000402	|	635465	|	Unclipped	|	 75,700 	|
+|	Quillayute	|	2010	|	SOLDUC HATCHERY	|	04201200000404	|	635877	|	Clipped	|	 80,757 	|
+|	Quillayute	|	2010	|	SOLDUC HATCHERY	|	04201200000404	|	635878	|	Unclipped	|	 80,185 	|
+|	Quillayute	|	2011	|	SOLDUC HATCHERY	|	04201300000044	|	635881	|	Clipped	|	 76,456 	|
+|	Quillayute	|	2011	|	SOLDUC HATCHERY	|	04201300000044	|	635882	|	Unclipped	|	 76,179 	|
+|	Quillayute	|	2012	|	SOLDUC HATCHERY	|	04201400000039	|	636398	|	Clipped	|	 79,336 	|
+|	Quillayute	|	2012	|	SOLDUC HATCHERY	|	04201400000039	|	636399	|	Unclipped	|	 79,205 	|
+|	Quillayute	|	2013	|	SOLDUC HATCHERY	|	04201500000799	|	636708	|	Clipped	|	 75,551 	|
+|	Quillayute	|	2013	|	SOLDUC HATCHERY	|	04201500000799	|	636709	|	Unclipped	|	 76,669 	|
+|	Quillayute	|	2014	|	SOLDUC HATCHERY	|	04201600000846	|	636865	|	Clipped	|	 75,012 	|
+|	Quillayute	|	2014	|	SOLDUC HATCHERY	|	04201600000846	|	636866	|	Unclipped	|	 77,281 	|
+|	Quillayute	|	2015	|	SOLDUC HATCHERY	|	04201700000866	|	636913	|	Clipped	|	 79,705 	|
+|	Quillayute	|	2015	|	SOLDUC HATCHERY	|	04201700000866	|	636914	|	Unclipped	|	 79,740 	|
+|	Quillayute	|	2016	|	SOLDUC HATCHERY	|	04201800000921	|	637131	|	Clipped	|	 75,067 	|
+|	Quillayute	|	2016	|	SOLDUC HATCHERY	|	04201800000921	|	637132	|	Unclipped	|	 75,027 	|
+|	Quillayute	|	2017	|	SOLDUC HATCHERY	|	04201900000956	|	637321	|	Clipped	|	 76,883 	|
+|	Quillayute	|	2017	|	SOLDUC HATCHERY	|	04201900000956	|	637323	|	Unclipped	|	 77,503 	|
+|	Quillayute	|	2018	|	SOLDUC HATCHERY	|	04202000001008	|	637502	|	Clipped	|	 74,561 	|
+|	Quillayute	|	2018	|	SOLDUC HATCHERY	|	04202000001008	|	637501	|	Unclipped	|	 74,464 	|
+|	Quillayute	|	2019	|	SOLDUC HATCHERY	|	04202100001076	|	637707	|	Clipped	|	 66,913 	|
+|	Quillayute	|	2019	|	SOLDUC HATCHERY	|	04202100001076	|	637708	|	Unclipped	|	 66,913 	|
+|	Quillayute	|	2020	|	SOLDUC HATCHERY	|	04202200001135	|	638018	|	Clipped	|	 73,848 	|
+|	Quillayute	|	2020	|	SOLDUC HATCHERY	|	04202200001135	|	638019	|	Unclipped	|	 74,549 	|
+|	Quillayute	|	2021	|	SOLDUC HATCHERY	|	04202300001155	|	638167	|	Clipped	|	 75,201 	|
+|	Quillayute	|	2021	|	SOLDUC HATCHERY	|	04202300001155	|	638260	|	Unclipped	|	 75,248 	|
+|	Queets	|	1995	|	SALMON R FISH CULTUR	|	1419979002	|	215502	|	Clipped	|	 98,204 	|
+|	Queets	|	1995	|	SALMON R FISH CULTUR	|	1419979002	|	636154	|	Unclipped	|	 71,275 	|
+|	Queets	|	1996	|	SALMON R FISH CULTUR	|	1419989003	|	630557	|	Clipped	|	 73,905 	|
+|	Queets	|	1996	|	SALMON R FISH CULTUR	|	1419989003	|	215503	|	Unclipped	|	 98,473 	|
+|	Queets	|	1997	|	SALMON R FISH CULTUR	|	141999DI04	|	630818	|	Clipped	|	 72,236 	|
+|	Queets	|	1997	|	SALMON R FISH CULTUR	|	141999DI04	|	210139	|	Unclipped	|	 68,208 	|
+|	Queets	|	1998	|	SALMON R FISH CULTUR	|	142000DI05	|	210227	|	Clipped	|	 68,440 	|
+|	Queets	|	1998	|	SALMON R FISH CULTUR	|	142000DI05	|	631103	|	Unclipped	|	 72,008 	|
+|	Queets	|	1999	|	SALMON R FISH CULTUR	|	142001DI07	|	210198	|	Clipped	|	 69,441 	|
+|	Queets	|	1999	|	SALMON R FISH CULTUR	|	142001DI07	|	630575	|	Unclipped	|	 72,796 	|
+|	Queets	|	2000	|	SALMON R FISH CULTUR	|	142002DI07	|	210330	|	Clipped	|	 72,257 	|
+|	Queets	|	2000	|	SALMON R FISH CULTUR	|	142002DI07	|	631190	|	Unclipped	|	 71,602 	|
+|	Queets	|	2001	|	SALMON R FISH CULTUR	|	142003DI07	|	631413	|	Clipped	|	 72,882 	|
+|	Queets	|	2001	|	SALMON R FISH CULTUR	|	142003DI07	|	210395	|	Unclipped	|	 73,408 	|
+|	Queets	|	2002	|	SALMON R FISH CULTUR	|	142004DI06	|	210518	|	Clipped	|	 74,207 	|
+|	Queets	|	2002	|	SALMON R FISH CULTUR	|	142004DI06	|	210499	|	Unclipped	|	 40,719 	|
+|	Queets	|	2002	|	SALMON R FISH CULTUR	|	142004DI06	|	210505	|	Unclipped	|	 33,721 	|
+|	Queets	|	2003	|	SALMON R FISH CULTUR	|	142005DI06	|	210572	|	Clipped	|	 70,869 	|
+|	Queets	|	2003	|	SALMON R FISH CULTUR	|	142005DI06	|	632691	|	Unclipped	|	 74,130 	|
+|	Queets	|	2004	|	SALMON R FISH CULTUR	|	142006DI05	|	210635	|	Clipped	|	 79,912 	|
+|	Queets	|	2004	|	SALMON R FISH CULTUR	|	142006DI05	|	633191	|	Unclipped	|	 78,945 	|
+|	Queets	|	2005	|	SALMON R FISH CULTUR	|	142007srcoho	|	633175	|	Clipped	|	 73,041 	|
+|	Queets	|	2005	|	SALMON R FISH CULTUR	|	142007srcoho	|	210692	|	Unclipped	|	 81,321 	|
+|	Queets	|	2006	|	SALMON R FISH CULTUR	|	142008D004	|	633481	|	Clipped	|	 72,133 	|
+|	Queets	|	2006	|	SALMON R FISH CULTUR	|	142008D004	|	210731	|	Unclipped	|	 81,407 	|
+|	Queets	|	2007	|	SALMON R FISH CULTUR	|	142009QUINC	|	210772	|	Clipped	|	 68,967 	|
+|	Queets	|	2007	|	SALMON R FISH CULTUR	|	142009QUINC	|	634181	|	Unclipped	|	 75,056 	|
+|	Queets	|	2008	|	SALMON R FISH CULTUR	|	142010quin001	|	210854	|	Clipped	|	 73,581 	|
+|	Queets	|	2008	|	SALMON R FISH CULTUR	|	142010quin001	|	634768	|	Unclipped	|	 77,578 	|
+|	Queets	|	2009	|	SALMON R FISH CULTUR	|	172011Q0002	|	210924	|	Clipped	|	 80,105 	|
+|	Queets	|	2009	|	SALMON R FISH CULTUR	|	172011Q0002	|	635189	|	Unclipped	|	 81,078 	|
+|	Queets	|	2010	|	SALMON R FISH CULTUR	|	172012Q0002	|	210965	|	Clipped	|	 79,280 	|
+|	Queets	|	2010	|	SALMON R FISH CULTUR	|	172012Q0002	|	635586	|	Unclipped	|	 80,161 	|
+|	Queets	|	2011	|	SALMON R FISH CULTUR	|	172013Q0001	|	211003	|	Clipped	|	 75,171 	|
+|	Queets	|	2011	|	SALMON R FISH CULTUR	|	172013Q0001	|	636188	|	Unclipped	|	 74,732 	|
+|	Queets	|	2012	|	SALMON R FISH CULTUR	|	172014Q0002	|	211037	|	Clipped	|	 80,063 	|
+|	Queets	|	2012	|	SALMON R FISH CULTUR	|	172014Q0002	|	636468	|	Unclipped	|	 83,283 	|
+|	Queets	|	2013	|	SALMON R FISH CULTUR	|	172015Q0003	|	211038	|	Clipped	|	 71,623 	|
+|	Queets	|	2013	|	SALMON R FISH CULTUR	|	172015Q0003	|	636631	|	Unclipped	|	 72,173 	|
+|	Queets	|	2014	|	SALMON R FISH CULTUR	|	172016Q0003	|	211119	|	Clipped	|	 79,589 	|
+|	Queets	|	2014	|	SALMON R FISH CULTUR	|	172016Q0003	|	636775	|	Unclipped	|	 79,707 	|
+|	Queets	|	2015	|	SALMON R FISH CULTUR	|	172017Q0001	|	211182	|	Clipped	|	 76,651 	|
+|	Queets	|	2015	|	SALMON R FISH CULTUR	|	172017Q0001	|	636911	|	Unclipped	|	 77,470 	|
+|	Queets	|	2016	|	SALMON R FISH CULTUR	|	172018Q0001	|	211204	|	Clipped	|	 76,791 	|
+|	Queets	|	2016	|	SALMON R FISH CULTUR	|	172018Q0001	|	637133	|	Unclipped	|	 76,229 	|
+|	Queets	|	2017	|	SALMON R FISH CULTUR	|	172019Q0001	|	211252	|	Clipped	|	 78,516 	|
+|	Queets	|	2017	|	SALMON R FISH CULTUR	|	172019Q0001	|	637322	|	Unclipped	|	 78,756 	|
+|	Queets	|	2018	|	SALMON R FISH CULTUR	|	172020Q0001	|	211312	|	Clipped	|	 80,594 	|
+|	Queets	|	2018	|	SALMON R FISH CULTUR	|	172020Q0001	|	637498	|	Unclipped	|	 79,234 	|
+|	Queets	|	2019	|	SALMON R FISH CULTUR	|	172021Q0001	|	211401	|	Clipped	|	 79,998 	|
+|	Queets	|	2019	|	SALMON R FISH CULTUR	|	172021Q0001	|	637706	|	Unclipped	|	 79,918 	|
+|	Queets	|	2020	|	SALMON R FISH CULTUR	|	172022Q0001	|	211512	|	Clipped	|	 78,689 	|
+|	Queets	|	2020	|	SALMON R FISH CULTUR	|	172022Q0001	|	637938	|	Unclipped	|	 79,848 	|
+|	Queets	|	2021	|	SALMON R FISH CULTUR	|	172023Q0002	|	211569	|	Clipped	|	 81,608 	|
+|	Queets	|	2021	|	SALMON R FISH CULTUR	|	172023Q0002	|	638256	|	Unclipped	|	 82,272 	|
+|	Grays Harbor	|	1995	|	HUMPTULIPS HATCHERY	|	04199700000410	|	636222	|	Clipped	|	 39,309 	|
+|	Grays Harbor	|	1995	|	HUMPTULIPS HATCHERY	|	04199700000410	|	636224	|	Clipped	|	 39,763 	|
+|	Grays Harbor	|	1995	|	HUMPTULIPS HATCHERY	|	04199700000410	|	636225	|	Unclipped	|	 39,406 	|
+|	Grays Harbor	|	1995	|	HUMPTULIPS HATCHERY	|	04199700000410	|	636223	|	Unclipped	|	 39,736 	|
+|	Grays Harbor	|	1995	|	BINGHAM CR HATCHERY	|	04199700000440	|	636157	|	Clipped	|	 72,015 	|
+|	Grays Harbor	|	1995	|	BINGHAM CR HATCHERY	|	04199700000440	|	636148	|	Unclipped	|	 74,919 	|
+|	Grays Harbor	|	1995	|	BINGHAM CR HATCHERY	|	04199700000441	|	636149	|	Clipped	|	 71,970 	|
+|	Grays Harbor	|	1995	|	BINGHAM CR HATCHERY	|	04199700000441	|	636150	|	Unclipped	|	 72,340 	|
+|	Grays Harbor	|	1996	|	HUMPTULIPS HATCHERY	|	04199800000411	|	636226	|	Clipped	|	 39,780 	|
+|	Grays Harbor	|	1996	|	HUMPTULIPS HATCHERY	|	04199800000411	|	636228	|	Clipped	|	 39,541 	|
+|	Grays Harbor	|	1996	|	HUMPTULIPS HATCHERY	|	04199800000411	|	636227	|	Unclipped	|	 39,244 	|
+|	Grays Harbor	|	1996	|	HUMPTULIPS HATCHERY	|	04199800000411	|	636229	|	Unclipped	|	 35,265 	|
+|	Grays Harbor	|	1996	|	BINGHAM CR HATCHERY	|	04199800000423	|	630340	|	Clipped	|	 63,978 	|
+|	Grays Harbor	|	1996	|	BINGHAM CR HATCHERY	|	04199800000423	|	630341	|	Unclipped	|	 65,229 	|
+|	Grays Harbor	|	1996	|	BINGHAM CR HATCHERY	|	04199800000439	|	636213	|	Clipped	|	 59,911 	|
+|	Grays Harbor	|	1996	|	BINGHAM CR HATCHERY	|	04199800000439	|	636212	|	Unclipped	|	 61,023 	|
+|	Grays Harbor	|	1997	|	BINGHAM CR HATCHERY	|	04199900000424	|	630562	|	Clipped	|	 75,449 	|
+|	Grays Harbor	|	1997	|	BINGHAM CR HATCHERY	|	04199900000424	|	630563	|	Unclipped	|	 74,744 	|
+|	Grays Harbor	|	1998	|	BINGHAM CR HATCHERY	|	04200000000420	|	630916	|	Clipped	|	 65,986 	|
+|	Grays Harbor	|	1998	|	BINGHAM CR HATCHERY	|	04200000000420	|	630915	|	Unclipped	|	 72,076 	|
+|	Grays Harbor	|	1998	|	SKOOKUMCHUCK HATCHERY	|	04200000000421	|	631154	|	Clipped	|	 51,017 	|
+|	Grays Harbor	|	1998	|	SKOOKUMCHUCK HATCHERY	|	04200000000421	|	631153	|	Unclipped	|	 51,966 	|
+|	Grays Harbor	|	1999	|	BINGHAM CR HATCHERY	|	none	|	630289	|	Clipped	|	 69,347 	|
+|	Grays Harbor	|	1999	|	BINGHAM CR HATCHERY	|	none	|	630288	|	Unclipped	|	 67,861 	|
+|	Grays Harbor	|	2000	|	BINGHAM CR HATCHERY	|	04200200000419	|	630899	|	Clipped	|	 71,665 	|
+|	Grays Harbor	|	2000	|	BINGHAM CR HATCHERY	|	04200200000419	|	630964	|	Unclipped	|	 71,016 	|
+|	Grays Harbor	|	2001	|	BINGHAM CR HATCHERY	|	04200300000418	|	631475	|	Clipped	|	 69,765 	|
+|	Grays Harbor	|	2001	|	BINGHAM CR HATCHERY	|	04200300000418	|	631531	|	Unclipped	|	 69,866 	|
+|	Grays Harbor	|	2002	|	BINGHAM CR HATCHERY	|	04200400000426	|	631875	|	Clipped	|	 69,462 	|
+|	Grays Harbor	|	2002	|	BINGHAM CR HATCHERY	|	04200400000426	|	631874	|	Unclipped	|	 71,462 	|
+|	Grays Harbor	|	2003	|	BINGHAM CR HATCHERY	|	04200500000427	|	632480	|	Clipped	|	 72,242 	|
+|	Grays Harbor	|	2003	|	BINGHAM CR HATCHERY	|	04200500000427	|	632481	|	Unclipped	|	 72,242 	|
+|	Grays Harbor	|	2004	|	BINGHAM CR HATCHERY	|	04200600000430	|	632693	|	Clipped	|	 72,621 	|
+|	Grays Harbor	|	2004	|	BINGHAM CR HATCHERY	|	04200600000430	|	633090	|	Unclipped	|	 71,973 	|
+|	Grays Harbor	|	2005	|	BINGHAM CR HATCHERY	|	04200700000432	|	633564	|	Clipped	|	 71,290 	|
+|	Grays Harbor	|	2005	|	BINGHAM CR HATCHERY	|	04200700000432	|	633499	|	Unclipped	|	 71,752 	|
+|	Grays Harbor	|	2006	|	BINGHAM CR HATCHERY	|	04200800000433	|	633675	|	Clipped	|	 73,728 	|
+|	Grays Harbor	|	2006	|	BINGHAM CR HATCHERY	|	04200800000433	|	633674	|	Unclipped	|	 73,371 	|
+|	Grays Harbor	|	2007	|	BINGHAM CR HATCHERY	|	04200900000434	|	634571	|	Clipped	|	 73,833 	|
+|	Grays Harbor	|	2007	|	BINGHAM CR HATCHERY	|	04200900000434	|	634572	|	Unclipped	|	 73,326 	|
+|	Grays Harbor	|	2008	|	BINGHAM CR HATCHERY	|	04201000000436	|	634967	|	Clipped	|	 71,762 	|
+|	Grays Harbor	|	2008	|	BINGHAM CR HATCHERY	|	04201000000436	|	634966	|	Unclipped	|	 72,179 	|
+|	Grays Harbor	|	2009	|	BINGHAM CR HATCHERY	|	04201100000442	|	635467	|	Clipped	|	 67,388 	|
+|	Grays Harbor	|	2009	|	BINGHAM CR HATCHERY	|	04201100000442	|	635468	|	Unclipped	|	 67,954 	|
+|	Grays Harbor	|	2010	|	BINGHAM CR HATCHERY	|	04201200000443	|	635879	|	Clipped	|	 71,234 	|
+|	Grays Harbor	|	2010	|	BINGHAM CR HATCHERY	|	04201200000443	|	635880	|	Unclipped	|	 71,753 	|
+|	Grays Harbor	|	2011	|	BINGHAM CR HATCHERY	|	04201300000036	|	636393	|	Clipped	|	 72,929 	|
+|	Grays Harbor	|	2011	|	BINGHAM CR HATCHERY	|	04201300000036	|	636394	|	Unclipped	|	 73,041 	|
+|	Grays Harbor	|	2012	|	BINGHAM CR HATCHERY	|	04201400000040	|	636402	|	Clipped	|	 72,302 	|
+|	Grays Harbor	|	2012	|	BINGHAM CR HATCHERY	|	04201400000040	|	636401	|	Unclipped	|	 72,623 	|
+|	Grays Harbor	|	2013	|	BINGHAM CR HATCHERY	|	04201500000803	|	636716	|	Clipped	|	 71,792 	|
+|	Grays Harbor	|	2013	|	BINGHAM CR HATCHERY	|	04201500000803	|	636717	|	Unclipped	|	 71,108 	|
+|	Grays Harbor	|	2014	|	BINGHAM CR HATCHERY	|	04201600000840	|	636849	|	Clipped	|	 44,961 	|
+|	Grays Harbor	|	2014	|	BINGHAM CR HATCHERY	|	04201600000840	|	636851	|	Clipped	|	 28,418 	|
+|	Grays Harbor	|	2014	|	BINGHAM CR HATCHERY	|	04201600000840	|	636850	|	Unclipped	|	 44,633 	|
+|	Grays Harbor	|	2014	|	BINGHAM CR HATCHERY	|	04201600000840	|	636852	|	Unclipped	|	 29,611 	|
+|	Grays Harbor	|	2015	|	BINGHAM CR HATCHERY	|	04201700000851	|	636905	|	Clipped	|	 73,706 	|
+|	Grays Harbor	|	2015	|	BINGHAM CR HATCHERY	|	04201700000851	|	636904	|	Unclipped	|	 74,263 	|
+|	Grays Harbor	|	2016	|	BINGHAM CR HATCHERY	|	04201800000913	|	637115	|	Clipped	|	 75,483 	|
+|	Grays Harbor	|	2016	|	BINGHAM CR HATCHERY	|	04201800000913	|	637114	|	Unclipped	|	 75,567 	|
+|	Grays Harbor	|	2017	|	BINGHAM CR HATCHERY	|	04201900000958	|	637324	|	Clipped	|	 74,591 	|
+|	Grays Harbor	|	2017	|	BINGHAM CR HATCHERY	|	04201900000958	|	637325	|	Unclipped	|	 74,881 	|
+|	Grays Harbor	|	2018	|	BINGHAM CR HATCHERY	|	04202000001023	|	637573	|	Clipped	|	 74,521 	|
+|	Grays Harbor	|	2018	|	BINGHAM CR HATCHERY	|	04202000001023	|	637574	|	Unclipped	|	 74,820 	|
+|	Grays Harbor	|	2019	|	BINGHAM CR HATCHERY	|	04202100001010	|	637504	|	Clipped	|	 74,991 	|
+|	Grays Harbor	|	2019	|	BINGHAM CR HATCHERY	|	04202100001010	|	637572	|	Unclipped	|	 75,580 	|
+|	Grays Harbor	|	2020	|	BINGHAM CR HATCHERY	|	04202200001134	|	638017	|	Clipped	|	 67,363 	|
+|	Grays Harbor	|	2020	|	BINGHAM CR HATCHERY	|	04202200001134	|	638016	|	Unclipped	|	 69,846 	|
+|	Grays Harbor	|	2021	|	BINGHAM CR HATCHERY	|	04202300001154	|	638258	|	Clipped	|	 74,937 	|
+|	Grays Harbor	|	2021	|	BINGHAM CR HATCHERY	|	04202300001154	|	638257	|	Unclipped	|	 74,578 	|
+
+
 
 *Question for the Southern Panel --> do you wish to see an assessment of CWTs recovered in fisheries (pre-terminal and terminal) for each MU (hatchery vs wild) over time?  We ask this because it may give the reader a sense of the data limitations when trying to employ the mixed-stock model*
 
