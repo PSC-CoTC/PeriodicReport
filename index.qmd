@@ -4477,9 +4477,9 @@ In an attempt to evaluate the implementation of Abundance Based Management of Co
 
 ## Management Unit Post-season Abundances and Categories
 
+Currently all of the MUs except the Lower Fraser River and Georgia Strait MUs have abundance break point criteria and associated exploitation rates for each abundance category. During catch years 2004 through 2021, MUs were considered Abundant 43% of the time, Moderate 24% of the time, and the remaining 32% were in Low status. Interior Fraser Management Unit was assigned Low status throughout the entire period assessed. U.S. Inside MUs were assigned an Abundant status less often (39% of the time) than U.S. Outside MUs (60%), while they were both assigned Low status nearly at equal rates (26 vs 24%). Over this 18 year time period, it appears that Low status was more often assigned post-season beginning with catch year 2015, when 80% were in Low status. During catch years 2015 to present, 50% of the MU assignments were Low status. The U.S. Straight of Juan de Fuca, Queets, and Grays Harbor MUs were assigned Low status in three or more consecutive catch years beginning with catch year 2015. A summary of MU abundances and associated categories are provided in the following table and figure.  
 
-
-** Post-season estimates of Ocean Age-3 total abundances and their associated status categories [A = abundanct, M = moderate, L= low] by MU for catch years 2004 through 2021.  Management Units in the Abundant category have green highlighted cells, Moderate ones are not highlighted, and those in Low status are highlighted orange.**  (need to make table fit unto a single page in Word)
+** Post-season estimates of Ocean Age-3 total abundances and their associated status categories [A = abundanct, M = moderate, L= low] by MU for catch years 2004 through 2021.  Management Units in the Abundant category have green highlighted cells, Moderate ones are not highlighted, and those in Low status are highlighted orange.**  (note - need to make table fit unto a single page in Word)
 
 ```{r gt_annual_abund}
 psc |> 
@@ -4537,10 +4537,9 @@ psc |>
 
 ```
 
+** Summary of the number of MUs in each abundance category, based on post-season assessments, of catch years 2004 through 2021. This figure is limited to the U.S. MUs and the Interior Fraser MU. **
 
 ![](images/MU_Status_by_yr.png){width=100% fig-alt="MU Abundance Status by Year"}
-
-
 
 ### ER Overview (placeholder table & fig)
 
