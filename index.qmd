@@ -4552,20 +4552,17 @@ psc |>
 
 ```
 
-Estimated ocean age-3 cohort abundances for the MUs are depicted below. 
+Estimated post-season ocean age-3 cohort abundances for the MUs are depicted below. Abundances for BC and US Inside MUs tend to be synchronous, with above- or below-average abundances occurring in the same years (e.g., high in 2001, low in 2006). Outside MUs are less synchronous and years with high abundances for Grays Harbor don't necessarily correspond to high abundances for other MUs.
 
-Abundances for inside MUs tend to be synchronous, with above- or below-average abundances occurring in the same years (e.g., high in 2001, low in 2006). Outside MUs are less synchronous and years with high abundances for Grays Harbor don't necessarily correspond to high abundances for other MUs.\
-
-
-**Estimated Ocean Age-3 Abundances of BC Coho Salmon Management Units; Catch Years 2004-2021.  update to 2022 when available**
+**Estimated Post-season Ocean Age-3 Abundances of BC Coho Salmon Management Units; Catch Years 2004-2021.  update to 2022 when available**
 
 ![](images/BC_Abund_by_yr.png){width=100% fig-alt="BC MU Ocean Age-3 Abundances by Year"}
 
-**Estimated Ocean Age-3 Abundances of US Inside Coho Salmon Management Units; Catch Years 2004-2021.  update to 2022 when available**
+**Estimated Post-season Ocean Age-3 Abundances of US Inside Coho Salmon Management Units; Catch Years 2004-2021.  update to 2022 when available**
 
 ![](images/US_Inside_Abund_by_yr.png){width=100% fig-alt="US Inside MU Ocean Age-3 Abundances by Year"}
 
-**Estimated Ocean Age-3 Abundances of US Outside Coho Salmon Management Units; Catch Years 2004-2021. update to 2022 when available**
+**Estimated Post-season Ocean Age-3 Abundances of US Outside Coho Salmon Management Units; Catch Years 2004-2021. update to 2022 when available**
 
 ![](images/US_Outside_Abund_by_yr.png){width=100% fig-alt="US Outside MU Ocean Age-3 Abundances by Year"}
 
@@ -4655,10 +4652,14 @@ Forecasts for the US Outside MUs performed better, on average, than the US Insid
 
 *A question for Southern Panel Members --> Would you like to see summaries using forecasted and post-season abundances in addition to abundance categories?*  
 
-## Management Unit Descriptions and Assessment
+## Management Unit Descriptions and Assessment of Performance 
+
+This section of the report focuses on descriptions of the individual MUs within the current Southern Coho Management Plan. Currently the US Inside MUs are the most complete, and the BC MU sections will be added soon.
+
+*Southern Panel --> please focus on the content within the Skagit MU when reviewing for content and clarity. CoTC will make any suggested changes and additions, if possible, to all of the MUs within this section following your input.*  
 
 ### Lower Fraser (PLACEHOLDER)
-#### Biological & Geographic Description
+#### Biological and Geographic Description
 #### Management Framework
 ##### Management Objectives
 ##### Stock Assessment
@@ -4676,6 +4677,8 @@ Forecasts for the US Outside MUs performed better, on average, than the US Insid
 plot_abund_bar("Lower Fraser")
 ```
 
+
+
 ```{r f_ns_msf_lfras}
 plot_ns_msf("Lower Fraser")
 ```
@@ -4683,7 +4686,7 @@ plot_ns_msf("Lower Fraser")
 ##### Historical Overview of Status of Management Unit
 
 ### Interior Fraser (PLACEHOLDER)
-#### Biological & Geographic Description
+#### Biological and Geographic Description
 #### Management Framework
 ##### Management Objectives
 ##### Stock Assessment
@@ -4709,7 +4712,7 @@ plot_ns_msf("Interior Fraser")
 
 ### Strait of Georgia (PLACEHOLDER)
 
-#### Biological & Geographic Description
+#### Biological and Geographic Description
 #### Management  Framework
 ##### Management Objectives
 ##### Stock Assessment
@@ -4735,7 +4738,7 @@ plot_ns_msf("Strait of Georgia")
 
 ### Skagit
 
-#### Biological & Geographic Description
+#### Biological and Geographic Description
 
 The Skagit MU is one of the US Inside MUs (refer to figure of inside MUs). All wild Coho that originate from the Skagit basin constitute this single management unit. The Skagit River MU consists of Coho Salmon in the Skagit River Basin and its major tributaries, the Baker, Sauk-Suiattle, and Cascade Rivers (MU Figure - fix Oak Harbar spelling). The Skagit basin drains the northern Cascade Mountains, flowing westward to Puget Sound and entering Puget Sound southwest of the city of Mt Vernon after splitting into to two similar-sized channels several miles above tidewater [@Haymes_2008]. The basin area accessible to anadromous salmonids downstream of the Skagit River reservoir system is 1,918 mi2 [4,968 km2] [@Volkhardt_et_al_2007]. There are currently two recognized Coho populations in the system, Baker and Skagit [@WDFW_and_WWTIT_1994]. The Baker run historically entered the system somewhat earlier than the Skagit run, but the two populations are nonetheless managed as a single management unit because: 1) there is considerable overlap in run timing, which would make it difficult to manage for separate escapement goals for each run; and 2) hatchery practices have so crossbred Baker and Skagit Coho that it is questionable whether a genetically separate Baker run population exists anymore [@WDFW_and_WWTIT_1994].
 
@@ -4992,7 +4995,7 @@ plot_status("Skagit")
 
 ### Stillaguamish
 
-#### Biological & Geographic Description
+#### Biological and Geographic Description
 
 The Stillaguamish MU is one of the US Inside MUs (refer to figure of inside MUs) and consists of the Stillaguamish River and its major tributaries, the North and South Forks (Figure x). Coho Salmon make use of all available habitat within the watershed not constrained by barriers to migration. The MU is made up of a single stock (Stillaguamish Coho Salmon), managed for natural production and for the purpose of achieving a desired spawning escapement objective.  Stillaguamish River Coho Salmon belong to the larger Puget Sound/Strait of Georgia Coho Salmon evolutionarily significant unit [ESU; @Weitkamp_et_al_1995]. This ESU is currently a species of concern under the US Endangered Species Act [@NOAA_Fisheries_2009].
 
@@ -5114,7 +5117,7 @@ plot_status("Stillaguamish")
 
 ### Snohomish
 
-#### Biological & Geographic Description
+#### Biological and Geographic Description
 
 The Snohomish MU is one of the US Inside MUs and includes all accessible waters of the Snohomish River Basin, Washington State, including its major tributaries, the Skykomish and Snoqualmie rivers.
 
@@ -5219,7 +5222,7 @@ plot_status("Snohomish")
 
 ### Hood Canal
 
-#### Biological & Geographic Description
+#### Biological and Geographic Description
 
 The Hood Canal MU is one of the US Inside MUs and includes all waters south and east of a line from Olele Point to Foulweather Bluff [WDFW_and_WWTIT_1994] (\@ref(fig:Hood_Canal_MU). This MU consists of the following nine stocks: Northeast Hood Canal, Dewatto, Southeast Hood Canal, Skokomish, Southwest Hood Canal, Hamma Hamma, Duckabush, Dosewallips, and Quilcene/Dabob Bays [@CCW_1998]. Coho Salmon utilize almost all of the accessible tributaries draining into Hood Canal. Hood Canal Coho Salmon belong to the larger Puget Sound/Strait of Georgia Coho Salmon evolutionarily significant unit (ESU; [@Weitkamp_et_al_1995]. This ESU is currently a species of concern under the US Endangered Species Act [@NOAA_Fisheries_2009].
 
@@ -5426,7 +5429,7 @@ plot_status("Hood Canal")
 
 ### US Strait of Juan de Fuca (JDF)
 
-#### Biological & Geographic Description
+#### Biological and Geographic Description
 
 The US Strait JDF MU is one of the US Inside MUs and includes Coho Salmon inhabiting the numerous streams and rivers along the southern side of Strait of Juan de Fuca.  This MU spans two evolutionarily significant units (ESUs).  Populations inhabiting the western Straits (from Salt Creek westwards) are part of the Olympic Peninsula ESU, while those inhabiting the Elwha River eastwards belong to the Puget Sound/Strait of Georgia ESU (Weitkamp et al. 1995).  The former was deemed “not warranted” for listing under the US Endangered Species Act, while the latter is a “species of concern” (NOAA Fisheries 2009).
 
@@ -5510,7 +5513,7 @@ plot_status("US Strait JDF")
 
 *Note that Quillayute and Queets values are those from the FRAM database and have not yet been extracted from the relevant TAMM cells for each year*
 
-#### Biological & Geographic Description
+#### Biological and Geographic Description
 
 The Quillayute MU consists of naturally-produced fall run Coho Salmon in the Quillayute River basin and its tributaries (Dickey, Sol Duc, Sitkum, Calawah, and Bogachiel rivers) (Figure 1.3). The Quillayute River has two unique populations of Coho, a summer run and a fall run (@Haymes_2008).  The summer Coho run has a peak river entry from the last week of August to the first week of September.  The fall Coho run has a run timing typical of other coastal Coho populations, with peak river entry in mid-October.  There is a hatchery and natural-origin production component to each population.  The Quillayute River MU consists of the natural-origin fall run.  Quillayute Coho belong to the Olympic Peninsula evolutionarily significant unit (ESU) (Weitkamp et al. 1995).  This ESU was deemed “not warranted” for listing under the US Endangered Species Act (Ford 2011).
 
@@ -5587,7 +5590,7 @@ plot_status("Quillayute")
 
 ### Hoh
 
-#### Biological & Geographic Description
+#### Biological and Geographic Description
 
 The Hoh MU consists of the Hoh River basin and consists of a single population of Coho Salmon occupying the Riverbasin.  This MU belongs to the Olympic Peninsula evolutionarily significant unit (ESU) (Weitkamp et al. 1995).  It was deemed “not warranted” for listing under the US Endangered Species Act (NOAA 2009).
 
@@ -5656,7 +5659,7 @@ plot_status("Hoh")
 
 *Note that Quillayute and Queets values are those from the FRAM database and have not yet been extracted from the relevant TAMM cells for each year*
 
-#### Biological & Geographic Description
+#### Biological and Geographic Description
 
 The Queets MU consists of a single population of Coho Salmon occupying the Queets River and its major tributary, the Clearwater River.  This MU belongs to the Olympic Peninsula evolutionarily significant unit (ESU) (Weitkamp et al. 1995).  It was deemed “not warranted” for listing under the US Endangered Species Act (NOAA 2009).
 
@@ -5727,7 +5730,7 @@ plot_status("Queets")
 
 ### Grays Harbor
 
-#### Biological & Geographic Description
+#### Biological and Geographic Description
 
 This MU consists of all tributaries to Grays Harbor, including the Chehalis and Humptulips river basins.  Coho Salmon inhabiting these basins are treated as a single population under the PST.  
 
