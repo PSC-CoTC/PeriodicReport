@@ -417,11 +417,11 @@ Under the CoABM regime, each Party is required to regulate its fisheries so as n
 
 ![Oregon Ocean Salmon Management Areas and Major Port Locations](images/OR_SMA.jpg){#fig-odfwmap}
 
-### Canadian Fisheries
+### Canadian Fisheries (CoTC note - this needs updating)
 
 Southern B.C. Coho Salmon are caught in First Nations, recreational, and commercial troll and net fisheries. Since Coho Salmon rear in areas near the coast they are readily caught in directed fisheries and as bycatch in fisheries targeting other species. As a result, Coho are harvested in mixed-stock fisheries, creating many challenges for the assessment and management of the species.
 
-Coho catches on the south coast of B.C. have declined since the mid-1980s, initially due to declining abundance and more recently because of severe conservation measures in response to the declining abundance. Total fishery ERs in Canada were reduced from a range of 75 to 80% in the mid-1980s to 60% in 1995, 37% in 1997, 5% in 1998, and are currently estimated by Backwards Coho FRAM at less than 10%.
+Coho catches on the south coast of B.C. have declined since the mid-1980s, initially due to declining abundance and more recently because of severe conservation measures in response to the declining abundance. Total fishery ERs in Canada were reduced from a range of 75 to 80% in the mid-1980s to 60% in 1995, 37% in 1997, 5% in 1998, and are currently estimated by Backwards Coho FRAM during catch years 2011 through 2021 at less than 10%.
 
 Historically 89% of the commercial Coho catch on the south coast of B.C. was taken by the troll sector with the remainder harvested by commercial net fisheries. The west coast of Vancouver Island (WCVI) troll fishery was the single largest commercial harvester, taking an average of 1.5 million Coho in the 10-year period before 1997, when major fishing restrictions were imposed. This fishery intercepted stocks from the U.S., Strait of Georgia, and WCVI. Since 2001, average catch retained in the WCVI troll fishery has been 725 Coho, due primarily to the timing and non-retention restrictions in place for this fishery. Historically, catch in the Strait of Georgia troll fishery, comprised predominantly of Strait of Georgia stocks, was much smaller than the WCVI troll fishery (1986-1995 averaged 150,000 Coho, annually). The Strait of Georgia troll fishery has not been permitted to retain Coho Salmon since 1995.
 
@@ -4554,7 +4554,7 @@ U.S. Inside MU exploitation rates were the lowest for the U.S. Strait of Juan de
 **U.S. Outside MUs**
 Over catch years 2011 through 2021, the U.S. Outdside MU also experienced a large range of exploitation rates, from a low of 3.8% by the Quillayute MU in 2021 to a high of 69.0% by the Hoh MU in 2013. The ER averaged 41.7% over all years for the Hoh MU, followed by the Quillayute MU at 36.6%, the Queets MU at 34.8%, the Grays Harbor MU at 34.6%, and Strait of Georgia MU at 16.8%.
 
-**Total Exploitation rates by MU, catch years 2011 through 2021.** (note - need to move Canadian MUs to top of table)
+**Total xxploitation rates by MU, catch years 2011 through 2021.** (note - need to move Canadian MUs to top of table)
 
 ```{r gt_annual_ER}
 psc |> 
@@ -4569,7 +4569,9 @@ psc |>
 
 ```
 
-Illustrating 25th, median and 75th quantile of post-2010 ERs by FRAM fishery.
+CoTC question --> what do you think of these figures?  How do we summarize ERs in text?  If we use these figures, should we provide the FRAM list of corresponding fisheries?  
+
+**25th, median, and 75th quantile of estimated post-season exploitation rates by MU and FRAM fishery.  Data includes catch years 2011 through 2021.** (note - need to correctly order figures, fix figure legend and axes, and further describe data summary. E.g., move Canadian MUs to top of figures, make x-axis same?).  Question for Southern Panel --> do you want this type of figure?  If so, what changes, if any, would you like to see?
 
 ```{r fig.height=14, fig.width=10, eval=T}
 #going towards "table F", but will need
