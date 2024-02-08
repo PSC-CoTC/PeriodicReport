@@ -4673,15 +4673,20 @@ This section of the report focuses on descriptions of the individual MUs within 
 ##### Forecast Evaluation
 ##### Fishery Mortality and Escapement
 
+(CoTC Note --> these figures squished and are fuzzy in the Word document. And, do we need to highlight 2010?)
+
 ```{r f_abund_bar_lfras}
 plot_abund_bar("Lower Fraser")
 ```
 
+** Lower Fraser MU post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years 2004 through 2021. The graphs include dashed trend lines and the vertical dotted lines highlight catch year 2010)
 
 
 ```{r f_ns_msf_lfras}
 plot_ns_msf("Lower Fraser")
 ```
+
+** Post-season estimates of fishery mortality for the Lower Fraser MU by mark-selective (MSF) and non-selective (NS) fisheries over catch years 1998 through 2021. These estimates are combined US and Canadian harvest impacts.**  
 
 ##### Historical Overview of Status of Management Unit
 
@@ -4704,9 +4709,13 @@ plot_ns_msf("Lower Fraser")
 plot_abund_bar("Interior Fraser")
 ```
 
+** Interior Fraser MU post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years 2004 through 2021. The graphs include dashed trend lines and the vertical dotted lines highlight catch year 2010)
+
 ```{r f_ns_msf_ifras}
 plot_ns_msf("Interior Fraser")
 ```
+
+** Post-season estimates of fishery mortality for the Interior Fraser MU by mark-selective (MSF) and non-selective (NS) fisheries over catch years 1998 through 2021. These estimates are combined US and Canadian harvest impacts.**  
 
 ##### Historical Overview of Status of Management Unit
 
@@ -4730,9 +4739,13 @@ plot_ns_msf("Interior Fraser")
 plot_abund_bar("Strait of Georgia")
 ```
 
+** Strait of Georgia MU post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years 2004 through 2021. The graphs include dashed trend lines and the vertical dotted lines highlight catch year 2010)
+
 ```{r f_ns_msf_strgrg}
 plot_ns_msf("Strait of Georgia")
 ```
+
+** Post-season estimates of fishery mortality for the Strait of Georgia MU by mark-selective (MSF) and non-selective (NS) fisheries over catch years 1998 through 2021. These estimates are combined US and Canadian harvest impacts.**  
 
 ##### Historical Overview of Status of Management Unit
 
@@ -4847,7 +4860,6 @@ static$releases |>
   
 ```
 
-
 ###### Forecast Methods
 
 Since 1996, WDFW and tribal biologists have developed forecasts of wild Coho run size for all primary and most secondary management units in Puget Sound and the Washington coast [@Zimmerman_2013]. These annual forecasts are described in the Pacific Fishery Management Council’s Preseason Forecast I document available each February [e.g., @PFMC_1_2013; www.pcouncil.org]. These forecasts rely on estimates of wild Coho production (i.e., smolts) paired with estimates of marine survival. Wild Coho production estimates for each of the primary and secondary management units in Puget Sound were derived from results of juvenile trapping studies conducted in the Skagit, Stillaguamish, Snohomish, Green, Nisqually, and Deschutes rivers as well as in tributaries to Lake Washington and Hood Canal.  Analyses of these long-term data sets have demonstrated that wild Coho smolt production is limited by a combination of factors including seeding levels (i.e., escapement), environmental effects (flows, marine derived nutrients), and habitat degradation [@Zimmerman_2012]. 
@@ -4944,33 +4956,124 @@ static$releases |>
   
 ```
 
+#### Management Unit Performance 
 
-#### Management Performance (MU-specific figures, tables, etc.)
-
-- includes historical/base period info, current fisheries
+This section of the report includes summaries of forecast performance, abundances and abundance categories, and exploitation rates and associated impacting fisheries for the Skagit MU. Base period MU exploitation rates are also provided. 
 
 ##### Forecast Evaluation
 
-A comparison of preseason adult ocean age-3 recruit forecasts with post-season estimates derived from Backwards FRAM run reconstruction have been mixed, with some forecasts over estimating abundances and others underestimating it (Table 4 2).  During catch years 2004–2013, predicted cohort size (without natural mortality) ranged from a low of 26,799 (2007) to a high of 155,814 (2004), while post-season estimates ranged from 11,521 (2006) to 145,283 (2004) (Table 4 2).  Accordingly, the difference between preseason and post-season estimates varied from -210% (2007) to +89% (2006) of the preseason estimates. 
+A comparison of preseason adult ocean age-3 recruit forecasts with post-season estimates derived from Backwards FRAM run reconstruction have been mixed, with some forecasts over estimating abundances and others underestimating it (Southern Panel --> do you wish to see a table of these data?). During catch years 2004–2021, predicted cohort size (without natural mortality) ranged from a low of 26,799 (2007) to a high of 155,814 (2004), while post-season estimates ranged from 11,521 (2006) to 145,283 (2004).  Accordingly, the difference between preseason and post-season estimates varied from -210% (2007) to +89% (2006) of the preseason estimates. 
 
-To-do --> add table 4.2 (pre-post table)
-**Preseason forecasts and post-season estimates of wild Coho in the Skagit MU. Cohort abundance is age-3 ocean recruits (harvest and escapement). Post-season cohort abundance is derived using the backwards version of the Fishery Regulation Assessment Model (FRAM).**
+CoTC --> need to create this figure for inclusion here
+**Preseason forecasts and post-season estimates of ocean age-3 abundance of Skagit MU. **
 
 
 ##### Fishery Mortality and Escapement
 
-The base period for the FRAM defines the temporal and spatial distributions of salmon fishing mortalities from each MU.  The current FRAM base period for Coho Salmon includes catch years 1986-1992.  During this period, fishing effort, tagging, and fishery sampling of Coho Salmon was high, allowing relatively fine-scale discrimination between salmon distributions.  Coded-wire-tag codes used during the base period for the Skagit MU are provided in Appendix B and average base period exploitation rates by individual fisheries are provided in Appendix C.
+*Base Period Exploitation Rates*
+The base period for the FRAM defines the temporal and spatial distributions of salmon fishing mortalities from each MU.  The current FRAM base period for Coho Salmon includes catch years 1986-1992.  During this period, fishing effort, tagging, and fishery sampling of Coho Salmon was high, allowing relatively fine-scale discrimination between salmon distributions.  Coded-wire-tag codes used during the base period for the Skagit MU are provided **here* and average base period exploitation rates by individual fisheries are listed below.
 
-During the base period, Coho production from the Skagit MU contributed to US and Canadian marine sport and commercial fisheries in southern British Columbia, the northern Washington coast, Strait of Juan de Fuca, and inner Puget Sound (Figure 5 1; Appendix C).  Terminal tribal and non-tribal set and drift-net Coho net fisheries occur in commercial fishery management area 8 and the lower Skagit River.  Moderate-sized Coho sport fisheries occur in sport fishery management area 8.1, the mainstem Skagit River, and the Cascade River.  The terminal fishery co-managers are WDFW, and the Upper Skagit, Sauk-Suiattle, and Swinomish Tribes.  
+During the base period, Coho production from the Skagit MU contributed to US and Canadian marine sport and commercial fisheries in southern British Columbia, the northern Washington coast, Strait of Juan de Fuca, and inner Puget Sound. Terminal tribal and non-tribal set and drift-net Coho net fisheries occur in commercial fishery management area 8 and the lower Skagit River. Moderate-sized Coho sport fisheries occured in sport fishery management area 8.1, the mainstem Skagit River, and the Cascade River. The terminal fishery co-managers are WDFW, and the Upper Skagit, Sauk-Suiattle, and Swinomish Tribes.  
+
+**Skagit MU average annual (total) and time period specific exploitation rates used in the current FRAM base period.** (CoTC --> is there a way to autobuild these tables directly from the FRAM database?)
+
+|		|||	Time Period	||				 |	     |
+|** Fishery **|** Jan-Jun **|** Jul **|** Aug **|** Sept **|** Oct-Dec **|** Total **|
+|:------------|------------:|--------:|--------:|---------:|------------:|----------:|
+|SEAK Southwest Troll	|	-	|	0.00%	|	-	|	-	|	-	|	0.00%	|
+|BC Northern Net	|	-	|	0.02%	|	-	|	-	|	-	|	0.02%	|
+|BC Northern Troll	|	-	|	0.02%	|	0.01%	|	0.01%	|	-	|	0.04%	|
+|BC North Central Troll	|	-	|	0.09%	|	0.01%	|	-	|	-	|	0.10%	|
+|BC Central Net	|	-	|	0.01%	|	0.00%	|	-	|	-	|	0.02%	|
+|BC South Central Troll	|	0.14%	|	0.39%	|	0.05%	|	0.01%	|	-	|	0.59%	|
+|Johnstone Strait Sport	|	0.02%	|	0.03%	|	0.01%	|	-	|	-	|	0.06%	|
+|Johnstone Strait Troll	|	0.04%	|	0.13%	|	0.01%	|	0.00%	|	-	|	0.17%	|
+|Johnstone Straits Net	|	-	|	0.01%	|	0.14%	|	0.04%	|	0.00%	|	0.18%	|
+|Georgia Straits Net	|	-	|	-	|	0.01%	|	-	|	0.00%	|	0.02%	|
+|Georgia Straits Troll	|	0.14%	|	0.52%	|	0.07%	|	0.02%	|	-	|	0.76%	|
+|North Georgia Straits Sport	|	1.41%	|	0.82%	|	0.41%	|	0.08%	|	0.00%	|	2.73%	|
+|South Georgia Straits Sport	|	0.71%	|	0.12%	|	0.11%	|	0.01%	|	0.02%	|	0.98%	|
+|Fraser R Gill Net	|	-	|	-	|	0.02%	|	0.01%	|	-	|	0.03%	|
+|BC Juan de Fuca Net	|	0.02%	|	0.28%	|	3.75%	|	2.08%	|	-	|	6.13%	|
+|BC Juan de Fuca Sport	|	0.63%	|	1.02%	|	0.35%	|	0.49%	|	0.10%	|	2.59%	|
+|BC Juan de Fuca Troll	|	-	|	0.00%	|	0.00%	|	0.00%	|	-	|	0.00%	|
+|West Coast Vanc Is Sport	|	0.02%	|	0.19%	|	0.07%	|	0.00%	|	-	|	0.28%	|
+|NW Vancouver Island Troll	|	0.18%	|	3.16%	|	1.10%	|	0.33%	|	-	|	4.77%	|
+|SW Vancouver Island Net	|	0.01%	|	0.00%	|	-	|	0.12%	|	0.08%	|	0.21%	|
+|SW Vancouver Island Troll	|	0.84%	|	12.17%	|	6.61%	|	1.34%	|	-	|	20.97%	|
+|WA Area 7 Sport	|	0.04%	|	0.06%	|	0.07%	|	0.09%	|	0.01%	|	0.26%	|
+|WA Area 7-7A Treaty Net	|	-	|	0.00%	|	0.07%	|	0.30%	|	0.07%	|	0.44%	|
+|WA Area 7-7A Non-Treaty Net	|	-	|	0.00%	|	0.07%	|	0.18%	|	0.03%	|	0.28%	|
+|WA Area 7B-7C-7D Treaty Net	|	-	|	-	|	0.01%	|	0.12%	|	0.11%	|	0.24%	|
+|WA Area 7B-7C-7D NT Net	|	-	|	-	|	0.00%	|	0.09%	|	0.08%	|	0.17%	|
+|WA Area 6 Sport	|	0.06%	|	0.30%	|	0.23%	|	0.49%	|	0.20%	|	1.28%	|
+|WA Area 5-6-6C Troll	|	0.00%	|	0.01%	|	0.01%	|	0.09%	|	0.00%	|	0.12%	|
+|WA Area 5 Sport	|	0.27%	|	0.97%	|	1.38%	|	1.18%	|	0.08%	|	3.88%	|
+|WA Area 4B-5-6C Treaty Net	|	-	|	0.09%	|	0.29%	|	0.43%	|	0.21%	|	1.02%	|
+|WA Area 4B-5-6C NT Net	|	-	|	0.00%	|	0.01%	|	0.04%	|	0.00%	|	0.05%	|
+|WA Area 8 Non-Treaty Net	|	-	|	-	|	0.11%	|	0.34%	|	0.79%	|	1.25%	|
+|WA Area 8 Treaty Net	|	-	|	-	|	0.08%	|	0.99%	|	1.56%	|	2.64%	|
+|WA Area 8.1 Sport	|	-	|	-	|	0.29%	|	0.02%	|	0.06%	|	0.37%	|
+|WA Area 8.2 Sport	|	-	|	-	|	0.05%	|	0.05%	|	-	|	0.10%	|
+|Skagit R Net	|	-	|	-	|	-	|	-	|	0.93%	|	0.93%	|
+|Skagit R Sport	|	-	|	-	|	-	|	-	|	0.32%	|	0.32%	|
+|Skagit River Test Net	|	-	|	-	|	-	|	-	|	0.61%	|	0.61%	|
+|WA Area 8A Non-Treaty Net	|	-	|	-	|	-	|	0.74%	|	0.63%	|	1.38%	|
+|WA Area 8A Treaty Net	|	-	|	-	|	-	|	1.17%	|	0.94%	|	2.11%	|
+|WA Area 9 Sport	|	0.20%	|	0.23%	|	0.23%	|	0.38%	|	0.13%	|	1.16%	|
+|Area 9/9A Non-Treaty Net	|	-	|	-	|	-	|	0.00%	|	0.00%	|	0.00%	|
+|Area 9/9A Treaty Net	|	-	|	-	|	-	|	0.00%	|	0.01%	|	0.01%	|
+|WA Area 10 Non-Treaty Net	|	-	|	-	|	-	|	0.41%	|	0.11%	|	0.52%	|
+|WA Area 10 Sport	|	0.15%	|	0.09%	|	0.07%	|	0.06%	|	0.02%	|	0.39%	|
+|WA Area 10 Treaty Net	|	-	|	-	|	-	|	0.24%	|	0.06%	|	0.30%	|
+|WA Area 10E Non-Treaty Net	|	-	|	-	|	-	|	0.00%	|	-	|	0.00%	|
+|WA Area 10E Treaty Net	|	-	|	-	|	-	|	0.00%	|	-	|	0.00%	|
+|WA Area 10F-G Treaty Net	|	-	|	-	|	0.03%	|	-	|	-	|	0.03%	|
+|WA Area 11 Non-Treaty Net	|	-	|	-	|	-	|	0.10%	|	0.02%	|	0.12%	|
+|WA Area 11 Sport	|	0.04%	|	0.00%	|	0.01%	|	0.00%	|	0.00%	|	0.06%	|
+|WA Area 11 Treaty Net	|	-	|	-	|	-	|	0.01%	|	0.00%	|	0.01%	|
+|WA Area 13 Marine Sport	|	0.01%	|	-	|	-	|	0.00%	|	0.00%	|	0.02%	|
+|Area 12 Marine Sport	|	-	|	-	|	-	|	-	|	0.00%	|	0.00%	|
+|Area 12-12B Hood Canal NT Net	|	-	|	-	|	-	|	0.01%	|	0.01%	|	0.02%	|
+|Area 12-12B Hood Canal T Net	|	-	|	-	|	-	|	0.01%	|	0.01%	|	0.02%	|
+|WA Area 4/4B Treaty Troll	|	0.20%	|	0.62%	|	0.60%	|	0.21%	|	0.02%	|	1.66%	|
+|WA Area 4/4B Non-Treaty Troll	|	0.00%	|	0.04%	|	0.35%	|	0.06%	|	0.00%	|	0.45%	|
+|WA Area 4 Sport	|	0.02%	|	0.43%	|	0.34%	|	0.06%	|	-	|	0.85%	|
+|WA Area 3 Treaty Troll	|	0.06%	|	0.13%	|	0.14%	|	0.05%	|	-	|	0.38%	|
+|WA Area 3 Sport	|	0.00%	|	0.04%	|	0.01%	|	-	|	-	|	0.05%	|
+|WA Area 3 Non-Treaty Troll	|	0.05%	|	0.01%	|	0.04%	|	0.03%	|	-	|	0.12%	|
+|Hoh R Net	|	-	|	-	|	-	|	-	|	0.00%	|	0.00%	|
+|WA Area 2 Treaty Troll	|	0.01%	|	0.09%	|	0.05%	|	0.01%	|	-	|	0.16%	|
+|WA Area 2 Sport	|	0.03%	|	0.33%	|	0.15%	|	0.01%	|	-	|	0.52%	|
+|WA Area 2 Non-Treaty Troll	|	0.01%	|	0.04%	|	0.06%	|	0.00%	|	-	|	0.11%	|
+|Willapa Bay & FW Trib Net	|	-	|	-	|	-	|	-	|	0.00%	|	0.00%	|
+|WA Area 1 & Astoria Troll	|	0.01%	|	0.09%	|	0.05%	|	0.04%	|	0.01%	|	0.20%	|
+|WA Area 1 & Astoria Sport	|	0.00%	|	0.06%	|	0.05%	|	-	|	-	|	0.12%	|
+|Col. River Buoy 10 Sport	|	-	|	-	|	0.05%	|	0.00%	|	-	|	0.06%	|
+|Tillamook Sport	|	0.01%	|	0.03%	|	0.02%	|	0.00%	|	-	|	0.06%	|
+|Tillamook Troll	|	0.01%	|	0.17%	|	0.04%	|	0.00%	|	-	|	0.22%	|
+|Newport Sport	|	0.02%	|	0.05%	|	0.03%	|	-	|	-	|	0.10%	|
+|Newport Troll	|	0.05%	|	0.12%	|	0.03%	|	0.00%	|	-	|	0.21%	|
+|Coos Bay Sport	|	0.02%	|	0.02%	|	0.00%	|	0.01%	|	-	|	0.05%	|
+|Coos Bay Troll	|	0.02%	|	0.03%	|	0.00%	|	0.00%	|	-	|	0.06%	|
+|Brookings Sport	|	-	|	0.00%	|	-	|	-	|	-	|	0.00%	|
+|Brookings Troll	|	0.00%	|	0.00%	|	0.00%	|	0.00%	|	-	|	0.01%	|
+|** Total **|	5.40%	|	23.10%	|	17.80%	|	12.60%	|	7.30%	|	66.10%	|
+
+
+*Current Exploitation Rates*
 
 ```{r f_abund_bar_skagit}
 plot_abund_bar("Skagit")
 ```
 
+** Skagit MU post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years 2004 through 2021. The graphs include dashed trend lines and the vertical dotted lines highlight catch year 2010)
+
 ```{r f_ns_msf_skagit}
 plot_ns_msf("Skagit")
 ```
 
+** Post-season estimates of fishery mortality for the Skagit MU by mark-selective (MSF) and non-selective (NS) fisheries over catch years 1998 through 2021. These estimates are combined US and Canadian harvest impacts.**
 
 **Average exploitation rates by fishing area.  The stacked bars represent the rates estimated by gear type during the FRAM base period, catch years 1986–1992.  The line represents the average annual total exploitation rate by fishing area during catch years ??, all gears combined.**
 
