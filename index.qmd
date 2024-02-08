@@ -4537,11 +4537,24 @@ psc |>
 
 ```
 
-** Summary of the number of MUs in each abundance category, based on post-season assessments, of catch years 2004 through 2021. This figure is limited to the U.S. MUs and the Interior Fraser MU. **
+**Summary of the number of MUs in each abundance category, based on post-season assessments, of catch years 2004 through 2021. This figure is limited to the U.S. MUs and the Interior Fraser MU. **
 
 ![](images/MU_Status_by_yr.png){width=100% fig-alt="MU Abundance Status by Year"}
 
-### ER Overview (placeholder table & fig)
+### Fishery Exploitaion Rate Overview 
+
+Recent catch years with the highest estimated average exploitation rates over all MUs include catch years 2014 (42%) and 2015 (43%), while the MUs experienced the lowest ERs, on average, in catch years 2016 (16%) and 2021 (14%). Estimates of post-season total exploitation rates (ERs) by MU for catch years 2011 through 2021 are listed in the table below, while average ERs by MU and FRAM fishery are depicted in the figures below. 
+
+**Canadian MUs**
+Over catch years 2011 through 2021, the Canadian MUs experienced varying exploitation rates from a low of 6.5% by the Strait of Georgia MU in 2021 to a high of 56.8% by the Lower Fraser MU in 2014. The ER averaged 21.5% over all years for the Lower Fraser River MU, followed by the Interior Fraser MU at 16.9%, and Strait of Georgia at 16.8%.
+
+**U.S. Inside MUs**
+U.S. Inside MU exploitation rates were the lowest for the U.S. Strait of Juan de Fuca at 3.0% in 2016 and were the highest at 68.3% for the Hood Canal MU in 2014. The ER averaged 48.5% over all years for the Hood Canal MU, followed by the Skagit MU at 39.6%, Snohomish MU at 23.8%, Stillaguamish at 21.3%, and U.S. Strait of Juan de Fuca at 10.2%.
+
+**U.S. Outside MUs**
+Over catch years 2011 through 2021, the U.S. Outdside MU also experienced a large range of exploitation rates, from a low of 3.8% by the Quillayute MU in 2021 to a high of 69.0% by the Hoh MU in 2013. The ER averaged 41.7% over all years for the Hoh MU, followed by the Quillayute MU at 36.6%, the Queets MU at 34.8%, the Grays Harbor MU at 34.6%, and Strait of Georgia MU at 16.8%.
+
+**Total Exploitation rates by MU, catch years 2011 through 2021.** (note - need to move Canadian MUs to top of table)
 
 ```{r gt_annual_ER}
 psc |> 
