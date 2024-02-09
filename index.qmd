@@ -4808,9 +4808,9 @@ The current PST/Council exploitation rate ceilings for the Skagit MU natural Coh
 
 The Baker wild releases are currently used as a marine survival rate indicator. The Skagit stock releases from Marblemount Hatchery and the Baker wild releases are used as exploitation rate indicator stocks. Coho Salmon released from Marblemount Hatchery have been double index tagged starting with brood year 1994.
 
-Coded wire tag recovery-based survival and exploitation rate data are available for the Marblemount Hatchery and Baker River Wild Coho tagging programs [@Haymes_2008]. The Baker River program began with broodyear 1983 and its purpose is to supply experimental and research smolts for gulper efficiency testing, serve as an indicator stock for wild Skagit Coho, and supplement natural production in the basin [@WDFW_and_PSE_2003]. An average of 39,000 Baker Lake wild smolts were captured, coded-wire tagged, and adipose fin clipped annually *(Figure x)* for broodyears 1983 through 1995. Beginning with brood year 1996, an average of 20,000 fish have been captured and released annually with a CWT and their fins intact. The Marblemount Hatchery Coho program has been in existence for over 64 years and its purpose is to provide harvest opportunity [@WDFW_2003_marblemount]. The hatchery indicator program is currently a double index tag (DIT) program (differentially tagged fish released with or without adipose clips) with a goal of releasing 45,000 tagged fish of each group, one with an adipose fin clip and one without [@WDFW_2003_marblemount]. Annual tagged and adipose fin clipped releases prior to the implementation of the DIT program were 68,000 on average. The DIT program began with brood year 1994 and an average of 70,000 tagged and clipped fish have been released annually, while tagged and unclipped fish have averaged approximately 44,000 annually. Exploitation rate values for the non-ad clipped+CWT Coho provide a surrogate measure of exploitation for natural origin Coho from this MU. There is no regular coded-wire-tag sampling of the freshwater sport fisheries in the MU, which results in some negative bias in tag recoveries. Double index tag groups released for the Skagit MU are provided in ** --> need to pull the table from the excel static table file! <--.**
+Coded wire tag recovery-based survival and exploitation rate data are available for the Marblemount Hatchery and Baker River Wild Coho tagging programs [@Haymes_2008]. The Baker River program began with broodyear 1983 and its purpose is to supply experimental and research smolts for gulper efficiency testing, serve as an indicator stock for wild Skagit Coho, and supplement natural production in the basin [@WDFW_and_PSE_2003]. An average of 39,000 Baker Lake wild smolts were captured, coded-wire tagged, and adipose fin clipped annually (@fig_wild_stock_tagging_skagit) for broodyears 1983 through 1995. Beginning with brood year 1996, an average of 20,000 fish have been captured and released annually with a CWT and their fins intact. The Marblemount Hatchery Coho program has been in existence for over 64 years and its purpose is to provide harvest opportunity [@WDFW_2003_marblemount]. The hatchery indicator program is currently a double index tag (DIT) program (differentially tagged fish released with or without adipose clips) with a goal of releasing 45,000 tagged fish of each group, one with an adipose fin clip and one without [@WDFW_2003_marblemount] (@fig_hatch_stock_releases_mu_cwt_only_skagit). Annual tagged and adipose fin clipped releases prior to the implementation of the DIT program were 68,000 on average. The DIT program began with brood year 1994 and an average of 70,000 tagged and clipped fish have been released annually, while tagged and unclipped fish have averaged approximately 44,000 annually. Exploitation rate values for the non-ad clipped+CWT Coho provide a surrogate measure of exploitation for natural origin Coho from this MU. There is no regular coded-wire-tag sampling of the freshwater sport fisheries in the MU, which results in some negative bias in tag recoveries. Double index tag groups released for the Skagit MU are provided below.
 
-```{r fig_wild_stock_tagging_skagit, fig.cap="Naturally produced tagging", fig.height=6, fig.width=8}
+```{r fig_wild_stock_tagging_skagit, fig.cap="Number of wild fish caught, tagged, and released by clip status, within the Skagit MU over brood years 1983 through 2020.", fig.height=4, fig.width=6}
 static$releases |> 
   filter(
     rearing_type != "H",
@@ -4834,7 +4834,7 @@ static$releases |>
   
 ```
 
-```{r fig_hatch_stock_releases_mu_cwt_only_skagit, fig.cap="Hatchery produced tagging", fig.height=6, fig.width=8}
+```{r fig_hatch_stock_releases_mu_cwt_only_skagit, fig.cap="Total number of coded-wire-tagged hatchery Coho Salmon released, by clip status, within the Skagit MU for brood years 1983 through 2020.", fig.height=4, fig.width=6}
 static$releases |> 
   filter(
     rearing_type == "H",
@@ -4860,20 +4860,105 @@ static$releases |>
   
 ```
 
+**Double-index tag codes released within the Skagit MU, brood years 1994 through 2021. **
+
+|** Brood Year **|** Hatchery **|** DIT Group ID **|** Tag Code **|** Mark **|** No. Released **| 
+ |:--------:|:--------:|:--------:|:--------:|:--------|--------:|
+|	1994	|	MARBLEMOUNT HATCHERY	|	04199600000211	|	635909	|	Clipped	|	 99,623 	|
+|	1994	|	MARBLEMOUNT HATCHERY	|	04199600000211	|	635906	|	Unclipped	|	 45,865 	|
+|	1995	|	MARBLEMOUNT HATCHERY	|	04199700000212	|	636158	|	Clipped	|	 42,489 	|
+|	1995	|	MARBLEMOUNT HATCHERY	|	04199700000212	|	636201	|	Unclipped	|	 42,566 	|
+|	1996	|	MARBLEMOUNT HATCHERY	|	04199800000196	|	630545	|	Clipped	|	 43,348 	|
+|	1996	|	MARBLEMOUNT HATCHERY	|	04199800000196	|	630546	|	Unclipped	|	 45,089 	|
+|	1997	|	MARBLEMOUNT HATCHERY	|	04199900000195	|	630554	|	Clipped	|	 42,299 	|
+|	1997	|	MARBLEMOUNT HATCHERY	|	04199900000195	|	636211	|	Unclipped	|	 41,906 	|
+|	1998	|	MARBLEMOUNT HATCHERY	|	04200000000209	|	631107	|	Clipped	|	 40,398 	|
+|	1998	|	MARBLEMOUNT HATCHERY	|	04200000000209	|	631108	|	Unclipped	|	 40,525 	|
+|	1999	|	MARBLEMOUNT HATCHERY	|	04200100000199	|	630299	|	Clipped	|	 45,831 	|
+|	1999	|	MARBLEMOUNT HATCHERY	|	04200100000199	|	630298	|	Unclipped	|	 45,052 	|
+|	2000	|	MARBLEMOUNT HATCHERY	|	04200200000200	|	630950	|	Clipped	|	 10,582 	|
+|	2000	|	MARBLEMOUNT HATCHERY	|	04200200000200	|	630387	|	Clipped	|	 10,777 	|
+|	2000	|	MARBLEMOUNT HATCHERY	|	04200200000200	|	630946	|	Clipped	|	 10,783 	|
+|	2000	|	MARBLEMOUNT HATCHERY	|	04200200000200	|	630948	|	Clipped	|	 10,861 	|
+|	2000	|	MARBLEMOUNT HATCHERY	|	04200200000200	|	630386	|	Unclipped	|	 10,988 	|
+|	2000	|	MARBLEMOUNT HATCHERY	|	04200200000200	|	630947	|	Unclipped	|	 10,969 	|
+|	2000	|	MARBLEMOUNT HATCHERY	|	04200200000200	|	630949	|	Unclipped	|	 10,935 	|
+|	2000	|	MARBLEMOUNT HATCHERY	|	04200200000200	|	630945	|	Unclipped	|	 10,988 	|
+|	2001	|	MARBLEMOUNT HATCHERY	|	04200300000206	|	631257	|	Clipped	|	 10,745 	|
+|	2001	|	MARBLEMOUNT HATCHERY	|	04200300000206	|	631259	|	Clipped	|	 11,240 	|
+|	2001	|	MARBLEMOUNT HATCHERY	|	04200300000206	|	631253	|	Clipped	|	 9,013 	|
+|	2001	|	MARBLEMOUNT HATCHERY	|	04200300000206	|	631255	|	Clipped	|	 9,975 	|
+|	2001	|	MARBLEMOUNT HATCHERY	|	04200300000206	|	631254	|	Unclipped	|	 7,472 	|
+|	2001	|	MARBLEMOUNT HATCHERY	|	04200300000206	|	631069	|	Unclipped	|	 6,887 	|
+|	2001	|	MARBLEMOUNT HATCHERY	|	04200300000206	|	631256	|	Unclipped	|	 9,063 	|
+|	2001	|	MARBLEMOUNT HATCHERY	|	04200300000206	|	631258	|	Unclipped	|	 8,999 	|
+|	2002	|	MARBLEMOUNT HATCHERY	|	04200400000192	|	632090	|	Clipped	|	 11,046 	|
+|	2002	|	MARBLEMOUNT HATCHERY	|	04200400000192	|	632088	|	Clipped	|	 10,781 	|
+|	2002	|	MARBLEMOUNT HATCHERY	|	04200400000192	|	632089	|	Clipped	|	 6,947 	|
+|	2002	|	MARBLEMOUNT HATCHERY	|	04200400000192	|	632091	|	Clipped	|	 10,861 	|
+|	2002	|	MARBLEMOUNT HATCHERY	|	04200400000192	|	632092	|	Unclipped	|	 10,967 	|
+|	2002	|	MARBLEMOUNT HATCHERY	|	04200400000192	|	632094	|	Unclipped	|	 10,878 	|
+|	2002	|	MARBLEMOUNT HATCHERY	|	04200400000192	|	632093	|	Unclipped	|	 9,781 	|
+|	2002	|	MARBLEMOUNT HATCHERY	|	04200400000192	|	632095	|	Unclipped	|	 11,100 	|
+|	2003	|	MARBLEMOUNT HATCHERY	|	04200500000191	|	631997	|	Clipped	|	 46,348 	|
+|	2003	|	MARBLEMOUNT HATCHERY	|	04200500000191	|	632289	|	Unclipped	|	 46,823 	|
+|	2004	|	MARBLEMOUNT HATCHERY	|	04200600000183	|	633099	|	Clipped	|	 47,305 	|
+|	2004	|	MARBLEMOUNT HATCHERY	|	04200600000183	|	633197	|	Unclipped	|	 41,300 	|
+|	2005	|	MARBLEMOUNT HATCHERY	|	04200700000184	|	633571	|	Clipped	|	 43,100 	|
+|	2005	|	MARBLEMOUNT HATCHERY	|	04200700000184	|	633572	|	Unclipped	|	 43,575 	|
+|	2006	|	MARBLEMOUNT HATCHERY	|	04200800000187	|	633691	|	Clipped	|	 47,072 	|
+|	2006	|	MARBLEMOUNT HATCHERY	|	04200800000187	|	633690	|	Unclipped	|	 47,206 	|
+|	2007	|	MARBLEMOUNT HATCHERY	|	04200900000180	|	634484	|	Clipped	|	 44,174 	|
+|	2007	|	MARBLEMOUNT HATCHERY	|	04200900000180	|	634485	|	Unclipped	|	 44,604 	|
+|	2008	|	MARBLEMOUNT HATCHERY	|	04201000000181	|	634495	|	Clipped	|	 43,359 	|
+|	2008	|	MARBLEMOUNT HATCHERY	|	04201000000181	|	634496	|	Unclipped	|	 43,568 	|
+|	2009	|	MARBLEMOUNT HATCHERY	|	04201100000213	|	635381	|	Clipped	|	 44,465 	|
+|	2009	|	MARBLEMOUNT HATCHERY	|	04201100000213	|	635382	|	Unclipped	|	 43,354 	|
+|	2010	|	MARBLEMOUNT HATCHERY	|	04201200000215	|	635799	|	Clipped	|	 41,840 	|
+|	2010	|	MARBLEMOUNT HATCHERY	|	04201200000215	|	635798	|	Unclipped	|	 42,100 	|
+|	2011	|	MARBLEMOUNT HATCHERY	|	04201300000030	|	636377	|	Clipped	|	 45,068 	|
+|	2011	|	MARBLEMOUNT HATCHERY	|	04201300000030	|	636376	|	Unclipped	|	 45,650 	|
+|	2012	|	MARBLEMOUNT HATCHERY	|	04201400000080	|	636555	|	Clipped	|	 43,388 	|
+|	2012	|	MARBLEMOUNT HATCHERY	|	04201400000080	|	636554	|	Unclipped	|	 43,163 	|
+|	2013	|	MARBLEMOUNT HATCHERY	|	04201500000796	|	636697	|	Clipped	|	 47,575 	|
+|	2013	|	MARBLEMOUNT HATCHERY	|	04201500000796	|	636696	|	Unclipped	|	 47,670 	|
+|	2014	|	MARBLEMOUNT HATCHERY	|	04201600000837	|	636839	|	Clipped	|	 43,867 	|
+|	2014	|	MARBLEMOUNT HATCHERY	|	04201600000837	|	636840	|	Unclipped	|	 43,868 	|
+|	2015	|	MARBLEMOUNT HATCHERY	|	04201700000878	|	636993	|	Clipped	|	 46,326 	|
+|	2015	|	MARBLEMOUNT HATCHERY	|	04201700000878	|	636994	|	Unclipped	|	 46,309 	|
+|	2016	|	MARBLEMOUNT HATCHERY	|	04201800000906	|	637089	|	Clipped	|	 36,508 	|
+|	2016	|	MARBLEMOUNT HATCHERY	|	04201800000906	|	637088	|	Unclipped	|	 36,893 	|
+|	2017	|	MARBLEMOUNT HATCHERY	|	04201900000951	|	637272	|	Clipped	|	 41,744 	|
+|	2017	|	MARBLEMOUNT HATCHERY	|	04201900000951	|	637271	|	Unclipped	|	 41,842 	|
+|	2018	|	MARBLEMOUNT HATCHERY	|	04202000001028	|	637555	|	Clipped	|	 44,326 	|
+|	2018	|	MARBLEMOUNT HATCHERY	|	04202000001028	|	637554	|	Unclipped	|	 46,243 	|
+|	2019	|	MARBLEMOUNT HATCHERY	|	04202100001068	|	637678	|	Clipped	|	 41,895 	|
+|	2019	|	MARBLEMOUNT HATCHERY	|	04202100001068	|	637677	|	Unclipped	|	 42,653 	|
+|	2020	|	MARBLEMOUNT HATCHERY	|	04202200001130	|	638003	|	Clipped	|	 40,507 	|
+|	2020	|	MARBLEMOUNT HATCHERY	|	04202200001130	|	638002	|	Unclipped	|	 40,547 	|
+|	2021	|	MARBLEMOUNT HATCHERY	|	04202300001147	|	638230	|	Clipped	|	 45,944 	|
+|	2021	|	MARBLEMOUNT HATCHERY	|	04202300001147	|	638229	|	Unclipped	|	 45,747 	|
+
 ###### Forecast Methods
 
 Since 1996, WDFW and tribal biologists have developed forecasts of wild Coho run size for all primary and most secondary management units in Puget Sound and the Washington coast [@Zimmerman_2013]. These annual forecasts are described in the Pacific Fishery Management Council’s Preseason Forecast I document available each February [e.g., @PFMC_1_2013; www.pcouncil.org]. These forecasts rely on estimates of wild Coho production (i.e., smolts) paired with estimates of marine survival. Wild Coho production estimates for each of the primary and secondary management units in Puget Sound were derived from results of juvenile trapping studies conducted in the Skagit, Stillaguamish, Snohomish, Green, Nisqually, and Deschutes rivers as well as in tributaries to Lake Washington and Hood Canal.  Analyses of these long-term data sets have demonstrated that wild Coho smolt production is limited by a combination of factors including seeding levels (i.e., escapement), environmental effects (flows, marine derived nutrients), and habitat degradation [@Zimmerman_2012]. 
 
-Estimates of wild Coho production in the Skagit Basin are based on catch of wild Coho smolts in a juvenile trapping program on the lower mainstem Skagit River. A scoop-and-screw trap combination is operated by WDFW in the lower Skagit River mainstem, located at RM 17 from the river mouth. Trapping began in 1990 and the juvenile trap is calibrated using recaptures of wild yearling Coho marked and released from an upstream tributary (Mannser Creek, RM 35). Coho abundance is calculated using a Petersen estimator with Chapman modification [@Seber_1973; @Volkhardt_et_al_2007]. Estimated smolt production has been quite consistent in the Skagit MU, averaging 1.1 million smolts annually from 1990 to 2022. Smolt production has varied from a low of 426,963 in 2008 to a high of 1,885,000 in 2002 and has exceeded 1,000,000 smolts in 20 of the last 33 years (Table 4 1).  Freshwater productivity (smolts/female) during this period was a function of Coho spawner abundance. The smolt-spawner function derived based on Skagit Coho estimates is comparable to systems with census counts, lending further credibility to the Skagit juvenile and adult estimates. Natural smolt production numbers have also been estimated for the 1984 to 1990 out-migration years by back-calculating from the number of coded-wire tags (CWTs) recovered from wild origin fish in terminal fisheries [Hayman_1995].
+Estimates of wild Coho production in the Skagit Basin are based on catch of wild Coho smolts in a juvenile trapping program on the lower mainstem Skagit River. A scoop-and-screw trap combination is operated by WDFW in the lower Skagit River mainstem, located at RM 17 from the river mouth. Trapping began in 1990 and the juvenile trap is calibrated using recaptures of wild yearling Coho marked and released from an upstream tributary (Mannser Creek, RM 35). Coho abundance is calculated using a Petersen estimator with Chapman modification [@Seber_1973; @Volkhardt_et_al_2007]. Estimated smolt production has been quite consistent in the Skagit MU, averaging 1.1 million smolts annually from 1990 to 2022 (@fig_smolts_skagit). Smolt production has varied from a low of 426,963 in 2008 to a high of 1,885,000 in 2002 and has exceeded 1,000,000 smolts in 20 of the last 33 years.  Freshwater productivity (smolts/female) during this period was a function of Coho spawner abundance. The smolt-spawner function derived based on Skagit Coho estimates is comparable to systems with census counts, lending further credibility to the Skagit juvenile and adult estimates. Natural smolt production numbers have also been estimated for the 1984 to 1990 out-migration years by back-calculating from the number of coded-wire tags (CWTs) recovered from wild origin fish in terminal fisheries [Hayman_1995].
+
+
+```{r fig_smolts_skagit, fig.cap="Estimated number of Skagit MU wild Coho Salmon smolts outmigrants, years 1990 through 2022", fig.height=4, fig.width=6}
+plot_smolts("Skagit")
+```
 
 Marine survival rates of wild Coho stocks have been measured using wild CWT indicator stocks in four geographic regions of Puget Sound: Big Beef Creek, Deschutes River, South Fork Skykomish River, and Baker River [@Zimmerman_2012]. These populations are assumed to be representative of the different Puget Sound regions. In the Baker River, a tributary to the Skagit River, marine survival of Coho smolts has averaged 7.9% (range of 1% and 14%) over 19 brood years (1989–1997, 2003–2009), with a high of 13.9% for return year 1989 and a low of 1.1% for return year 2003 *(Figure 4 1)*. Although the long term trend in marine survival is downwards, high survival (>10%) in 2009 and 2012 is encouraging.
 
 
-```{r fig_smolts_skagit, fig.cap="TBD", fig.height=5, fig.width=8}
-plot_smolts("Skagit")
-```
 
-**Marine survival for Baker River Coho Salmon, the average marine survival of Puget Sound indicator stocks, and forecast survival for Skagit Coho salmon by year [data from @Zimmerman_2012; @Zimmerman_2013, unpublished data; forecast data from PFMC Preseason I reports).**
+
+![](images/US_Outside_forecast_perf.png){width=100% fig-alt="US Outside MU Forecast Performance"}
+
+**Estimated marine survival rates for Baker River Coho Salmon, (data provided by M. Litz, WDFW).**
+
 
 **2023 Forecast**
 The forecast was based on a prediction of total smolt to Ocean Age 3 (OA3) survival using a single beta regression model of PDO in May – September and SAR Chloro in May [@PFMC_1_2023]. The range of brood years used in this analysis was 2000 to 2018. The analysis produced a weighted average marine survival of 6.84%; this was multiplied by the measured smolt production from the Skagit basin (54,457 Baker natural smolts and 573,325 Skagit natural smolts). The 2023 Skagit natural OA3 abundance forecast is 43,146, compared to the 2022 preseason forecast of 80,378. This ocean abundance forecast classifies the stock abundance as "Moderate" under the 2019 PST Southern Coho Management Plan and “Low” under the FMP. This results in an allowable total exploitation rate of no more than 35% under both the PFMC-adopted exploitation rate matrix and the 2019 PST Southern Coho Management Plan.
