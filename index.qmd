@@ -4950,17 +4950,15 @@ Estimates of wild Coho production in the Skagit Basin are based on catch of wild
 plot_smolts("Skagit")
 ```
 
-Marine survival rates of wild Coho stocks have been measured using wild CWT indicator stocks in four geographic regions of Puget Sound: Big Beef Creek, Deschutes River, South Fork Skykomish River, and Baker River [@Zimmerman_2012]. These populations are assumed to be representative of the different Puget Sound regions. In the Baker River, a tributary to the Skagit River, marine survival of Coho smolts has averaged 7.9% (range of 1% and 14%) over 19 brood years (1989–1997, 2003–2009), with a high of 13.9% for return year 1989 and a low of 1.1% for return year 2003 *(Figure 4 1)*. Although the long term trend in marine survival is downwards, high survival (>10%) in 2009 and 2012 is encouraging.
+Marine survival rates of wild Coho stocks have been measured using wild CWT indicator stocks in four geographic regions of Puget Sound: Big Beef Creek, Deschutes River, South Fork Skykomish River, and Baker River [@Zimmerman_2012]. These populations are assumed to be representative of the different Puget Sound regions. In the Baker River, a tributary to the Skagit River, marine survival of Coho smolts has averaged 7.8% (range of 1.1% and 13.9%) over 19 brood years (1989–1997, 2000–2020), with a high of 13.9% for brood year 1987 and a low of 1.1% for brood year 2003. High survival (>11.5%) for brood years 2020 through 2022 is encouraging.
 
-
-
-
-![](images/US_Outside_forecast_perf.png){width=100% fig-alt="US Outside MU Forecast Performance"}
+![](images/Skagit_marine_SR.png){width=100% fig-alt="Skagit Marine Survival Rates"}
 
 **Estimated marine survival rates for Baker River Coho Salmon, (data provided by M. Litz, WDFW).**
 
 
 **2023 Forecast**
+
 The forecast was based on a prediction of total smolt to Ocean Age 3 (OA3) survival using a single beta regression model of PDO in May – September and SAR Chloro in May [@PFMC_1_2023]. The range of brood years used in this analysis was 2000 to 2018. The analysis produced a weighted average marine survival of 6.84%; this was multiplied by the measured smolt production from the Skagit basin (54,457 Baker natural smolts and 573,325 Skagit natural smolts). The 2023 Skagit natural OA3 abundance forecast is 43,146, compared to the 2022 preseason forecast of 80,378. This ocean abundance forecast classifies the stock abundance as "Moderate" under the 2019 PST Southern Coho Management Plan and “Low” under the FMP. This results in an allowable total exploitation rate of no more than 35% under both the PFMC-adopted exploitation rate matrix and the 2019 PST Southern Coho Management Plan.
 
 ###### Escapement Monitoring
