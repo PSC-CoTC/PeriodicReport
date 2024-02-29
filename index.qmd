@@ -6,7 +6,8 @@ bibliography: references.bib
 csl: american-fisheries-society.csl
 params:
   static_tables: StaticTables.xlsx
-  mdb: ~/O/code/coho/fram_mdbs/PSC_CoTC_PostSeason_CohoFRAMDB_thru2021_021523.mdb
+  mdb_pre: ~/O/code/coho/fram_mdbs/PSC_CoTC_Preseason_CohoFRAMDB_thru2023_050223.mdb
+  mdb_pst: ~/O/code/coho/fram_mdbs/PSC_CoTC_PostSeason_CohoFRAMDB_thru2022_02202024.mdb
 editor_options:
   chunk_output_type: console
 format:
@@ -27,11 +28,35 @@ format:
 
 <p>
 
-!! Jan 2024 DRAFT DOCUMENT UNDER DEVELOPMENT !!
+!! DRAFT DOCUMENT UNDER DEVELOPMENT !!
 
 </p>
 
 </header>
+
+**TO DO**
+  
+  - re-update `psc` with final final final 2022 postseason run
+    - get multiyear mdb; update `params$mdb` (unused in fig/tables but for knit text)
+    - run chunk `rebuild_psc_csv` to gen "psc_postfram_1998_2022.csv"
+      - make sure to check and update `fram$runIDs` to include 2022 (should be runid 46)
+  - update any `psc_pre` preseason run changes following a similar approach and the `rebuild_psc_pre_csv` chunk
+  - further text revisions; drop tables from StaticTable
+  - figures
+    - drop linear trend lines from plotabundbar
+    - post
+      - make simple figure from gt_annual_abund: stacked bar count of MUs in each status (low, mod, abund) by yea
+      - fishery_er_quantiles: 
+        - reorder facet panels by regions 
+        - swap min/max for 25/75th
+        - reorder fisheries by impact (fct_reorder median)
+        - better name strings via FisheryTitle? or just include LU ref in caption https://framverse.github.io/fram_doc/calcs_appendices.html#Appendix_3_Coho_FRAM_fisheries  
+    - pre/post
+      - make simple stacked bar of stoplight of nochange/toohigh/toolow
+      - depiction of 'un-used' catch, either fish or ER?
+      - abundance figures overlaying MUs within regions (US in, US out, BC)
+      
+
 
 
 ```{r setup, include=FALSE}
@@ -51,7 +76,9 @@ theme_set(theme_light())
 # load("PeriodicReport_envi.RData")
 
 #but to deal with WA Coast stocks from TAMM spreadsheets, among other reasons
-psc <- readr::read_csv("psc_postfram_1998_2021.csv") |> 
+psc <- readr::read_csv("psc_postfram_1998_2022_temp.csv") |> 
+  rename(`Catch Year` = RunYear)
+psc_pre <- readr::read_csv("psc_prefram_2004_2023.csv") |> 
   rename(`Catch Year` = RunYear)
 
 static <- list(
@@ -103,11 +130,11 @@ pal_rel_tag_mark <- c("CWT_Unclipped"= "#4D5370",
 ```
 
 ```{r rebuild_psc_csv, include=FALSE, eval=FALSE}
-#mdb from params arg above, sourced locally from CoTC Sharepoint
-#moving from .RData to .csv on load to allow more portability/generality
+#postseason mdb from params arg above, sourced locally, ultimately from CoTC Sharepoint
+#moved to .csv on load to allow more portability/generality
 
 fram_mdb_reader <- function(
-    mdb_file_path = params$mdb,
+    mdb_file_path,
     fram_table,
     osx = grepl("apple", sessionInfo()$platform)
     ) {
@@ -138,23 +165,23 @@ fram <- list()
 
 fram$stockIDs <- static$lu_stock$StockID
 
-fram$runIDs <- 22:45 #1998-2020, but 34:44 2010onward
+fram$runIDs <- 22:46 #1998-2022, but 34:44 2010onward
 
 #Note the original negative escapement in A12A Wild in 2005 is due to an error in the FRAM database
 #Mortality is summed across timesteps (and Ages, but only 3s anyway)
 #maintaining FRAM stocks and fisheries
-fram$fishery <- fram_mdb_reader(fram_table = "Fishery") |> 
+fram$fishery <- fram_mdb_reader(mdb_file_path = params$mdb_pst, fram_table = "Fishery") |> 
   filter(Species == "COHO") |> select(FisheryID, FisheryName)
-fram$stock <- fram_mdb_reader(fram_table = "Stock") |> 
+fram$stock <- fram_mdb_reader(mdb_file_path = params$mdb_pst, fram_table = "Stock") |> 
   filter(Species == "COHO", StockID %in% fram$stockIDs) |> select(StockID, StockLongName)
-fram$runid <- fram_mdb_reader(fram_table = "RunID") |> 
+fram$runid <- fram_mdb_reader(mdb_file_path = params$mdb_pst, fram_table = "RunID") |> 
   filter(RunID %in% fram$runIDs) |> 
   select(RunID, RunYear)
-fram$escp <- fram_mdb_reader(fram_table = "Escapement") |> 
+fram$escp <- fram_mdb_reader(mdb_file_path = params$mdb_pst, fram_table = "Escapement") |> 
   filter(StockID %in% fram$stockIDs, RunID %in% fram$runIDs) |> 
   select(RunID, StockID, escp = Escapement) |> 
   mutate(escp = if_else(escp < 0, 0, escp))
-fram$mort <- fram_mdb_reader(fram_table = "Mortality") |> 
+fram$mort <- fram_mdb_reader(mdb_file_path = params$mdb_pst, fram_table = "Mortality") |> 
   filter(StockID %in% fram$stockIDs, RunID %in% fram$runIDs) |> 
   mutate(
     mort_ns = LandedCatch + NonRetention + Shaker + DropOff,
@@ -213,6 +240,8 @@ psc <- left_join(
     , by = "PSC_StockID"
     )
 
+write_csv(psc, "psc_postfram_1998_2022_temp.csv")
+
 ##Quillayute and Queets post-season values are drawn from TAMM
 #https://github.com/PSC-CoTC/AnnualReport/blob/master/csv/TammFisheryQueetsRef.csv
 #need to swap out some fishery values (and escp for Quil?)
@@ -226,11 +255,84 @@ psc <- left_join(
 #sheet 2, r39, col31 Queets spt, fid 65 (2021: 56)
 #plus 0 out 66,67,69 for sid 139 and 65:69 for sid140 (prob already 0)
 
+```
 
-# rm(params, static, fram, fram_mdb_reader)
-# save.image("PeriodicReport_envi.RData")
+```{r rebuild_psc_pre_csv, include=FALSE, eval=FALSE}
+#using fram_mdb_reader from postseason rebuild chunk
+#overwrites (temporary) `fram` object
+#identical to postseason other than mdb_file_path argument
 
-##write_csv(psc, "psc_postfram_1998_2021.csv")
+fram <- list()
+fram$stockIDs <- static$lu_stock$StockID
+fram$runIDs <- 369:388 #2004-2023
+
+fram$fishery <- fram_mdb_reader(mdb_file_path = params$mdb_pre, fram_table = "Fishery") |> 
+  filter(Species == "COHO") |> select(FisheryID, FisheryName)
+fram$stock <- fram_mdb_reader(mdb_file_path = params$mdb_pre, fram_table = "Stock") |> 
+  filter(Species == "COHO", StockID %in% fram$stockIDs) |> select(StockID, StockLongName)
+fram$runid <- fram_mdb_reader(mdb_file_path = params$mdb_pre, fram_table = "RunID") |> 
+  filter(RunID %in% fram$runIDs) |> 
+  select(RunID, RunYear) |> arrange(RunYear)
+fram$escp <- fram_mdb_reader(mdb_file_path = params$mdb_pre, fram_table = "Escapement") |> 
+  filter(StockID %in% fram$stockIDs, RunID %in% fram$runIDs) |> 
+  select(RunID, StockID, escp = Escapement) |> 
+  mutate(escp = if_else(escp < 0, 0, escp))
+fram$mort <- fram_mdb_reader(mdb_file_path = params$mdb_pre, fram_table = "Mortality") |> 
+  filter(StockID %in% fram$stockIDs, RunID %in% fram$runIDs) |> 
+  mutate(
+    mort_ns = LandedCatch + NonRetention + Shaker + DropOff,
+    mort_msf = MSFLandedCatch + MSFNonRetention + MSFShaker + MSFDropOff,
+    mort = mort_ns + mort_msf
+  ) |> 
+  group_by(RunID, StockID, FisheryID) |> 
+  summarise(across(LandedCatch:mort, ~sum(., na.rm=T)), .groups = "drop")
+
+
+psc_pre <- left_join(
+  fram$mort |> 
+    left_join(fram$runid, by = "RunID") |> 
+    left_join(fram$fishery, by = "FisheryID") |> 
+    left_join(
+      static$lu_stock |> 
+        select(StockID, PSC_StockID, PSC_StockName),
+      by = "StockID") |> 
+    group_by(RunYear, PSC_StockID, PSC_StockName, FisheryID, FisheryName) |> 
+    summarise(across(starts_with("mort"), sum), .groups = "drop") |> 
+    group_by(RunYear, PSC_StockID, PSC_StockName) |> 
+    mutate(across(starts_with("mort"), list(sum = sum), .names = "{.col}_{.fn}")) |> 
+    ungroup()
+  ,
+  fram$escp |> 
+    left_join(fram$runid, by = "RunID") |> 
+    left_join(
+      static$lu_stock |> 
+        select(StockID, PSC_StockID, PSC_StockName),
+      by = "StockID") |> 
+    group_by(RunYear, PSC_StockID, PSC_StockName) |> 
+    summarise(across(escp, sum), .groups = "drop") 
+  ,
+  by = c("RunYear", "PSC_StockID", "PSC_StockName")
+  ) |>
+  mutate(
+    abund = mort_sum + escp,
+    across(c(mort, mort_sum), list(er = ~.x/abund))
+  ) |> 
+  left_join(
+    static$lu_stock |> 
+      distinct(PSC_StockID, PSC_Region, cap_method,
+               low_mod_abund, mod_abd_abund,
+               low_er_cap, mod_er_cap, abd_er_cap,
+               low_escp_goal, upr_escp_goal)
+    , by = "PSC_StockID"
+    )
+
+# full_join(
+#   psc |> count(RunYear),
+#   psc_pre |> count(RunYear),
+#   by = "RunYear"  
+# ) |> print(n=100)
+
+write_csv(psc_pre, "psc_prefram_2004_2023.csv")
 
 ```
 
@@ -335,7 +437,7 @@ plot_status <- function(mu = "Skagit"){
 #plot_status()
 ```
 
-This report is based on data in `r basename(params$mdb)`
+This report is based on postseason data in `r basename(params$mdb_pst)` and preseason data in `r basename(params$mdb_pre)`, as well as supporting [StaticTables.xlsx](https://github.com/PSC-CoTC/PeriodicReport/blob/master/StaticTables.xlsx).
 
 ![](images/coho_pic2.png){width=100% fig-alt="Coho Picture"}
 
@@ -529,7 +631,7 @@ Because of the absence of programs to estimate total abundance and escapement fo
 
 ASK DAN --> why is this figure not working?
 
-```{r BCAbundance, echo = FALSE, fig.cap = "Estimated Ocean Age-3 Abundances of Southern BC Coho Salmon Management Units; Catch Years 1986-2021.", eval=TRUE}
+```{r BCAbundance, echo = FALSE, fig.cap = "Estimated Ocean Age-3 Abundances of Southern BC Coho Salmon Management Units; Catch Years 1986-2021.", eval=F}
 PrePostBC <- openxlsx::read.xlsx("./data/CoTc_Output_File.xlsx", sheet = 3, detectDates = FALSE)
 
 PrePostBC <- tidyr::separate(PrePostBC[,-1], 3, c("Abundance", "Status"), sep = " ")
@@ -4603,7 +4705,7 @@ CoTC question --> what do you think of these figures?  How do we summarize ERs i
 
 **25th, median, and 75th quantile of estimated post-season exploitation rates by MU and FRAM fishery.  Data includes catch years 2011 through 2021.** (note - need to correctly order figures, fix figure legend and axes, and further describe data summary. E.g., move Canadian MUs to top of figures, make x-axis same?).  Question for Southern Panel --> do you want this type of figure?  If so, what changes, if any, would you like to see?
 
-```{r fig.height=14, fig.width=10, eval=T}
+```{r fishery_er_quantiles, fig.height=14, fig.width=10, eval=T}
 #going towards "table F", but will need
 #various lower non-ER rows appended separately
 #and FisheryID aggregations defined
