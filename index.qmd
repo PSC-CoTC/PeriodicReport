@@ -36,16 +36,14 @@ format:
 
 **TO DO**
   
-  - re-update `psc` with final final final 2022 postseason run
+  - re-update `psc_pst` with final final final 2022 postseason run
     - get multiyear mdb; update `params$mdb` (unused in fig/tables but for knit text)
     - run chunk `rebuild_psc_csv` to gen "psc_postfram_1998_2022.csv"
       - make sure to check and update `fram$runIDs` to include 2022 (should be runid 46)
   - update any `psc_pre` preseason run changes following a similar approach and the `rebuild_psc_pre_csv` chunk
   - further text revisions; drop tables from StaticTable
   - figures
-    - drop linear trend lines from plotabundbar
     - post
-      - make simple figure from gt_annual_abund: stacked bar count of MUs in each status (low, mod, abund) by yea
       - fishery_er_quantiles: 
         - reorder facet panels by regions 
         - swap min/max for 25/75th
@@ -76,7 +74,7 @@ theme_set(theme_light())
 # load("PeriodicReport_envi.RData")
 
 #but to deal with WA Coast stocks from TAMM spreadsheets, among other reasons
-psc <- readr::read_csv("psc_postfram_1998_2022_temp.csv") |> 
+psc_pst <- readr::read_csv("psc_postfram_1998_2022_temp.csv") |> 
   rename(`Catch Year` = RunYear)
 psc_pre <- readr::read_csv("psc_prefram_2004_2023.csv") |> 
   rename(`Catch Year` = RunYear)
@@ -129,7 +127,7 @@ pal_rel_tag_mark <- c("CWT_Unclipped"= "#4D5370",
 
 ```
 
-```{r rebuild_psc_csv, include=FALSE, eval=FALSE}
+```{r rebuild_psc_pst_csv, include=FALSE, eval=FALSE}
 #postseason mdb from params arg above, sourced locally, ultimately from CoTC Sharepoint
 #moved to .csv on load to allow more portability/generality
 
@@ -202,7 +200,7 @@ fram$mort <- fram_mdb_reader(mdb_file_path = params$mdb_pst, fram_table = "Morta
 # these are summed over fisheries and repeating per individual fishery
 # same idea for escapement...
 
-psc <- left_join(
+psc_pst <- left_join(
   fram$mort |> 
     left_join(fram$runid, by = "RunID") |> 
     left_join(fram$fishery, by = "FisheryID") |> 
@@ -240,12 +238,12 @@ psc <- left_join(
     , by = "PSC_StockID"
     )
 
-write_csv(psc, "psc_postfram_1998_2022_temp.csv")
+write_csv(psc_pst, "psc_postfram_1998_2022_temp.csv")
 
 ##Quillayute and Queets post-season values are drawn from TAMM
 #https://github.com/PSC-CoTC/AnnualReport/blob/master/csv/TammFisheryQueetsRef.csv
 #need to swap out some fishery values (and escp for Quil?)
-#sheet 2, r48, col26 Quil escp (2021: 9907)
+#sheet 2, r48, col26 Quil escp (2021: 9916)
 #sheet 2, r38, col26 Quil TR net, fid 71 (2021: 1083)
 #sheet 2, r39, col26 Quil spt, fid 70 (2021: 174)
 #plus 0 fid72 for sid131, 70:72 for sid132
@@ -327,7 +325,7 @@ psc_pre <- left_join(
     )
 
 # full_join(
-#   psc |> count(RunYear),
+#   psc_pst |> count(RunYear),
 #   psc_pre |> count(RunYear),
 #   by = "RunYear"  
 # ) |> print(n=100)
@@ -340,13 +338,13 @@ write_csv(psc_pre, "psc_prefram_2004_2023.csv")
 
 ```{r func_plot_abund_bar}
 # #export these data for CCT to have for text summaries
-# psc |> 
+# psc_pst |> 
 #   filter(RunYear > 2003) |> 
 #   split(~PSC_StockName) |> 
 #   writexl::write_xlsx("psc_mort_escp_abund_data.xlsx")
 
 plot_abund_bar <- function(stknm = "Skagit"){
-  psc |> 
+  psc_pst |> 
     filter(PSC_StockName==stknm, `Catch Year` > 2003) |>
     distinct(`Catch Year`, PSC_StockName, 
              Harvest = mort_sum, Escapement = escp, Abundance = abund, 
@@ -359,7 +357,7 @@ plot_abund_bar <- function(stknm = "Skagit"){
     geom_hline(aes(yintercept = low_mod_abund), color = "orange", linetype = 5, linewidth = 1.2) +
     geom_hline(aes(yintercept = mod_abd_abund), color = "orange", linetype = 5) +
     geom_vline(xintercept = 2010, linetype = 3, alpha = 0.5) +
-    geom_smooth(formula = y ~ x, method = "lm", se = F, linewidth = 0.5, linetype = 2) +
+    #geom_smooth(formula = y ~ x, method = "lm", se = F, linewidth = 0.5, linetype = 2) +
     scale_fill_grey("", start = 0.3, end = 0.7, aesthetics = c("fill", "color")) +
     scale_x_continuous(breaks = seq(1998, 2040, by = 3), guide = guide_axis(n.dodge = 2)) +
     scale_y_continuous("", labels = scales::comma) +
@@ -373,7 +371,7 @@ plot_abund_bar <- function(stknm = "Skagit"){
 
 ```{r func_plot_ns_msf}
 plot_ns_msf <- function(stknm = "Skagit"){
-  psc |> 
+  psc_pst |> 
     filter(PSC_StockName==stknm) |> 
     distinct(`Catch Year`, PSC_StockName, NS = mort_ns_sum, MSF = mort_msf_sum) |> 
     pivot_longer(names_to = "var", values_to = "val", -c(`Catch Year`, PSC_StockName)) |> 
@@ -484,7 +482,7 @@ The US Inside MUs consist of naturally-spawning populations originating in the S
 The US Outside MUs consist of naturally-spawning populations from the Quillayute, Hoh, Queets, and Grays Harbor basins. All US Outside MUs, except the Grays Harbor MU, are part of the Olympic Peninsula ESU. Populations from the western portion of the Strait of Juan de Fuca MU are also in this ESU. The Grays Harbor MU is part of the Southwest Washington ESU.
 
 ```{r mu_table}
-# psc |> 
+# psc_pst |> 
 #   distinct(Region = PSC_Region, `Management Units` =  PSC_StockName) |> 
 #   arrange(Region) |>  
 #   mutate(Region = str_replace(Region, "Canada", "Southern BC")) |> 
@@ -1191,7 +1189,7 @@ Currently all of the MUs except the Lower Fraser River and Georgia Strait MUs ha
 ** Post-season estimates of Ocean Age-3 total abundances and their associated status categories [A = abundanct, M = moderate, L= low] by MU for catch years 2004 through 2021.  Management Units in the Abundant category have green highlighted cells, Moderate ones are not highlighted, and those in Low status are highlighted orange.**  (note - need to make table fit unto a single page in Word)
 
 ```{r gt_annual_abund}
-psc |> 
+psc_pst |> 
   distinct(`Catch Year`, PSC_Region, PSC_StockName, abund, low_mod_abund, mod_abd_abund) |> 
   mutate(
     PSC_Region = factor(PSC_Region, levels = c("Canada","US Inside","US Outside")),
@@ -1246,6 +1244,45 @@ psc |>
 
 ```
 
+```{r fig_unit_status_stackedcol}
+# #this is what's behind CCT temp figure
+# #based on manual review of as-produced postseason reports
+# #differs from versions derived from current postseason database
+# #at least for Quill and Queets
+# #at least recent postseason reports seem to be missing terminal catches in total abundance
+# #confirmed by comparing 2021 postseason TAMM and mdb numbers against what's written
+# #for 2021, Quill shows total abund of 10354 which is sum of spwnescp 9916 + 438 preterm catch, missing ~1200 term net+sport
+# static$status |> 
+#   drop_na(`Post-Season`) |>
+#   #filter(`Catch Year`==2004) |> 
+#   count(`Catch Year`,`Post-Season`)
+
+psc_pst |> 
+  filter(`Catch Year` >= 2004) |> 
+  distinct(`Catch Year`, PSC_Region, PSC_StockName, abund, low_mod_abund, mod_abd_abund) |> 
+  mutate(
+    PSC_Region = factor(PSC_Region, levels = c("Canada","US Inside","US Outside")),
+    abd = case_when(
+      abund < low_mod_abund ~ "L",
+      abund >= low_mod_abund & abund <= mod_abd_abund ~ "M",
+      abund > mod_abd_abund ~ "A",
+      PSC_StockName == "Interior Fraser" ~ "L",
+      is.na(low_mod_abund) ~ ""
+      ) |> 
+      factor(levels = c("A","M","L"))
+  ) |> 
+  drop_na(abd) |> #filter(abd != "") |> 
+  count(`Catch Year`, abd) |> 
+  ggplot() +
+    geom_col(aes(`Catch Year`, n, fill = abd), color = "grey") +
+    scale_fill_manual(name = "Status", values = c("#C6F5BA","white","#F5E298"), aesthetics = c("color","fill")) +
+  scale_y_continuous("Num. Mgmt. Units", breaks = 1:11, labels = 1:11)
+
+
+
+```
+
+
 Estimated post-season ocean age-3 cohort abundances for the MUs are depicted below. Abundances for BC and US Inside MUs tend to be synchronous, with above- or below-average abundances occurring in the same years (e.g., high in 2001, low in 2006). Outside MUs are less synchronous and years with high abundances for Grays Harbor don't necessarily correspond to high abundances for other MUs.
 
 **Estimated Post-season Ocean Age-3 Abundances of BC Coho Salmon Management Units; Catch Years 2004-2021.  update to 2022 when available**
@@ -1281,7 +1318,7 @@ Over catch years 2011 through 2021, the US Outdside MU also experienced a large 
 **Total xxploitation rates by MU, catch years 2011 through 2021.** (note - need to move Canadian MUs to top of table)
 
 ```{r gt_annual_ER}
-psc |> 
+psc_pst |> 
   distinct(`Catch Year`, PSC_Region, PSC_StockName, mort_sum_er) |> 
   pivot_wider(names_from = `Catch Year`, values_from = mort_sum_er) |> 
   gt(
@@ -1302,9 +1339,9 @@ CoTC question --> what do you think of these figures?  How do we summarize ERs i
 #various lower non-ER rows appended separately
 #and FisheryID aggregations defined
 #join fishery aggregations here & resummarize summing ERs?
-#or join above in "psc" object creation before first group_by?
+#or join above in "psc_pst" object creation before first group_by?
 
-psc |> 
+psc_pst |> 
   select(`Catch Year`:FisheryName, mort_er) |> 
   filter(`Catch Year` > 2009) |> 
   unite("sid_nm", PSC_StockID, PSC_StockName) |> 
