@@ -32,6 +32,8 @@ format:
 
 </p>
 
+The CoTC intends to produce this report online in HTML format. The current draft HTML version has much more functionality, better format, and looks more visually appealing than the Word document.  However, we are providing a Word document in pdf format to the Southern Panel to facilitate review and collaboration.   
+
 </header>
 
 **TO DO**
