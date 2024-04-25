@@ -46,11 +46,6 @@ The CoTC intends to produce this report online in HTML format. The current draft
   - further text revisions; drop tables from StaticTable
   - figures
     - post
-      - fishery_er_quantiles: 
-        - reorder facet panels by regions 
-        - swap min/max for 25/75th
-        - reorder fisheries by impact (fct_reorder median)
-        - better name strings via FisheryTitle? or just include LU ref in caption https://framverse.github.io/fram_doc/calcs_appendices.html#Appendix_3_Coho_FRAM_fisheries  
     - pre/post
       - make simple stacked bar of stoplight of nochange/toohigh/toolow
       - depiction of 'un-used' catch, either fish or ER?
@@ -69,6 +64,7 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 library("tidyverse", quietly = T)
 library("readxl")
 library("kableExtra", quietly = T)
+library("patchwork")
 library("gt")
 theme_set(theme_light())
 
@@ -93,6 +89,9 @@ static <- list(
   lu_stock = readxl::read_excel(params$static_tables, sheet = "lu_stock") |> 
     mutate(across(where(is.character), ~replace_na(.,"")))
   ,
+  #exported from postseason db 'Fishery' table
+  lu_fishery = readxl::read_excel(params$static_tables, sheet = "fram_coho_fishery")
+    ,
   glossary = readxl::read_excel(params$static_tables, sheet = "glossary") |> 
     mutate(across(where(is.character), ~replace_na(.,"")))
   ,
@@ -118,7 +117,7 @@ static <- list(
 levels <- list(
   mu_name = c("Interior Fraser", "Lower Fraser",
   "Strait of Georgia", #created inline by combining Mainland and Van.Isl.
-  "Skagit","Stillaguamish","Snohomish","Hood Canal","Strait of Juan de Fuca",
+  "Skagit","Stillaguamish","Snohomish","Hood Canal","US Strait JDF",
   "Quillayute","Hoh","Queets","Grays Harbor"
   ))
 
@@ -1331,38 +1330,45 @@ psc_pst |>
 
 ```
 
-CoTC question --> what do you think of these figures?  How do we summarize ERs in text?  If we use these figures, should we provide the FRAM list of corresponding fisheries?  
 
-**25th, median, and 75th quantile of estimated post-season exploitation rates by MU and FRAM fishery.  Data includes catch years 2011 through 2021.** (note - need to correctly order figures, fix figure legend and axes, and further describe data summary. E.g., move Canadian MUs to top of figures, make x-axis same?).  Question for Southern Panel --> do you want this type of figure?  If so, what changes, if any, would you like to see?
 
 ```{r fishery_er_quantiles, fig.height=14, fig.width=10, eval=T}
-#going towards "table F", but will need
-#various lower non-ER rows appended separately
-#and FisheryID aggregations defined
-#join fishery aggregations here & resummarize summing ERs?
-#or join above in "psc_pst" object creation before first group_by?
 
 psc_pst |> 
   select(`Catch Year`:FisheryName, mort_er) |> 
   filter(`Catch Year` > 2009) |> 
-  unite("sid_nm", PSC_StockID, PSC_StockName) |> 
-  unite("fid_nm", FisheryID, FisheryName) |> 
-  group_by(sid_nm, fid_nm) |>
+  left_join(static$lu_fishery |> select(FisheryID, FisheryTitle), by = "FisheryID") |> 
+  mutate(PSC_StockName = factor(PSC_StockName, levels = levels$mu_name)) |> 
+  group_by(PSC_StockName, FisheryTitle) |>
   summarise(
     across(mort_er, list(
+      min = ~min(.),
       q25 = ~quantile(., 0.25),
       median = ~median(.), 
       mean = ~mean(.), 
-      q75 = ~quantile(., 0.75) )),
+      q75 = ~quantile(., 0.75),
+      max = ~max(.)
+      )),
     .groups = "drop") |> 
-  filter(mort_er_mean > 0.005) |> 
-  group_by(sid_nm) |> 
-  ggplot(aes(fid_nm)) + 
-  geom_pointrange(aes(y = mort_er_median, ymin = mort_er_q25, ymax = mort_er_q75)) +
-  scale_x_discrete("") +
-  scale_y_continuous(labels = scales::percent) +
-  coord_flip() +
-  facet_wrap(~sid_nm, scales = "free", ncol = 2)
+  filter(mort_er_median > 0.005) |> 
+  split(~PSC_StockName) |> 
+  map(
+    ~.x |> 
+      mutate(FisheryTitle = factor(FisheryTitle) |> reorder(mort_er_median)) |> 
+      ggplot() + 
+      geom_linerange(aes(y = FisheryTitle, x = mort_er_median,
+                         xmin = mort_er_min, xmax = mort_er_max), linewidth = 0.4) +
+      geom_pointrange(aes(y = FisheryTitle, x = mort_er_median,
+                          xmin = mort_er_q25, xmax = mort_er_q75), linewidth = 1.0, fatten = 2) +
+      scale_x_continuous(labels = scales::percent) +
+    # facet_wrap(~PSC_StockName, scales = "free", ncol = 2) +
+      labs(x="",y="",subtitle = .x$PSC_StockName[1])
+  ) |> 
+  wrap_plots(ncol = 2, guides = "collect") +
+  plot_annotation(
+    title = "Characteristic fishery ERs since 2010",
+    subtitle = "Showing ER median, IQR, and range for fisheries with mean ER > 0.5% "
+  )
 
 ```
 
@@ -1389,6 +1395,35 @@ Forecasts for the US Outside MUs performed better, on average, than the US Insid
 This section of the report focuses on descriptions of the individual MUs within the current Southern Coho Management Plan. Currently the US Inside MUs are the most complete, and the BC MU sections will be added soon.
 
 *Southern Panel --> please focus on the content within the Skagit MU when reviewing for content and clarity. CoTC will make any suggested changes and additions, if possible, to all of the MUs within this section following your input.*  
+
+### Interior Fraser (PLACEHOLDER)
+#### Biological and Geographic Description
+#### Management Framework
+##### Management Objectives
+##### Stock Assessment
+###### Indicator Stocks
+###### Forecast Methods
+###### Escapement Monitoring
+###### Fishery Monitoring
+##### Enhancement
+#### Management Performance 
+
+##### Forecast Evaluation
+##### Fishery Mortality and Escapement
+
+```{r f_abund_bar_ifras}
+plot_abund_bar("Interior Fraser")
+```
+
+** Interior Fraser MU post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years 2004 through 2021. The graphs include dashed trend lines and the vertical dotted lines highlight catch year 2010)
+
+```{r f_ns_msf_ifras}
+plot_ns_msf("Interior Fraser")
+```
+
+** Post-season estimates of fishery mortality for the Interior Fraser MU by mark-selective (MSF) and non-selective (NS) fisheries over catch years 1998 through 2021. These estimates are combined US and Canadian harvest impacts.**  
+
+##### Historical Overview of Status of Management Unit
 
 ### Lower Fraser (PLACEHOLDER)
 #### Biological and Geographic Description
@@ -1422,34 +1457,6 @@ plot_ns_msf("Lower Fraser")
 
 ##### Historical Overview of Status of Management Unit
 
-### Interior Fraser (PLACEHOLDER)
-#### Biological and Geographic Description
-#### Management Framework
-##### Management Objectives
-##### Stock Assessment
-###### Indicator Stocks
-###### Forecast Methods
-###### Escapement Monitoring
-###### Fishery Monitoring
-##### Enhancement
-#### Management Performance 
-
-##### Forecast Evaluation
-##### Fishery Mortality and Escapement
-
-```{r f_abund_bar_ifras}
-plot_abund_bar("Interior Fraser")
-```
-
-** Interior Fraser MU post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years 2004 through 2021. The graphs include dashed trend lines and the vertical dotted lines highlight catch year 2010)
-
-```{r f_ns_msf_ifras}
-plot_ns_msf("Interior Fraser")
-```
-
-** Post-season estimates of fishery mortality for the Interior Fraser MU by mark-selective (MSF) and non-selective (NS) fisheries over catch years 1998 through 2021. These estimates are combined US and Canadian harvest impacts.**  
-
-##### Historical Overview of Status of Management Unit
 
 ### Strait of Georgia (PLACEHOLDER)
 
