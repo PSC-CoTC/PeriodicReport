@@ -628,6 +628,9 @@ Canadian Coho Salmon abundance has declined, particularly in southern BC Interio
 
 Because of the absence of programs to estimate total abundance and escapement for many Canadian MUs, the bilaterally-developed tool, Backwards Coho FRAM, is relied upon to generate estimates of ocean age-3 cohort abundance and ERs using post-season data. Cohort abundances (catch and escapement) of Canadian MUs, estimated by Backwards Coho FRAM, are depicted in Figure \@ref(fig:BCAbundance). Reduced abundances apparent since 1996 were a major consideration that led to the development of ABM regimes for management of southern Coho Salmon.
 
+
+
+
 ASK DAN --> why is this figure not working?
 
 ```{r BCAbundance, echo = FALSE, fig.cap = "Estimated Ocean Age-3 Abundances of Southern BC Coho Salmon Management Units; Catch Years 1986-2021.", eval=F}
@@ -649,6 +652,21 @@ ggplot(PrePostBC, # this is where the dataframe goes
       scale_color_manual(values = c('#abd9e9','#2c7bb6', '#fdae61', '#d7191c')) + # used colorbrewer2.org to select colour codes
       labs(x = "Catch Year", y = "Cohort Abundance (thousands)") # renaming the x and y axis
 ```
+
+### IFR MU 
+Prior to the establishment of PST Management Reference Points, IFR have been assessed by COSEWIC and CDFO. 
+
+A COSEWIC assessment in 2002 (Irvine 2002) identified IFR status as endangered while the COSEWIC re-assessment in 2016 (COSEWIC 2016) identified their status as threatened. Between 1990-2000, IFR experienced declines in recruitment in excess of 60% due to changes in freshwater and marine habitats and lagged reductions in harvest, resulting in a status of endangered in 2002. Since 2000, the population has persisted at relatively low abundance and low smolt-to-adult survival rates and was therefore re-assessed as threatened in 2016.
+
+In a review done in 2014, estimated abundance of IFR was below the Interior Fraser Recovery Team (IFCRT) lower benchmark of 23,000 spawners in five out of 10 years, and was below the upper rebuilding benchmark of 35,000 spawners in all 10 years (Decker et al. 2014).  For two decades (1992-2011), abundance was also below the lower and upper benchmarks in 50% and 100% of the years respectively. Based on the criteria proposed by the IFCRT (2006), this would indicate that recent abundances of Interior Fraser Coho may be insufficient to conserve genetic diversity and to provide a reasonable expectation of growth and recovery for some of the local populations within the MU.  For returns prior to 1992, abundance exceeded the upper benchmark every year going back to 1975.  
+
+A Wild Salmon Policy (WSP) assessment in 2013 of the five CUs comprising IFR was undertaken by Parken et al. (in draft). Through this exercise it was determined that two of the CUs, the North Thompson and Lower Thompson, were amber/green and the remaining three CUs were amber. WSP designation is determined to provide guidance to managers on the status of populations and their likelihood of a COSEWIC assessment. It is an expert judgment on the past and current state of escapements and does not speak to productivity of a stock.  In the case of IFR WSP determinations, the escapements under review were achieved under a low exploitation regime and productivity of the five populations within the IFR MU have recently been determined to be low (Decker et al. 2014).
+
+It is important to note that designation under the WSP is different from that under the PST. Within the PST chapter 5, two of the five stated objectives of the Coho Management program, which guides the establishment of ER ergo PST status, are to a) constrain total ER to maintain maximum sustainable harvest over the long term while maintaining genetic and ecological diversity of the component populations and b) improve long term prospects for healthy fisheries in both countries.
+
+Though the WSP Status review determined that two of the five CUs comprising IFR MU may have enough spawners on the ground to maintain genetic and ecological diversity, IFR are still in a low productivity regime. Allowable harvest that meets the criteria of the PST is still low, therefore PST status may be low while WSP status is green.
+
+Since 2018, and retrospectively, the survival index and abundances have been compared directly to the PST Management Reference Points. The MU survival index has never exceeded 3% since 1999, so the MU has persisted in a low status.
 
 ## US Inside Management Units
 
@@ -1454,12 +1472,9 @@ Historically, coded-wire-tagged smolts were also released into Dunn, Louis, Lemi
 ###### Forecast Methods
 In 1999, forecasts for southern BC Coho salmon included IFR Coho for the first time (Holtby et al. 1999).  Relative numbers of Coho returning to the North and South Thompson drainages were predicted.  Forecasts for other IFR Coho populations were not made since data quality was sometimes less than adequate.  Forecasting for Coho returning to the entire Interior Fraser drainage (recruitment, not escapement) began in 2001 and continues annually (e.g. DFO 2012).  
 
-Originally, Holtby et al. (1999) concluded that given the data the 3-year average Naïve model (3YRA) was the preferred approach to forecast relative numbers of North and South Thompson Coho.  The model uses the average abundance of the last three return years to forecast the abundance of the next year.  As the quality and time-series of information improved in the Lower Thompson River systems those data were included in the annual abundance forecast. The performance of the time-series model is influenced by shifts in the parameters which influence abundance, but the parameters are not dealt with explicitly in the approach. For example, in periods of apparently stable marine survival and low exploitation the 3YRA model is likely adequate to confirm the status of the MU; however, annual shifts in productivity (marine or freshwater) or errors in the exploitation rate estimates can result in poor forecast performance (Table 4 1, Figure 4 1).
+Originally, Holtby et al. (1999) concluded that given the data the 3-year average Naïve model (3YRA) was the preferred approach to forecast relative numbers of North and South Thompson Coho.  The model uses the average abundance of the last three return years to forecast the abundance of the next year.  As the quality and time-series of information improved in the Lower Thompson River systems those data were included in the annual abundance forecast. The performance of the time-series model is influenced by shifts in the parameters which influence abundance, but the parameters are not dealt with explicitly in the approach. For example, in periods of apparently stable marine survival and low exploitation the 3YRA model is likely adequate to confirm the status of the MU; however, annual shifts in productivity (marine or freshwater) or errors in the exploitation rate estimates can result in poor forecast performance (Table x1, Figure x).
 
 In more recent forecasts, the forecast model has been chosen by reviewing retrospective performance metrics. Retrospective performance metrics such as mean raw error, mean absolute error, mean percent error, mean absolute percent error, mean absolute scaled error, root mean square error, and the correlation coefficient between forecasts and observed series were calculated to rank the model performance and determine which model performs the best across the time series. For the top performing models, model diagnostics were examined in order to determine if the models reasonably predicted trends in abundance and to ensure that models did not violate assumptions. Both time series models such as the Naïve models (1, 3, and 5 years), ARIMA, and Exponential Smoothing were applied with various data transformations, and a linearized Ricker model that incorporates stock-recruit dynamics are ranked to determine which is used for the forecast each year. The 3YRA has still ranked the highest in most years.
-
-ADD Table "IFR_Forecasts" from excel file.  Return year observed and forecasted Interior Fraser River Coho MU pre-fishery abundances from 1998 to 2019. Pre-fishery abundance is estimated by backwards FRAM.
-ADD Figure (example "IFR_Forecasts" picture). Forecasted and estimated abundances of Interior Fraser River Coho as well as absolute percent error of the yearly forecast.
 
 ###### Escapement Monitoring
 Interior Fraser River Coho spawner assessments have changed over the years based on management priorities and available resources, both in terms of the number of systems surveyed and the extent of coverage. Though IFR spawner estimates exist for a few systems prior to 1975 and the accuracy and precision of those estimates are not understood. Between 1975 and 1997, more effort was expended to estimate IFR escapement in the North and South Thompson CUs. Survey coverage was extended in 1984 to include several key tributaries of the Lower Thompson CU, as well as the Seton and Bridge tributaries of the Middle Fraser CU. Surveys were mainly conducted by Fisheries Officers and hatchery staff; however, the repeatability, and accuracy of these estimates remain poorly understood.
@@ -1470,8 +1485,16 @@ Escapement estimates for 1975 to 1997 were revised during the IFCRT recovery tea
 
 ADD Figure (example "IFR_Escapement").  Escapement of Interior Fraser River Coho by quality of assessment type.
 
-###### Fishery Monitoring
+###### Fry and Smolt Monitoring
+There have been no consistent or basin-wide assessments of fry or smolt densities within the MU.
 
+Smolt-to-adult survival rates of Coho from the indicator stocks are shown in (Figure 4 3). Marked Coho (adipose-fin-clipped) have been released with CWTs since 1983 to support fisheries monitoring and creation of a survival index. Although all of these releases may be used for calculating exploitation, some releases included experimental release sizes or timings that may affect survival. It has been shown that there is strong size-selective mortality in the early marine period (Beamish and Mahnken 2001; Beamish et al. 2004, etc); therefore, releases need to be fairly uniform to support a long-term survival index. The survival of the Inch Creek CWT index is thus calculated from specific tag codes releases that do not fall out of a normal range of size at release. The index calculation is simply the sum of adult (age 3+) escapement and catch of all CWT tag codes from a given brood year divided by the total release of that given brood year.
+
+For the hatchery indicator stocks the smolt-to-adult survival rate showed a directed downward trend during the early 1990s (brood years) (Figure x). Data from brood years 1985-1999 shows the smolt-to-adult survival rate averaged 3.7% during this time with a high of 7.2% in 1989. More recently IFR Coho has had an average survival rate of 1.0% between brood years 2000-2017.
+
+ADD figure  (example IFR_SAR).  Smolt-to-adult survival rate index from coded-wire-tagged (CWT) Interior Fraser River hatchery Coho smolt releases by brood year. Note that insufficient adipose-fin-clipped CWT smolt releases existed prior 1985 and from brood year 1987 to calculate survival; infilled values are the average of the survival up to and including brood year 1991.
+
+###### Fishery Monitoring
 A fundamental requirement of abundance-based Coho Salmon management under the PST is that all fishery impacts on individual MUs be annually monitored with respect to both number of fish caught and CWTs. This requires basic reporting of total impacts by fishery and the capacity to estimate each fishery’s MU-specific impacts. Total fishing mortalities for each MU must be estimated to enable managers the ability to evaluate the annual exploitation rate relative to the PST-prescribed impact limits.
 
 Assessments of total fishing mortalities for each MU must include both directed and incidentally-landed catch as well as estimates of non-landed mortalities. These estimates may be obtained through monitoring programs or, in some cases, generated through the use of algorithms built into the Fisheries Regulation Assessment Model (FRAM). Monitoring programs may involve test fisheries or data collected directly from fishers (e.g., through creel survey interviews, and other fisher-reported techniques, such as log books or fish-tickets). Estimation of non-landed fishing mortality requires annual estimates of encounter rates by fishery and gear.
@@ -1481,7 +1504,7 @@ Management-Unit-specific impacts are generally evaluated using the coast-wide CW
 Post-season exploitation rate estimates are also generated using the Post-Season FRAM Model. Post-season estimates of catch and escapement are entered into the updated FRAM model with the same fishery regulation and effort package used for preseason modeling to generate post-season exploitation rate estimates.
 
 ##### Enhancement
-Enhancement in the IFR MU was initiated in the early 1980s.  There have been up to 13 enhancement projects producing Coho as well as habitat restoration ongoing at various sites. Most of the projects are in the Thompson River drainage, with only minor enhancement occurring in other areas of this MU. 
+Enhancement in the IFR MU was initiated in the early 1980s.  There have been up to 13 enhancement projects producing Coho as well as habitat restoration ongoing at various sites. Most of the projects are in the Thompson River drainage, with only minor enhancement occurring in other areas of this MU. There are also numerous community hatcheries that support Indigenous and community activities through the Community Economic Development and Public Involvement Program.
 
 Production peaked during the mid to late 1980s, when different enhancement strategies were being tested for Coho in the Eagle, Salmon, and Coldwater systems. The objectives were to evaluate the different strategies and to assess the impact of enhanced production on natural stocks (Perry 1995, Pitre and Cross 1993). Supplementation was in the form of spring fed fry, fall fry, and yearling smolt releases. Fish were marked by removing the adipose fin and inserting a coded-wire tag. The success of the enhanced component was measured using survival rates calculated from tag data, while the success of the naturally spawning component was measured by returns of natural spawners.
 
@@ -1489,14 +1512,31 @@ More recent Coho enhancement activity has occurred primarily out of Spius Creek 
 
 The following hatcheries produce salmon to support CDFO and PST objectives and are located within the Fraser River watershed: 1) Chehalis River Hatchery, located on a tributary of the Harrison River, which is a major tributary of the lower Fraser River; 2) Chilliwack River Hatchery, located on a major tributary of the lower Fraser River; 3) Inch Creek Hatchery, located on a tributary of a large slough connected to the lower Fraser River; 4) Spius Creek Hatchery, located on a tributary of the Nicola that drains into the Thompson River; and 5) Shuswap Falls (Middle Shuswap River) Hatchery. Both the Chilliwack River Hatchery and Spius Creek Hatchery rear Coho for the coded-wire-tag (CWT) indicator stocks for the Interior Fraser River MU. 
 
-ADD figure?
+The average total hatchery release within the IFR basin was 737,000 fish annually between 1983-2018. Fry releases greatly decreased starting in 1990, from a high of 2,226,000 Coho fry released for brood year 1986 to a low of 90,500 fry from brood year 1996 (Figure x). After 1996, the total hatchery fry releases have averaged 173,000, primarily in unmarked fry released from community hatcheries. The average hatchery smolt releases within the IFR basin is 227,000 smolts annually between 1983-2018; with relatively smaller fluctuations between total releases. 
 
-There are also numerous community hatcheries that support Indigenous and community activities through the Community Economic Development and Public Involvement Program.
+Since the late 1990s, enhancement for IFR Coho has taken one of three forms: 1) conservation enhancement, used to protect demes that are at risk of extirpation; 2) assessment enhancement, where releases of CWT marked fish provide information for assessment of survival and minimal encounter rates and ocean distribution; and 3) rebuilding enhancement, where hatchery supplementation is used to increase escapements (IFCRT 2006).  Enhancement activities are described in more detail by Irvine et al. (1999b, 2000) and the IFCRT (2006). Coded wire tagged and total releases are summarized in Appendix E. 
+
+ADD figure of hatchery production (see "IFR_Enhancement). Total hatchery smolt (A) and fry (B) releases for the Interior Fraser River MU, brood years 1980–2018 (data downloaded on 2021/02/12 from RMIS). Note that the range of the Y-axis is different between panels A and B.
+
+With the advent of technology to automatically remove adipose fins and/or insert CWTs using mobile “tagging trailers”, mass marking of hatchery fish was implemented for many Coho Salmon MUs in the mid-1990s (SFEC 1999).  Mass marking allows mark selective fisheries (MSF) for Coho Salmon in which marked hatchery fish can be retained and unmarked wild fish released, resulting in higher harvest rates on hatchery fish than wild fish. Mass marking was not fully implemented for Coho Salmon from the Fraser River. Only indicator stocks have consistently been marked with both an adipose clip and a CWT and are used in stock assessment. Mark-selective fisheries in Canada are limited; however, a DIT program was operatedran between brood years 1997-2002 but results were variable and the report unpublished (Appendix A).
 
 #### Management Performance 
 
 ##### Forecast Evaluation
+(add more description here) 
+
+ADD Table "IFR_Forecasts" from excel file.  Return year observed and forecasted Interior Fraser River Coho MU pre-fishery abundances from 1998 to 2019. Pre-fishery abundance is estimated by backwards FRAM.
+ADD Figure (example "IFR_Forecasts" picture). Forecasted and estimated abundances of Interior Fraser River Coho as well as absolute percent error of the yearly forecast.
+
 ##### Fishery Mortality and Escapement
+
+The base period for the FRAM defines the temporal and spatial distributions of salmon fishing mortalities from each MU.  The current FRAM base period for Coho Salmon includes catch years 1986-1992.  During this period, fishing effort, tagging, and fishery sampling of Coho Salmon was high, allowing relatively fine-scale discrimination between salmon distributions.  The marine distribution data of marked Coho salmon populations in Canada was obtained through the Mark Recovery Program (MRP), operated by CDFO. Recoveries of coded wire tagged (CWT) and adipose-fin-clipped (AFC) marked Coho salmon from various fisheries provide information on fishery exploitation rates and apparent marine distributions. Coded-wire-tag codes used during the base period for the IFR MU are provided in Appendix B and average base period exploitation rates by individual fisheries are provided in Appendix C.
+
+During the base period, Coho production from the MU contributed to US and Canadian marine sport and commercial fisheries in southern BC, the northern Washington coast, Strait of Juan de Fuca, and inner Puget Sound (Figure 5 1; Appendix C).  In general, most were recovered from commercial troll and sport fisheries operating during the summer months off the west coast of Vancouver Island and in the Strait of Georgia. The proportion of the catch of Coho salmon from fisheries within the Strait of Georgia (inside) compared to fisheries operating off the west coast of Vancouver Island (outside) has varied considerably among years. These variations have been correlated with changes in ocean salinity (Kadowaki 1997). During the 1970’s and 1980’s, large numbers of Coho salmon remained inside the Strait of Georgia each year and supported large sport and troll fisheries (Simpson et al. 1997). However, in some recent years, most Coho salmon leave the Strait of Georgia in the fall of their first year, and have become vulnerable to fisheries operating in outside areas (Irvine et al. 1999a). There are relatively few catch distribution data available for IFR Coho. However, those that are available support the hypothesis that IFR Coho have similar distributions to many other southern BC Coho salmon populations. Beamish et al. (1999) suggest that these distribution variations were caused by changing ocean conditions driven by climate. Major fishery closures commencing in 1998 have made it more difficult to infer inside-outside distribution changes. The base period for FRAM contains data from only one outside year, 1991.
+
+Total exploitation rates averaged 69% during 1986-1997 and then reductions in harvest starting in 1998 to protect IFR Coho resulted in a period of low exploitation rates (14.7% average since it has been measured starting in 2004) (Table x)
+
+ADD Figure ("IFR_ER1" and IFR_ER2".  Average exploitation rates by fishing area of Interior Fraser River Coho.  The stacked bars represent the rates estimated by gear type during the FRAM base period, catch years 1986–1992 (Top Panel). Bottom panel is the average 1998-2013 catch by gear type.
 
 ```{r f_abund_bar_ifras}
 plot_abund_bar("Interior Fraser")
@@ -1511,6 +1551,7 @@ plot_ns_msf("Interior Fraser")
 ** Post-season estimates of fishery mortality for the Interior Fraser MU by mark-selective (MSF) and non-selective (NS) fisheries over catch years 1998 through 2021. These estimates are combined US and Canadian harvest impacts.**  
 
 ##### Historical Overview of Status of Management Unit
+Since catch year 2004, the pre- and post-season status of the IFR MU has been Low.
 
 ### Lower Fraser (PLACEHOLDER)
 #### Biological and Geographic Description
