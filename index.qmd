@@ -476,7 +476,15 @@ Constraints for US fisheries on Canadian MUs depend on the status of the Interio
 
 ## Management Unit Overview
 
-The Canadian MUs are comprised of geographical aggregates of naturally-spawning Coho populations.
+The Canadian MUs are comprised of geographical aggregates of naturally-spawning Coho populations. The 1999 PST identified seven management (or assessment) units (MUs) in southern British Columbia (Figure x), of which four – Georgia Basin-East, Lower Fraser, Upper Fraser/Thompson River, and Georgia Basin-West - were subject to the bilateral management regime in the PST. The seven southern BC Coho MUs are:
+	+	Johnstone Strait/Mainland Inlets (including Queen Charlotte Str. and adjacent mainland inlets).
+	+	Georgia Basin - East (the east side of the Strait of Georgia, excluding the Fraser River system).
+	+	Lower Fraser (Fraser River delta and lower Fraser River system as far upstream as Hell’s Gate).
+	+	Upper Fraser/Thompson River system (upstream from Hell’s Gate, including the Thompson River system). 
+	+	Georgia Basin - West (the west side of the Strait of Georgia).
+	+	South-west Vancouver Island (Victoria to Point Estevan).
+	+	North-west Vancouver Island (Point Estevan to Cape Scott).
+The 2019 renewal of the PST combined the Georgia Basin – East and Georgia Basin – West MUs into a single Strait of Georgia MU, reducing the number of Canadian MUs in the bilateral management regime to three.  The CoTC choose to combine model outputs for these MUs in carrying out its pre-season and post-season responsibilities beginning in 2019 and forward rather than reconfigure the FRAM framework.
 
 The US Inside MUs consist of naturally-spawning populations originating in the Skagit, Stillaguamish, Snohomish, Hood Canal, and the Strait of Juan de Fuca. Coho populations in the US Inside MUs belong to the larger Puget Sound/Strait of Georgia Coho Salmon evolutionarily significant unit (ESU; [@Weitkamp_et_al_1995]). Only the eastern portion of the Strait of Juan de Fuca MU is in this ESU. An ESU is a Pacific salmon population or group of populations that is substantially reproductively isolated from other conspecific populations and represents an important component of the evolutionary legacy of the species. The ESU policy (56 FR 58612) for Pacific salmon defines the criteria for identifying a Pacific salmon population as a distinct population segment, which can be listed under the US Endangered Species Act of 1973.
 
@@ -1411,6 +1419,8 @@ Forecasts for the US Outside MUs performed better, on average, than the US Insid
 ## Management Unit Descriptions and Assessment of Performance 
 
 ### Interior Fraser River
+This MU description was prepared by Canadian members of the PSC Coho Technical Committee.
+
 #### Biological and Geographic Description
 
 The Interior Fraser River (IFR) MU consists of Coho salmon that re-colonized the IFR and tributaries above Hells Gate in the Fraser Canyon (Figure X) at the end of the last period of glaciation, colonizing from glacial refugia in the Columbia River basin (Northcote and Larkin 1989). Hells Gate in the Fraser Canyon was identified as a natural boundary that separates Fraser River Coho populations into Interior and Lower Fraser units. The IFR Coho MU encompasses the North, South and mainstem Thompson river drainages as well as the mainstem Fraser River beginning at Fraser Pass in Mount Robson Provincial Park and terminating at Hells Gate.
@@ -1581,22 +1591,113 @@ In many watersheds, the alteration of natural riparian ecosystems for agricultur
 
 The extent of use of the lower Fraser River and its estuary by Interior Fraser Coho is poorly understood. However, DNA analysis of a sample of 1800 juvenile Coho Salmon collected during the winter from side-channel and off-channel habitat in the lower Fraser River near Aggasiz in 2006-2007 indicated that 35% were of Interior Fraser origin (CDFO, Fraser River Chinook and Coho Stock Assessment Division, unpublished data).  An acoustic tagging experiment suggests that Interior Fraser Coho experience relatively high mortality during their migration through the Lower Fraser River and estuary (Chittenden et al. 2010).  Habitats within the lower Fraser River have been greatly impacted. Most of the streams in the lower Fraser River valley are classified as threatened or endangered due to draining of wetlands for agriculture and residential development, dyke construction for flood control, riparian zone degradation, and pollution (FRAP 1998, Langer et al. 2000, Brown 2002, Rosenau and Angelo 2003). As of 1988, an estimated 70% of wetland habitats had been isolated from the lower Fraser River floodplain by dyke systems (Birtwell et al. 1988).
 
-
-
 ### Lower Fraser (PLACEHOLDER)
+This MU description was prepared by Canadian members of the PSC Coho Technical Committee.
+
 #### Biological and Geographic Description
+
+The Fraser River is the largest watershed in the province and supports a wide diversity and great abundance of salmon stocks. The Lower Fraser (LWFR) Coho MU includes conservation units (CUs) below Hells Gate, at the Fraser River upstream limit of the MU. During the period of glaciation, as the ice retreated, the Fraser canyon at Hells Gate became blocked with ice, restricting the dispersal of many fish species. Consequently, Coho found in the lower Fraser River watershed, are known to have been colonized along the coast via the sea (Decker and Irvine 2014). Furthermore, in 1945 a landslide at Hells Gate (induced by railway construction in 1913) created a barrier to upstream salmon migration. Despite the construction of a fishway, Hells Gate remains a velocity barrier for many salmon species. For these reasons, Coho migrating upstream of Hells Gate are biologically and evolutionarily distinct from LWFR Coho and are referred to as Interior Fraser River (IFR) Coho. IFR Coho originate from areas considerably farther upstream of Hells Gate, many from the Thompson River system. In turn, they show morphological differences and swimming performance that are likely associated with their longer migrations (Taylor and McPhail 1985). The IFR Coho MU includes North Thompson, South Thompson, Lower Thompson, Fraser Canyon, and Middle Fraser CUs. LWFR Coho are more typical of other nearby coastal populations in terms of morphology, genetic marker similarity, and life history (Arbeider et al 2020a). Within the LWFR, there are four CUs as designated under the Wild Salmon Policy (WSP); Lillooet, Lower Fraser A (further upstream, incorporates Chilliwack watershed), Lower Fraser B (nearer the mouth of the Fraser River), and Boundary Bay. The Boundary Bay CU is not directly connected to the Fraser River watershed and is more genetically related to the Puget Sound populations (in the U.S.). 
+
+ADD Figure "LWFR_MU_Map". Lower Fraser Coho Management Unit
+
+The LWFR Management Unit is comprised of the Fraser River watershed including the Lillooet River and the delta downstream of Hell’s Gate encompassing Boundary Bay. This area roughly matches both marine and freshwater Canadian Fisheries Management Area 29; it does not include sub-areas 29-1 and 29-5, which borders the shoreline of the Sunshine Coast and the Gulf Islands. This area is also described as Region 2 in the British Columbia Regional Freshwater Fishing Guide. Not all rivers and streams found in these areas are contained within the MU; only systems derived from the Fraser River or Boundary Bay are included. The MU includes a significant marine portion of the southern Strait of Georgia extending north to Reception Point on the Sunshine Coast, east to the Southern Gulf Islands, and south to the international border.
+
+The Fraser is the longest river in British Columbia, originating at Fraser Pass and flowing for 1,375 into the Strait of Georgia at the city of Vancouver. The Fraser River drains a 220,000 km² area with an annual discharge at its mouth of 112 km3 (3550 m3/s). The LWFR Management Unit’s upper boundary begins at Hell's Gate, where the entire volume of the river is forced through a narrow canyon only 35 meters wide. Downstream at Yale, the canyon opens, emerging almost at sea level with the river widening until Hope, where the river then turns west and southwest into the lowland Fraser Valley. The Fraser turns southwest again just east of New Westminster, where it splits into the North Arm and the South Arm. It then forms a delta, with several industrialized and heavily populated islands, where it empties into the Strait of Georgia between the mainland and Vancouver Island. At the mouth of the Fraser, mixing of the fresh river water and denser saline ocean water produces stratified flow, developing a well-defined “salt-wedge” during flood tides. The salt wedge is generally restricted to the reach downstream of Deas Island for most times of the year (Ward, 1976). The position of the salt wedge shifts further downstream with increasing freshwater discharges. 
+
+Four main tributaries enter the Fraser River between Hope and Mission. In order of basin size, these are Harrison River (7,870 km2), Chilliwack River (1,230 km2), Chehalis River (383 km2), and Silverhope Creek (350 km2). The Lillooet River originates from the Lillooet Glacier meltwater that flows south past the town of Pemberton into the top of Harrison Lake. Owing to this, the Harrison peak flows tend to be snowmelt generated and typically occur a few days after the Fraser peak flow. The Chilliwack River and Silverhope Creek maximum annual discharges may occur in either summer or fall, whereas Chehalis River peak flood events occur in the fall and winter. Four additional large tributary systems are located downstream of Mission: Stave River, Pitt River, Alouette River, and Coquitlam River. The Stave River and Pitt River are the larger basins with drainage areas of 1,140 km2 and 795 km2. The Coquitlam and Alouette Rivers each drain areas of 237 km2 and 234 km2. The Stave, Alouette, and Coquitlam Rivers are regulated by BC Hydro while the Pitt River is unregulated.
+
+While the vast majority of the river's drainage basin lies within British Columbia, a small portion in the drainage basin lies across the international border in Washington, namely the upper reaches of the Chilliwack and Sumas Rivers and parts of the Boundary Bay CU. The Boundary Bay watershed is not a tributary of the Fraser River and is located south of the Fraser River Delta, approximately 19 km outside the City of Vancouver. The rectangular-shaped basin is 15 km long and 4 km wide and straddles the US Canadian border facing onto the southern portion of the Strait of Georgia. Boundary Bay is divided into two extensions: Mud Bay to the northeast, and Semiahmoo Bay to the southeast that crosses the border into the United States. The five main river inflows include; Nicomekl (~34 km long), Serpentine (~35 km long), Little Campbell River (~30 km long), California Creek, and Dakota Creek (Swain and Holms 1988). 
+
+Downstream from Hope, the river and adjoining floodplains widen considerably in the area considered the head of the Fraser Delta. The river passes through fertile agricultural lands and populous city centers on its way through the valley to the mouth at Georgia Strait. The Fraser Valley has a variety of land uses, ranging from the urban and industrial centers through golf courses and parks to dairy farms and berry fields. 
+
+Increasing rapid urban and suburban growth has taken place in the Vancouver area and communities in the Fraser Valley. The main population center in this region is Metro Vancouver. Other centers include Chilliwack, Abbotsford, Surrey, and Mission. Surrey has become the lower Mainland’s second-largest city with significant population growth between 2010-2020. It is anticipated that Surrey’s population will grow by more than 50% by 2051 (City of Surrey 2021). With anticipated continued population growth, the cumulative impact of human activities will put increasing pressure on watershed catchments, sediment stability, and water resources (Arbeider et al. 2020a). 
+
+Agriculture in the Fraser Valley is well established. Although it makes up only a small percentage of the province's total land area the Fraser Valley brings in over half of British Columbia's annual agricultural revenue. Typically, farmland activities are focussed along riparian areas causing impacts to stream habitat. Sumas Lake is one specific example of Coho habitat converted for agricultural purposes. In the 1920’s Sumas Lake was drained and dyked to allow for increased land availability and flood control. The shallow lake was approximately 40 km2 in size. Roughly 3,600 ha of open water and 8,000 ha of marsh habitat and sloughs were lost during the draining of the lake (Brown 2002). Following the drainage of Sumas Lake, the intensity of agricultural operations increased considerably, specifically for livestock operations (BC Min. of Water, Land, and Air Protection. 2004). More generally, most of the streams in the lower Fraser have been altered due to flood control and agricultural practices (Finn et al. 2021). 
+
+Additionally, two pipelines run through the lower Fraser Valley: the Trans Mountain pipeline that transports crude and refined oil products, and the Westcoast Transmission System Pipeline that transports natural gas. 
+
+
 #### Management Framework
 ##### Management Objectives
+Under the ABM regime, exploitation rates (ERs) (defined as total fishing mortality divided by total fishing mortality plus escapement) for each Party's fisheries are to be constrained for each MU, depending on status determinations provided by each Party. Under the ABM plan, the Parties are required to establish escapement goals or ERs that achieve Maximum Sustainable Harvest, for each MU and status category (low, moderate, and abundant). Until such time as the Parties provide the MU ER targets, the PST plan identified ER ceilings for the following MU status categories (for details see http://www.psc.org/publications_psctreaty.htm). The low category is defined as marine survival less than 3%, moderate 3-6% and abundant as survival greater than 6% (Table x).
+
+Table x. Current Management Reference Point (circa 2018). 
+| **Status**	|	**Survival and Abundance Targets**	| **Total Exploitation Rate** |
+| Low	|	<3 % survival or abundance target |	Up to 20% |
+| Moderate |		3-6 % survival and moderate abundance target |	21% – 40% |
+| Abundant |		>6 % survival and abundant abundance target |	41% – 65% |
+
+Currently, there are no exploitation rate (ER) caps in place for the LWFR MU. Fisheries management measures implemented to protect IFR Coho are assumed to protect the LWFR Coho due to overlap in run timing. In addition, similar marine survival rate patterns between the two MUs provide the support that status-based ER caps for IFR Coho will achieve conservation requirements for LWFR Coho in most years (DFO 2018b). The IFR Coho MU is classified as ‘low’ status under the PST and is currently managed internationally to an overall ER of 20% (10% for Canada and 10% for the U.S.). Canadian domestic management has further reduced the ER objective for IFR Coho to between 3 and 5% annually. The reduction is accomplished through significant restrictions on the retention of naturally produced (adipose fin present) Coho in fisheries where IFR Coho are present, as well as broad-scale closures to fisheries targeting Coho. A moving window closure is implemented annually in the mainstem of the Fraser from September through October to avoid bycatch of IFR Coho (DFO 2020). These restrictions have been in place since 1998, though the 3-5% ER management objective has been in place since 2015. In years prior to 2015, the management objective was occasionally relaxed to facilitate Sockeye targeted fisheries that catch Coho as bycatch (such as in 2014). LWFR Coho are known to have a slightly later run timing than IFR Coho, therefore late-season fisheries occurring after the window closure may still impact the LWFR MU. In the absence of ER caps for this MU, attention should be taken to avoid over-harvesting Coho in late fall fisheries (DFO 2018).
+
+At this time, there are no Management Unit Reference Points for the LWFR MU. Recent changes to the Canadian Fisheries Act (Bill C-38) have mandated the establishment of limit reference points for all major Canadian fish stocks. It is anticipated to take several years for all fish stocks to be evaluated. The LWFR MU has not been prioritized for the development reference points as of this writing.
+
+Under the Wild Salmon Policy (WSP), the Department is mandated to manage wild Pacific salmon to allow for the restoration and maintenance of healthy and diverse salmon populations. Under the WSP, all decisions and activities are guided by three objectives; safeguard genetic diversity, maintain habitat and ecosystem integrity, and manage fisheries for sustainable benefits. Wild LWFR Coho will be and are currently managed in a way and at a rate that does not lead to a long-term decline in abundance. Canada’s adoption of the WSP allows for sustainable harvest to maintain the ability for future generations to sustain their needs (Fisheries and Oceans Canada 2005). 
+
 ##### Stock Assessment
 ###### Indicator Stocks
+CWT applications levels in the entire LWFR system have averaged 4.5% of released fish in brood years between 2000-2016. In this period, there has been a shift in the number of hatcheries that release CWT fish. Historically, fish tagging occurred in the Alouette, Chelalis, Chilliwack, Inch Creek, and Kanaka Creek hatcheries. As of 2002, Inch Creek has become the sole hatchery to tag Coho (Table x). Fish have been tagged at the Inch Creek hatchery since 1983, and between 1983 and 2000, releases averaged 45,000 fish per year. More recently, from 2000-2016 Inch Creek averaged approximately 105,500 CWT releases per year.
+
+ADD Table (from CWT summaries or "LWFR_cwts" worksheet.  Total hatchery releases and coded wire tag (CWT) releases at Inch Creek hatchery from brood years 1986-2016 with percent of releases with a CWT.
+
 ###### Forecast Methods
+Due to data deficiencies, pre-season system-wide forecasts are not calculated for the LWFR Coho MU. However, under Annex four of the PST (PSC 2019), Canada and the United States have agreed to estimate fishery impacts on the Southern Coho MUs using the Fisheries Regulation Assessment Model (FRAM). FRAM is a discrete, time-step, age-structured, deterministic, model that is used to predict escapement and ER (Cook-Tabor 2012). FRAM is founded in a base period of stock-specific ocean distributions from 1986 to 1992 constructed from CWT recoveries from 198 fisheries (Fisheries and Oceans Canada 2019). The model estimates escapement and ER for the upcoming year using past Coho encounters scaled to represent present stock abundances and catch (Fisheries and Oceans Canada 2019). For the LWFR MU, the Inch Creek indicator stock survival and run size is forecasted and incorporated into the FRAM model for pre-and post-season analysis on stock status. Survival is calculated by: 
+		need to fix this     Survival=(100  (C+E+M))/S
+Where percent survival equals catch (C) plus escapement (E) plus natural mortality (M) (which is assumed as negligible) divided by the abundance of brood year smolts (S) multiplied by 100%. The calculated survival rates are used as indicators of smolt releases and the resulting return of three-year-old adults including fisheries removals. 
+
+It has been shown that climatic indicators are correlated to biological processes including marine survival of salmon (DFO unpublished 2020b). Models use data on climatic trends to better inform future marine survival run size. Climate indicators such as Pacific Decadal Oscillation (PDO), North Pacific Gyre Oscillation (NPGO), El Nino Southern Oscillation (ENSO), and Sea Surface Temperature (SST) are included (DFO unpublished 2020b). Climatic models utilize a regression of the logit transformed marine survivals (Y) against the logit transformed climate index (X1) and the “odd year” status (X2). Each model follows this general equation:
+		need to fix this 	Y_(t+1)=X_(1t+1) b_1+X_(2t+2) b_2+a
+
+Where the regression coefficients (b) are multiplied by the climate index value for the forecast year (X1t+1) and “odd year” status for the forecast year (X2t+1) summed together with the regression intercept (a). The best-preforming model for each MU is determined through retrospective analysis and a forecast is produced yearly. 
+
 ###### Escapement Monitoring
+Grant et al. (2007) is the most recent reference for escapement monitoring for Coho in the lower Fraser. Inconsistencies in budgets and Departmental staffing have limited data analysis on this MU. Estimates of LWFR Coho escapement have not been completed for the system and remains a significant data gap. Methods to monitor escapement vary depending on CU and by stream.
+
+*Lower Fraser* 
+In the past, two mark re-capture programs were implemented in the lower Fraser. The Upper Pitt River program ran from 1993 to 2001 with a yearly escapement average estimate of just over 10,000 fish for the nine years. The Salmon River program ran from 1997 to 2008. Currently, there are no mark re-capture projects aimed at assessing Coho in the lower Fraser. Alternatively, stream walks have been conducted throughout the Lower Mainland in the following streams:
+	+ Barnes
+	+ Blaney 
+	+ Chilqua
+	+ Coghlan
+	+ Hicks 
+	+ Hopedale
+	+ Kanaka 
+	+ Kawakawa 
+	+ McIntyre
+	+ North Alouette
+	+ Nathan
+	+ Norrish
+	+ Post 
+	+ Salmon
+	+ Siddle
+	+ Silverdale
+	+ Squawkum
+	+ Street
+	+ Whonnock 
+	+ Widgeon
+	+ Worth
+
+The objective of the stream walks is to estimate daily abundance throughout the entire run. Historical information on stream run timing is used to determine survey start and end dates. The two technicians use counters to tally live and dead counts of observed Coho in each stream. Carcasses may be sampled for length, sex, percent spawn, adipose presence/absence, CWT detection, and DNA analysis (Grant et al. 2007). The number of streams surveyed changes yearly based on the availability of staff and funding. Unfortunately, data on recent escapement trends is currently unavailable and remains a major data gap. 
+
+*Lillooet CU* 
+Stream surveys are annually completed in the Lillooet CU on major tributaries. Due to inconsistencies in funds, there is currently no way of estimating system-wide Lillooet escapements (Johnson et al. 2019). Recently, efforts have been made to remedy this through the deployment of a sonar system in the Lillooet River run by the Lil’wat Nation and LGL Ltd. The project was prepared for the PSC and was undertaken to estimate wild Coho escapement through the use of an ARIS system (Johnson et al. 2019). Over the six weeks of sampling from 18 October to 30 November 2020, 2,124 Coho were enumerated. From the results of the ARIS sampling, it was determined the project did not fully capture the peak of the run. As part of the larger LWFR Coho Escapement Assessment project (described in section 4), the Lillooet sonar program will be expanded to cover the entire length of the run to allow total escapement to be estimated (Arbeider et al. 2020b). 
+
+*Boundary Bay CU*
+The Boundary Bay CU does not currently have stock assessment programs dedicated to assessing escapement.
+
 ###### Fishery Monitoring
+
 ##### Enhancement
-#### Management Performance (MU-specific figures, tables, etc.)
+The following hatcheries produce salmon to support DFO and PST objectives and are located within the lower Fraser River watershed: 1) Chehalis River Hatchery, located on a tributary of the Harrison River, which is a major tributary of the lower Fraser River; 2) Chilliwack River Hatchery, located on a major tributary of the lower Fraser River; and 3) Inch Creek Hatchery, located on a tributary of a large slough connected to the lower Fraser River. The Inch Creek Hatchery rears Coho for the coded-wire-tag (CWT) indicator stock for the LWFR Coho MU. Numerous community hatcheries support Indigenous and community activities through the Community Economic Development and Public Involvement Program.
+
+ADD Figure with hatcheries?
+
+#### Management Performance
 
 ##### Forecast Evaluation
+
 ##### Fishery Mortality and Escapement
+
+##### Factors Affecting Management Unit Status
 
 (CoTC Note --> these figures squished and are fuzzy in the Word document. And, do we need to highlight 2010?)
 
@@ -1616,7 +1717,8 @@ plot_ns_msf("Lower Fraser")
 ##### Historical Overview of Status of Management Unit
 
 
-### Strait of Georgia (PLACEHOLDER)
+### Strait of Georgia (PLACEHOLDER)  ----- ASK CoTC --> what do we do with the 2 MU descriptions?  Do you wish to keep seperate?????
+This MU description was prepared by Canadian members of the PSC Coho Technical Committee.
 
 #### Biological and Geographic Description
 #### Management  Framework
@@ -1647,6 +1749,7 @@ plot_ns_msf("Strait of Georgia")
 ##### Historical Overview of Status of Management Unit
 
 ### Skagit
+This MU description was prepared by U.S. members of the PSC Coho Technical Committee.
 
 #### Biological and Geographic Description
 
@@ -2077,6 +2180,7 @@ plot_status("Skagit")
 ```
 
 ### Stillaguamish
+This MU description was prepared by U.S. members of the PSC Coho Technical Committee.
 
 #### Biological and Geographic Description
 
@@ -2199,6 +2303,7 @@ plot_status("Stillaguamish")
 
 
 ### Snohomish
+This MU description was prepared by U.S. members of the PSC Coho Technical Committee.
 
 #### Biological and Geographic Description
 
@@ -2304,6 +2409,7 @@ plot_status("Snohomish")
 
 
 ### Hood Canal
+This MU description was prepared by U.S. members of the PSC Coho Technical Committee.
 
 #### Biological and Geographic Description
 
@@ -2511,6 +2617,7 @@ plot_status("Hood Canal")
 ```
 
 ### US Strait of Juan de Fuca (JDF)
+This MU description was prepared by U.S. members of the PSC Coho Technical Committee.
 
 #### Biological and Geographic Description
 
@@ -2593,6 +2700,7 @@ plot_status("US Strait JDF")
 ```
 
 ### Quillayute
+This MU description was prepared by U.S. members of the PSC Coho Technical Committee.
 
 *Note that Quillayute and Queets values are those from the FRAM database and have not yet been extracted from the relevant TAMM cells for each year*
 
@@ -2672,6 +2780,7 @@ plot_status("Quillayute")
 ```
 
 ### Hoh
+This MU description was prepared by U.S. members of the PSC Coho Technical Committee.
 
 #### Biological and Geographic Description
 
@@ -2739,6 +2848,7 @@ plot_status("Hoh")
 ```
 
 ### Queets
+This MU description was prepared by U.S. members of the PSC Coho Technical Committee.
 
 *Note that Quillayute and Queets values are those from the FRAM database and have not yet been extracted from the relevant TAMM cells for each year*
 
@@ -2812,6 +2922,7 @@ plot_status("Queets")
 ```
 
 ### Grays Harbor
+This MU description was prepared by U.S. members of the PSC Coho Technical Committee.
 
 #### Biological and Geographic Description
 
