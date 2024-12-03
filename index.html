@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.555">
+<meta name="generator" content="quarto-1.5.57">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="PSC Joint Coho Technical Committee">
-<meta name="dcterms.date" content="2024-07-19">
+<meta name="dcterms.date" content="2024-12-03">
 
 <title>Joint Coho Technical Committee Periodic Report</title>
 <style>
@@ -21,6 +21,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 /* CSS for citations */
 div.csl-bib-body { }
@@ -233,7 +267,7 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">July 19, 2024</p>
+      <p class="date">December 3, 2024</p>
     </div>
   </div>
   
@@ -253,29 +287,30 @@ div.csl-indent {
 </header>
 <p><strong>TO DO</strong></p>
 <ul>
-<li>re-update <code>psc_pst</code> with final final final 2022 postseason run
-<ul>
+<li>re-update <code>psc_pst</code> with final final final 2022 postseason run</li>
 <li>get multiyear mdb; update <code>params$mdb</code> (unused in fig/tables but for knit text)</li>
-<li>run chunk <code>rebuild_psc_csv</code> to gen “psc_postfram_1998_2022.csv”
-<ul>
+<li>run chunk <code>rebuild_psc_csv</code> to gen “psc_postfram_1998_2022.csv”</li>
 <li>make sure to check and update <code>fram$runIDs</code> to include 2022 (should be runid 46)</li>
-</ul></li>
-</ul></li>
 <li>update any <code>psc_pre</code> preseason run changes following a similar approach and the <code>rebuild_psc_pre_csv</code> chunk</li>
 <li>further text revisions; drop tables from StaticTable</li>
-<li>figures
-<ul>
+<li>figures</li>
 <li>post</li>
-<li>pre/post
-<ul>
+<li>pre/post</li>
 <li>make simple stacked bar of stoplight of nochange/toohigh/toolow</li>
 <li>depiction of ‘un-used’ catch, either fish or ER?</li>
 <li>abundance figures overlaying MUs within regions (US in, US out, BC)</li>
-</ul></li>
-</ul></li>
 </ul>
+<p><strong>CBE change log</strong></p>
+<ul>
+<li>added “clean_run” as a logical to the parameters. If <code>TRUE</code>, recreates the temporary .csv files.</li>
+<li>Previously used hard-coded RunID numbers when generating intermediate data csv. This was sensitive to changes in numbering scheme; updated to instead specify minimum year (1998, to match comments from original) and include all years of FRAM data after that.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Semi-hardcoded params:</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>year.min <span class="ot">=</span> <span class="dv">1998</span> <span class="do">## minimum year to include from our fram databases. Code uses all years since then.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p><em>Note that Quillayute and Queets values are those from the FRAM database and have not yet been extracted from the relevant TAMM cells for each year</em></p>
-<p>This report is based on postseason data in PSC_CoTC_PostSeason_CohoFRAMDB_thru2022_02202024.mdb and preseason data in PSC_CoTC_Preseason_CohoFRAMDB_thru2023_050223.mdb, as well as supporting <a href="https://github.com/PSC-CoTC/PeriodicReport/blob/master/StaticTables.xlsx">StaticTables.xlsx</a>.</p>
+<p>This report is based on postseason data in PSC_CoTC_PostSeason_CohoFRAMDB_thru2022_03042024.mdb and preseason data in PSC_CoTC_Preseason_CohoFRAMDB_thru2024_06182024.mdb, as well as supporting <a href="https://github.com/PSC-CoTC/PeriodicReport/blob/master/StaticTables.xlsx">StaticTables.xlsx</a>.</p>
 <p><img src="images/coho_pic2.png" class="img-fluid" style="width:100.0%" alt="Coho Picture"></p>
 <section id="introduction" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
@@ -283,23 +318,23 @@ div.csl-indent {
 <p>When a new Coho Management Plan was reached in 2008 (implemented 2009 through 2018; <span class="citation" data-cites="PSC_2009">(<a href="#ref-PSC_2009" role="doc-biblioref">Pacific Salmon Commission 2009</a>)</span>) and the latest agreement finalized (applies to the period from catch years 2019 through 2028; <span class="citation" data-cites="PSC_2022">(<a href="#ref-PSC_2022" role="doc-biblioref">Pacific Salmon Commission 2022</a>)</span>), modifications were made to the list of specified MUs and to the manner in which exploitation rate caps are established. This periodic report presents information for the MUs identified in the most current Pacific Salmon Treaty’s (PST) Southern Coho Management Plan (Chapter 5 of Annex IV in the current PST). In the 2008 SCMP abundance-based management regimes were established to constrain exploitation rates (ERs) on the 13 Management Units (MUs) of naturally-spawning Coho Salmon originating in rivers along the Washington/British Columbia (BC) border. Within the most recent Management Plan <span class="citation" data-cites="PSC_2022">(<a href="#ref-PSC_2022" role="doc-biblioref">Pacific Salmon Commission 2022</a>)</span>, two of the Canadian MUs, the Georgia Strait Vancouver Island and the Georgia Strait Mainland Management Units, are now combined into the Strait of Georgia Management Unit. The 12 MUs in the current PST are listed below.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div id="otrhcadmkn" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#otrhcadmkn table {
+<div id="dgepjgjwvj" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#dgepjgjwvj table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#otrhcadmkn thead, #otrhcadmkn tbody, #otrhcadmkn tfoot, #otrhcadmkn tr, #otrhcadmkn td, #otrhcadmkn th {
+#dgepjgjwvj thead, #dgepjgjwvj tbody, #dgepjgjwvj tfoot, #dgepjgjwvj tr, #dgepjgjwvj td, #dgepjgjwvj th {
   border-style: none;
 }
 
-#otrhcadmkn p {
+#dgepjgjwvj p {
   margin: 0;
   padding: 0;
 }
 
-#otrhcadmkn .gt_table {
+#dgepjgjwvj .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -325,12 +360,12 @@ div.csl-indent {
   border-left-color: #D3D3D3;
 }
 
-#otrhcadmkn .gt_caption {
+#dgepjgjwvj .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#otrhcadmkn .gt_title {
+#dgepjgjwvj .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -342,7 +377,7 @@ div.csl-indent {
   border-bottom-width: 0;
 }
 
-#otrhcadmkn .gt_subtitle {
+#dgepjgjwvj .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -354,7 +389,7 @@ div.csl-indent {
   border-top-width: 0;
 }
 
-#otrhcadmkn .gt_heading {
+#dgepjgjwvj .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -366,13 +401,13 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#otrhcadmkn .gt_bottom_border {
+#dgepjgjwvj .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#otrhcadmkn .gt_col_headings {
+#dgepjgjwvj .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -387,7 +422,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#otrhcadmkn .gt_col_heading {
+#dgepjgjwvj .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -407,7 +442,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-#otrhcadmkn .gt_column_spanner_outer {
+#dgepjgjwvj .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -419,15 +454,15 @@ div.csl-indent {
   padding-right: 4px;
 }
 
-#otrhcadmkn .gt_column_spanner_outer:first-child {
+#dgepjgjwvj .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#otrhcadmkn .gt_column_spanner_outer:last-child {
+#dgepjgjwvj .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#otrhcadmkn .gt_column_spanner {
+#dgepjgjwvj .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -439,11 +474,11 @@ div.csl-indent {
   width: 100%;
 }
 
-#otrhcadmkn .gt_spanner_row {
+#dgepjgjwvj .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#otrhcadmkn .gt_group_heading {
+#dgepjgjwvj .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -469,7 +504,7 @@ div.csl-indent {
   text-align: left;
 }
 
-#otrhcadmkn .gt_empty_group_heading {
+#dgepjgjwvj .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -484,15 +519,15 @@ div.csl-indent {
   vertical-align: middle;
 }
 
-#otrhcadmkn .gt_from_md > :first-child {
+#dgepjgjwvj .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#otrhcadmkn .gt_from_md > :last-child {
+#dgepjgjwvj .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#otrhcadmkn .gt_row {
+#dgepjgjwvj .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -511,7 +546,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-#otrhcadmkn .gt_stub {
+#dgepjgjwvj .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -524,7 +559,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#otrhcadmkn .gt_stub_row_group {
+#dgepjgjwvj .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -538,15 +573,15 @@ div.csl-indent {
   vertical-align: top;
 }
 
-#otrhcadmkn .gt_row_group_first td {
+#dgepjgjwvj .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#otrhcadmkn .gt_row_group_first th {
+#dgepjgjwvj .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#otrhcadmkn .gt_summary_row {
+#dgepjgjwvj .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -556,16 +591,16 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#otrhcadmkn .gt_first_summary_row {
+#dgepjgjwvj .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#otrhcadmkn .gt_first_summary_row.thick {
+#dgepjgjwvj .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#otrhcadmkn .gt_last_summary_row {
+#dgepjgjwvj .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -575,7 +610,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#otrhcadmkn .gt_grand_summary_row {
+#dgepjgjwvj .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -585,7 +620,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#otrhcadmkn .gt_first_grand_summary_row {
+#dgepjgjwvj .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -595,7 +630,7 @@ div.csl-indent {
   border-top-color: #D3D3D3;
 }
 
-#otrhcadmkn .gt_last_grand_summary_row_top {
+#dgepjgjwvj .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -605,11 +640,11 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#otrhcadmkn .gt_striped {
+#dgepjgjwvj .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#otrhcadmkn .gt_table_body {
+#dgepjgjwvj .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -618,7 +653,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#otrhcadmkn .gt_footnotes {
+#dgepjgjwvj .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -632,7 +667,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#otrhcadmkn .gt_footnote {
+#dgepjgjwvj .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -641,7 +676,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#otrhcadmkn .gt_sourcenotes {
+#dgepjgjwvj .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -655,7 +690,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#otrhcadmkn .gt_sourcenote {
+#dgepjgjwvj .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -663,64 +698,73 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#otrhcadmkn .gt_left {
+#dgepjgjwvj .gt_left {
   text-align: left;
 }
 
-#otrhcadmkn .gt_center {
+#dgepjgjwvj .gt_center {
   text-align: center;
 }
 
-#otrhcadmkn .gt_right {
+#dgepjgjwvj .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#otrhcadmkn .gt_font_normal {
+#dgepjgjwvj .gt_font_normal {
   font-weight: normal;
 }
 
-#otrhcadmkn .gt_font_bold {
+#dgepjgjwvj .gt_font_bold {
   font-weight: bold;
 }
 
-#otrhcadmkn .gt_font_italic {
+#dgepjgjwvj .gt_font_italic {
   font-style: italic;
 }
 
-#otrhcadmkn .gt_super {
+#dgepjgjwvj .gt_super {
   font-size: 65%;
 }
 
-#otrhcadmkn .gt_footnote_marks {
+#dgepjgjwvj .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#otrhcadmkn .gt_asterisk {
+#dgepjgjwvj .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#otrhcadmkn .gt_indent_1 {
+#dgepjgjwvj .gt_indent_1 {
   text-indent: 5px;
 }
 
-#otrhcadmkn .gt_indent_2 {
+#dgepjgjwvj .gt_indent_2 {
   text-indent: 10px;
 }
 
-#otrhcadmkn .gt_indent_3 {
+#dgepjgjwvj .gt_indent_3 {
   text-indent: 15px;
 }
 
-#otrhcadmkn .gt_indent_4 {
+#dgepjgjwvj .gt_indent_4 {
   text-indent: 20px;
 }
 
-#otrhcadmkn .gt_indent_5 {
+#dgepjgjwvj .gt_indent_5 {
   text-indent: 25px;
+}
+
+#dgepjgjwvj .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#dgepjgjwvj div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
 }
 </style>
 
@@ -730,9 +774,9 @@ div.csl-indent {
 <th colspan="3" class="gt_heading gt_title gt_font_normal gt_bottom_border" style="text-align: left;">Management Units within the current Pacific Salmon Treaty Southern Coho Management Plan.</th>
 </tr>
 <tr class="odd gt_col_headings">
-<th id="Southern BC" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" style="text-align: center; font-weight: bold;" scope="col">Southern BC</th>
-<th id="US Inside" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" style="text-align: center; font-weight: bold;" scope="col">US Inside</th>
-<th id="US Outside" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" style="text-align: center; font-weight: bold;" scope="col">US Outside</th>
+<th id="Southern-BC" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" style="text-align: center; font-weight: bold;" scope="col">Southern BC</th>
+<th id="US-Inside" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" style="text-align: center; font-weight: bold;" scope="col">US Inside</th>
+<th id="US-Outside" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" style="text-align: center; font-weight: bold;" scope="col">US Outside</th>
 </tr>
 </thead>
 <tbody class="gt_table_body">
@@ -800,23 +844,23 @@ div.csl-indent {
 <p>The US Outside MUs consist of naturally-spawning populations from the Quillayute, Hoh, Queets, and Grays Harbor basins. All US Outside MUs, except the Grays Harbor MU, are part of the Olympic Peninsula ESU. Populations from the western portion of the Strait of Juan de Fuca MU are also in this ESU. The Grays Harbor MU is part of the Southwest Washington ESU.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div id="acbmwbowyd" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#acbmwbowyd table {
+<div id="rjuwmxwkrp" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#rjuwmxwkrp table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#acbmwbowyd thead, #acbmwbowyd tbody, #acbmwbowyd tfoot, #acbmwbowyd tr, #acbmwbowyd td, #acbmwbowyd th {
+#rjuwmxwkrp thead, #rjuwmxwkrp tbody, #rjuwmxwkrp tfoot, #rjuwmxwkrp tr, #rjuwmxwkrp td, #rjuwmxwkrp th {
   border-style: none;
 }
 
-#acbmwbowyd p {
+#rjuwmxwkrp p {
   margin: 0;
   padding: 0;
 }
 
-#acbmwbowyd .gt_table {
+#rjuwmxwkrp .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -842,12 +886,12 @@ div.csl-indent {
   border-left-color: #D3D3D3;
 }
 
-#acbmwbowyd .gt_caption {
+#rjuwmxwkrp .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#acbmwbowyd .gt_title {
+#rjuwmxwkrp .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -859,7 +903,7 @@ div.csl-indent {
   border-bottom-width: 0;
 }
 
-#acbmwbowyd .gt_subtitle {
+#rjuwmxwkrp .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -871,7 +915,7 @@ div.csl-indent {
   border-top-width: 0;
 }
 
-#acbmwbowyd .gt_heading {
+#rjuwmxwkrp .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -883,13 +927,13 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#acbmwbowyd .gt_bottom_border {
+#rjuwmxwkrp .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#acbmwbowyd .gt_col_headings {
+#rjuwmxwkrp .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -904,7 +948,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#acbmwbowyd .gt_col_heading {
+#rjuwmxwkrp .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -924,7 +968,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-#acbmwbowyd .gt_column_spanner_outer {
+#rjuwmxwkrp .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -936,15 +980,15 @@ div.csl-indent {
   padding-right: 4px;
 }
 
-#acbmwbowyd .gt_column_spanner_outer:first-child {
+#rjuwmxwkrp .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#acbmwbowyd .gt_column_spanner_outer:last-child {
+#rjuwmxwkrp .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#acbmwbowyd .gt_column_spanner {
+#rjuwmxwkrp .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -956,11 +1000,11 @@ div.csl-indent {
   width: 100%;
 }
 
-#acbmwbowyd .gt_spanner_row {
+#rjuwmxwkrp .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#acbmwbowyd .gt_group_heading {
+#rjuwmxwkrp .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -986,7 +1030,7 @@ div.csl-indent {
   text-align: left;
 }
 
-#acbmwbowyd .gt_empty_group_heading {
+#rjuwmxwkrp .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1001,15 +1045,15 @@ div.csl-indent {
   vertical-align: middle;
 }
 
-#acbmwbowyd .gt_from_md > :first-child {
+#rjuwmxwkrp .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#acbmwbowyd .gt_from_md > :last-child {
+#rjuwmxwkrp .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#acbmwbowyd .gt_row {
+#rjuwmxwkrp .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1028,7 +1072,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-#acbmwbowyd .gt_stub {
+#rjuwmxwkrp .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1041,7 +1085,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#acbmwbowyd .gt_stub_row_group {
+#rjuwmxwkrp .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1055,15 +1099,15 @@ div.csl-indent {
   vertical-align: top;
 }
 
-#acbmwbowyd .gt_row_group_first td {
+#rjuwmxwkrp .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#acbmwbowyd .gt_row_group_first th {
+#rjuwmxwkrp .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#acbmwbowyd .gt_summary_row {
+#rjuwmxwkrp .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1073,16 +1117,16 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#acbmwbowyd .gt_first_summary_row {
+#rjuwmxwkrp .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#acbmwbowyd .gt_first_summary_row.thick {
+#rjuwmxwkrp .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#acbmwbowyd .gt_last_summary_row {
+#rjuwmxwkrp .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1092,7 +1136,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#acbmwbowyd .gt_grand_summary_row {
+#rjuwmxwkrp .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1102,7 +1146,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#acbmwbowyd .gt_first_grand_summary_row {
+#rjuwmxwkrp .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1112,7 +1156,7 @@ div.csl-indent {
   border-top-color: #D3D3D3;
 }
 
-#acbmwbowyd .gt_last_grand_summary_row_top {
+#rjuwmxwkrp .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1122,11 +1166,11 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#acbmwbowyd .gt_striped {
+#rjuwmxwkrp .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#acbmwbowyd .gt_table_body {
+#rjuwmxwkrp .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1135,7 +1179,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#acbmwbowyd .gt_footnotes {
+#rjuwmxwkrp .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1149,7 +1193,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#acbmwbowyd .gt_footnote {
+#rjuwmxwkrp .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1158,7 +1202,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#acbmwbowyd .gt_sourcenotes {
+#rjuwmxwkrp .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1172,7 +1216,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#acbmwbowyd .gt_sourcenote {
+#rjuwmxwkrp .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1180,64 +1224,73 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#acbmwbowyd .gt_left {
+#rjuwmxwkrp .gt_left {
   text-align: left;
 }
 
-#acbmwbowyd .gt_center {
+#rjuwmxwkrp .gt_center {
   text-align: center;
 }
 
-#acbmwbowyd .gt_right {
+#rjuwmxwkrp .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#acbmwbowyd .gt_font_normal {
+#rjuwmxwkrp .gt_font_normal {
   font-weight: normal;
 }
 
-#acbmwbowyd .gt_font_bold {
+#rjuwmxwkrp .gt_font_bold {
   font-weight: bold;
 }
 
-#acbmwbowyd .gt_font_italic {
+#rjuwmxwkrp .gt_font_italic {
   font-style: italic;
 }
 
-#acbmwbowyd .gt_super {
+#rjuwmxwkrp .gt_super {
   font-size: 65%;
 }
 
-#acbmwbowyd .gt_footnote_marks {
+#rjuwmxwkrp .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#acbmwbowyd .gt_asterisk {
+#rjuwmxwkrp .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#acbmwbowyd .gt_indent_1 {
+#rjuwmxwkrp .gt_indent_1 {
   text-indent: 5px;
 }
 
-#acbmwbowyd .gt_indent_2 {
+#rjuwmxwkrp .gt_indent_2 {
   text-indent: 10px;
 }
 
-#acbmwbowyd .gt_indent_3 {
+#rjuwmxwkrp .gt_indent_3 {
   text-indent: 15px;
 }
 
-#acbmwbowyd .gt_indent_4 {
+#rjuwmxwkrp .gt_indent_4 {
   text-indent: 20px;
 }
 
-#acbmwbowyd .gt_indent_5 {
+#rjuwmxwkrp .gt_indent_5 {
   text-indent: 25px;
+}
+
+#rjuwmxwkrp .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#rjuwmxwkrp div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
 }
 </style>
 
@@ -1247,9 +1300,9 @@ div.csl-indent {
 <th colspan="3" class="gt_heading gt_title gt_font_normal gt_bottom_border" style="text-align: left;">Management Units within the current Pacific Salmon Treaty Southern Coho Management Plan</th>
 </tr>
 <tr class="odd gt_col_headings">
-<th id="Southern BC" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" style="text-align: center; font-weight: bold;" scope="col">Southern BC</th>
-<th id="US Inside" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" style="text-align: center; font-weight: bold;" scope="col">US Inside</th>
-<th id="US Outside" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" style="text-align: center; font-weight: bold;" scope="col">US Outside</th>
+<th id="Southern-BC" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" style="text-align: center; font-weight: bold;" scope="col">Southern BC</th>
+<th id="US-Inside" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" style="text-align: center; font-weight: bold;" scope="col">US Inside</th>
+<th id="US-Outside" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" style="text-align: center; font-weight: bold;" scope="col">US Outside</th>
 </tr>
 </thead>
 <tbody class="gt_table_body">
@@ -1288,7 +1341,7 @@ div.csl-indent {
 <section id="fishery-overview" class="level2" data-number="1.2">
 <h2 data-number="1.2" class="anchored" data-anchor-id="fishery-overview"><span class="header-section-number">1.2</span> Fishery Overview</h2>
 <p>Under the CoABM regime, each Party is required to regulate its fisheries so as not to exceed exploitation rate (ER) constraints on MUs. Fishery Management Areas for British Columbia (<a href="#fig-dfomap" class="quarto-xref">Figure&nbsp;1.1</a>), Washington (<a href="#fig-wdfwmap" class="quarto-xref">Figure&nbsp;1.2</a>), and Oregon (<a href="#fig-odfwmap" class="quarto-xref">Figure&nbsp;1.3</a>) are shown below.</p>
-<div id="fig-dfomap" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-dfomap" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-dfomap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="images/PFMA_CDFO.png" class="img-fluid figure-img">
@@ -1298,7 +1351,7 @@ Figure&nbsp;1.1: Canadian DFO Southern BC Pacific Fisheries Management Areas
 </figcaption>
 </figure>
 </div>
-<div id="fig-wdfwmap" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-wdfwmap" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-wdfwmap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="images/WA_MFA.jpg" class="img-fluid figure-img">
@@ -1308,7 +1361,7 @@ Figure&nbsp;1.2: Washington Coast and Puget Sound Marine Fishery Areas
 </figcaption>
 </figure>
 </div>
-<div id="fig-odfwmap" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-odfwmap" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-odfwmap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="images/OR_SMA.jpg" class="img-fluid figure-img">
@@ -1341,7 +1394,7 @@ Figure&nbsp;1.3: Oregon Ocean Salmon Management Areas and Major Port Locations
 <p>Coho fisheries are evaluated with the Coho Fisheries Regulation Assessment Model <a href="https://framverse.github.io/fram_doc/calcs_data_coho.html">(Coho FRAM)</a>, a bilaterally developed tool that is employed for both pre-season fishery planning and post-season estimation of escapements and exploitation rates <a href="https://framverse.github.io/fram_doc/apps_coho.html">(see: pre- and post-season applications)</a>.</p>
 <p>Coho FRAM is an annual mixed-stock accounting model that evaluates a set of stock units within a set of fisheries over time periods within a single fishing year (the calendar year for Coho). It can be used to estimate catch and escapement based on forecast abundance and planned fisheries (‘forward’), or it can be used to reconstruct ocean abundance from observed escapements and fisheries (‘backward’).</p>
 <p>The Coho FRAM base period parameterization, determinining stock-fishery-timestep impacts, was constructed from stock-specific fishery recoveries of coded-wire tags (CWTs) within the time steps January to June, July, August, September, and October to December during coast wide fisheries from 1986 to 1992. The procedure used to generate base period data is depicted below (<a href="#fig-FRAMdev" class="quarto-xref">Figure&nbsp;1.4</a>). For each base period year, post-season reconstruction of cohort abundances for each Coho MU is based on two different models: the Mixed-Stock Model (MSM) that estimates the Production Expansion Factors for each Production Region and RRTERM program that estimates stock-specific impacts for terminal marine and freshwater fisheries. The MSM uses CWT recoveries for each model stock expanded by the Production Expansion Factors to best describe the total catch in each marine mixed-stock fishery. The MSM/RRTERM cohort analysis has been used for post-season reconstructions for catch years 1986-2007. However, beginning with catch year 1993, too few coded-wire tags were recovered in mixed-stock fisheries to perform robust cohort analyses using the mixed-stock model.</p>
-<div id="fig-FRAMdev" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-FRAMdev" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-FRAMdev-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="images/FRAMDevel.jpg" class="img-fluid figure-img">
@@ -1362,7 +1415,7 @@ Figure&nbsp;1.4: Procedure used to generate base period data for Coho FRAM.
 <section id="terrestrial-conditions" class="level3" data-number="1.4.1">
 <h3 data-number="1.4.1" class="anchored" data-anchor-id="terrestrial-conditions"><span class="header-section-number">1.4.1</span> Terrestrial Conditions</h3>
 <p>Annual average temperatures and precipitation by water year (Oct–Sep) provide a broad-brush view of terrestrial conditions across the Pacific Northwest. A strong and persistent warming trend and large year-to-year variations in precipitation are among the most notable features in recent decades (<a href="#fig-envi1" class="quarto-xref">Figure&nbsp;1.5</a>). Within snow-dominated watersheds, warmer winters and springs experienced in recent years reduce snow accumulation and hasten snowmelt. Reduced snowpack causes an earlier and smaller freshet in spring and can result in lower minimum flows and higher stream temperatures in summer.</p>
-<div id="fig-envi1" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-envi1" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-envi1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="images/Env_fig1.jpg" class="img-fluid figure-img">
@@ -1379,7 +1432,7 @@ Figure&nbsp;1.5: Water year (Oct–Sep) surface air temperature (top) and precip
 <section id="marine-conditions" class="level3" data-number="1.4.2">
 <h3 data-number="1.4.2" class="anchored" data-anchor-id="marine-conditions"><span class="header-section-number">1.4.2</span> Marine Conditions</h3>
 <p>Surface temperatures in the northeastern Pacific Ocean vary on decadal time scales, with periods of above and below average temperatures, as indicated by the Pacific Decadal Oscillation (PDO; [<span class="citation" data-cites="Mantua_et_al_1997">Mantua et al. (<a href="#ref-Mantua_et_al_1997" role="doc-biblioref">1997</a>)</span>). Recently, surface temperatures were notably cooler than average from 1999–2002, 2008–13 and again starting in 2020 (<a href="#fig-envi2" class="quarto-xref">Figure&nbsp;1.6</a>). They were warmer than normal from 2003–05, and at record highs for much of the period from fall 2013–20 due to a series of marine heat waves. For the California Current region, surface temperatures reached record high levels from 2014–16, with 2015 being the single warmest year in the historical record <span class="citation" data-cites="Jacox_et_al_2018">(<a href="#ref-Jacox_et_al_2018" role="doc-biblioref">Jacox et al. 2018</a>)</span>. In most years, positive PDO values correspond to El Niño events (e.g., the 2015/2016 El Niño), while negative PDO values correspond to La Niña events (e.g., 2021, 2022, and 2023 La Niñas).</p>
-<div id="fig-envi2" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-envi2" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-envi2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="images/Env_fig2.png" class="img-fluid figure-img">
@@ -2342,23 +2395,23 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
 <p>** Post-season estimates of Ocean Age-3 total abundances and their associated status categories [A = abundanct, M = moderate, L= low] by MU for catch years 2004 through 2021. Management Units in the Abundant category have green highlighted cells, Moderate ones are not highlighted, and those in Low status are highlighted orange.** (note - need to make table fit unto a single page in Word)</p>
 <div class="cell">
 <div class="cell-output-display">
-<div id="wbtmhtrdiy" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#wbtmhtrdiy table {
+<div id="tzeclsognl" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#tzeclsognl table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#wbtmhtrdiy thead, #wbtmhtrdiy tbody, #wbtmhtrdiy tfoot, #wbtmhtrdiy tr, #wbtmhtrdiy td, #wbtmhtrdiy th {
+#tzeclsognl thead, #tzeclsognl tbody, #tzeclsognl tfoot, #tzeclsognl tr, #tzeclsognl td, #tzeclsognl th {
   border-style: none;
 }
 
-#wbtmhtrdiy p {
+#tzeclsognl p {
   margin: 0;
   padding: 0;
 }
 
-#wbtmhtrdiy .gt_table {
+#tzeclsognl .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -2384,12 +2437,12 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-left-color: #D3D3D3;
 }
 
-#wbtmhtrdiy .gt_caption {
+#tzeclsognl .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#wbtmhtrdiy .gt_title {
+#tzeclsognl .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -2401,7 +2454,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-bottom-width: 0;
 }
 
-#wbtmhtrdiy .gt_subtitle {
+#tzeclsognl .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -2413,7 +2466,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-top-width: 0;
 }
 
-#wbtmhtrdiy .gt_heading {
+#tzeclsognl .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -2425,13 +2478,13 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-right-color: #D3D3D3;
 }
 
-#wbtmhtrdiy .gt_bottom_border {
+#tzeclsognl .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#wbtmhtrdiy .gt_col_headings {
+#tzeclsognl .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2446,7 +2499,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-right-color: #D3D3D3;
 }
 
-#wbtmhtrdiy .gt_col_heading {
+#tzeclsognl .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2466,7 +2519,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   overflow-x: hidden;
 }
 
-#wbtmhtrdiy .gt_column_spanner_outer {
+#tzeclsognl .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2478,15 +2531,15 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   padding-right: 4px;
 }
 
-#wbtmhtrdiy .gt_column_spanner_outer:first-child {
+#tzeclsognl .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#wbtmhtrdiy .gt_column_spanner_outer:last-child {
+#tzeclsognl .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#wbtmhtrdiy .gt_column_spanner {
+#tzeclsognl .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -2498,11 +2551,11 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   width: 100%;
 }
 
-#wbtmhtrdiy .gt_spanner_row {
+#tzeclsognl .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#wbtmhtrdiy .gt_group_heading {
+#tzeclsognl .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2528,7 +2581,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   text-align: left;
 }
 
-#wbtmhtrdiy .gt_empty_group_heading {
+#tzeclsognl .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2543,15 +2596,15 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   vertical-align: middle;
 }
 
-#wbtmhtrdiy .gt_from_md > :first-child {
+#tzeclsognl .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#wbtmhtrdiy .gt_from_md > :last-child {
+#tzeclsognl .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#wbtmhtrdiy .gt_row {
+#tzeclsognl .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2570,7 +2623,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   overflow-x: hidden;
 }
 
-#wbtmhtrdiy .gt_stub {
+#tzeclsognl .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2583,7 +2636,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   padding-right: 5px;
 }
 
-#wbtmhtrdiy .gt_stub_row_group {
+#tzeclsognl .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2597,15 +2650,15 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   vertical-align: top;
 }
 
-#wbtmhtrdiy .gt_row_group_first td {
+#tzeclsognl .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#wbtmhtrdiy .gt_row_group_first th {
+#tzeclsognl .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#wbtmhtrdiy .gt_summary_row {
+#tzeclsognl .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2615,16 +2668,16 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   padding-right: 5px;
 }
 
-#wbtmhtrdiy .gt_first_summary_row {
+#tzeclsognl .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#wbtmhtrdiy .gt_first_summary_row.thick {
+#tzeclsognl .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#wbtmhtrdiy .gt_last_summary_row {
+#tzeclsognl .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2634,7 +2687,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-bottom-color: #D3D3D3;
 }
 
-#wbtmhtrdiy .gt_grand_summary_row {
+#tzeclsognl .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2644,7 +2697,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   padding-right: 5px;
 }
 
-#wbtmhtrdiy .gt_first_grand_summary_row {
+#tzeclsognl .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2654,7 +2707,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-top-color: #D3D3D3;
 }
 
-#wbtmhtrdiy .gt_last_grand_summary_row_top {
+#tzeclsognl .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2664,11 +2717,11 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-bottom-color: #D3D3D3;
 }
 
-#wbtmhtrdiy .gt_striped {
+#tzeclsognl .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#wbtmhtrdiy .gt_table_body {
+#tzeclsognl .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2677,7 +2730,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-bottom-color: #D3D3D3;
 }
 
-#wbtmhtrdiy .gt_footnotes {
+#tzeclsognl .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2691,7 +2744,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-right-color: #D3D3D3;
 }
 
-#wbtmhtrdiy .gt_footnote {
+#tzeclsognl .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -2700,7 +2753,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   padding-right: 5px;
 }
 
-#wbtmhtrdiy .gt_sourcenotes {
+#tzeclsognl .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2714,7 +2767,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-right-color: #D3D3D3;
 }
 
-#wbtmhtrdiy .gt_sourcenote {
+#tzeclsognl .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -2722,64 +2775,73 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   padding-right: 5px;
 }
 
-#wbtmhtrdiy .gt_left {
+#tzeclsognl .gt_left {
   text-align: left;
 }
 
-#wbtmhtrdiy .gt_center {
+#tzeclsognl .gt_center {
   text-align: center;
 }
 
-#wbtmhtrdiy .gt_right {
+#tzeclsognl .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#wbtmhtrdiy .gt_font_normal {
+#tzeclsognl .gt_font_normal {
   font-weight: normal;
 }
 
-#wbtmhtrdiy .gt_font_bold {
+#tzeclsognl .gt_font_bold {
   font-weight: bold;
 }
 
-#wbtmhtrdiy .gt_font_italic {
+#tzeclsognl .gt_font_italic {
   font-style: italic;
 }
 
-#wbtmhtrdiy .gt_super {
+#tzeclsognl .gt_super {
   font-size: 65%;
 }
 
-#wbtmhtrdiy .gt_footnote_marks {
+#tzeclsognl .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#wbtmhtrdiy .gt_asterisk {
+#tzeclsognl .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#wbtmhtrdiy .gt_indent_1 {
+#tzeclsognl .gt_indent_1 {
   text-indent: 5px;
 }
 
-#wbtmhtrdiy .gt_indent_2 {
+#tzeclsognl .gt_indent_2 {
   text-indent: 10px;
 }
 
-#wbtmhtrdiy .gt_indent_3 {
+#tzeclsognl .gt_indent_3 {
   text-indent: 15px;
 }
 
-#wbtmhtrdiy .gt_indent_4 {
+#tzeclsognl .gt_indent_4 {
   text-indent: 20px;
 }
 
-#wbtmhtrdiy .gt_indent_5 {
+#tzeclsognl .gt_indent_5 {
   text-indent: 25px;
+}
+
+#tzeclsognl .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#tzeclsognl div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
 }
 </style>
 
@@ -2788,25 +2850,25 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
 <thead>
 <tr class="header gt_col_headings">
 <th id="PSC_StockName" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" style="text-align: right; font-size: 0; font-weight: bold; background-color: #B3B3B3;" scope="col">PSC_StockName</th>
-<th id="2004" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2004</th>
-<th id="2005" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2005</th>
-<th id="2006" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2006</th>
-<th id="2007" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2007</th>
-<th id="2008" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2008</th>
-<th id="2009" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2009</th>
-<th id="2010" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2010</th>
-<th id="2011" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2011</th>
-<th id="2012" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2012</th>
-<th id="2013" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2013</th>
-<th id="2014" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2014</th>
-<th id="2015" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2015</th>
-<th id="2016" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2016</th>
-<th id="2017" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2017</th>
-<th id="2018" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2018</th>
-<th id="2019" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2019</th>
-<th id="2020" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2020</th>
-<th id="2021" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2021</th>
-<th id="2022" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2022</th>
+<th id="a2004" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2004</th>
+<th id="a2005" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2005</th>
+<th id="a2006" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2006</th>
+<th id="a2007" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2007</th>
+<th id="a2008" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2008</th>
+<th id="a2009" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2009</th>
+<th id="a2010" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2010</th>
+<th id="a2011" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2011</th>
+<th id="a2012" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2012</th>
+<th id="a2013" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2013</th>
+<th id="a2014" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2014</th>
+<th id="a2015" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2015</th>
+<th id="a2016" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2016</th>
+<th id="a2017" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2017</th>
+<th id="a2018" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2018</th>
+<th id="a2019" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2019</th>
+<th id="a2020" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2020</th>
+<th id="a2021" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2021</th>
+<th id="a2022" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="background-color: #B3B3B3; font-weight: bold" scope="col">2022</th>
 </tr>
 </thead>
 <tbody class="gt_table_body">
@@ -2833,7 +2895,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
 <td class="gt_row gt_right" headers="Canada  2019">42,572</td>
 <td class="gt_row gt_right" headers="Canada  2020">85,395</td>
 <td class="gt_row gt_right" headers="Canada  2021">47,539</td>
-<td class="gt_row gt_right" headers="Canada  2022">78,084</td>
+<td class="gt_row gt_right" headers="Canada  2022">78,093</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_left" headers="Canada  PSC_StockName">Interior Fraser</td>
@@ -2855,7 +2917,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
 <td class="gt_row gt_right" headers="Canada  2019">54,777</td>
 <td class="gt_row gt_right" headers="Canada  2020">82,191</td>
 <td class="gt_row gt_right" headers="Canada  2021">87,210</td>
-<td class="gt_row gt_right" headers="Canada  2022">80,122</td>
+<td class="gt_row gt_right" headers="Canada  2022">80,129</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="Canada  PSC_StockName">Strait of Georgia</td>
@@ -2877,7 +2939,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
 <td class="gt_row gt_right" headers="Canada  2019">32,727</td>
 <td class="gt_row gt_right" headers="Canada  2020">109,574</td>
 <td class="gt_row gt_right" headers="Canada  2021">140,232</td>
-<td class="gt_row gt_right" headers="Canada  2022">128,394</td>
+<td class="gt_row gt_right" headers="Canada  2022">128,444</td>
 </tr>
 <tr class="odd gt_group_heading_row">
 <td colspan="20" id="US Inside" class="gt_group_heading" data-quarto-table-cell-role="th" scope="colgroup">US Inside</td>
@@ -2902,7 +2964,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
 <td class="gt_row gt_right" headers="US Inside  2019">27,499 [M]</td>
 <td class="gt_row gt_right" headers="US Inside  2020">41,468 [M]</td>
 <td class="gt_row gt_right" headers="US Inside  2021" style="background-color: #C6F5BA">111,989 [A]</td>
-<td class="gt_row gt_right" headers="US Inside  2022" style="background-color: #C6F5BA">124,050 [A]</td>
+<td class="gt_row gt_right" headers="US Inside  2022" style="background-color: #C6F5BA">124,042 [A]</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_left" headers="US Inside  PSC_StockName">Stillaguamish</td>
@@ -2924,7 +2986,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
 <td class="gt_row gt_right" headers="US Inside  2019">16,165 [M]</td>
 <td class="gt_row gt_right" headers="US Inside  2020" style="background-color: #C6F5BA">24,654 [A]</td>
 <td class="gt_row gt_right" headers="US Inside  2021" style="background-color: #C6F5BA">42,702 [A]</td>
-<td class="gt_row gt_right" headers="US Inside  2022" style="background-color: #C6F5BA">59,710 [A]</td>
+<td class="gt_row gt_right" headers="US Inside  2022" style="background-color: #C6F5BA">59,711 [A]</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="US Inside  PSC_StockName">Snohomish</td>
@@ -3059,7 +3121,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
 <td class="gt_row gt_right" headers="US Outside  2019" style="background-color: #F5E298">3,944 [L]</td>
 <td class="gt_row gt_right" headers="US Outside  2020" style="background-color: #F5E298">5,126 [L]</td>
 <td class="gt_row gt_right" headers="US Outside  2021" style="background-color: #F5E298">5,261 [L]</td>
-<td class="gt_row gt_right" headers="US Outside  2022" style="background-color: #C6F5BA">17,812 [A]</td>
+<td class="gt_row gt_right" headers="US Outside  2022" style="background-color: #C6F5BA">17,811 [A]</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_left" headers="US Outside  PSC_StockName">Grays Harbor</td>
@@ -3081,7 +3143,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
 <td class="gt_row gt_right" headers="US Outside  2019">50,994 [M]</td>
 <td class="gt_row gt_right" headers="US Outside  2020" style="background-color: #F5E298">31,581 [L]</td>
 <td class="gt_row gt_right" headers="US Outside  2021" style="background-color: #C6F5BA">77,315 [A]</td>
-<td class="gt_row gt_right" headers="US Outside  2022" style="background-color: #C6F5BA">78,247 [A]</td>
+<td class="gt_row gt_right" headers="US Outside  2022" style="background-color: #C6F5BA">79,356 [A]</td>
 </tr>
 </tbody>
 </table>
@@ -3099,14 +3161,50 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
 </div>
 </div>
 <p>Estimated post-season ocean age-3 cohort abundances for the MUs are depicted below. Abundances for BC and US Inside MUs tend to be synchronous, with above- or below-average abundances occurring in the same years (e.g., high in 2001, low in 2006). Outside MUs are less synchronous and years with high abundances for Grays Harbor don’t necessarily correspond to high abundances for other MUs.</p>
-<p><strong>Estimated Post-season Ocean Age-3 Abundances of BC Coho Salmon Management Units; Catch Years 2004-2021. update to 2022 when available</strong></p>
-<p><img src="images/BC_Abund_by_yr.png" class="img-fluid" style="width:100.0%" alt="BC MU Ocean Age-3 Abundances by Year"></p>
-<p><strong>Estimated Post-season Ocean Age-3 Abundances of US Inside Coho Salmon Management Units; Catch Years 2004-2021. update to 2022 when available</strong></p>
-<p><img src="images/US_Inside_Abund_by_yr.png" class="img-fluid" style="width:100.0%" alt="US Inside MU Ocean Age-3 Abundances by Year"></p>
-<p><strong>Estimated Post-season Ocean Age-3 Abundances of US Outside Coho Salmon Management Units; Catch Years 2004-2021. update to 2022 when available</strong></p>
-<p><img src="images/US_Outside_Abund_by_yr.png" class="img-fluid" style="width:100.0%" alt="US Outside MU Ocean Age-3 Abundances by Year"></p>
-<p><strong>Summary of the number of MUs in each abundance category, based on post-season assessments, of catch years 2004 through 2021. This figure is limited to the US MUs and the Interior Fraser MU. </strong></p>
-<p><img src="images/MU_Status_by_yr.png" class="img-fluid" style="width:100.0%" alt="MU Abundance Status by Year"></p>
+<p><strong>Estimated Post-season Ocean Age-3 Abundances of BC Coho Salmon Management Units</strong></p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<!-- ![](images/BC_Abund_by_yr.png){width=100% fig-alt="BC MU Ocean Age-3 Abundances by Year"} -->
+<p><strong>Estimated Post-season Ocean Age-3 Abundances of US Inside Coho Salmon Management Units</strong></p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<!-- ![](images/US_Inside_Abund_by_yr.png){width=100% fig-alt="US Inside MU Ocean Age-3 Abundances by Year"} -->
+<p><strong>Estimated Post-season Ocean Age-3 Abundances of US Outside Coho Salmon Management Units</strong></p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<!-- ![](images/US_Outside_Abund_by_yr.png){width=100% fig-alt="US Outside MU Ocean Age-3 Abundances by Year"} -->
+<p><strong>Summary of the number of MUs in each abundance category, based on post-season assessments.</strong></p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<!-- ![](images/MU_Status_by_yr.png){width=100% fig-alt="MU Abundance Status by Year"} -->
 <section id="fishery-exploitaion-rate-overview" class="level3" data-number="4.1.1">
 <h3 data-number="4.1.1" class="anchored" data-anchor-id="fishery-exploitaion-rate-overview"><span class="header-section-number">4.1.1</span> Fishery Exploitaion Rate Overview</h3>
 <p>Recent catch years with the highest estimated average exploitation rates over all MUs include catch years 2014 (42%) and 2015 (43%), while the MUs experienced the lowest ERs, on average, in catch years 2016 (16%) and 2021 (14%). Estimates of post-season total exploitation rates (ERs) by MU for catch years 2011 through 2021 are listed in the table below, while average ERs by MU and FRAM fishery are depicted in the figures below.</p>
@@ -3116,23 +3214,23 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
 <p><strong>Total xxploitation rates by MU, catch years 2011 through 2021.</strong> (note - need to move Canadian MUs to top of table)</p>
 <div class="cell">
 <div class="cell-output-display">
-<div id="tlddgmshph" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#tlddgmshph table {
+<div id="hoebqsjpfm" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#hoebqsjpfm table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#tlddgmshph thead, #tlddgmshph tbody, #tlddgmshph tfoot, #tlddgmshph tr, #tlddgmshph td, #tlddgmshph th {
+#hoebqsjpfm thead, #hoebqsjpfm tbody, #hoebqsjpfm tfoot, #hoebqsjpfm tr, #hoebqsjpfm td, #hoebqsjpfm th {
   border-style: none;
 }
 
-#tlddgmshph p {
+#hoebqsjpfm p {
   margin: 0;
   padding: 0;
 }
 
-#tlddgmshph .gt_table {
+#hoebqsjpfm .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -3158,12 +3256,12 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-left-color: #D3D3D3;
 }
 
-#tlddgmshph .gt_caption {
+#hoebqsjpfm .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#tlddgmshph .gt_title {
+#hoebqsjpfm .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -3175,7 +3273,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-bottom-width: 0;
 }
 
-#tlddgmshph .gt_subtitle {
+#hoebqsjpfm .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -3187,7 +3285,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-top-width: 0;
 }
 
-#tlddgmshph .gt_heading {
+#hoebqsjpfm .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -3199,13 +3297,13 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-right-color: #D3D3D3;
 }
 
-#tlddgmshph .gt_bottom_border {
+#hoebqsjpfm .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#tlddgmshph .gt_col_headings {
+#hoebqsjpfm .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -3220,7 +3318,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-right-color: #D3D3D3;
 }
 
-#tlddgmshph .gt_col_heading {
+#hoebqsjpfm .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3240,7 +3338,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   overflow-x: hidden;
 }
 
-#tlddgmshph .gt_column_spanner_outer {
+#hoebqsjpfm .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3252,15 +3350,15 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   padding-right: 4px;
 }
 
-#tlddgmshph .gt_column_spanner_outer:first-child {
+#hoebqsjpfm .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#tlddgmshph .gt_column_spanner_outer:last-child {
+#hoebqsjpfm .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#tlddgmshph .gt_column_spanner {
+#hoebqsjpfm .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -3272,11 +3370,11 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   width: 100%;
 }
 
-#tlddgmshph .gt_spanner_row {
+#hoebqsjpfm .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#tlddgmshph .gt_group_heading {
+#hoebqsjpfm .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3302,7 +3400,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   text-align: left;
 }
 
-#tlddgmshph .gt_empty_group_heading {
+#hoebqsjpfm .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -3317,15 +3415,15 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   vertical-align: middle;
 }
 
-#tlddgmshph .gt_from_md > :first-child {
+#hoebqsjpfm .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#tlddgmshph .gt_from_md > :last-child {
+#hoebqsjpfm .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#tlddgmshph .gt_row {
+#hoebqsjpfm .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3344,7 +3442,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   overflow-x: hidden;
 }
 
-#tlddgmshph .gt_stub {
+#hoebqsjpfm .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3357,7 +3455,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   padding-right: 5px;
 }
 
-#tlddgmshph .gt_stub_row_group {
+#hoebqsjpfm .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3371,15 +3469,15 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   vertical-align: top;
 }
 
-#tlddgmshph .gt_row_group_first td {
+#hoebqsjpfm .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#tlddgmshph .gt_row_group_first th {
+#hoebqsjpfm .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#tlddgmshph .gt_summary_row {
+#hoebqsjpfm .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -3389,16 +3487,16 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   padding-right: 5px;
 }
 
-#tlddgmshph .gt_first_summary_row {
+#hoebqsjpfm .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#tlddgmshph .gt_first_summary_row.thick {
+#hoebqsjpfm .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#tlddgmshph .gt_last_summary_row {
+#hoebqsjpfm .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3408,7 +3506,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-bottom-color: #D3D3D3;
 }
 
-#tlddgmshph .gt_grand_summary_row {
+#hoebqsjpfm .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -3418,7 +3516,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   padding-right: 5px;
 }
 
-#tlddgmshph .gt_first_grand_summary_row {
+#hoebqsjpfm .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3428,7 +3526,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-top-color: #D3D3D3;
 }
 
-#tlddgmshph .gt_last_grand_summary_row_top {
+#hoebqsjpfm .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3438,11 +3536,11 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-bottom-color: #D3D3D3;
 }
 
-#tlddgmshph .gt_striped {
+#hoebqsjpfm .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#tlddgmshph .gt_table_body {
+#hoebqsjpfm .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -3451,7 +3549,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-bottom-color: #D3D3D3;
 }
 
-#tlddgmshph .gt_footnotes {
+#hoebqsjpfm .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -3465,7 +3563,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-right-color: #D3D3D3;
 }
 
-#tlddgmshph .gt_footnote {
+#hoebqsjpfm .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -3474,7 +3572,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   padding-right: 5px;
 }
 
-#tlddgmshph .gt_sourcenotes {
+#hoebqsjpfm .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -3488,7 +3586,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-right-color: #D3D3D3;
 }
 
-#tlddgmshph .gt_sourcenote {
+#hoebqsjpfm .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -3496,64 +3594,73 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   padding-right: 5px;
 }
 
-#tlddgmshph .gt_left {
+#hoebqsjpfm .gt_left {
   text-align: left;
 }
 
-#tlddgmshph .gt_center {
+#hoebqsjpfm .gt_center {
   text-align: center;
 }
 
-#tlddgmshph .gt_right {
+#hoebqsjpfm .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#tlddgmshph .gt_font_normal {
+#hoebqsjpfm .gt_font_normal {
   font-weight: normal;
 }
 
-#tlddgmshph .gt_font_bold {
+#hoebqsjpfm .gt_font_bold {
   font-weight: bold;
 }
 
-#tlddgmshph .gt_font_italic {
+#hoebqsjpfm .gt_font_italic {
   font-style: italic;
 }
 
-#tlddgmshph .gt_super {
+#hoebqsjpfm .gt_super {
   font-size: 65%;
 }
 
-#tlddgmshph .gt_footnote_marks {
+#hoebqsjpfm .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#tlddgmshph .gt_asterisk {
+#hoebqsjpfm .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#tlddgmshph .gt_indent_1 {
+#hoebqsjpfm .gt_indent_1 {
   text-indent: 5px;
 }
 
-#tlddgmshph .gt_indent_2 {
+#hoebqsjpfm .gt_indent_2 {
   text-indent: 10px;
 }
 
-#tlddgmshph .gt_indent_3 {
+#hoebqsjpfm .gt_indent_3 {
   text-indent: 15px;
 }
 
-#tlddgmshph .gt_indent_4 {
+#hoebqsjpfm .gt_indent_4 {
   text-indent: 20px;
 }
 
-#tlddgmshph .gt_indent_5 {
+#hoebqsjpfm .gt_indent_5 {
   text-indent: 25px;
+}
+
+#hoebqsjpfm .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#hoebqsjpfm div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
 }
 </style>
 
@@ -3562,18 +3669,18 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
 <thead>
 <tr class="header gt_col_headings">
 <th id="PSC_StockName" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">PSC_StockName</th>
-<th id="2011" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2011</th>
-<th id="2012" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2012</th>
-<th id="2013" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2013</th>
-<th id="2014" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2014</th>
-<th id="2015" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2015</th>
-<th id="2016" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2016</th>
-<th id="2017" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2017</th>
-<th id="2018" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2018</th>
-<th id="2019" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2019</th>
-<th id="2020" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2020</th>
-<th id="2021" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2021</th>
-<th id="2022" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2022</th>
+<th id="a2011" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2011</th>
+<th id="a2012" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2012</th>
+<th id="a2013" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2013</th>
+<th id="a2014" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2014</th>
+<th id="a2015" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2015</th>
+<th id="a2016" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2016</th>
+<th id="a2017" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2017</th>
+<th id="a2018" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2018</th>
+<th id="a2019" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2019</th>
+<th id="a2020" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2020</th>
+<th id="a2021" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2021</th>
+<th id="a2022" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2022</th>
 </tr>
 </thead>
 <tbody class="gt_table_body">
@@ -3716,7 +3823,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
 <td class="gt_row gt_right" headers="US Outside  2019">39.6%</td>
 <td class="gt_row gt_right" headers="US Outside  2020">28.6%</td>
 <td class="gt_row gt_right" headers="US Outside  2021">22.4%</td>
-<td class="gt_row gt_right" headers="US Outside  2022">28.9%</td>
+<td class="gt_row gt_right" headers="US Outside  2022">28.8%</td>
 </tr>
 <tr class="even gt_group_heading_row">
 <td colspan="13" id="Canada" class="gt_group_heading" data-quarto-table-cell-role="th" scope="colgroup">Canada</td>
@@ -3734,7 +3841,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
 <td class="gt_row gt_right" headers="Canada  2019">14.0%</td>
 <td class="gt_row gt_right" headers="Canada  2020">9.6%</td>
 <td class="gt_row gt_right" headers="Canada  2021">7.7%</td>
-<td class="gt_row gt_right" headers="Canada  2022">10.1%</td>
+<td class="gt_row gt_right" headers="Canada  2022">10.3%</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="Canada  PSC_StockName">Interior Fraser</td>
@@ -3749,7 +3856,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
 <td class="gt_row gt_right" headers="Canada  2019">20.0%</td>
 <td class="gt_row gt_right" headers="Canada  2020">13.4%</td>
 <td class="gt_row gt_right" headers="Canada  2021">9.5%</td>
-<td class="gt_row gt_right" headers="Canada  2022">12.2%</td>
+<td class="gt_row gt_right" headers="Canada  2022">12.4%</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_left" headers="Canada  PSC_StockName">Strait of Georgia</td>
@@ -3764,7 +3871,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
 <td class="gt_row gt_right" headers="Canada  2019">16.2%</td>
 <td class="gt_row gt_right" headers="Canada  2020">7.4%</td>
 <td class="gt_row gt_right" headers="Canada  2021">6.5%</td>
-<td class="gt_row gt_right" headers="Canada  2022">8.1%</td>
+<td class="gt_row gt_right" headers="Canada  2022">8.8%</td>
 </tr>
 </tbody>
 </table>
@@ -3786,11 +3893,38 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
 <h3 data-number="4.1.2" class="anchored" data-anchor-id="forecast-performance"><span class="header-section-number">4.1.2</span> Forecast Performance</h3>
 <p>Forecasts are integral to Coho Salmon management in the Pacific Northwest. These forecasts, as described earlier, are used in pre-season assessments to determine allowable fishing mortality on stocks of concern. In the absence of in-season management controls, forecasts that are too high may yield higher than agreed to exploitation of management units of concern. Forecasts that are too low may yield losses in fishing opportunities.</p>
 <p>Pre-season forecasts of all of the MUs over the catch years 2004 through 2021 have often (63%) been within the abundance based categories assigned post-season. Forecasts were too high 24% of the time and too low 13% of the time. The forecasts for catch years 2005 and 2011 were very good, resulting in no change in abundance categories from pre- to post-season estimates of abundance. Forecasts were poor for catch years 2006, 2015, and 2021, where less than 50% of the forecasted MUs were within the abundance category assigned post-season. There does not appear to be an obvious trend in forecast performance of abundance categories across all MUs with available forecasts over catch years 2004 through 2021.</p>
-<p><img src="images/MU_forecast_perf.png" class="img-fluid" style="width:100.0%" alt="MU Forecast Performance"></p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<!-- ![](images/MU_forecast_perf.png){width=100% fig-alt="MU Forecast Performance"} -->
 <p>Pre-season forecasts for the five US Inside MUs over catch years 2004 through 2021 were within the abundance based categories assigned post-season 54% of the time, too high 28% of the time, and too low 18% of the time. Forecasting was poor for catch years 2006 and 2010, where only 1 MU was forecasted within the abundance category assigned post-season. In addition, only two of the five forecasted MUs were within the abundance category assigned post-season in each of eight additional catch years. Forecasts were more often correct (72% of the years) for the Hood Canal MU, followed by the US Strait of Juan de Fuca MU (56%), Skagit and Stillaguamish MUs (50%), and least correct for the Snohomish MU (44% of the years).</p>
-<p><img src="images/US_Inside_forecast_perf.png" class="img-fluid" style="width:100.0%" alt="US Inside MU Forecast Performance"></p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<!-- ![](images/US_Inside_forecast_perf.png){width=100% fig-alt="US Inside MU Forecast Performance"} -->
 <p>Forecasts for the US Outside MUs performed better, on average, than the US Inside forecasts of abundance categories. Pre-season forecasts for the four US Outside MUs over catch years 2004 through 2021 were within the abundance based categories assigned post-season 64% of the time, too high 25% of the time, and too low 11% of the time. The forecasts for catch years 2005, 2009-2011, and 2014 were very good, resulting in no change in abundance categories from pre- to post-season estimates of abundance. Forecasting performance was poor for catch years 2006, 2015, and 2021. Forecasts were more often correct (72% of the years) for the Hoh and Quillayute MUs, followed by the Queets MU (61%), and least correct for the Grays Harbor MU (50% of the years).</p>
-<p><img src="images/US_Outside_forecast_perf.png" class="img-fluid" style="width:100.0%" alt="US Outside MU Forecast Performance"></p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<!-- ![](images/US_Outside_forecast_perf.png){width=100% fig-alt="US Outside MU Forecast Performance"} -->
 <p><em>A question for Southern Panel Members –&gt; Would you like to see summaries using forecasted and post-season abundances in addition to abundance categories?</em></p>
 </section>
 </section>
@@ -3804,7 +3938,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
 <p>The Interior Fraser River (IFR) MU consists of Coho salmon that re-colonized the IFR and tributaries above Hells Gate in the Fraser Canyon (<a href="#fig-BCmap" class="quarto-xref">Figure&nbsp;4.1</a>) at the end of the last period of glaciation, colonizing from glacial refugia in the Columbia River basin (Northcote and Larkin 1989). Hells Gate in the Fraser Canyon was identified as a natural boundary that separates Fraser River Coho populations into Interior and Lower Fraser units. The IFR Coho MU encompasses the North, South and mainstem Thompson river drainages as well as the mainstem Fraser River beginning at Fraser Pass in Mount Robson Provincial Park and terminating at Hells Gate.</p>
 <p>Within the MU, five distinct Wild Salmon Policy (WSP) Conservation Units (CU) for IFR Coho have been designated using molecular genetics and ecotypology (Table x) (Holtby and Ciruna 2007). These populations correspond to the five major Coho salmon bearing regions within the Interior Fraser River; three within the Thompson (North Thompson, South Thompson, and Lower Thompson regions) and two within the Fraser (the area between the Fraser Canyon and the Thompson-Fraser confluence and the Fraser River and tributaries above the Thompson-Fraser confluence).</p>
 <p>Migration among different Thompson River basins and between Thompson and non-Thompson drainages is sufficiently restricted to permit local adaptations to occur (Irvine et al.&nbsp;2000). Coho salmon of the Fraser Canyon population are quite distinct from other IFR Coho populations, and appear to be partially related to those of the Lower Fraser River, implying that some genetic exchange may occur between those areas. Irvine et al.&nbsp;(2000) noted that, based on genetic information, subdivision of the designated unit beyond these five populations was not warranted. However, while the genetic data does not suggest the presence of additional populations, many of the five populations comprise vast areas of the Fraser River basin, within which demographically independent groups may exist. Such groups have been defined as sub-populations (IFCRT 2006). Sub-populations within a population may not be isolated enough from each other to be differentiated based on neutral allele composition; however, they may have different life history traits, productivities, and population dynamics. Generally, the distance in spawning areas between sub-populations reduces their ability to act as source populations if a major mortality event occurs in freshwater that only impacts one sub-population (e.g., Big Bar landslide occurred in-between two pre-defined sub-populations).</p>
-<div id="fig-BCmap" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-BCmap" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-BCmap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="images/Canadian%20MUs.JPG" class="img-fluid figure-img">
@@ -3858,7 +3992,7 @@ Figure&nbsp;4.1: Pacific Salmon Treaty Coho MU boundaries in Canada. Note: The G
 <p>Interior Fraser River Coho spawner assessments have changed over the years based on management priorities and available resources, both in terms of the number of systems surveyed and the extent of coverage. Though IFR spawner estimates exist for a few systems prior to 1975 and the accuracy and precision of those estimates are not understood. Between 1975 and 1997, more effort was expended to estimate IFR escapement in the North and South Thompson CUs. Survey coverage was extended in 1984 to include several key tributaries of the Lower Thompson CU, as well as the Seton and Bridge tributaries of the Middle Fraser CU. Surveys were mainly conducted by Fisheries Officers and hatchery staff; however, the repeatability, and accuracy of these estimates remain poorly understood.</p>
 <p>Beginning in 1998, coverage within all CUs increased with respect to both the number of systems assessed and the extent of coverage within previously assessed systems. Coverage was increased to include the Nahatlatch River (Fraser Canyon CU) and Quesnel watershed in the Middle Fraser CU; and in 1999 assessment began in the Chilko watershed (Middle Fraser CU). In addition, more robust methods were employed, including sonar and fence counts, Area-Under-the-Curve (AUC) methodology, mark-recapture, and the calculation of survey life for AUC and expansion factors for peak count estimates based on paired assessments using high precision methods and visual surveys.</p>
 <p>Escapement estimates for 1975 to 1997 were revised during the IFCRT recovery teams review (IFCRT 2006). Revisions were based on calibration studies where paired assessments were conducted between 1998 and 2000. The calibration approach was described in detail in the Conservation Strategy for Coho Salmon, Interior River Populations (IFCRT 2006). It is important to note that escapement estimates for the Middle Fraser and Fraser Canyon CUs for 1975-1997, and for the Lower Thompson for 1975-1983 are based entirely on average ratios of abundance in these CUs to combined abundance in the North and South Thompson CUs during the period from 1998 to 2000 (IFCRT 2006). This introduces a substantial degree of uncertainty in the reliably of the earlier portion of the time series for these CUs. Escapement by assessment type is illustrated in (<a href="#fig-IFREsc" class="quarto-xref">Figure&nbsp;4.2</a>).</p>
-<div id="fig-IFREsc" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-IFREsc" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-IFREsc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="images/IFR_Escapement.png" class="img-fluid figure-img">
@@ -3874,7 +4008,7 @@ Figure&nbsp;4.2: Escapement of Interior Fraser River Coho by quality of assessme
 <p>There have been no consistent or basin-wide assessments of fry or smolt densities within the MU.</p>
 <p>Smolt-to-adult survival rates of Coho from the indicator stocks are shown in (<a href="#fig-IFR_SAR" class="quarto-xref">Figure&nbsp;4.3</a>). Marked Coho (adipose-fin-clipped) have been released with CWTs since 1983 to support fisheries monitoring and creation of a survival index. Although all of these releases may be used for calculating exploitation, some releases included experimental release sizes or timings that may affect survival. It has been shown that there is strong size-selective mortality in the early marine period (Beamish and Mahnken 2001; Beamish et al.&nbsp;2004, etc); therefore, releases need to be fairly uniform to support a long-term survival index. The survival of the Inch Creek CWT index is thus calculated from specific tag codes releases that do not fall out of a normal range of size at release. The index calculation is simply the sum of adult (age 3+) escapement and catch of all CWT tag codes from a given brood year divided by the total release of that given brood year.</p>
 <p>For the hatchery indicator stocks the smolt-to-adult survival rate showed a directed downward trend during the early 1990s (brood years) (<a href="#fig-IFR_SAR" class="quarto-xref">Figure&nbsp;4.3</a>). Data from brood years 1985-1999 shows the smolt-to-adult survival rate averaged 3.7% during this time with a high of 7.2% in 1989. More recently IFR Coho has had an average survival rate of 1.0% between brood years 2000-2017.</p>
-<div id="fig-IFR_SAR" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-IFR_SAR" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-IFR_SAR-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="images/IFR_SAR.png" class="img-fluid figure-img">
@@ -3901,7 +4035,7 @@ Figure&nbsp;4.3: Smolt-to-adult survival rate index from coded-wire-tagged (CWT)
 <p>The following hatcheries produce salmon to support CDFO and PST objectives and are located within the Fraser River watershed: 1) Chehalis River Hatchery, located on a tributary of the Harrison River, which is a major tributary of the lower Fraser River; 2) Chilliwack River Hatchery, located on a major tributary of the lower Fraser River; 3) Inch Creek Hatchery, located on a tributary of a large slough connected to the lower Fraser River; 4) Spius Creek Hatchery, located on a tributary of the Nicola that drains into the Thompson River; and 5) Shuswap Falls (Middle Shuswap River) Hatchery. Both the Chilliwack River Hatchery and Spius Creek Hatchery rear Coho for the coded-wire-tag (CWT) indicator stocks for the Interior Fraser River MU.</p>
 <p>The average total hatchery release within the IFR basin was 737,000 fish annually between 1983-2018. Fry releases greatly decreased starting in 1990, from a high of 2,226,000 Coho fry released for brood year 1986 to a low of 90,500 fry from brood year 1996 (<a href="#fig-IFR_Enh" class="quarto-xref">Figure&nbsp;4.4</a>). After 1996, the total hatchery fry releases have averaged 173,000, primarily in unmarked fry released from community hatcheries. The average hatchery smolt releases within the IFR basin is 227,000 smolts annually between 1983-2018; with relatively smaller fluctuations between total releases.</p>
 <p>Since the late 1990s, enhancement for IFR Coho has taken one of three forms: 1) conservation enhancement, used to protect demes that are at risk of extirpation; 2) assessment enhancement, where releases of CWT marked fish provide information for assessment of survival and minimal encounter rates and ocean distribution; and 3) rebuilding enhancement, where hatchery supplementation is used to increase escapements (IFCRT 2006). Enhancement activities are described in more detail by Irvine et al.&nbsp;(1999b, 2000) and the IFCRT (2006). Coded wire tagged and total releases are summarized in Appendix E.</p>
-<div id="fig-IFR_Enh" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-IFR_Enh" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-IFR_Enh-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="images/IFR_Enhancement.png" class="img-fluid figure-img">
@@ -3920,7 +4054,7 @@ Figure&nbsp;4.4: Total hatchery smolt (A) and fry (B) releases for the Interior 
 <h5 class="anchored" data-anchor-id="forecast-evaluation">Forecast Evaluation</h5>
 <p>(add more description here) (<a href="#fig-IFR_For" class="quarto-xref">Figure&nbsp;4.5</a>)</p>
 <p>ADD Table “IFR_Forecasts” from excel file. Return year observed and forecasted Interior Fraser River Coho MU pre-fishery abundances from 1998 to 2019. Pre-fishery abundance is estimated by backwards FRAM.</p>
-<div id="fig-IFR_For" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-IFR_For" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-IFR_For-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="images/IFR_Forecasts.png" class="img-fluid figure-img">
@@ -3936,7 +4070,7 @@ Figure&nbsp;4.5: Forecasted and estimated abundances of Interior Fraser River Co
 <p>The base period for the FRAM defines the temporal and spatial distributions of salmon fishing mortalities from each MU. The current FRAM base period for Coho Salmon includes catch years 1986-1992. During this period, fishing effort, tagging, and fishery sampling of Coho Salmon was high, allowing relatively fine-scale discrimination between salmon distributions. The marine distribution data of marked Coho salmon populations in Canada was obtained through the Mark Recovery Program (MRP), operated by CDFO. Recoveries of coded wire tagged (CWT) and adipose-fin-clipped (AFC) marked Coho salmon from various fisheries provide information on fishery exploitation rates and apparent marine distributions. Coded-wire-tag codes used during the base period for the IFR MU are provided in Appendix B and average base period exploitation rates by individual fisheries are provided in Appendix C.</p>
 <p>During the base period, Coho production from the MU contributed to US and Canadian marine sport and commercial fisheries in southern BC, the northern Washington coast, Strait of Juan de Fuca, and inner Puget Sound (<a href="#fig-IFR_ER1" class="quarto-xref">Figure&nbsp;4.6</a>; Appendix C). In general, most were recovered from commercial troll and sport fisheries operating during the summer months off the west coast of Vancouver Island and in the Strait of Georgia. The proportion of the catch of Coho salmon from fisheries within the Strait of Georgia (inside) compared to fisheries operating off the west coast of Vancouver Island (outside) has varied considerably among years (<a href="#fig-IFR_ER2" class="quarto-xref">Figure&nbsp;4.7</a>). These variations have been correlated with changes in ocean salinity (Kadowaki 1997). During the 1970s and 1980s, large numbers of Coho salmon remained inside the Strait of Georgia each year and supported large sport and troll fisheries (Simpson et al.&nbsp;1997). However, in some recent years, most Coho salmon leave the Strait of Georgia in the fall of their first year, and have become vulnerable to fisheries operating in outside areas (Irvine et al.&nbsp;1999a). There are relatively few catch distribution data available for IFR Coho. However, those that are available support the hypothesis that IFR Coho have similar distributions to many other southern BC Coho salmon populations. <span class="citation" data-cites="Beamish_et_al_1999">Beamish and Thomson (<a href="#ref-Beamish_et_al_1999" role="doc-biblioref">1999</a>)</span> suggest that these distribution variations were caused by changing ocean conditions driven by climate. Major fishery closures commencing in 1998 have made it more difficult to infer inside-outside distribution changes. The base period for FRAM contains data from only one outside year, 1991.</p>
 <p>Total exploitation rates averaged 69% during 1986-1997 and then reductions in harvest starting in 1998 to protect IFR Coho resulted in a period of low exploitation rates (14.7% average since it has been measured starting in 2004) (Table x)</p>
-<div id="fig-IFR_ER1" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-IFR_ER1" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-IFR_ER1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="images/IFR_ER1.png" class="img-fluid figure-img">
@@ -3946,7 +4080,7 @@ Figure&nbsp;4.6: Average exploitation rates by fishing area of Interior Fraser R
 </figcaption>
 </figure>
 </div>
-<div id="fig-IFR_ER2" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-IFR_ER2" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-IFR_ER2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="images/IFR_ER2.png" class="img-fluid figure-img">
@@ -3987,7 +4121,7 @@ Figure&nbsp;4.7: Average exploitation rates by fishing area of Interior Fraser R
 <section id="factors-affecting-management-unit-status" class="level5">
 <h5 class="anchored" data-anchor-id="factors-affecting-management-unit-status">Factors Affecting Management Unit Status</h5>
 <p>** Survival and Productivity ** Several reports have highlighted a change in IFR Coho survival and productivity. Irvine et al.&nbsp;(1999a) first documented trends in the rate of population growth for the North and South Thompson populations of IFR Coho salmon for the brood years between 1975 and 1997. Decker et al.&nbsp;(2014) subsequently noted two distinct periods in the stock-recruitment relationship for IFR (<a href="#fig-IFR_Prod" class="quarto-xref">Figure&nbsp;4.8</a>) that are likely driven by a change in smolt-to-adult survival. Productivity was considerably higher for return years 1987- 1993 (brood years 1984-1990) than for return years 1994-2018 (brood years 1991-2015). This change corresponds approximately to a 1989-1990 change in marine conditions <span class="citation" data-cites="Beamish_&amp;_Bouillon_1993">(<a href="#ref-Beamish_&amp;_Bouillon_1993" role="doc-biblioref">Beamish 1993</a>, Irvine and Fukuwaka 2011)</span>. A shift is evident in annual smolt-to-adult survival estimates for IFR CWT-indicator stocks, with survival for the past 15+ years being much lower than before the shift in productivity (<a href="#fig-IFR_SAR" class="quarto-xref">Figure&nbsp;4.3</a>). Smolt-to-adult survival averaged about 4.4% from brood years 1984-1990 (including 2 infilled years), then dropped to &lt;1% in brood year 1992. Smolt-to-adult survival appeared to increase after brood year 1992 but then decreased to &lt;0.1% in brood year 2003. Since the last peak in smolt-to-adult survival around brood years 1997-1999, smolt-to-adult survival has averaged 1.0%.</p>
-<div id="fig-IFR_Prod" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-IFR_Prod" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-IFR_Prod-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="images/IFR_Prod.png" class="img-fluid figure-img">
@@ -4012,7 +4146,7 @@ Figure&nbsp;4.8: Productivity (natural log transformed) versus total escapement 
 <section id="biological-and-geographic-description-1" class="level4" data-number="4.2.2.1">
 <h4 data-number="4.2.2.1" class="anchored" data-anchor-id="biological-and-geographic-description-1"><span class="header-section-number">4.2.2.1</span> Biological and Geographic Description</h4>
 <p>The Fraser River is the largest watershed in the province and supports a wide diversity and great abundance of salmon stocks. The Lower Fraser (LWFR) Coho MU includes conservation units (CUs) below Hells Gate, at the Fraser River upstream limit of the MU. During the period of glaciation, as the ice retreated, the Fraser canyon at Hells Gate became blocked with ice, restricting the dispersal of many fish species. Consequently, Coho found in the lower Fraser River watershed, are known to have been colonized along the coast via the sea (Decker and Irvine 2014). Furthermore, in 1945 a landslide at Hells Gate (induced by railway construction in 1913) created a barrier to upstream salmon migration. Despite the construction of a fishway, Hells Gate remains a velocity barrier for many salmon species. For these reasons, Coho migrating upstream of Hells Gate are biologically and evolutionarily distinct from LWFR Coho and are referred to as Interior Fraser River (IFR) Coho. IFR Coho originate from areas considerably farther upstream of Hells Gate, many from the Thompson River system. In turn, they show morphological differences and swimming performance that are likely associated with their longer migrations (Taylor and McPhail 1985). The IFR Coho MU includes North Thompson, South Thompson, Lower Thompson, Fraser Canyon, and Middle Fraser CUs. LWFR Coho are more typical of other nearby coastal populations in terms of morphology, genetic marker similarity, and life history (Arbeider et al 2020a). Within the LWFR, there are four CUs as designated under the Wild Salmon Policy (WSP); Lillooet, Lower Fraser A (further upstream, incorporates Chilliwack watershed), Lower Fraser B (nearer the mouth of the Fraser River), and Boundary Bay. The Boundary Bay CU is not directly connected to the Fraser River watershed and is more genetically related to the Puget Sound populations (in the U.S.).</p>
-<div id="fig-LWFR_MU_Map" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-LWFR_MU_Map" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-LWFR_MU_Map-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="images/LWFR_MU_Map.png" class="img-fluid figure-img">
@@ -4055,7 +4189,7 @@ Figure&nbsp;4.9: Lower Fraser Coho Management Unit.
 <p>Where the regression coefficients (b) are multiplied by the climate index value for the forecast year (X1t+1) and “odd year” status for the forecast year (X2t+1) summed together with the regression intercept (a). The best-preforming model for each MU is determined through retrospective analysis and a forecast is produced yearly.</p>
 <p><em>Marine Survival</em> Marine survival rates of Coho from the Inch Creek Hatchery indicator stocks are displayed in (<a href="#fig-LWFR_SR" class="quarto-xref">Figure&nbsp;4.10</a>). Marked Coho (adipose-fin-clipped) have been released with CWTs from Inch Creek since 1983 to support fisheries monitoring and creation of a survival index. Although all releases can be used for calculating exploitation, some include experimental release sizes or timings that may affect survival. It has been proven that there is strong size-selective mortality in the early marine period (Beamish and Mahnken 2001; Beamish et al.&nbsp;2004, etc); therefore, releases need to be fairly uniform to support a long-term survival index. The survival of the Inch Creek CWT index is thus calculated from specific tag codes releases that do not fall out of a normal range of size at release. The index calculation is simply the sum of adult (age 3+) escapement and catch of all CWT tag codes from a given brood year divided by the total release of that given brood year.</p>
 <p>For the hatchery indicator stocks, the marine survival rate showed a directed downward trend during the 1990s. Historic data from 1985-1999 shows, the marine survival rates of Salmon, Inch, and Chilliwack averaged 9.5%, 7.0%, and 7.4%, respectively. More recently, the Inch Creek Hatchery has had an average survival rate of 2.7% between brood years 2000-2017 (<a href="#fig-LWFR_SR" class="quarto-xref">Figure&nbsp;4.10</a>). Fish returning in 2020 from the 2017 brood year saw an unexpectedly large increase in percent survival. Analysis of the increase in survival is currently underway.</p>
-<div id="fig-LWFR_SR" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-LWFR_SR" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-LWFR_SR-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="images/LWFR_SR.JPG" class="img-fluid figure-img">
@@ -4093,7 +4227,7 @@ Figure&nbsp;4.10: Inch Creek Coho indicator stock smolt to adult survival estima
 <h5 class="anchored" data-anchor-id="enhancement-1">Enhancement</h5>
 <p>–&gt; These paragraphs don’t match up entirely (update paragraph #2 and delete first one): The following hatcheries produce salmon to support DFO and PST objectives and are located within the lower Fraser River watershed: 1) Chehalis River Hatchery, located on a tributary of the Harrison River, which is a major tributary of the lower Fraser River; 2) Chilliwack River Hatchery, located on a major tributary of the lower Fraser River; and 3) Inch Creek Hatchery, located on a tributary of a large slough connected to the lower Fraser River. The Inch Creek Hatchery rears Coho for the coded-wire-tag (CWT) indicator stock for the LWFR Coho MU. Numerous community hatcheries support Indigenous and community activities through the Community Economic Development and Public Involvement Program.</p>
 <p>The following federal hatcheries are located within the lower Fraser watershed: 1) Chehalis Hatchery located on the Chehalis River, 2.8 km upstream of the confluence of Harrison River; 2) Chilliwack Hatchery located on the Chilliwack River approximately 40 km upstream of the confluence of the Fraser River; and 3) Inch Creek Hatchery located on Norrish Creek 1.6 km upstream of the confluence of Nicomen/Dewdney Slough. Several additional community hatcheries and school programs operate within the MU and release LWFR Coho. LWFR Coho releases from the entire MU during the 1980 to 2016 brood years are displayed in (<a href="#fig-LWFR_Enhancement" class="quarto-xref">Figure&nbsp;4.11</a>). The average number of smolts released during this period was approximately 2.1 million per year. The average number of fry released was approximately 183,000 per year. The majority of the smolts are released from the Inch, Chilliwack, and Chehalis federal hatcheries (averaging approximately 180,000, 1.2 million, and 774,000, respectively). The Alouette and Kanaka hatcheries also release a significant number of Coho (approximately 42,000 each).</p>
-<div id="fig-LWFR_Enhancement" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-LWFR_Enhancement" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-LWFR_Enhancement-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="images/LWFR_Enhancement.png" class="img-fluid figure-img">
@@ -4143,7 +4277,7 @@ Figure&nbsp;4.11: Total hatchery releases for the entire LWFR MU from brood year
 <p>Total ER, Escapement, and abundance for the LWFR MU has been modelled based on the CWT survival scalar in Backwards FRAM for the return years 1986-2019 (Table 5). MU abundance and escapement are modeled values that are not direct estimates as abundance data for the LWFR Coho is limited. Overall, the estimated abundance has averaged 25,800 from 2010-2019 return years. In the more recent years, there has been an increase in abundance, particularly from 2016-2019. During this period, MU run size averaged 34,245, which is almost 10,000 more fish than the long-term average. Prior to 2016, abundance was steadily declining. In 2014, Coho exploitation rates increased substantially due to high bycatch in Sockeye-directed fisheries. In 2015 a similar situation occurred, however, in Pink fisheries. The lower abundance estimate produced in 2017 could be related to the reduced escapement for the 2014 and 2015 brood years due to the reasons outlined above. Additional environmental factors other than fisheries affect LWFR Coho abundance during this time. Specifically, a large “Blob” of warm waters began to form during the winter of 2013-2014, peaking in 2015. The Blob created an unprecedented shift in the distribution of marine animals that impacted predation and competition ultimately, producing areas of low productivity affecting several fisheries (Fisheries and Oceans Canada 2019). Both the Blob and increased Coho impacts in Sockeye and Pink fisheries could have led to the decrease in LWFR Coho abundance for the 2014 – 2017 return years. Although good-quality escapement data is limited for the MU, escapement to streams surveyed by foot or through swims have generally been low in recent years.</p>
 <p>ADD TABLE sheet “LWFR_ER” . Post-season summary of total exploitation rates (ER%), abundance, and escapement estimates for return years 1986-2019. Data represents cohort abundances of ocean age 3 Coho. Values are modelled FRAM outputs and not direct estimates. Escapement values are of terminal run size occurring after lower Fraser in river fisheries. Exploitation rates for catch years 1986 to 1997 were estimated using CWT analysis with the Mixed-Stock Model cohort reconstruction. Exploitation rates for catch years 2004 to 2019 were estimated using the post-season FRAM assessment technique. Cohort reconstructions have not been completed for the Canadian MUs between 1998 and 2003.</p>
 <p>Escapement estimates for the Inch Creek indicator stock are calculated through expansion of CWT recoveries and are detailed in (<a href="#fig-LWFR_Escap" class="quarto-xref">Figure&nbsp;4.12</a>). Over the entire time series, there has been an overall increase in the escapement, with the last four years being the highest. However, there was a moderate drop during the 2010-2012 time period. It is unclear the reason for the reduction. Many different factors could have contributed to the decline.</p>
-<div id="fig-LWFR_Escap" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-LWFR_Escap" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-LWFR_Escap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="images/LWFR_Escap.JPG" class="img-fluid figure-img">
@@ -4965,7 +5099,7 @@ Figure&nbsp;4.12: Inch Creek escapement years 1986-2017 brood year. Escapement e
 <p>In the 1990s another escapement estimation approach was developed for Skagit MU Coho that uses the observed marine survival rate of CWT tagged Baker Lake origin wild Coho for each year multiplied by the parent year Skagit basin smolt out-migration to produce an estimate of total adult recruitment, which is multiplied by (1 - the Baker Wild CWT-recovery fishery exploitation rate) to generate the escapement estimates <span class="citation" data-cites="Seiler_et_al_1995">(<a href="#ref-Seiler_et_al_1995" role="doc-biblioref">Seiler et al. 1995</a>)</span>. These estimates were also typically considerably higher than the Base-Year Index estimates.</p>
 <p>There are a number of reasons for the differences observed in the escapement estimates derived by the various methods discussed above. The Base-Year Index escapement formula for the Skagit has an inherent negative bias due to a decision made by WDF management biologists following completion of the 1977 mark-recapture escapement study to select a value approaching the lower bound of the 95% confidence interval from the M/R study results as the “base year” escapement estimate [WDF_1985]. The 29,200 value that was selected by the WDF managers is considerably lower than the M/R study point estimate of 43,000, which has a 95% confidence interval (CI) of 25,211–148,464. This decision was based on concern about the limited number of marks recovered in the M/R study, and the subsequent possibility of positive bias in the M/R-based estimate. Further uncertainty in the 1977 M/R estimate was highlighted by a re-analysis of the 1977 M/R study data by the Northwest Indian Fisheries Commission (NWIFC) that produced a point estimate of 110,758, with a 95% CI of 4,564–216,952 <span class="citation" data-cites="Conrad_1995">(<a href="#ref-Conrad_1995" role="doc-biblioref">Conrad n.d.</a>)</span>.</p>
 <p>There are uncertainties regarding the point estimates of escapement derived by the newer M/R-based estimates, due to the positive bias that can occur from missed mark recoveries at fish traps or spawning grounds, under-estimates of post-tagging mortality or tag loss, size selectivity in the terminal test fisheries, or other issues <span class="citation" data-cites="Cousens_et_al_1982">(<a href="#ref-Cousens_et_al_1982" role="doc-biblioref">Cousens et al. 1982</a>)</span>. The accuracy of the “marine survival*smolt outmigration”-based method is dependent upon the assumption that the Baker River natural-origin smolts survive and are exploited in fisheries at the same rate as the rest of the Skagit MU natural origin smolts, which may not be true. The veracity of the “test fishery hatchery/wild ratio”-based method is dependent upon an equal exploitation rate on the hatchery and wild populations. Due to unresolved uncertainties at this time regarding the accuracy of all the various available methods and associated estimates, the escapement estimates currently used by the co-managers for management purposes for the 1986-to-present period are an average of the annual results of the Base-Year Index and M/R (“Reverse Petersen”)-based estimates of escapement. Historical trends in escapement for the Skagit MU are provided in <a href="#fig-spwnskgt" class="quarto-xref">Figure&nbsp;4.13</a>. Known distribution of spawners within the basin is depicted in Figure NNN (derived from WDFW’s Salmonid Stock Inventory (SaSI) located at: http://wdfw.wa.gov/conservation/fisheries/sasi/).</p>
-<div id="fig-spwnskgt" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-spwnskgt" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-spwnskgt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="images/Skagit_Spawner_Map.jpg" class="img-fluid figure-img">
@@ -6064,7 +6198,7 @@ Between 1978 and 1983, average production was 276,000 smolts (range = 212,000 to
 <section id="biological-and-geographic-description-6" class="level4" data-number="4.2.7.1">
 <h4 data-number="4.2.7.1" class="anchored" data-anchor-id="biological-and-geographic-description-6"><span class="header-section-number">4.2.7.1</span> Biological and Geographic Description</h4>
 <p>The Hood Canal MU is one of the US Inside MUs and includes all waters south and east of a line from Olele Point to Foulweather Bluff [WDFW_and_WWTIT_1994] (@ref(fig:Hood_Canal_MU). This MU consists of the following nine stocks: Northeast Hood Canal, Dewatto, Southeast Hood Canal, Skokomish, Southwest Hood Canal, Hamma Hamma, Duckabush, Dosewallips, and Quilcene/Dabob Bays <span class="citation" data-cites="CCW_1998">(<a href="#ref-CCW_1998" role="doc-biblioref">Comprehensive Coho Workgroup 1998</a>)</span>. Coho Salmon utilize almost all of the accessible tributaries draining into Hood Canal. Hood Canal Coho Salmon belong to the larger Puget Sound/Strait of Georgia Coho Salmon evolutionarily significant unit (ESU; <span class="citation" data-cites="Weitkamp_et_al_1995">(<a href="#ref-Weitkamp_et_al_1995" role="doc-biblioref">Weitkamp et al. 1995</a>)</span>. This ESU is currently a species of concern under the US Endangered Species Act <span class="citation" data-cites="NOAA_Fisheries_2009">(<a href="#ref-NOAA_Fisheries_2009" role="doc-biblioref">NOAA Fisheries 2009</a>)</span>.</p>
-<div id="fig-hcmap" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-hcmap" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-hcmap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="images/Hood_Canal_MU.jpg" class="img-fluid figure-img">
@@ -6090,7 +6224,7 @@ Figure&nbsp;4.14: Hood_Canal_MU
 <li><p>The Port Gamble Net Pens are anchored at the northern end of Port Gamble Bay (commercial MMA 9A) in northern Hood Canal. This is a cooperative effort with the Washington Department of Fish and Wildlife and US Fish and Wildlife Service. The net pens are operated by the Port Gamble S’Klallam Tribe and began releasing Coho smolts in 1981 <span class="citation" data-cites="Port_Gamble_SKlallam_Tribe_2003">(<a href="#ref-Port_Gamble_SKlallam_Tribe_2003" role="doc-biblioref">Port Gamble S’Klallam Tribe 2003</a>)</span>. Eggs are collected from QNFH broodstock and transferred to George Adams Hatchery where they are hatched and the fry are reared to smolts before transfer to the Port Gamble Net Pens. The Port Gamble S’Klallam Tribe operates and maintains the net pens, and fish food is provided by WDFW. Around 425,000 yearling Coho salmon are released each year after April 15. The program is intended to be an isolated harvest program and the production goal is to release 400,000 Coho smolts annually. <em>update new release goals due to SRKW increases here</em></p></li>
 <li><p>The newest hatcheries within the Canal include Saltwater Park Sockeye Hatchery and the North Fork Salmon Hatchery.</p></li>
 </ul>
-<div id="fig-cushmap" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-cushmap" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-cushmap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="images/Cushman-map.jpg" class="img-fluid figure-img">
@@ -6951,23 +7085,23 @@ The climate varies widely throughout the MU, with higher annual precipitation to
 <h1 data-number="5"><span class="header-section-number">5</span> Members</h1>
 <div class="cell">
 <div class="cell-output-display">
-<div id="jiicxzygmj" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#jiicxzygmj table {
+<div id="tzyzhncmsy" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#tzyzhncmsy table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#jiicxzygmj thead, #jiicxzygmj tbody, #jiicxzygmj tfoot, #jiicxzygmj tr, #jiicxzygmj td, #jiicxzygmj th {
+#tzyzhncmsy thead, #tzyzhncmsy tbody, #tzyzhncmsy tfoot, #tzyzhncmsy tr, #tzyzhncmsy td, #tzyzhncmsy th {
   border-style: none;
 }
 
-#jiicxzygmj p {
+#tzyzhncmsy p {
   margin: 0;
   padding: 0;
 }
 
-#jiicxzygmj .gt_table {
+#tzyzhncmsy .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -6993,12 +7127,12 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-left-color: #D3D3D3;
 }
 
-#jiicxzygmj .gt_caption {
+#tzyzhncmsy .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#jiicxzygmj .gt_title {
+#tzyzhncmsy .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -7010,7 +7144,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-bottom-width: 0;
 }
 
-#jiicxzygmj .gt_subtitle {
+#tzyzhncmsy .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -7022,7 +7156,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-top-width: 0;
 }
 
-#jiicxzygmj .gt_heading {
+#tzyzhncmsy .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -7034,13 +7168,13 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-right-color: #D3D3D3;
 }
 
-#jiicxzygmj .gt_bottom_border {
+#tzyzhncmsy .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#jiicxzygmj .gt_col_headings {
+#tzyzhncmsy .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -7055,7 +7189,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-right-color: #D3D3D3;
 }
 
-#jiicxzygmj .gt_col_heading {
+#tzyzhncmsy .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -7075,7 +7209,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   overflow-x: hidden;
 }
 
-#jiicxzygmj .gt_column_spanner_outer {
+#tzyzhncmsy .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -7087,15 +7221,15 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   padding-right: 4px;
 }
 
-#jiicxzygmj .gt_column_spanner_outer:first-child {
+#tzyzhncmsy .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#jiicxzygmj .gt_column_spanner_outer:last-child {
+#tzyzhncmsy .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#jiicxzygmj .gt_column_spanner {
+#tzyzhncmsy .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -7107,11 +7241,11 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   width: 100%;
 }
 
-#jiicxzygmj .gt_spanner_row {
+#tzyzhncmsy .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#jiicxzygmj .gt_group_heading {
+#tzyzhncmsy .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -7137,7 +7271,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   text-align: left;
 }
 
-#jiicxzygmj .gt_empty_group_heading {
+#tzyzhncmsy .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -7152,15 +7286,15 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   vertical-align: middle;
 }
 
-#jiicxzygmj .gt_from_md > :first-child {
+#tzyzhncmsy .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#jiicxzygmj .gt_from_md > :last-child {
+#tzyzhncmsy .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#jiicxzygmj .gt_row {
+#tzyzhncmsy .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -7179,7 +7313,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   overflow-x: hidden;
 }
 
-#jiicxzygmj .gt_stub {
+#tzyzhncmsy .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -7192,7 +7326,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   padding-right: 5px;
 }
 
-#jiicxzygmj .gt_stub_row_group {
+#tzyzhncmsy .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -7206,15 +7340,15 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   vertical-align: top;
 }
 
-#jiicxzygmj .gt_row_group_first td {
+#tzyzhncmsy .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#jiicxzygmj .gt_row_group_first th {
+#tzyzhncmsy .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#jiicxzygmj .gt_summary_row {
+#tzyzhncmsy .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -7224,16 +7358,16 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   padding-right: 5px;
 }
 
-#jiicxzygmj .gt_first_summary_row {
+#tzyzhncmsy .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#jiicxzygmj .gt_first_summary_row.thick {
+#tzyzhncmsy .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#jiicxzygmj .gt_last_summary_row {
+#tzyzhncmsy .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -7243,7 +7377,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-bottom-color: #D3D3D3;
 }
 
-#jiicxzygmj .gt_grand_summary_row {
+#tzyzhncmsy .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -7253,7 +7387,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   padding-right: 5px;
 }
 
-#jiicxzygmj .gt_first_grand_summary_row {
+#tzyzhncmsy .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -7263,7 +7397,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-top-color: #D3D3D3;
 }
 
-#jiicxzygmj .gt_last_grand_summary_row_top {
+#tzyzhncmsy .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -7273,11 +7407,11 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-bottom-color: #D3D3D3;
 }
 
-#jiicxzygmj .gt_striped {
+#tzyzhncmsy .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#jiicxzygmj .gt_table_body {
+#tzyzhncmsy .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -7286,7 +7420,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-bottom-color: #D3D3D3;
 }
 
-#jiicxzygmj .gt_footnotes {
+#tzyzhncmsy .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -7300,7 +7434,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-right-color: #D3D3D3;
 }
 
-#jiicxzygmj .gt_footnote {
+#tzyzhncmsy .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -7309,7 +7443,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   padding-right: 5px;
 }
 
-#jiicxzygmj .gt_sourcenotes {
+#tzyzhncmsy .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -7323,7 +7457,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-right-color: #D3D3D3;
 }
 
-#jiicxzygmj .gt_sourcenote {
+#tzyzhncmsy .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -7331,64 +7465,73 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   padding-right: 5px;
 }
 
-#jiicxzygmj .gt_left {
+#tzyzhncmsy .gt_left {
   text-align: left;
 }
 
-#jiicxzygmj .gt_center {
+#tzyzhncmsy .gt_center {
   text-align: center;
 }
 
-#jiicxzygmj .gt_right {
+#tzyzhncmsy .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#jiicxzygmj .gt_font_normal {
+#tzyzhncmsy .gt_font_normal {
   font-weight: normal;
 }
 
-#jiicxzygmj .gt_font_bold {
+#tzyzhncmsy .gt_font_bold {
   font-weight: bold;
 }
 
-#jiicxzygmj .gt_font_italic {
+#tzyzhncmsy .gt_font_italic {
   font-style: italic;
 }
 
-#jiicxzygmj .gt_super {
+#tzyzhncmsy .gt_super {
   font-size: 65%;
 }
 
-#jiicxzygmj .gt_footnote_marks {
+#tzyzhncmsy .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#jiicxzygmj .gt_asterisk {
+#tzyzhncmsy .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#jiicxzygmj .gt_indent_1 {
+#tzyzhncmsy .gt_indent_1 {
   text-indent: 5px;
 }
 
-#jiicxzygmj .gt_indent_2 {
+#tzyzhncmsy .gt_indent_2 {
   text-indent: 10px;
 }
 
-#jiicxzygmj .gt_indent_3 {
+#tzyzhncmsy .gt_indent_3 {
   text-indent: 15px;
 }
 
-#jiicxzygmj .gt_indent_4 {
+#tzyzhncmsy .gt_indent_4 {
   text-indent: 20px;
 }
 
-#jiicxzygmj .gt_indent_5 {
+#tzyzhncmsy .gt_indent_5 {
   text-indent: 25px;
+}
+
+#tzyzhncmsy .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#tzyzhncmsy div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
 }
 </style>
 
@@ -7396,8 +7539,8 @@ The climate varies widely throughout the MU, with higher annual precipitation to
 <caption>Membership of the Joint Coho Technical Committee</caption>
 <thead>
 <tr class="header gt_col_headings">
-<th id="Canadian Members" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Canadian Members</th>
-<th id="United States Members" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">United States Members</th>
+<th id="Canadian-Members" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Canadian Members</th>
+<th id="United-States-Members" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">United States Members</th>
 </tr>
 </thead>
 <tbody class="gt_table_body">
@@ -7448,23 +7591,23 @@ The climate varies widely throughout the MU, with higher annual precipitation to
 <h1 data-number="6"><span class="header-section-number">6</span> Acronyms</h1>
 <div class="cell">
 <div class="cell-output-display">
-<div id="wyoovibvdo" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#wyoovibvdo table {
+<div id="yrtngevumn" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#yrtngevumn table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#wyoovibvdo thead, #wyoovibvdo tbody, #wyoovibvdo tfoot, #wyoovibvdo tr, #wyoovibvdo td, #wyoovibvdo th {
+#yrtngevumn thead, #yrtngevumn tbody, #yrtngevumn tfoot, #yrtngevumn tr, #yrtngevumn td, #yrtngevumn th {
   border-style: none;
 }
 
-#wyoovibvdo p {
+#yrtngevumn p {
   margin: 0;
   padding: 0;
 }
 
-#wyoovibvdo .gt_table {
+#yrtngevumn .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -7490,12 +7633,12 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-left-color: #D3D3D3;
 }
 
-#wyoovibvdo .gt_caption {
+#yrtngevumn .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#wyoovibvdo .gt_title {
+#yrtngevumn .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -7507,7 +7650,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-bottom-width: 0;
 }
 
-#wyoovibvdo .gt_subtitle {
+#yrtngevumn .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -7519,7 +7662,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-top-width: 0;
 }
 
-#wyoovibvdo .gt_heading {
+#yrtngevumn .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -7531,13 +7674,13 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-right-color: #D3D3D3;
 }
 
-#wyoovibvdo .gt_bottom_border {
+#yrtngevumn .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#wyoovibvdo .gt_col_headings {
+#yrtngevumn .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -7552,7 +7695,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-right-color: #D3D3D3;
 }
 
-#wyoovibvdo .gt_col_heading {
+#yrtngevumn .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -7572,7 +7715,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   overflow-x: hidden;
 }
 
-#wyoovibvdo .gt_column_spanner_outer {
+#yrtngevumn .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -7584,15 +7727,15 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   padding-right: 4px;
 }
 
-#wyoovibvdo .gt_column_spanner_outer:first-child {
+#yrtngevumn .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#wyoovibvdo .gt_column_spanner_outer:last-child {
+#yrtngevumn .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#wyoovibvdo .gt_column_spanner {
+#yrtngevumn .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -7604,11 +7747,11 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   width: 100%;
 }
 
-#wyoovibvdo .gt_spanner_row {
+#yrtngevumn .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#wyoovibvdo .gt_group_heading {
+#yrtngevumn .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -7634,7 +7777,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   text-align: left;
 }
 
-#wyoovibvdo .gt_empty_group_heading {
+#yrtngevumn .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -7649,15 +7792,15 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   vertical-align: middle;
 }
 
-#wyoovibvdo .gt_from_md > :first-child {
+#yrtngevumn .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#wyoovibvdo .gt_from_md > :last-child {
+#yrtngevumn .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#wyoovibvdo .gt_row {
+#yrtngevumn .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -7676,7 +7819,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   overflow-x: hidden;
 }
 
-#wyoovibvdo .gt_stub {
+#yrtngevumn .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -7689,7 +7832,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   padding-right: 5px;
 }
 
-#wyoovibvdo .gt_stub_row_group {
+#yrtngevumn .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -7703,15 +7846,15 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   vertical-align: top;
 }
 
-#wyoovibvdo .gt_row_group_first td {
+#yrtngevumn .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#wyoovibvdo .gt_row_group_first th {
+#yrtngevumn .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#wyoovibvdo .gt_summary_row {
+#yrtngevumn .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -7721,16 +7864,16 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   padding-right: 5px;
 }
 
-#wyoovibvdo .gt_first_summary_row {
+#yrtngevumn .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#wyoovibvdo .gt_first_summary_row.thick {
+#yrtngevumn .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#wyoovibvdo .gt_last_summary_row {
+#yrtngevumn .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -7740,7 +7883,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-bottom-color: #D3D3D3;
 }
 
-#wyoovibvdo .gt_grand_summary_row {
+#yrtngevumn .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -7750,7 +7893,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   padding-right: 5px;
 }
 
-#wyoovibvdo .gt_first_grand_summary_row {
+#yrtngevumn .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -7760,7 +7903,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-top-color: #D3D3D3;
 }
 
-#wyoovibvdo .gt_last_grand_summary_row_top {
+#yrtngevumn .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -7770,11 +7913,11 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-bottom-color: #D3D3D3;
 }
 
-#wyoovibvdo .gt_striped {
+#yrtngevumn .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#wyoovibvdo .gt_table_body {
+#yrtngevumn .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -7783,7 +7926,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-bottom-color: #D3D3D3;
 }
 
-#wyoovibvdo .gt_footnotes {
+#yrtngevumn .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -7797,7 +7940,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-right-color: #D3D3D3;
 }
 
-#wyoovibvdo .gt_footnote {
+#yrtngevumn .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -7806,7 +7949,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   padding-right: 5px;
 }
 
-#wyoovibvdo .gt_sourcenotes {
+#yrtngevumn .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -7820,7 +7963,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-right-color: #D3D3D3;
 }
 
-#wyoovibvdo .gt_sourcenote {
+#yrtngevumn .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -7828,64 +7971,73 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   padding-right: 5px;
 }
 
-#wyoovibvdo .gt_left {
+#yrtngevumn .gt_left {
   text-align: left;
 }
 
-#wyoovibvdo .gt_center {
+#yrtngevumn .gt_center {
   text-align: center;
 }
 
-#wyoovibvdo .gt_right {
+#yrtngevumn .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#wyoovibvdo .gt_font_normal {
+#yrtngevumn .gt_font_normal {
   font-weight: normal;
 }
 
-#wyoovibvdo .gt_font_bold {
+#yrtngevumn .gt_font_bold {
   font-weight: bold;
 }
 
-#wyoovibvdo .gt_font_italic {
+#yrtngevumn .gt_font_italic {
   font-style: italic;
 }
 
-#wyoovibvdo .gt_super {
+#yrtngevumn .gt_super {
   font-size: 65%;
 }
 
-#wyoovibvdo .gt_footnote_marks {
+#yrtngevumn .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#wyoovibvdo .gt_asterisk {
+#yrtngevumn .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#wyoovibvdo .gt_indent_1 {
+#yrtngevumn .gt_indent_1 {
   text-indent: 5px;
 }
 
-#wyoovibvdo .gt_indent_2 {
+#yrtngevumn .gt_indent_2 {
   text-indent: 10px;
 }
 
-#wyoovibvdo .gt_indent_3 {
+#yrtngevumn .gt_indent_3 {
   text-indent: 15px;
 }
 
-#wyoovibvdo .gt_indent_4 {
+#yrtngevumn .gt_indent_4 {
   text-indent: 20px;
 }
 
-#wyoovibvdo .gt_indent_5 {
+#yrtngevumn .gt_indent_5 {
   text-indent: 25px;
+}
+
+#yrtngevumn .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#yrtngevumn div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
 }
 </style>
 
@@ -8234,23 +8386,23 @@ The climate varies widely throughout the MU, with higher annual precipitation to
 <h1 data-number="7"><span class="header-section-number">7</span> Glossary</h1>
 <div class="cell">
 <div class="cell-output-display">
-<div id="docemrfybz" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#docemrfybz table {
+<div id="tioilppgjj" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#tioilppgjj table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#docemrfybz thead, #docemrfybz tbody, #docemrfybz tfoot, #docemrfybz tr, #docemrfybz td, #docemrfybz th {
+#tioilppgjj thead, #tioilppgjj tbody, #tioilppgjj tfoot, #tioilppgjj tr, #tioilppgjj td, #tioilppgjj th {
   border-style: none;
 }
 
-#docemrfybz p {
+#tioilppgjj p {
   margin: 0;
   padding: 0;
 }
 
-#docemrfybz .gt_table {
+#tioilppgjj .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -8276,12 +8428,12 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-left-color: #D3D3D3;
 }
 
-#docemrfybz .gt_caption {
+#tioilppgjj .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#docemrfybz .gt_title {
+#tioilppgjj .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -8293,7 +8445,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-bottom-width: 0;
 }
 
-#docemrfybz .gt_subtitle {
+#tioilppgjj .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -8305,7 +8457,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-top-width: 0;
 }
 
-#docemrfybz .gt_heading {
+#tioilppgjj .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -8317,13 +8469,13 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-right-color: #D3D3D3;
 }
 
-#docemrfybz .gt_bottom_border {
+#tioilppgjj .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#docemrfybz .gt_col_headings {
+#tioilppgjj .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -8338,7 +8490,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-right-color: #D3D3D3;
 }
 
-#docemrfybz .gt_col_heading {
+#tioilppgjj .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -8358,7 +8510,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   overflow-x: hidden;
 }
 
-#docemrfybz .gt_column_spanner_outer {
+#tioilppgjj .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -8370,15 +8522,15 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   padding-right: 4px;
 }
 
-#docemrfybz .gt_column_spanner_outer:first-child {
+#tioilppgjj .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#docemrfybz .gt_column_spanner_outer:last-child {
+#tioilppgjj .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#docemrfybz .gt_column_spanner {
+#tioilppgjj .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -8390,11 +8542,11 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   width: 100%;
 }
 
-#docemrfybz .gt_spanner_row {
+#tioilppgjj .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#docemrfybz .gt_group_heading {
+#tioilppgjj .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -8420,7 +8572,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   text-align: left;
 }
 
-#docemrfybz .gt_empty_group_heading {
+#tioilppgjj .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -8435,15 +8587,15 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   vertical-align: middle;
 }
 
-#docemrfybz .gt_from_md > :first-child {
+#tioilppgjj .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#docemrfybz .gt_from_md > :last-child {
+#tioilppgjj .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#docemrfybz .gt_row {
+#tioilppgjj .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -8462,7 +8614,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   overflow-x: hidden;
 }
 
-#docemrfybz .gt_stub {
+#tioilppgjj .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -8475,7 +8627,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   padding-right: 5px;
 }
 
-#docemrfybz .gt_stub_row_group {
+#tioilppgjj .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -8489,15 +8641,15 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   vertical-align: top;
 }
 
-#docemrfybz .gt_row_group_first td {
+#tioilppgjj .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#docemrfybz .gt_row_group_first th {
+#tioilppgjj .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#docemrfybz .gt_summary_row {
+#tioilppgjj .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -8507,16 +8659,16 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   padding-right: 5px;
 }
 
-#docemrfybz .gt_first_summary_row {
+#tioilppgjj .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#docemrfybz .gt_first_summary_row.thick {
+#tioilppgjj .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#docemrfybz .gt_last_summary_row {
+#tioilppgjj .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -8526,7 +8678,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-bottom-color: #D3D3D3;
 }
 
-#docemrfybz .gt_grand_summary_row {
+#tioilppgjj .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -8536,7 +8688,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   padding-right: 5px;
 }
 
-#docemrfybz .gt_first_grand_summary_row {
+#tioilppgjj .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -8546,7 +8698,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-top-color: #D3D3D3;
 }
 
-#docemrfybz .gt_last_grand_summary_row_top {
+#tioilppgjj .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -8556,11 +8708,11 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-bottom-color: #D3D3D3;
 }
 
-#docemrfybz .gt_striped {
+#tioilppgjj .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#docemrfybz .gt_table_body {
+#tioilppgjj .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -8569,7 +8721,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-bottom-color: #D3D3D3;
 }
 
-#docemrfybz .gt_footnotes {
+#tioilppgjj .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -8583,7 +8735,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-right-color: #D3D3D3;
 }
 
-#docemrfybz .gt_footnote {
+#tioilppgjj .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -8592,7 +8744,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   padding-right: 5px;
 }
 
-#docemrfybz .gt_sourcenotes {
+#tioilppgjj .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -8606,7 +8758,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-right-color: #D3D3D3;
 }
 
-#docemrfybz .gt_sourcenote {
+#tioilppgjj .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -8614,64 +8766,73 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   padding-right: 5px;
 }
 
-#docemrfybz .gt_left {
+#tioilppgjj .gt_left {
   text-align: left;
 }
 
-#docemrfybz .gt_center {
+#tioilppgjj .gt_center {
   text-align: center;
 }
 
-#docemrfybz .gt_right {
+#tioilppgjj .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#docemrfybz .gt_font_normal {
+#tioilppgjj .gt_font_normal {
   font-weight: normal;
 }
 
-#docemrfybz .gt_font_bold {
+#tioilppgjj .gt_font_bold {
   font-weight: bold;
 }
 
-#docemrfybz .gt_font_italic {
+#tioilppgjj .gt_font_italic {
   font-style: italic;
 }
 
-#docemrfybz .gt_super {
+#tioilppgjj .gt_super {
   font-size: 65%;
 }
 
-#docemrfybz .gt_footnote_marks {
+#tioilppgjj .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#docemrfybz .gt_asterisk {
+#tioilppgjj .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#docemrfybz .gt_indent_1 {
+#tioilppgjj .gt_indent_1 {
   text-indent: 5px;
 }
 
-#docemrfybz .gt_indent_2 {
+#tioilppgjj .gt_indent_2 {
   text-indent: 10px;
 }
 
-#docemrfybz .gt_indent_3 {
+#tioilppgjj .gt_indent_3 {
   text-indent: 15px;
 }
 
-#docemrfybz .gt_indent_4 {
+#tioilppgjj .gt_indent_4 {
   text-indent: 20px;
 }
 
-#docemrfybz .gt_indent_5 {
+#tioilppgjj .gt_indent_5 {
   text-indent: 25px;
+}
+
+#tioilppgjj .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#tioilppgjj div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
 }
 </style>
 
@@ -9285,18 +9446,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -9328,7 +9478,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -9336,7 +9508,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {

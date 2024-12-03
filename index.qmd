@@ -6,8 +6,9 @@ bibliography: references.bib
 csl: american-fisheries-society.csl
 params:
   static_tables: StaticTables.xlsx
-  mdb_pre: ~/O/code/coho/fram_mdbs/PSC_CoTC_Preseason_CohoFRAMDB_thru2023_050223.mdb
-  mdb_pst: ~/O/code/coho/fram_mdbs/PSC_CoTC_PostSeason_CohoFRAMDB_thru2022_02202024.mdb
+  mdb_pre: C:/Repos/PeriodicReportData/PSC_CoTC_Preseason_CohoFRAMDB_thru2024_06182024.mdb
+  mdb_pst: C:/Repos/PeriodicReportData/PSC_CoTC_PostSeason_CohoFRAMDB_thru2022_03042024.mdb
+  clean_run: true
 editor_options:
   chunk_output_type: console
 format:
@@ -37,31 +38,51 @@ The CoTC intends to produce this report online in HTML format. The current draft
 </header>
 
 **TO DO**
-  
-  - re-update `psc_pst` with final final final 2022 postseason run
-    - get multiyear mdb; update `params$mdb` (unused in fig/tables but for knit text)
-    - run chunk `rebuild_psc_csv` to gen "psc_postfram_1998_2022.csv"
-      - make sure to check and update `fram$runIDs` to include 2022 (should be runid 46)
-  - update any `psc_pre` preseason run changes following a similar approach and the `rebuild_psc_pre_csv` chunk
-  - further text revisions; drop tables from StaticTable
-  - figures
-    - post
-    - pre/post
-      - make simple stacked bar of stoplight of nochange/toohigh/toolow
-      - depiction of 'un-used' catch, either fish or ER?
-      - abundance figures overlaying MUs within regions (US in, US out, BC)
-      
+
+- re-update `psc_pst` with final final final 2022 postseason run
+- get multiyear mdb; update `params$mdb` (unused in fig/tables but for knit text)
+- run chunk `rebuild_psc_csv` to gen "psc_postfram_1998_2022.csv"
+- make sure to check and update `fram$runIDs` to include 2022 (should be runid 46)
+- update any `psc_pre` preseason run changes following a similar approach and the `rebuild_psc_pre_csv` chunk
+- further text revisions; drop tables from StaticTable
+- figures
+- post
+- pre/post
+- make simple stacked bar of stoplight of nochange/toohigh/toolow
+- depiction of 'un-used' catch, either fish or ER?
+- abundance figures overlaying MUs within regions (US in, US out, BC)
+
+**CBE change log**
+
+- added "clean_run" as a logical to the parameters.  If `TRUE`, recreates the temporary .csv files.
+- Previously used hard-coded RunID numbers when generating intermediate data csv. This was sensitive to changes in numbering scheme;
+updated to instead specify minimum year (1998, to match comments from original) and include all years of FRAM data after that.
 
 
+```{r internal_parms}
+## Semi-hardcoded params:
+year.min = 1998 ## minimum year to include from our fram databases. Code uses all years since then.
+```
 
 ```{r setup, include=FALSE}
+
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+if(interactive()){ ## recreate parameters if being run interactively.
+  params = list(static_tables = "StaticTables.xlsx",
+                mdb_pre = "C:/Repos/PeriodicReportData/PSC_CoTC_Preseason_CohoFRAMDB_thru2024_06182024.mdb",
+                mdb_pst = "C:/Repos/PeriodicReportData/PSC_CoTC_PostSeason_CohoFRAMDB_thru2022_03042024.mdb",
+                clean_run = FALSE
+  )
+}
+
 
 # #biblio CSL (following AFS) from:
 # https://github.com/citation-style-language/styles/blob/master/american-fisheries-society.csl
 # dropped 'text-case="capitalize-first"' on L164
 
 library("tidyverse", quietly = T)
+library("here")
 library("readxl")
 library("kableExtra", quietly = T)
 library("patchwork")
@@ -70,12 +91,6 @@ theme_set(theme_light())
 
 # #can load an entire environment built ahead of time and save time on reknitting
 # load("PeriodicReport_envi.RData")
-
-#but to deal with WA Coast stocks from TAMM spreadsheets, among other reasons
-psc_pst <- readr::read_csv("psc_postfram_1998_2022_temp.csv") |> 
-  rename(`Catch Year` = RunYear)
-psc_pre <- readr::read_csv("psc_prefram_2004_2023.csv") |> 
-  rename(`Catch Year` = RunYear)
 
 static <- list(
   members = readxl::read_excel(params$static_tables, sheet = "members") |> 
@@ -91,7 +106,7 @@ static <- list(
   ,
   #exported from postseason db 'Fishery' table
   lu_fishery = readxl::read_excel(params$static_tables, sheet = "fram_coho_fishery")
-    ,
+  ,
   glossary = readxl::read_excel(params$static_tables, sheet = "glossary") |> 
     mutate(across(where(is.character), ~replace_na(.,"")))
   ,
@@ -100,7 +115,7 @@ static <- list(
   releases = readxl::read_excel(
     params$static_tables, sheet = "Releases",
     col_types = c(rep('text',9), 'numeric', 'text', rep('numeric',7))
-    ) |> 
+  ) |> 
     mutate(across(where(is.character), ~replace_na(.,"")))
   ,
   #these data derive from CCT review of annual wild coho forecasts from WDFW
@@ -116,19 +131,19 @@ static <- list(
 
 levels <- list(
   mu_name = c("Interior Fraser", "Lower Fraser",
-  "Strait of Georgia", #created inline by combining Mainland and Van.Isl.
-  "Skagit","Stillaguamish","Snohomish","Hood Canal","US Strait JDF",
-  "Quillayute","Hoh","Queets","Grays Harbor"
+              "Strait of Georgia", #created inline by combining Mainland and Van.Isl.
+              "Skagit","Stillaguamish","Snohomish","Hood Canal","US Strait JDF",
+              "Quillayute","Hoh","Queets","Grays Harbor"
   ))
 
 pal_rel_tag_mark <- c("CWT_Unclipped"= "#4D5370", 
                       "CWT_Unclipped_DIT" = alpha("#263C19", 0.6),
                       "CWT_Clipped" = "#A6B7C6",
                       "Clipped_only"= "#E4C22B", "Unclipped" = "#965127")
-
 ```
 
-```{r rebuild_psc_pst_csv, include=FALSE, eval=FALSE}
+
+```{r rebuild_psc_pst_csv, include=FALSE}
 #postseason mdb from params arg above, sourced locally, ultimately from CoTC Sharepoint
 #moved to .csv on load to allow more portability/generality
 
@@ -136,7 +151,7 @@ fram_mdb_reader <- function(
     mdb_file_path,
     fram_table,
     osx = grepl("apple", sessionInfo()$platform)
-    ) {
+) {
   if(osx){
     t_out <- readr::read_csv(I(
       system2(
@@ -150,190 +165,230 @@ fram_mdb_reader <- function(
       drv = odbc::odbc(),
       .connection_string = paste0(
         "Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=", mdb_file_path, ";")
-      )
-
+    )
+    
     t_out <- DBI::dbReadTable(db_con, fram_table)
-
+    
     DBI::dbDisconnect(db_con)
   }
   return(t_out)
 }
 
-
-fram <- list()
-
-fram$stockIDs <- static$lu_stock$StockID
-
-fram$runIDs <- 22:46 #1998-2022, but 34:44 2010onward
-
-#Note the original negative escapement in A12A Wild in 2005 is due to an error in the FRAM database
-#Mortality is summed across timesteps (and Ages, but only 3s anyway)
-#maintaining FRAM stocks and fisheries
-fram$fishery <- fram_mdb_reader(mdb_file_path = params$mdb_pst, fram_table = "Fishery") |> 
-  filter(Species == "COHO") |> select(FisheryID, FisheryName)
-fram$stock <- fram_mdb_reader(mdb_file_path = params$mdb_pst, fram_table = "Stock") |> 
-  filter(Species == "COHO", StockID %in% fram$stockIDs) |> select(StockID, StockLongName)
-fram$runid <- fram_mdb_reader(mdb_file_path = params$mdb_pst, fram_table = "RunID") |> 
-  filter(RunID %in% fram$runIDs) |> 
-  select(RunID, RunYear)
-fram$escp <- fram_mdb_reader(mdb_file_path = params$mdb_pst, fram_table = "Escapement") |> 
-  filter(StockID %in% fram$stockIDs, RunID %in% fram$runIDs) |> 
-  select(RunID, StockID, escp = Escapement) |> 
-  mutate(escp = if_else(escp < 0, 0, escp))
-fram$mort <- fram_mdb_reader(mdb_file_path = params$mdb_pst, fram_table = "Mortality") |> 
-  filter(StockID %in% fram$stockIDs, RunID %in% fram$runIDs) |> 
-  mutate(
-    mort_ns = LandedCatch + NonRetention + Shaker + DropOff,
-    mort_msf = MSFLandedCatch + MSFNonRetention + MSFShaker + MSFDropOff,
-    mort = mort_ns + mort_msf
-  ) |> 
-  group_by(RunID, StockID, FisheryID) |> 
-  summarise(across(LandedCatch:mort, ~sum(., na.rm=T)), .groups = "drop")
-
-
-# #build out the yearly totals and ER info for PSC stock (and fishery?) aggregations
-# #SUS fisheries are FRAM FisheryID 1:166
-# #Canadian are FRAM FisheryID 167:193
-# #AK are 193:max?
-
-# join PSC metadata and re-aggregate, 
-# also adding columns of total mortality per year per re-aggregated PSC stock 
-# these are summed over fisheries and repeating per individual fishery
-# same idea for escapement...
-
-psc_pst <- left_join(
-  fram$mort |> 
-    left_join(fram$runid, by = "RunID") |> 
-    left_join(fram$fishery, by = "FisheryID") |> 
-    left_join(
-      static$lu_stock |> 
-        select(StockID, PSC_StockID, PSC_StockName),
-      by = "StockID") |> 
-    group_by(RunYear, PSC_StockID, PSC_StockName, FisheryID, FisheryName) |> 
-    summarise(across(starts_with("mort"), sum), .groups = "drop") |> 
-    group_by(RunYear, PSC_StockID, PSC_StockName) |> 
-    mutate(across(starts_with("mort"), list(sum = sum), .names = "{.col}_{.fn}")) |> 
-    ungroup()
-  ,
-  fram$escp |> 
-    left_join(fram$runid, by = "RunID") |> 
-    left_join(
-      static$lu_stock |> 
-        select(StockID, PSC_StockID, PSC_StockName),
-      by = "StockID") |> 
-    group_by(RunYear, PSC_StockID, PSC_StockName) |> 
-    summarise(across(escp, sum), .groups = "drop") 
-  ,
-  by = c("RunYear", "PSC_StockID", "PSC_StockName")
+if(params$clean_run){
+  fram <- list()
+  
+  fram$stockIDs <- static$lu_stock$StockID
+  
+  #Note the original negative escapement in A12A Wild in 2005 is due to an error in the FRAM database
+  #Mortality is summed across timesteps (and Ages, but only 3s anyway)
+  #maintaining FRAM stocks and fisheries
+  fram$fishery <- fram_mdb_reader(mdb_file_path = params$mdb_pst, fram_table = "Fishery") |> 
+    filter(Species == "COHO") |> select(FisheryID, FisheryName)
+  fram$stock <- fram_mdb_reader(mdb_file_path = params$mdb_pst, fram_table = "Stock") |> 
+    filter(Species == "COHO", StockID %in% fram$stockIDs) |> select(StockID, StockLongName)
+  fram$runid <- fram_mdb_reader(mdb_file_path = params$mdb_pst, fram_table = "RunID") |> 
+    filter(RunYear >= year.min) |> 
+    select(RunID, RunYear)
+  ## snagging starting cohort size
+  fram$ocean_abund = fram_mdb_reader(mdb_file_path = params$mdb_pst, fram_table = "Cohort") |> 
+    filter(StockID %in% fram$stockIDs, RunID %in% fram$runid$RunID) |> 
+    filter(TimeStep == 1) |> 
+    select(RunID, StockID, ocean_abund = StartCohort)
+  fram$escp <- fram_mdb_reader(mdb_file_path = params$mdb_pst, fram_table = "Escapement") |> 
+    filter(StockID %in% fram$stockIDs, RunID %in% fram$runid$RunID) |> 
+    select(RunID, StockID, escp = Escapement) |> 
+    mutate(escp = if_else(escp < 0, 0, escp))
+  fram$mort <- fram_mdb_reader(mdb_file_path = params$mdb_pst, fram_table = "Mortality") |> 
+    filter(StockID %in% fram$stockIDs, RunID %in% fram$runid$RunID) |> 
+    mutate(
+      mort_ns = LandedCatch + NonRetention + Shaker + DropOff,
+      mort_msf = MSFLandedCatch + MSFNonRetention + MSFShaker + MSFDropOff,
+      mort = mort_ns + mort_msf
+    ) |> 
+    group_by(RunID, StockID, FisheryID) |> 
+    summarise(across(LandedCatch:mort, ~sum(., na.rm=T)), .groups = "drop")
+  
+  
+  # #build out the yearly totals and ER info for PSC stock (and fishery?) aggregations
+  # #SUS fisheries are FRAM FisheryID 1:166
+  # #Canadian are FRAM FisheryID 167:193
+  # #AK are 193:max?
+  
+  # join PSC metadata and re-aggregate, 
+  # also adding columns of total mortality per year per re-aggregated PSC stock 
+  # these are summed over fisheries and repeating per individual fishery
+  # same idea for escapement...
+  
+  psc_pst <- left_join(
+    fram$mort |> 
+      left_join(fram$runid, by = "RunID") |> 
+      left_join(fram$fishery, by = "FisheryID") |> 
+      left_join(
+        static$lu_stock |> 
+          select(StockID, PSC_StockID, PSC_StockName),
+        by = "StockID") |> 
+      group_by(RunYear, PSC_StockID, PSC_StockName, FisheryID, FisheryName) |> 
+      summarise(across(starts_with("mort"), sum), 
+                .groups = "drop") |>
+      group_by(RunYear, PSC_StockID, PSC_StockName) |> 
+      mutate(across(starts_with("mort"), list(sum = sum), .names = "{.col}_{.fn}")) |> 
+      ungroup() |> 
+      left_join(
+        ## ocean abundances need to be summed to PSC before joining in
+        left_join(static$lu_stock |> select(StockID, PSC_StockID, PSC_StockName),
+                  fram$ocean_abund |> rename(ocean_abund_sum = ocean_abund), by = c("StockID")) |> 
+          left_join(fram$runid, by = "RunID") |> 
+          group_by(RunYear, PSC_StockName) |> 
+          summarize(ocean_abund_sum = sum(ocean_abund_sum)) |> 
+          ungroup(),
+        by = c("RunYear", "PSC_StockName")
+      )
+    ,
+    fram$escp |> 
+      left_join(fram$runid, by = "RunID") |> 
+      left_join(
+        static$lu_stock |> 
+          select(StockID, PSC_StockID, PSC_StockName),
+        by = "StockID") |> 
+      group_by(RunYear, PSC_StockID, PSC_StockName) |> 
+      summarise(across(escp, sum), .groups = "drop") 
+    ,
+    by = c("RunYear", "PSC_StockID", "PSC_StockName")
   ) |>
-  mutate(
-    abund = mort_sum + escp,
-    across(c(mort, mort_sum), list(er = ~.x/abund))
-  ) |> 
-  left_join(
-    static$lu_stock |> 
-      distinct(PSC_StockID, PSC_Region, cap_method,
-               low_mod_abund, mod_abd_abund,
-               low_er_cap, mod_er_cap, abd_er_cap,
-               low_escp_goal, upr_escp_goal)
-    , by = "PSC_StockID"
+    mutate(
+      abund = mort_sum + escp,
+      across(c(mort, mort_sum), list(er = ~.x/abund))
+    ) |> 
+    left_join(
+      static$lu_stock |> 
+        distinct(PSC_StockID, PSC_Region, cap_method,
+                 low_mod_abund, mod_abd_abund,
+                 low_er_cap, mod_er_cap, abd_er_cap,
+                 low_escp_goal, upr_escp_goal)
+      , by = "PSC_StockID"
     )
-
-write_csv(psc_pst, "psc_postfram_1998_2022_temp.csv")
-
-##Quillayute and Queets post-season values are drawn from TAMM
-#https://github.com/PSC-CoTC/AnnualReport/blob/master/csv/TammFisheryQueetsRef.csv
-#need to swap out some fishery values (and escp for Quil?)
-#sheet 2, r48, col26 Quil escp (2021: 9916)
-#sheet 2, r38, col26 Quil TR net, fid 71 (2021: 1083)
-#sheet 2, r39, col26 Quil spt, fid 70 (2021: 174)
-#plus 0 fid72 for sid131, 70:72 for sid132
-
-#sheet 2, r48, col31 Queets escp (2021: 4530)
-#sheet 2, r38, col31 Queets TR net, fid 68 (2021: 164)
-#sheet 2, r39, col31 Queets spt, fid 65 (2021: 56)
-#plus 0 out 66,67,69 for sid 139 and 65:69 for sid140 (prob already 0)
-
+  
+  write_csv(psc_pst, here("../PeriodicReportData/psc_postfram_1998_2022_temp.csv"))
+  
+  ##Quillayute and Queets post-season values are drawn from TAMM
+  #https://github.com/PSC-CoTC/AnnualReport/blob/master/csv/TammFisheryQueetsRef.csv
+  #need to swap out some fishery values (and escp for Quil?)
+  #sheet 2, r48, col26 Quil escp (2021: 9916)
+  #sheet 2, r38, col26 Quil TR net, fid 71 (2021: 1083)
+  #sheet 2, r39, col26 Quil spt, fid 70 (2021: 174)
+  #plus 0 fid72 for sid131, 70:72 for sid132
+  
+  #sheet 2, r48, col31 Queets escp (2021: 4530)
+  #sheet 2, r38, col31 Queets TR net, fid 68 (2021: 164)
+  #sheet 2, r39, col31 Queets spt, fid 65 (2021: 56)
+  #plus 0 out 66,67,69 for sid 139 and 65:69 for sid140 (prob already 0)
+}
 ```
 
-```{r rebuild_psc_pre_csv, include=FALSE, eval=FALSE}
-#using fram_mdb_reader from postseason rebuild chunk
-#overwrites (temporary) `fram` object
-#identical to postseason other than mdb_file_path argument
+```{r rebuild_psc_pre_csv, include=FALSE}
 
-fram <- list()
-fram$stockIDs <- static$lu_stock$StockID
-fram$runIDs <- 369:388 #2004-2023
-
-fram$fishery <- fram_mdb_reader(mdb_file_path = params$mdb_pre, fram_table = "Fishery") |> 
-  filter(Species == "COHO") |> select(FisheryID, FisheryName)
-fram$stock <- fram_mdb_reader(mdb_file_path = params$mdb_pre, fram_table = "Stock") |> 
-  filter(Species == "COHO", StockID %in% fram$stockIDs) |> select(StockID, StockLongName)
-fram$runid <- fram_mdb_reader(mdb_file_path = params$mdb_pre, fram_table = "RunID") |> 
-  filter(RunID %in% fram$runIDs) |> 
-  select(RunID, RunYear) |> arrange(RunYear)
-fram$escp <- fram_mdb_reader(mdb_file_path = params$mdb_pre, fram_table = "Escapement") |> 
-  filter(StockID %in% fram$stockIDs, RunID %in% fram$runIDs) |> 
-  select(RunID, StockID, escp = Escapement) |> 
-  mutate(escp = if_else(escp < 0, 0, escp))
-fram$mort <- fram_mdb_reader(mdb_file_path = params$mdb_pre, fram_table = "Mortality") |> 
-  filter(StockID %in% fram$stockIDs, RunID %in% fram$runIDs) |> 
-  mutate(
-    mort_ns = LandedCatch + NonRetention + Shaker + DropOff,
-    mort_msf = MSFLandedCatch + MSFNonRetention + MSFShaker + MSFDropOff,
-    mort = mort_ns + mort_msf
-  ) |> 
-  group_by(RunID, StockID, FisheryID) |> 
-  summarise(across(LandedCatch:mort, ~sum(., na.rm=T)), .groups = "drop")
-
-
-psc_pre <- left_join(
-  fram$mort |> 
-    left_join(fram$runid, by = "RunID") |> 
-    left_join(fram$fishery, by = "FisheryID") |> 
-    left_join(
-      static$lu_stock |> 
-        select(StockID, PSC_StockID, PSC_StockName),
-      by = "StockID") |> 
-    group_by(RunYear, PSC_StockID, PSC_StockName, FisheryID, FisheryName) |> 
-    summarise(across(starts_with("mort"), sum), .groups = "drop") |> 
-    group_by(RunYear, PSC_StockID, PSC_StockName) |> 
-    mutate(across(starts_with("mort"), list(sum = sum), .names = "{.col}_{.fn}")) |> 
-    ungroup()
-  ,
-  fram$escp |> 
-    left_join(fram$runid, by = "RunID") |> 
-    left_join(
-      static$lu_stock |> 
-        select(StockID, PSC_StockID, PSC_StockName),
-      by = "StockID") |> 
-    group_by(RunYear, PSC_StockID, PSC_StockName) |> 
-    summarise(across(escp, sum), .groups = "drop") 
-  ,
-  by = c("RunYear", "PSC_StockID", "PSC_StockName")
+if(params$clean_run){
+  #using fram_mdb_reader from postseason rebuild chunk
+  #overwrites (temporary) `fram` object
+  #identical to postseason other than mdb_file_path argument
+  
+  fram <- list()
+  fram$stockIDs <- static$lu_stock$StockID
+  
+  fram$fishery <- fram_mdb_reader(mdb_file_path = params$mdb_pre, fram_table = "Fishery") |> 
+    filter(Species == "COHO") |> select(FisheryID, FisheryName)
+  fram$stock <- fram_mdb_reader(mdb_file_path = params$mdb_pre, fram_table = "Stock") |> 
+    filter(Species == "COHO", StockID %in% fram$stockIDs) |> select(StockID, StockLongName)
+  fram$runid <- fram_mdb_reader(mdb_file_path = params$mdb_pre, fram_table = "RunID") |> 
+    filter(RunYear >= year.min) |> 
+    select(RunID, RunYear) |> arrange(RunYear)
+  ## snagging starting cohort size
+  fram$ocean_abund = fram_mdb_reader(mdb_file_path = params$mdb_pst, fram_table = "Cohort") |> 
+    filter(StockID %in% fram$stockIDs, RunID %in% fram$runid$RunID) |> 
+    filter(TimeStep == 1) |> 
+    select(RunID, StockID, ocean_abund = StartCohort)
+  fram$escp <- fram_mdb_reader(mdb_file_path = params$mdb_pre, fram_table = "Escapement") |> 
+    filter(StockID %in% fram$stockIDs, RunID %in% fram$runid$RunID) |> 
+    select(RunID, StockID, escp = Escapement) |> 
+    mutate(escp = if_else(escp < 0, 0, escp))
+  fram$mort <- fram_mdb_reader(mdb_file_path = params$mdb_pre, fram_table = "Mortality") |> 
+    filter(StockID %in% fram$stockIDs, RunID %in% fram$runid$RunID) |> 
+    mutate(
+      mort_ns = LandedCatch + NonRetention + Shaker + DropOff,
+      mort_msf = MSFLandedCatch + MSFNonRetention + MSFShaker + MSFDropOff,
+      mort = mort_ns + mort_msf
+    ) |> 
+    group_by(RunID, StockID, FisheryID) |> 
+    summarise(across(LandedCatch:mort, ~sum(., na.rm=T)), .groups = "drop")
+  
+  
+  psc_pre <- left_join(
+    fram$mort |> 
+      left_join(fram$runid, by = "RunID") |> 
+      left_join(fram$fishery, by = "FisheryID") |> 
+      left_join(
+        static$lu_stock |> 
+          select(StockID, PSC_StockID, PSC_StockName),
+        by = "StockID") |> 
+      group_by(RunYear, PSC_StockID, PSC_StockName, FisheryID, FisheryName) |> 
+      summarise(across(starts_with("mort"), sum), .groups = "drop") |> 
+      group_by(RunYear, PSC_StockID, PSC_StockName) |> 
+      mutate(across(starts_with("mort"), list(sum = sum), .names = "{.col}_{.fn}")) |> 
+      ungroup() |> 
+      left_join(
+        ## ocean abundances need to be summed to PSC before joining in
+        left_join(static$lu_stock |> select(StockID, PSC_StockID, PSC_StockName),
+                  fram$ocean_abund |> rename(ocean_abund_sum = ocean_abund), by = c("StockID")) |> 
+          left_join(fram$runid, by = "RunID") |> 
+          group_by(RunYear, PSC_StockName) |> 
+          summarize(ocean_abund_sum = sum(ocean_abund_sum)) |> 
+          ungroup(),
+        by = c("RunYear", "PSC_StockName")
+      )
+    ,
+    fram$escp |> 
+      left_join(fram$runid, by = "RunID") |> 
+      left_join(
+        static$lu_stock |> 
+          select(StockID, PSC_StockID, PSC_StockName),
+        by = "StockID") |> 
+      group_by(RunYear, PSC_StockID, PSC_StockName) |> 
+      summarise(across(escp, sum), .groups = "drop") 
+    ,
+    by = c("RunYear", "PSC_StockID", "PSC_StockName")
   ) |>
-  mutate(
-    abund = mort_sum + escp,
-    across(c(mort, mort_sum), list(er = ~.x/abund))
-  ) |> 
-  left_join(
-    static$lu_stock |> 
-      distinct(PSC_StockID, PSC_Region, cap_method,
-               low_mod_abund, mod_abd_abund,
-               low_er_cap, mod_er_cap, abd_er_cap,
-               low_escp_goal, upr_escp_goal)
-    , by = "PSC_StockID"
+    mutate(
+      abund = mort_sum + escp,
+      across(c(mort, mort_sum), list(er = ~.x/abund))
+    ) |> 
+    left_join(
+      static$lu_stock |> 
+        distinct(PSC_StockID, PSC_Region, cap_method,
+                 low_mod_abund, mod_abd_abund,
+                 low_er_cap, mod_er_cap, abd_er_cap,
+                 low_escp_goal, upr_escp_goal)
+      , by = "PSC_StockID"
     )
-
-# full_join(
-#   psc_pst |> count(RunYear),
-#   psc_pre |> count(RunYear),
-#   by = "RunYear"  
-# ) |> print(n=100)
-
-write_csv(psc_pre, "psc_prefram_2004_2023.csv")
-
+  
+  # full_join(
+  #   psc_pst |> count(RunYear),
+  #   psc_pre |> count(RunYear),
+  #   by = "RunYear"  
+  # ) |> print(n=100)
+  
+  write_csv(psc_pre, here("../PeriodicReportData/psc_prefram_2004_2023.csv"))
+}
 ```
+
+```{r loading_in, include=FALSE}
+#but to deal with WA Coast stocks from TAMM spreadsheets, among other reasons
+psc_pst <- readr::read_csv(here("../PeriodicReportData/psc_postfram_1998_2022_temp.csv")) |> 
+  rename(`Catch Year` = RunYear)
+psc_pre <- readr::read_csv(here("../PeriodicReportData/psc_postfram_1998_2022_temp.csv")) |> 
+  rename(`Catch Year` = RunYear)
+```
+
+
 
 *Note that Quillayute and Queets values are those from the FRAM database and have not yet been extracted from the relevant TAMM cells for each year*
 
@@ -408,13 +463,13 @@ plot_smolts <- function(stknm = "Skagit"){
 
 ```{r func_plot_status}
 plot_status <- function(mu = "Skagit"){
-
+  
   static$status |>
     filter(MU == mu) |>
     mutate(
       across(c(`Pre-season`,`Post-Season`),
              ~factor(., levels = c("Low","Moderate","Abundant"))
-             ),
+      ),
       pre_to_post = case_when(
         as.integer(`Pre-season`) == as.integer(`Post-Season`) ~ "no change",
         as.integer(`Pre-season`) >  as.integer(`Post-Season`) ~ "decrease",
@@ -430,10 +485,10 @@ plot_status <- function(mu = "Skagit"){
     scale_shape_manual(values = c(25,21,24)) +
     scale_fill_manual(values = c("orange","darkgreen","green"), aesthetics = c("fill","color")) +
     labs(subtitle = paste(mu, "post-season status, relative to preseason"))
-
+  
 }
-
 #plot_status()
+
 ```
 
 This report is based on postseason data in `r basename(params$mdb_pst)` and preseason data in `r basename(params$mdb_pre)`, as well as supporting [StaticTables.xlsx](https://github.com/PSC-CoTC/PeriodicReport/blob/master/StaticTables.xlsx).
@@ -451,7 +506,7 @@ tibble(
   `Southern BC` = c("Interior Fraser", "Lower Fraser", "Georgia Strait Vancouver Island", "Georgia Strait Mainland", ""),
   `US Inside` = c("Skagit", "Stillaguamish", "Snohomish", "Hood Canal", "US Strait JDF"),
   `US Outside` = c("Quillayute", "Hoh", "Queets", "Grays Harbor", "")
-  ) |> 
+) |> 
   gt() |> 
   tab_options(table.width = px(400)) |> 
   tab_style(locations = cells_column_labels(), style = cell_text(align = "center", weight = "bold")) |> 
@@ -497,7 +552,7 @@ tibble(
   `Southern BC` = c("Interior Fraser", "Lower Fraser", "Strait of Georgia", "", ""),
   `US Inside` = c("Skagit", "Stillaguamish", "Snohomish", "Hood Canal", "US Strait JDF"),
   `US Outside` = c("Quillayute", "Hoh", "Queets", "Grays Harbor", "")
-  ) |> 
+) |> 
   gt() |> 
   tab_options(table.width = px(400)) |> 
   tab_style(locations = cells_column_labels(), style = cell_text(align = "center", weight = "bold")) |> 
@@ -637,16 +692,16 @@ PrePostBC <- tidyr::separate(PrePostBC[,-1], 3, c("Abundance", "Status"), sep = 
 PrePostBC <- tidyr::separate(PrePostBC, 5, c("Abundance2", "Status2"), sep = " ")
 
 ggplot(PrePostBC, # this is where the dataframe goes
-                aes(x = as.numeric(Catch.Year),  # X axis column name
-          y = as.numeric(Abundance2)/1000, # need to make sure that Y axis data is numeric, AND we are dividing by 1000 for the axis
-          group = Management.Unit)) + # grouping by Management unit so that the legend groups the colours and linetypes later
+       aes(x = as.numeric(Catch.Year),  # X axis column name
+           y = as.numeric(Abundance2)/1000, # need to make sure that Y axis data is numeric, AND we are dividing by 1000 for the axis
+           group = Management.Unit)) + # grouping by Management unit so that the legend groups the colours and linetypes later
   theme_classic() +
-          geom_line(aes(colour = Management.Unit, # choosing to make each Management Unit a different Colour
-          linetype = Management.Unit),  # making each MU a different linetype
-          size = 1.25) + # making the lines thicker (>1) (or thinner by going < 1)
-      scale_linetype_manual(values = c("solid", "longdash", "twodash", "dotted")) + # changes the line types
-      scale_color_manual(values = c('#abd9e9','#2c7bb6', '#fdae61', '#d7191c')) + # used colorbrewer2.org to select colour codes
-      labs(x = "Catch Year", y = "Cohort Abundance (thousands)") # renaming the x and y axis
+  geom_line(aes(colour = Management.Unit, # choosing to make each Management Unit a different Colour
+                linetype = Management.Unit),  # making each MU a different linetype
+            size = 1.25) + # making the lines thicker (>1) (or thinner by going < 1)
+  scale_linetype_manual(values = c("solid", "longdash", "twodash", "dotted")) + # changes the line types
+  scale_color_manual(values = c('#abd9e9','#2c7bb6', '#fdae61', '#d7191c')) + # used colorbrewer2.org to select colour codes
+  labs(x = "Catch Year", y = "Cohort Abundance (thousands)") # renaming the x and y axis
 ```
 
 ### IFR MU 
@@ -737,11 +792,11 @@ The US annual salmon fishery planning process starts in January with a Stock and
 
 - Stocks’ abundance forecasts
 - Fishery inputs by Coho FRAM time period (e.g., season structure, gear and retention restrictions, quota levels, fishery harvest rate scalars) 
-    
+
 *Inseason:*
 
 - FRAM fishery adjustments 
-    
+
 *Postseason FRAM inputs:*
 
 - Stocks’ observed escapement
@@ -872,11 +927,11 @@ The US preseason Coho FRAM modeling requires Canadian inputs to complete the mod
 - Stocks’ abundance forecasts, or;
 - Regional expected marine survival rates, based on CWT indicator stocks;
 - FRAM fishery scalars by Coho FRAM time period from postseason analysis of a fishery plan similar to anticipated fishing patterns 
-    
+
 *Inseason:*
 
 - FRAM fishery adjustments or significant deviations in expected abundance / catch
-    
+
 *Postseason:*
 
 - Stocks’ observed escapement, or;
@@ -888,16 +943,16 @@ US FRAM preseason modeling requires forecasts of Canadian stocks. Forecast devel
 
 To obtain these values Canadian forecast methodology uses the following information:
 
-  1) Annual hatchery production
-  2) Base Period FRAM natural production
-  3) Base Period hatchery production
-  4) Predicted marine survival
-  5) Base Period marine survival
-  6) Base Period FRAM stock abundance values
+1) Annual hatchery production
+2) Base Period FRAM natural production
+3) Base Period hatchery production
+4) Predicted marine survival
+5) Base Period marine survival
+6) Base Period FRAM stock abundance values
 
 Estimates of freshwater production (smolt out-migrants) for hatchery produced Coho, by FRAM production region, are scaled to Base Period production. Next the annual expected regional marine survival (MS) is scaled to Base Period marine survival. Both ratios are applied to a stock’s Base Period Abundance to produce the annual adult abundance forecasts. To illustrate (*by stock*):
 
- Adult H Abundance = (*Annual H Smolts*) / (*Base H Smolts*) X (*Expected MS*) / (*Base MS*) X (*Base Adult Abundance)
+Adult H Abundance = (*Annual H Smolts*) / (*Base H Smolts*) X (*Expected MS*) / (*Base MS*) X (*Base Adult Abundance)
 
 Hatchery smolt data are obtained from the Canadian Salmon Enhancement Program. Where naturally produced smolt out-migrant estimates exists (2 of 14 Canadian production regions), the values are used. For the production regions where naturally produced smolt data are not available (the remaining 12 of 14 Canadian production regions), the default production starting values has been the same as the annual hatchery output for the same FRAM production region, assuming similar smolt abundance trends between naturally produced and hatchery smolts. As hatchery production has been reduced over time it has become necessary to find other means to obtain the surrogates for naturally produced smolt production.
 
@@ -1061,7 +1116,7 @@ static$releases |>
     #MU = if_else(MU %in% c("GSMLND","GSVNCI"), "GeorgSt", MU)
     MU_Name = if_else(str_detect(MU_Name, "Georgia"), "Strait of Georgia", MU_Name) |> 
       factor(levels = levels$mu_name)
-    ) |> 
+  ) |> 
   select(MU_Name, brood_year, CWT_Clipped, CWT_Unclipped) |> 
   pivot_longer(cols = starts_with("CWT_"), names_to = "tag_mark", values_to = "val") |> 
   mutate(tag_mark = factor(tag_mark, levels = c("CWT_Unclipped", "CWT_Unclipped_DIT", "CWT_Clipped"))) |> 
@@ -1076,7 +1131,7 @@ static$releases |>
     legend.position = "bottom", legend.title = element_blank(),
     strip.background = element_rect(fill = NA), strip.text = element_text(colour = 1, hjust = 0)
   )
-  
+
 ```
 
 ### Hatchery Tagging Programs
@@ -1109,7 +1164,7 @@ static$releases |>
   theme(
     legend.position = "bottom", legend.title = element_blank()
   )
-  
+
 ```
 
 Hatchery stock tagging has consistently occurred in every MU, with the exception of the Stillaguamish and the Hoh MUs where very few hatchery fish are released. Double-index-tagging programs were implemented in all MUs but the Stillaguamish and the Hoh MU; however, DIT programs currently exist only in the US MUs.
@@ -1142,7 +1197,7 @@ static$releases |>
     legend.position = "bottom", legend.title = element_blank(),
     strip.background = element_rect(fill = NA), strip.text = element_text(colour = 1, hjust = 0)
   )
-  
+
 ```
 REPLACE with LINK to file
 ** Double-index-tag codes released within each US MU (data downloaded from RMIS 9-6-2023).**
@@ -1184,7 +1239,7 @@ static$releases |>
     legend.position = "bottom", legend.title = element_blank(),
     strip.background = element_rect(fill = NA), strip.text = element_text(colour = 1, hjust = 0)
   )
-  
+
 ```
 
 # Performance of Abundance Based Management Regime 
@@ -1212,7 +1267,7 @@ psc_pst |>
       abd == "",
       format(round(abund), big.mark=",", trim=TRUE),
       paste0(format(round(abund), big.mark=",", trim=TRUE), " [",abd,"]")
-      ),
+    ),
     abund = NULL
   ) |> 
   pivot_wider(names_from = `Catch Year`, values_from = abd) |> 
@@ -1220,15 +1275,15 @@ psc_pst |>
   gt(
     groupname_col = "PSC_Region", 
     caption = "Annual FRAM-estimated abundance (escapement + harvest)"
-    ) |> 
+  ) |> 
   tab_options(
     table.width = 1500
-    ) |> 
+  ) |> 
   cols_hide(c(ends_with("_abund"), `1998`:`2003`)) |> 
   cols_width(
     PSC_StockName ~ px(150),
     starts_with("2") ~ px(120)
-    ) |> 
+  ) |> 
   cols_align(align = "right", columns = starts_with("2")) |> 
   tab_style(
     style = cell_text(align = "right"),
@@ -1277,14 +1332,14 @@ psc_pst |>
       abund > mod_abd_abund ~ "A",
       PSC_StockName == "Interior Fraser" ~ "L",
       is.na(low_mod_abund) ~ ""
-      ) |> 
+    ) |> 
       factor(levels = c("A","M","L"))
   ) |> 
   drop_na(abd) |> #filter(abd != "") |> 
   count(`Catch Year`, abd) |> 
   ggplot() +
-    geom_col(aes(`Catch Year`, n, fill = abd), color = "grey") +
-    scale_fill_manual(name = "Status", values = c("#C6F5BA","white","#F5E298"), aesthetics = c("color","fill")) +
+  geom_col(aes(`Catch Year`, n, fill = abd), color = "grey") +
+  scale_fill_manual(name = "Status", values = c("#C6F5BA","white","#F5E298"), aesthetics = c("color","fill")) +
   scale_y_continuous("Num. Mgmt. Units", breaks = 1:11, labels = 1:11)
 
 
@@ -1294,22 +1349,88 @@ psc_pst |>
 
 Estimated post-season ocean age-3 cohort abundances for the MUs are depicted below. Abundances for BC and US Inside MUs tend to be synchronous, with above- or below-average abundances occurring in the same years (e.g., high in 2001, low in 2006). Outside MUs are less synchronous and years with high abundances for Grays Harbor don't necessarily correspond to high abundances for other MUs.
 
-**Estimated Post-season Ocean Age-3 Abundances of BC Coho Salmon Management Units; Catch Years 2004-2021.  update to 2022 when available**
+**Estimated Post-season Ocean Age-3 Abundances of BC Coho Salmon Management Units**
+```{r}
+plot_abund = function(dat, region, label){
+  dat |> 
+    distinct(`Catch Year`, PSC_Region, PSC_StockName, ocean_abund_sum) |> 
+    filter(PSC_Region == region) |> 
+    ggplot(aes(x = `Catch Year`, y = ocean_abund_sum, col = PSC_StockName))+
+    geom_path(linewidth = 1)+
+    theme_bw(base_size = 16)+
+    scale_y_continuous(labels = \(x) format(x, big.mark = ",", scientific = FALSE))+
+    scale_x_continuous(breaks = min(dat$`Catch Year`):max(dat$`Catch Year`))+
+    labs(y = "Ocean Age-3 Abundance",
+         title = label,
+         col = "")+
+    theme(legend.position = "top",
+          axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+}
 
-![](images/BC_Abund_by_yr.png){width=100% fig-alt="BC MU Ocean Age-3 Abundances by Year"}
+plot_abund(psc_pst |> filter(`Catch Year` >= 2004), "Canada", "BC Management Units")
 
-**Estimated Post-season Ocean Age-3 Abundances of US Inside Coho Salmon Management Units; Catch Years 2004-2021.  update to 2022 when available**
+# psc_pst |> 
+#   distinct(`Catch Year`, PSC_Region, PSC_StockName, ocean_abund_sum) |> 
+#   filter(PSC_Region == "Canada") |> 
+#   ggplot(aes(x = `Catch Year`, y = ocean_abund_sum, col = PSC_StockName))+
+#   geom_path()+
+#   theme_bw(base_size = 16)+
+#   labs(y = "Ocean Age-3 Abundance",
+#        title = "BC Management Units",
+#        col = "")+
+#   theme(legend.position = "top")
+```
 
-![](images/US_Inside_Abund_by_yr.png){width=100% fig-alt="US Inside MU Ocean Age-3 Abundances by Year"}
+<!-- ![](images/BC_Abund_by_yr.png){width=100% fig-alt="BC MU Ocean Age-3 Abundances by Year"} -->
 
-**Estimated Post-season Ocean Age-3 Abundances of US Outside Coho Salmon Management Units; Catch Years 2004-2021. update to 2022 when available**
+**Estimated Post-season Ocean Age-3 Abundances of US Inside Coho Salmon Management Units**
 
-![](images/US_Outside_Abund_by_yr.png){width=100% fig-alt="US Outside MU Ocean Age-3 Abundances by Year"}
+```{r}
+plot_abund(psc_pst |> filter(`Catch Year` >= 2004), "US Inside", "US Inside Management Units")
+```
 
 
-**Summary of the number of MUs in each abundance category, based on post-season assessments, of catch years 2004 through 2021. This figure is limited to the US MUs and the Interior Fraser MU. **
 
-![](images/MU_Status_by_yr.png){width=100% fig-alt="MU Abundance Status by Year"}
+<!-- ![](images/US_Inside_Abund_by_yr.png){width=100% fig-alt="US Inside MU Ocean Age-3 Abundances by Year"} -->
+
+**Estimated Post-season Ocean Age-3 Abundances of US Outside Coho Salmon Management Units**
+
+
+```{r}
+plot_abund(psc_pst |> filter(`Catch Year` >= 2004), "US Outside", "US Outside Management Units")
+```
+
+<!-- ![](images/US_Outside_Abund_by_yr.png){width=100% fig-alt="US Outside MU Ocean Age-3 Abundances by Year"} -->
+
+
+**Summary of the number of MUs in each abundance category, based on post-season assessments.**
+
+```{r}
+psc_pst |> 
+  distinct(`Catch Year`, PSC_Region, PSC_StockName, abund, low_mod_abund, mod_abd_abund) |> 
+  mutate(
+    PSC_Region = factor(PSC_Region, levels = c("Canada","US Inside","US Outside")),
+    abd = case_when(
+      abund < low_mod_abund ~ "Low",
+      abund >= low_mod_abund & abund <= mod_abd_abund ~ "Moderate",
+      abund > mod_abd_abund ~ "Abundant",
+      is.na(low_mod_abund) ~ ""
+    )) |> 
+  count(`Catch Year`, abd) |> 
+  filter(abd != "") |> 
+  mutate(abd = factor(abd, c("Abundant", "Moderate", "Low"))) |> 
+  ggplot(aes(x = `Catch Year`, y = n, fill = abd)) +
+  scale_fill_manual(limits = c("Low", "Moderate", "Abundant"),
+                    values = c("coral", "cornflowerblue", "lightgreen"))+
+  geom_col(width = 0.5, alpha = 0.8)+
+  theme_bw(base_size = 15)+
+  scale_x_continuous(breaks = min(psc_pst$`Catch Year`):max(psc_pst$`Catch Year`))+
+  labs(y = "# of Management Units", fill = "")+
+  theme(legend.position = "top",
+        axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
+
+<!-- ![](images/MU_Status_by_yr.png){width=100% fig-alt="MU Abundance Status by Year"} -->
 
 ### Fishery Exploitaion Rate Overview 
 
@@ -1333,7 +1454,7 @@ psc_pst |>
   gt(
     groupname_col = "PSC_Region",
     caption = "Annual FRAM-estimated Exploitation Rates as harvest / abundance"
-    ) |> 
+  ) |> 
   cols_hide(`1998`:`2010`) |> 
   fmt_percent(columns = -PSC_StockName, decimals = 1)
 
@@ -1357,7 +1478,7 @@ psc_pst |>
       mean = ~mean(.), 
       q75 = ~quantile(., 0.75),
       max = ~max(.)
-      )),
+    )),
     .groups = "drop") |> 
   filter(mort_er_median > 0.005) |> 
   split(~PSC_StockName) |> 
@@ -1370,7 +1491,7 @@ psc_pst |>
       geom_pointrange(aes(y = FisheryTitle, x = mort_er_median,
                           xmin = mort_er_q25, xmax = mort_er_q75), linewidth = 1.0, fatten = 2) +
       scale_x_continuous(labels = scales::percent) +
-    # facet_wrap(~PSC_StockName, scales = "free", ncol = 2) +
+      # facet_wrap(~PSC_StockName, scales = "free", ncol = 2) +
       labs(x="",y="",subtitle = .x$PSC_StockName[1])
   ) |> 
   wrap_plots(ncol = 2, guides = "collect") +
@@ -1387,15 +1508,80 @@ Forecasts are integral to Coho Salmon management in the Pacific Northwest. These
 
 Pre-season forecasts of all of the MUs over the catch years 2004 through 2021 have often (63%) been within the abundance based categories assigned post-season. Forecasts were too high 24% of the time and too low 13% of the time. The forecasts for catch years 2005 and 2011 were very good, resulting in no change in abundance categories from pre- to post-season estimates of abundance. Forecasts were poor for catch years 2006, 2015, and 2021, where less than 50% of the forecasted MUs were within the abundance category assigned post-season. There does not appear to be an obvious trend in forecast performance of abundance categories across all MUs with available forecasts over catch years 2004 through 2021.
 
-![](images/MU_forecast_perf.png){width=100% fig-alt="MU Forecast Performance"}
+```{r}
+ests.post = psc_pst |> 
+  distinct(`Catch Year`, PSC_Region, PSC_StockName, abund, low_mod_abund, mod_abd_abund) |> 
+  mutate(
+    PSC_Region = factor(PSC_Region, levels = c("Canada","US Inside","US Outside")),
+    abd = case_when(
+      abund < low_mod_abund ~ 1,
+      abund >= low_mod_abund & abund <= mod_abd_abund ~ 2,
+      abund > mod_abd_abund ~ 3,
+      is.na(low_mod_abund) ~ NA
+    )) |> 
+  filter(!is.na(abd))  |> 
+  select("Catch Year", PSC_Region, PSC_StockName, abd)
+
+ests.pre = psc_pre |> 
+  distinct(`Catch Year`, PSC_Region, PSC_StockName, abund, low_mod_abund, mod_abd_abund) |> 
+  mutate(
+    PSC_Region = factor(PSC_Region, levels = c("Canada","US Inside","US Outside")),
+    abd = case_when(
+      abund < low_mod_abund ~ 1,
+      abund >= low_mod_abund & abund <= mod_abd_abund ~ 2,
+      abund > mod_abd_abund ~ 3,
+      is.na(low_mod_abund) ~ NA
+    )) |> 
+  filter(!is.na(abd))  |> 
+  select("Catch Year", PSC_Region, PSC_StockName, abd)
+
+
+ests.joint = inner_join(ests.post, ests.pre, by = c("Catch Year", "PSC_Region", "PSC_StockName"),
+                        suffix = c("_post", "_pre")) |> 
+  mutate(prediction = case_when(
+    abd_post == abd_pre ~ "No Change",
+    abd_post < abd_pre ~ "Too High",
+    abd_post > abd_pre ~ "Too Low"
+  )) |> 
+  count(`Catch Year`, PSC_Region, prediction) |> 
+  mutate(prediction = factor(prediction, c("Too High", "No Change", "Too Low")))
+
+
+plot_mus = function(dat, label){
+  ggplot(data = dat,
+         aes(x = `Catch Year`, y = n, fill = prediction)) +
+    scale_fill_manual(limits = c("Too Low", "Too High", "No Change"),
+                      values = c("goldenrod", "coral", "lightgreen"))+
+    geom_col(width = 0.5)+
+    theme_bw(base_size = 15)+
+    scale_x_continuous(breaks = min(dat$`Catch Year`):max(dat$`Catch Year`))+
+    labs(y = "# of Management Units", fill = "",
+         title = label)+
+    theme(legend.position = "top",
+          axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+}
+plot_mus(ests.joint, label = "All")
+```
+
+<!-- ![](images/MU_forecast_perf.png){width=100% fig-alt="MU Forecast Performance"} -->
 
 Pre-season forecasts for the five US Inside MUs over catch years 2004 through 2021 were within the abundance based categories assigned post-season 54% of the time, too high 28% of the time, and too low 18% of the time. Forecasting was poor for catch years 2006 and 2010, where only 1 MU was forecasted within the abundance category assigned post-season. In addition, only two of the five forecasted MUs were within the abundance category assigned post-season in each of eight additional catch years. Forecasts were more often correct (72% of the years) for the Hood Canal MU, followed by the US Strait of Juan de Fuca MU (56%), Skagit and Stillaguamish MUs (50%), and least correct for the Snohomish MU (44% of the years).  
 
-![](images/US_Inside_forecast_perf.png){width=100% fig-alt="US Inside MU Forecast Performance"}
+```{r}
+plot_mus(ests.joint |> 
+           filter(PSC_Region == "US Inside"), label = "US Inside")
+```
+
+<!-- ![](images/US_Inside_forecast_perf.png){width=100% fig-alt="US Inside MU Forecast Performance"} -->
 
 Forecasts for the US Outside MUs performed better, on average, than the US Inside forecasts of abundance categories. Pre-season forecasts for the four US Outside MUs over catch years 2004 through 2021 were within the abundance based categories assigned post-season 64% of the time, too high 25% of the time, and too low 11% of the time. The forecasts for catch years 2005, 2009-2011, and 2014 were very good, resulting in no change in abundance categories from pre- to post-season estimates of abundance. Forecasting performance was poor for catch years 2006, 2015, and 2021. Forecasts were more often correct (72% of the years) for the Hoh and Quillayute MUs, followed by the Queets MU (61%), and least correct for the Grays Harbor MU (50% of the years).
 
-![](images/US_Outside_forecast_perf.png){width=100% fig-alt="US Outside MU Forecast Performance"}
+```{r}
+plot_mus(ests.joint |> 
+           filter(PSC_Region == "US Outside"), label = "US Outside")
+```
+
+<!-- ![](images/US_Outside_forecast_perf.png){width=100% fig-alt="US Outside MU Forecast Performance"} -->
 
 *A question for Southern Panel Members --> Would you like to see summaries using forecasted and post-season abundances in addition to abundance categories?*  
 
@@ -1519,7 +1705,7 @@ With the advent of technology to automatically remove adipose fins and/or insert
 (add more description here) (@fig-IFR_For)
 
 ADD Table "IFR_Forecasts" from excel file.  Return year observed and forecasted Interior Fraser River Coho MU pre-fishery abundances from 1998 to 2019. Pre-fishery abundance is estimated by backwards FRAM.
- 
+
 ![Forecasted and estimated abundances of Interior Fraser River Coho as well as absolute percent error of the yearly forecast.](images/IFR_Forecasts.png){#fig-IFR_For}
 
 ##### Fishery Mortality and Escapement
@@ -1624,11 +1810,11 @@ ADD Table (from CWT summaries or "LWFR_cwts" worksheet.  Total hatchery releases
 
 ###### Forecast Methods
 Due to data deficiencies, pre-season system-wide forecasts are not calculated for the LWFR Coho MU. However, under Annex four of the PST (PSC 2019), Canada and the United States have agreed to estimate fishery impacts on the Southern Coho MUs using the Fisheries Regulation Assessment Model (FRAM). FRAM is a discrete, time-step, age-structured, deterministic, model that is used to predict escapement and ER (Cook-Tabor 2012). FRAM is founded in a base period of stock-specific ocean distributions from 1986 to 1992 constructed from CWT recoveries from 198 fisheries (Fisheries and Oceans Canada 2019). The model estimates escapement and ER for the upcoming year using past Coho encounters scaled to represent present stock abundances and catch (Fisheries and Oceans Canada 2019). For the LWFR MU, the Inch Creek indicator stock survival and run size is forecasted and incorporated into the FRAM model for pre-and post-season analysis on stock status. Survival is calculated by: 
-		need to fix this     Survival=(100  (C+E+M))/S
+need to fix this     Survival=(100  (C+E+M))/S
 Where percent survival equals catch (C) plus escapement (E) plus natural mortality (M) (which is assumed as negligible) divided by the abundance of brood year smolts (S) multiplied by 100%. The calculated survival rates are used as indicators of smolt releases and the resulting return of three-year-old adults including fisheries removals. 
 
 It has been shown that climatic indicators are correlated to biological processes including marine survival of salmon (DFO unpublished 2020b). Models use data on climatic trends to better inform future marine survival run size. Climate indicators such as Pacific Decadal Oscillation (PDO), North Pacific Gyre Oscillation (NPGO), El Nino Southern Oscillation (ENSO), and Sea Surface Temperature (SST) are included (DFO unpublished 2020b). Climatic models utilize a regression of the logit transformed marine survivals (Y) against the logit transformed climate index (X1) and the “odd year” status (X2). Each model follows this general equation:
-		need to fix this 	Y_(t+1)=X_(1t+1) b_1+X_(2t+2) b_2+a
+need to fix this 	Y_(t+1)=X_(1t+1) b_1+X_(2t+2) b_2+a
 
 Where the regression coefficients (b) are multiplied by the climate index value for the forecast year (X1t+1) and “odd year” status for the forecast year (X2t+1) summed together with the regression intercept (a). The best-preforming model for each MU is determined through retrospective analysis and a forecast is produced yearly. 
 
@@ -1660,27 +1846,27 @@ Grant et al. (2007) is the most recent reference for escapement monitoring for C
 
 *Lower Fraser* 
 In the past, two mark re-capture programs were implemented in the lower Fraser. The Upper Pitt River program ran from 1993 to 2001 with a yearly escapement average estimate of just over 10,000 fish for the nine years. The Salmon River program ran from 1997 to 2008. Currently, there are no mark re-capture projects aimed at assessing Coho in the lower Fraser. Alternatively, stream walks have been conducted throughout the Lower Mainland in the following streams:
-	+ Barnes
-	+ Blaney 
-	+ Chilqua
-	+ Coghlan
-	+ Hicks 
-	+ Hopedale
-	+ Kanaka 
-	+ Kawakawa 
-	+ McIntyre
-	+ North Alouette
-	+ Nathan
-	+ Norrish
-	+ Post 
-	+ Salmon
-	+ Siddle
-	+ Silverdale
-	+ Squawkum
-	+ Street
-	+ Whonnock 
-	+ Widgeon
-	+ Worth
++ Barnes
++ Blaney 
++ Chilqua
++ Coghlan
++ Hicks 
++ Hopedale
++ Kanaka 
++ Kawakawa 
++ McIntyre
++ North Alouette
++ Nathan
++ Norrish
++ Post 
++ Salmon
++ Siddle
++ Silverdale
++ Squawkum
++ Street
++ Whonnock 
++ Widgeon
++ Worth
 
 The objective of the stream walks is to estimate daily abundance throughout the entire run. Historical information on stream run timing is used to determine survey start and end dates. The two technicians use counters to tally live and dead counts of observed Coho in each stream. Carcasses may be sampled for length, sex, percent spawn, adipose presence/absence, CWT detection, and DNA analysis (Grant et al. 2007). The number of streams surveyed changes yearly based on the availability of staff and funding. Unfortunately, data on recent escapement trends is currently unavailable and remains a major data gap. 
 
@@ -1889,7 +2075,7 @@ static$releases |>
     legend.position = "bottom", legend.title = element_blank(),
     strip.background = element_rect(fill = NA), strip.text = element_text(colour = 1, hjust = 0)
   )
-  
+
 ```
 
 ```{r fig_hatch_stock_releases_mu_cwt_only_skagit, fig.cap="Total number of coded-wire-tagged hatchery Coho Salmon released, by clip status, within the Skagit MU for brood years 1983 through 2020.", fig.height=4, fig.width=6}
@@ -1915,13 +2101,13 @@ static$releases |>
     legend.position = "bottom", legend.title = element_blank(),
     strip.background = element_rect(fill = NA), strip.text = element_text(colour = 1, hjust = 0)
   )
-  
+
 ```
 
 **Double-index tag codes released within the Skagit MU, brood years 1994 through 2021. **
 
 |** Brood Year **|** Hatchery **|** DIT Group ID **|** Tag Code **|** Mark **|** No. Released **| 
- |:--------:|:--------:|:--------:|:--------:|:--------|--------:|
+|:--------:|:--------:|:--------:|:--------:|:--------|--------:|
 |	1994	|	MARBLEMOUNT HATCHERY	|	04199600000211	|	635909	|	Clipped	|	 99,623 	|
 |	1994	|	MARBLEMOUNT HATCHERY	|	04199600000211	|	635906	|	Unclipped	|	 45,865 	|
 |	1995	|	MARBLEMOUNT HATCHERY	|	04199700000212	|	636158	|	Clipped	|	 42,489 	|
@@ -2044,10 +2230,10 @@ swifd <- sf::read_sf("~/Downloads/swifd/SWIFD.shp") |> sf::st_zm()
 
 swifd |> 
   filter(SPECCODE=="CO", between(WRIA,3,4)) |> 
-    mapview::mapview(zcol = "USETYPE_DE")
+  mapview::mapview(zcol = "USETYPE_DE")
 #  filter(USE_TYPE==2) |> 
-  ggplot() + geom_sf(aes(color = USETYPE_DE))
-  
+ggplot() + geom_sf(aes(color = USETYPE_DE))
+
 ```
 
 
@@ -2069,7 +2255,7 @@ Post-season exploitation rate estimates are also generated using the Post-Season
 
 ##### Enhancement
 There are numerous hatchery programs releasing Coho Salmon within the Skagit Basin. Since brood year 1983 to 2020, the largest ones include Marblemount, Baker Lake, Puget Sound Energy, and Swinomish Channel PD Hatchery programs. Over this time period approximately 690,000 Coho have been released annually on average. Marblemount Hatchery made up the majority (77%) of all releases, followed by Baker Lake Hatchery (9%), Puget Sound Energy (7%; ended with 2009 brood), and Swinomish Channel PD (2%; ended with 1990 brood). Prior to the implmentation of mass marking, total hatchery production within the MU of brood years 1983–1994 were highly variable, ranging from a high of three million fish released from brood year 1983 to a low of 380,000 fish from brood year 1988 (**Figure **) [@RMISD_1977]. With the advent of technology to automatically remove adipose fins and/or insert CWTs using mobile “tagging trailers”, mass marking of hatchery fish was implemented for Coho Salmon in the mid-1990s [@SFEC_1999]. Mass marking allows mark selective fisheries (MSF) for Coho Salmon in which marked hatchery fish can be retained and unmarked wild fish released, resulting in higher harvest rates on hatchery fish than wild fish. Mass marking was fully implemented for Coho Salmon from the Columbia River, Washington coast, and Puget Sound with the 1997 brood, including both mass marking (adipose fin clip) the vast majority of hatchery fish and use of select double index tag (DIT) groups (paired clipped and unclipped fish with CWTs) [@SFEC_1999]. Double index tagging of hatchery fish at Marblemount Hatchery began with the 1994 brood and mass-marked fish were released beginning with brood year 1995. Hatchery production within the MU for brood years 1995 to brood year 2020 have averaged 500,000 annually, with a low of 252,000 in 2000 and a high of 795,000 in 2018. Of these, an average of 290,000 hatchery fish have been mass marked and released within the MU (fig_hatch_stock_releases_skagit) [@RMISD_1977]. 
-    
+
 
 ```{r fig_hatch_stock_releases_skagit, fig.cap="Hatchery production of Coho Salmon released within the Skagit MU, brood years 1983 through 2020.", fig.height=6.5, fig.width=6.5}
 static$releases |> 
@@ -2094,7 +2280,7 @@ static$releases |>
     legend.position = "bottom", legend.title = element_blank(),
     strip.background = element_rect(fill = NA), strip.text = element_text(colour = 1, hjust = 0)
   )
-  
+
 ```
 
 #### Management Unit Performance 
@@ -2273,7 +2459,7 @@ In 2009, the Council adopted annual management objectives for Puget Sound Coho a
 ###### Indicator Stocks
 
 Hatchery and wild coded-wire tagging programs have been limited within the Stillaguamish basin. A smolt trapping study conducted by the Stillaguamish Tribe on brood years 1984–87, where approximately 47,000 Coho smolts were captured, clipped and tagged, and released annually, is the only source of wild tagging data from the Stillaguamish Watershed. Highly variable numbers of coded-wire-tagged and ad-clipped fish have been released from Harvey Creek which still operates, and Jim Creek and North Fork Hatcheries that have been discontinued. On average, 57,000 coded-wire-tagged fish have been released annually from Harvey Creek when the program has been implemented.  Since 1986, this hatchery has reported releases for 20 broods, however, tagged fish have been released for only 8 of these brood years. The North Fork Hatchery released Coho smolts in 10 years during the period of 1988 to 2011; however, tagged fish were released for only BYs 2009 through 2011. Due to a lack of consistent tagging programs within the MU, analysts have used the following two indicator stocks releases in the Snohomish MU as surrogates in the development of the FRAM base period and subsequent CWT-based exploitation rate analyses: Bernie Gobin Hatchery (Tulalip Creek) and Wallace River Hatchery (Skykomish) (CoTC 2011). Wallace River fish have been double index tagged starting with brood year 1996.
-  
+
 ###### Forecast Methods
 Each year, a preseason abundance forecast of age-3 ocean recruits for Stillaguamish Coho Salmon is developed jointly by the Stillaguamish and Tulalip Tribes and WDFW by February. These annual forecasts are described in the Pacific Fishery Management Council’s Preseason Forecast I document each February [@PFMC_1_2012; www.pcouncil.org]. This is part of a larger WDFW-tribal effort to develop forecasts of wild Coho run size for all primary and most secondary management units in Puget Sound and the Washington coast [@Seiler_et_al_1995; @Zimmerman_2011]. These forecasts rely on estimates of wild Coho Salmon production (i.e., smolts) paired with estimates of marine survival.  Wild Coho Salmon production estimates for each of the primary and secondary management units in Puget Sound were derived from results of juvenile trapping studies conducted in the Skagit, Stillaguamish, Snohomish, Green, Nisqually, and Deschutes rivers, as well as in tributaries to Lake Washington and Hood Canal. Analysis of these long-term data sets have demonstrated that wild Coho smolt production is limited by a combination of factors including seeding levels (i.e., escapement), environmental effects (flows, marine derived nutrients), and habitat degradation [@Zimmerman_2011]. 
 
@@ -2543,7 +2729,7 @@ ToDo --> reference Figure 6.1
 ToDo --> add Figure 4.4
 
 **Total number of Hood Canal wild Coho tagged and released, brood years 1983-2020 (data downloaded on ??; [@RMISD_1977])
-	
+
 Exploitation rate estimates are available for the Quilcene NFH and George Adams CWT programs. Coho broodstock are not collected at the net pen release sites, so there is no complete accounting of escapement of coded-wire-tagged Coho originating from these facilities, and exploitation rates cannot be directly calculated for these programs. The intensive fisheries adjacent to the Quilcene Bay and Port Gamble net pens are designed to harvest the majority of available Coho retuning to these areas, so the sum of all tag recoveries in fisheries and escapement are considered to provide reasonable relative estimates of marine survival for these programs, albeit with some negative bias.  
 
 ###### Forecast Methods
@@ -2551,7 +2737,7 @@ Exploitation rate estimates are available for the Quilcene NFH and George Adams 
 Since 1996, WDFW and tribal biologists have developed forecasts of wild Coho run size for all primary and most secondary management units in Puget Sound and the Washington coast [@Zimmerman_2013]. These annual forecasts are described in the Pacific Fishery Management Council’s Preseason Forecast I document available each February [@PFMC_1_2013; www.pcouncil.org].  These forecasts rely on estimates of wild Coho production (i.e., smolts) paired with estimates of marine survival. Wild Coho production estimates for each of the primary and secondary management units in Puget Sound were derived from results of juvenile trapping studies conducted in the Skagit, Stillaguamish, Snohomish, Green, Nisqually, East Kitsap, and Deschutes rivers as well as in tributaries to Lake Washington and Hood Canal. Analyses of these long-term data sets have demonstrated that wild Coho smolt production is limited by a combination of factors including seeding levels (i.e., escapement), environmental effects (flows, marine derived nutrients), and habitat degradation [@Zimmerman_2013].
 
 For Hood Canal MU, natural smolt production and adult escapements are intensively monitored by WDFW at the Big Beef Creek Research Station and three nearby tributaries that enter Hood Canal on the Kitsap Peninsula northeast of Bremerton. A permanent WDFW upstream/downstream migrant weir is located on Big Beef Creek just upstream of the estuary, and juvenile fence traps are installed annually on Little Anderson, Seabeck, and Stavis creeks, which are smaller adjacent tributaries (WRIAs 15.0377, 15.0400, and 15.0404). 
-	
+
 Production is not directly measured in all Hood Canal tributaries; therefore estimates are based on an expansion of the measured production. Three approaches have been used to expand measured production at Big Beef Creek and neighboring tributaries to a Hood Canal estimate [@Zimmerman_2012]. The first approach assumes that Coho production from four tributaries (Little Anderson, Big Beef, Seabeck, and Stavis creeks) is 5.9% that of the entire Hood Canal [@Zillges_1977]. A subsequent review by the Hood Canal Joint Technical Committee (HCJTC) estimated that Coho production from these same four tributaries to be 7.6% that of Hood Canal [@HCJTC_1994]. A third approach [@Volkhardt_&_Seiler_2001], based on the HCJTC forecast review in summer of 2001, estimated that Coho production from Big Beef Creek was 4.56% that of Hood Canal.  
 
 Estimated smolt production in the Hood Canal MU averaged 538,000 smolts annually during 1995 to 2022.  Smolt production has varied from a low of 67,000 in 2021 to a high of 995,000 in 2009 (Table 4.1).  
@@ -2606,7 +2792,7 @@ The 2023 Hood Canal natural OA3 abundance forecast is 37,888, compared to the 20
 ###### Escapement Monitoring
 
 The method used for estimating natural Coho escapements in this MU is the Base-Year Index approach [@Haymes_2008]. This approach is used to estimate annual Coho escapements to most of the major river basins and geographically associated aggregations of smaller independent tributaries in the Puget Sound region, exclusive of the Strait of Juan de Fuca. The Base-Year Index approach was adopted for estimating Coho escapements in this region because the distribution of Coho spawners is geographically broad in each river basin and an approach is required that is not dependent on the direct census of a large portion of the total spawning habitat, and that can use serial live and/or dead fish observations instead of spawning redd enumeration because the multiple species overlap and/or high spawning densities often make Coho redd enumeration impractical.	
-	
+
 The Base-Year Index method allows expansion of an annual index of abundance developed from serial field counts of live or dead salmon, collected in a relatively small fraction of the total freshwater habitat to an estimate of basin or region-total escapement.  A series of point counts of live Coho abundance are made in several fixed-location survey reaches, distributed throughout each major river basin or region. At the end of the spawning season an abundance index is developed for each index survey reach using the “area under the curve” (AUC) approach [@Ames_1984; @Irvine_et_al_1993]. The sum of the individual abundance index values from an individual escapement estimation unit (usually a river basin) are then multiplied by a historical “base year” basin-total escapement estimate developed from a mark-recapture study. The resulting value is divided by the base year index of abundance calculated for the same survey reaches that were monitored in the current escapement year, to produce the basin-total escapement estimate for the current year.
 
 In the Hood Canal MU, escapements are estimated in 10 survey reaches covering 9 miles (14.5 km) [@Haymes_2008].  In addition, natural smolt production and adult escapements are intensively monitored by WDFW at the Big Beef Creek Research Station and 3 nearby tributaries that enter Hood Canal on the Kitsap Peninsula northeast of Bremerton. A permanent WDFW upstream/downstream migrant weir is located on Big Beef Cr. just upstream of the estuary, and  juvenile fence traps are installed annually on 3 smaller adjacent tributaries (WRIAs 15.0377, 15.0400, and 15.0404).  The adult escapement information collected at this weir is used as an index abundance adjustment scalar in the Base-Year Index escapement estimation process for the MU. Spawning redd enumeration-based accounting of adult escapement is currently conducted on the three study streams adjacent to Big Beef that are being monitored for juvenile production as part of an ongoing habitat productivity study [@Volkhardt_et_al_2007].  Historical trends in escapement for the Hood Canal MU are provided in Table 5 3 and Figure 4 2. Known distribution of spawners within the basin is depicted in Figure 4 3.
@@ -2736,7 +2922,7 @@ The natural forecast includes both Eastern and Western Strait of Juan de Fuca dr
 ##### Enhancement
 
 Hatchery production within this MU has averaged 1.3 million Coho Salmon released annually over broods 1983 through 2020.  Most of this production has been split between the Dungeness (50%) and the Lower Elwha Hatchery (44%). Approximately 673,000 Coho have been released annually from the Dungeness Hatchery over this period with another 626,000 released annually from the Lower Elwha Hatchery beginning with brood 1985. Mass marking of hatchery fish began with brood 1995 at the Lower Elwha Hatchery and with brood 1996 at the Dungeness Hatchery, averaging 1.1 million annually in total in recent years.
- 
+
 #### Management Performance 
 
 ##### Forecast Evaluation
