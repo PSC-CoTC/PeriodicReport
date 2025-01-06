@@ -11,6 +11,10 @@ params:
   clean_run: true
 editor_options:
   chunk_output_type: console
+glossary:
+    path: glossary.yml
+    popup: hover
+    show: true
 format:
   html:
     toc: true
@@ -25,25 +29,13 @@ format:
     reference-doc: /Users/auerbdaa/O/code/quarto_template.docx
 ---
 
-<header style="color: #ff4000; font-weight: bold; font-size: 40px; text-align:center">
-
-<p>
+Dev note: using quarto-glossary to add hover-over text. Details and installation guide here: https://debruine.github.io/quarto-glossary/
 
 !! DRAFT DOCUMENT UNDER DEVELOPMENT !!
 
-</p>
-
-The CoTC intends to produce this report online in HTML format. The current draft HTML version has much more functionality, better format, and looks more visually appealing than the Word document.  However, we are providing a Word document in pdf format to the Southern Panel to facilitate review and collaboration.   
-
-</header>
-
 **TO DO**
 
-- re-update `psc_pst` with final final final 2022 postseason run
-- get multiyear mdb; update `params$mdb` (unused in fig/tables but for knit text)
-- run chunk `rebuild_psc_csv` to gen "psc_postfram_1998_2022.csv"
-- make sure to check and update `fram$runIDs` to include 2022 (should be runid 46)
-- update any `psc_pre` preseason run changes following a similar approach and the `rebuild_psc_pre_csv` chunk
+- get multiyear mdb; update `params$mdb` (unused in fig/tables but for knit text) (CBE note: I think this is now unnecessary?)
 - further text revisions; drop tables from StaticTable
 - figures
 - post
@@ -51,6 +43,7 @@ The CoTC intends to produce this report online in HTML format. The current draft
 - make simple stacked bar of stoplight of nochange/toohigh/toolow
 - depiction of 'un-used' catch, either fish or ER?
 - abundance figures overlaying MUs within regions (US in, US out, BC)
+- CBE: Populate glossary hover-over tooltips, using glossary.yml and inserting based on nomenclature here: https://debruine.github.io/quarto-glossary/
 
 **CBE change log**
 
@@ -561,6 +554,8 @@ tibble(
 
 ```
 
+<span style="color: red;">**Carrie: This table looks identical to the one in the last section. Do we need this duplication?**</span>
+
 ## Fishery Overview
 
 Under the CoABM regime, each Party is required to regulate its fisheries so as not to exceed ER constraints on MUs. Fishery Management Areas for British Columbia (@fig-dfomap), Washington (@fig-wdfwmap), and Oregon (@fig-odfwmap) are shown below.
@@ -587,7 +582,7 @@ Recreational fishing for Coho Salmon in BC tidal waters continues to be importan
 
 Due to conservation concerns, most notably for the Interior Fraser MU, Canadian Coho Salmon fisheries have seen unprecedented restrictions since 1997. In 1998 and 1999, no directed fisheries on naturally-spawning stocks of Coho Salmon were permitted; mandatory non-retention and non-possession of incidentally caught Coho Salmon was implemented in all areas, with the exception of some terminal hatchery locations. In the Pacific Region, (i.e., all marine waters of BC), barbless hooks became required for all salmon-directed commercial and recreational hook and line gear in 1998, a regulation that remains in effect. Pacific Region waters were classified as red or yellow zones. In red zones, areas where Thompson River Coho from the Interior Fraser River MU were known to be prevalent, fishing was restricted to very limited experimental selective fisheries, as well as some limited First Nations’ fisheries to meet food, social, and ceremonial requirements. Red zones included inshore waters of Victoria to Barkley Sound and offshore waters of Barkley Sound to Quatsino Sound, from June to September. Special management zones (SMZs), areas of mandatory Coho Salmon non-retention with special restrictions, were identified with the intent to avoid Coho Salmon encounters. Fisheries were only permitted in locations and times when Thompson River Coho Salmon could be avoided or released unharmed. These areas were subject to in-season adjustments, including time and area closures for all sectors. Fisheries conducted in these SMZs were monitored to ensure Coho encounter rates did not become too high, and tissue samples were taken for stock identification. In yellow zones, where endangered stocks were not prevalent, a selective fishing strategy was implemented for all commercial and recreational fisheries [**Jeromy comment: Does this mean in red zones, endangered stocks (under SARA?) are prevalent?  This context is not provided.**]. These fisheries were required to release any live Coho Salmon that were caught during operations. Mandatory logbooks and an onboard observer program were initiated in commercial fisheries. Limited Coho Salmon retention was allowed only for First Nations and recreational fisheries.
 
-Since 2000, fisheries impacting naturally-spawning Coho Salmon from southern BC, Washington State, and Oregon have been managed under the PST ABM regime. The ABM plan constrains total fishery exploitation on key stock MUs in BC For each MU, annual limits of fishing mortality are established based on the categorical level of abundance and the health of the naturally-spawning stocks. In Canada, low status of Interior Fraser Coho Salmon has constrained southern BC fisheries for the last decade. The Southern US has been limited to 10% ER on Coho originating from the Interior Fraser MU. Southern BC fisheries, in waters south of Cape Caution where Interior Fraser Coho are prevalent, have been managed to a maximum 3% total fishing mortality rate on the Interior Fraser Coho MU. Non-retention of naturally-spawning Coho is generally in effect except for First Nations FSC opportunities in specific terminal systems where abundance permits and where retention of by-catch during fisheries for other species is permitted. Release of unmarked Coho Salmon during periods when Interior Fraser Coho may be caught is required in all Canadian commercial and recreational fisheries.
+Since 2000, fisheries impacting naturally-spawning Coho Salmon from southern BC, Washington State, and Oregon have been managed under the PST ABM regime. The ABM plan constrains total fishery exploitation on key stock MUs in BC For each MU, annual limits of fishing mortality are established based on the categorical level of abundance and the health of the naturally-spawning stocks. In Canada, low status of Interior Fraser Coho Salmon has constrained southern BC fisheries for the last decade. The Southern US has been limited to 10% ER on Coho originating from the Interior Fraser MU. Southern BC fisheries, in waters south of Cape Caution where Interior Fraser Coho are prevalent, have been managed to a maximum 3% total fishing mortality rate on the Interior Fraser Coho MU. Non-retention of naturally-spawning Coho is generally in effect except for First Nations {{< glossary FSC >}} opportunities in specific terminal systems where abundance permits and where retention of by-catch during fisheries for other species is permitted. Release of unmarked Coho Salmon during periods when Interior Fraser Coho may be caught is required in all Canadian commercial and recreational fisheries.
 
 ### US Fisheries
 
@@ -597,13 +592,15 @@ Fisheries between Cape Falcon, Oregon and the US/Canada Border are constrained b
 
 Most Coho-directed recreational fisheries [**Jeromy comment: Freshwater and marine?  I think so, for WA, and Columbia River but would be good to add this qualifier in if true. More recently the OR coast freshwater fisheries are all non-selective, hence why I am asking for a bit of a qualifier here if possible.**] have been mark-selective since 1999. Non-Indian commercial troll fisheries have been mostly restricted to mark-selective Coho retention since 2000. Treaty Indian fisheries are not restricted to mark-selective retention of Coho Salmon.
 
+<span style="color: red;">**Carrie: With the fram databases we have, we could plot MSF vs non MSF by fishery type through time. Not sure if that would be helpful. **</span>
+
 ## Bilateral Assessment Tool (FRAM) Overview
 
 Coho fisheries are evaluated with the Coho Fisheries Regulation Assessment Model [(Coho FRAM)](https://framverse.github.io/fram_doc/calcs_data_coho.html), a bilaterally developed tool that is employed for both pre-season fishery planning and post-season estimation of escapements and exploitation rates [(see: pre- and post-season applications)](https://framverse.github.io/fram_doc/apps_coho.html). 
 
-Coho FRAM is an annual mixed-stock accounting model that evaluates a set of stock units within a set of fisheries over time periods within a single fishing year (the calendar year for Coho) (documentation on FRAM can be found here: https://framverse.github.io/fram_doc/). It can be used to estimate catch and escapement based on forecast abundance and planned fisheries (‘forward’), or it can be used to reconstruct ocean abundance from observed escapements and fisheries (‘backward’). 
+Coho FRAM is an annual mixed-stock accounting model that evaluates a set of stock units within a set of fisheries over time periods within a single fishing year (the calendar year for Coho) (documentation on FRAM can be found here: [https://framverse.github.io/fram_doc/](https://framverse.github.io/fram_doc/)). It can be used to estimate catch and escapement based on forecast abundance and planned fisheries (‘forward’), or it can be used to reconstruct ocean abundance from observed escapements and fisheries (‘backward’). 
 
-The Coho FRAM base period parameterization, determinining stock-fishery-timestep impacts, was constructed from stock-specific fishery recoveries of coded-wire tags (CWTs) within the time steps January to June, July, August, September, and October to December during coast wide fisheries from 1986 to 1992. The procedure used to generate base period data is depicted below (@fig-FRAMdev). For each base period year, post-season reconstruction of cohort abundances for each Coho MU is based on two different models: the Mixed-Stock Model (MSM) that estimates the Production Expansion Factors for each Production Region and RRTERM program that estimates stock-specific impacts for terminal marine and freshwater fisheries. The MSM uses CWT recoveries for each model stock expanded by the Production Expansion Factors to best describe the total catch in each marine mixed-stock fishery. The MSM/RRTERM cohort analysis has been used for post-season reconstructions for catch years 1986-2007. However, beginning with catch year 1993, too few coded-wire tags were recovered in mixed-stock fisheries to perform robust cohort analyses using the mixed-stock model.
+The Coho FRAM base period parameterization, determining stock-fishery-timestep impacts, was constructed from stock-specific fishery recoveries of coded-wire tags (CWTs) within the time steps January to June, July, August, September, and October to December during coast wide fisheries from 1986 to 1992. The procedure used to generate base period data is depicted below (@fig-FRAMdev). For each base period year, post-season reconstruction of cohort abundances for each Coho MU is based on two different models: the Mixed-Stock Model (MSM) that estimates the Production Expansion Factors for each Production Region and RRTERM program that estimates stock-specific impacts for terminal marine and freshwater fisheries. The MSM uses CWT recoveries for each model stock expanded by the Production Expansion Factors to best describe the total catch in each marine mixed-stock fishery. The MSM/RRTERM cohort analysis has been used for post-season reconstructions for catch years 1986-2007. However, beginning with catch year 1993, too few coded-wire tags were recovered in mixed-stock fisheries to perform robust cohort analyses using the mixed-stock model.
 
 ![Procedure used to generate base period data for Coho FRAM.](images/FRAMDevel.jpg){#fig-FRAMdev}
 
@@ -1888,7 +1885,7 @@ Due to management measures implemented to protect IFR Coho, retention of all Coh
 Catch monitoring programs vary depending on the characteristics of the fishery and available resources. Data is collected through either fisher-dependent or fisher-independent methods. Fisher-dependant estimates are collected through interviews either orally or in writing, while fisher-independent estimates are based on catch observed or verified by fishery monitors. Most fisheries are monitored using a combination of fisher-dependant and fisher-independent methods. 
 
 Food, Social, and Ceremonial (FSC) and Economic Opportunity (EO) Fisheries 
-Nations fishing for FSC needs are subject to different types of monitoring depending on the type of net and the location of the fishing area. Generally, all catch rate data is based on interviews with fishers. In some cases, the retained catch is counted by fishery monitors, either onboard or observed on the water. Nations fishing in an EO opening are required to land their catch at landing sites where a stationed monitor counts catch and collects release and effort data. Frequent vessel patrols and overflights are conducted in some areas to calculate instantaneous effort counts in both FSC and EO gillnet fisheries. Patrols in selective fisheries such as beach seines and shallow seines are used to ensure bycatch is recorded correctly. 
+Nations fishing for {{< glossary FSC >}} needs are subject to different types of monitoring depending on the type of net and the location of the fishing area. Generally, all catch rate data is based on interviews with fishers. In some cases, the retained catch is counted by fishery monitors, either onboard or observed on the water. Nations fishing in an EO opening are required to land their catch at landing sites where a stationed monitor counts catch and collects release and effort data. Frequent vessel patrols and overflights are conducted in some areas to calculate instantaneous effort counts in both {{< glossary FSC >}} and EO gillnet fisheries. Patrols in selective fisheries such as beach seines and shallow seines are used to ensure bycatch is recorded correctly. 
 
 *Commercial Fisheries* 
 Commercial catch is reported via phone-in log reports. Data is also verified through daily patrols where on the water monitors validate kept and release numbers. Commercial vessels are mandated to have an onboard revival tank to lower impacts to bycatch species such as wild Coho. Some commercial fleets are required to have onboard at-sea-observers to assess Coho encounter rates and fish conditions. Vessel patrols and overflights estimate boat counts to calculate instantaneous effort. 

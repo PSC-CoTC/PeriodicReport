@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="PSC Joint Coho Technical Committee">
-<meta name="dcterms.date" content="2024-12-19">
+<meta name="dcterms.date" content="2025-01-03">
 
 <title>Joint Coho Technical Committee Periodic Report</title>
 <style>
@@ -89,6 +89,7 @@ div.csl-indent {
 <script src="index_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="index_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="index_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="index_files/libs/quarto-contrib/glossary/glossary.css" rel="stylesheet">
 
 
 </head>
@@ -126,7 +127,7 @@ div.csl-indent {
   <ul>
   <li><a href="#canadian-management-units-this-needs-to-be-updated" id="toc-canadian-management-units-this-needs-to-be-updated" class="nav-link" data-scroll-target="#canadian-management-units-this-needs-to-be-updated"><span class="header-section-number">2.1</span> Canadian Management Units <em>(this needs to be updated)</em></a>
   <ul class="collapse">
-  <li><a href="#ifr-mu" id="toc-ifr-mu" class="nav-link" data-scroll-target="#ifr-mu"><span class="header-section-number">2.1.1</span> IFR MU</a></li>
+  <li><a href="#ifr-mu-this-needs-to-be-moved" id="toc-ifr-mu-this-needs-to-be-moved" class="nav-link" data-scroll-target="#ifr-mu-this-needs-to-be-moved"><span class="header-section-number">2.1.1</span> IFR MU (*this needs to be moved!)</a></li>
   </ul></li>
   <li><a href="#us-inside-management-units" id="toc-us-inside-management-units" class="nav-link" data-scroll-target="#us-inside-management-units"><span class="header-section-number">2.2</span> US Inside Management Units</a></li>
   <li><a href="#us-outside-management-units" id="toc-us-outside-management-units" class="nav-link" data-scroll-target="#us-outside-management-units"><span class="header-section-number">2.3</span> US Outside Management Units</a></li>
@@ -140,7 +141,6 @@ div.csl-indent {
   <li><a href="#us-preseason-abundance-forecasts" id="toc-us-preseason-abundance-forecasts" class="nav-link" data-scroll-target="#us-preseason-abundance-forecasts"><span class="header-section-number">3.2.1</span> US Preseason Abundance Forecasts</a></li>
   <li><a href="#development-of-us-preseason-fram-inputs" id="toc-development-of-us-preseason-fram-inputs" class="nav-link" data-scroll-target="#development-of-us-preseason-fram-inputs"><span class="header-section-number">3.2.2</span> Development of US Preseason FRAM Inputs</a></li>
   <li><a href="#us-inseason-management" id="toc-us-inseason-management" class="nav-link" data-scroll-target="#us-inseason-management"><span class="header-section-number">3.2.3</span> US Inseason Management</a></li>
-  <li><a href="#us-management-units-2023-exploitation-rate-constraints" id="toc-us-management-units-2023-exploitation-rate-constraints" class="nav-link" data-scroll-target="#us-management-units-2023-exploitation-rate-constraints"><span class="header-section-number">3.2.4</span> US Management Units 2023 Exploitation Rate Constraints</a></li>
   </ul></li>
   <li><a href="#canadian-fishery-planning-process" id="toc-canadian-fishery-planning-process" class="nav-link" data-scroll-target="#canadian-fishery-planning-process"><span class="header-section-number">3.3</span> Canadian Fishery Planning Process</a>
   <ul class="collapse">
@@ -267,7 +267,7 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">December 19, 2024</p>
+      <p class="date">January 3, 2025</p>
     </div>
   </div>
   
@@ -279,19 +279,11 @@ div.csl-indent {
 </header>
 
 
-<header style="color: #ff4000; font-weight: bold; font-size: 40px; text-align:center">
-<p>
-</p><p>!! DRAFT DOCUMENT UNDER DEVELOPMENT !!</p>
-<p></p>
-<p>The CoTC intends to produce this report online in HTML format. The current draft HTML version has much more functionality, better format, and looks more visually appealing than the Word document. However, we are providing a Word document in pdf format to the Southern Panel to facilitate review and collaboration.</p>
-</header>
+<p>Dev note: using quarto-glossary to add hover-over text. Details and installation guide here: https://debruine.github.io/quarto-glossary/</p>
+<p>!! DRAFT DOCUMENT UNDER DEVELOPMENT !!</p>
 <p><strong>TO DO</strong></p>
 <ul>
-<li>re-update <code>psc_pst</code> with final final final 2022 postseason run</li>
-<li>get multiyear mdb; update <code>params$mdb</code> (unused in fig/tables but for knit text)</li>
-<li>run chunk <code>rebuild_psc_csv</code> to gen “psc_postfram_1998_2022.csv”</li>
-<li>make sure to check and update <code>fram$runIDs</code> to include 2022 (should be runid 46)</li>
-<li>update any <code>psc_pre</code> preseason run changes following a similar approach and the <code>rebuild_psc_pre_csv</code> chunk</li>
+<li>get multiyear mdb; update <code>params$mdb</code> (unused in fig/tables but for knit text) (CBE note: I think this is now unnecessary?)</li>
 <li>further text revisions; drop tables from StaticTable</li>
 <li>figures</li>
 <li>post</li>
@@ -299,6 +291,7 @@ div.csl-indent {
 <li>make simple stacked bar of stoplight of nochange/toohigh/toolow</li>
 <li>depiction of ‘un-used’ catch, either fish or ER?</li>
 <li>abundance figures overlaying MUs within regions (US in, US out, BC)</li>
+<li>CBE: Populate glossary hover-over tooltips, using glossary.yml and inserting based on nomenclature here: https://debruine.github.io/quarto-glossary/</li>
 </ul>
 <p><strong>CBE change log</strong></p>
 <ul>
@@ -315,26 +308,26 @@ div.csl-indent {
 <section id="introduction" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
 <p>In response to a decline in natural Coho Salmon (<em>Onchorynchus kisutch</em>) abundance, the Pacific Salmon Commission established a Southern Coho abundance-based management regime (CoABM) in 1999 <span class="citation" data-cites="PSC_1999">(<a href="#ref-PSC_1999" role="doc-biblioref">Pacific Salmon Commission 1999</a>)</span>. This Southern Coho Management Plan (SCMP, also referred to as ABM, or ‘abundance based management’) aimed to conserve Coho Salmon Management Units (MUs of naturally-spawning Coho Salmon in southern British Columbia and Washington/Oregon) based on abundance status and escapement goals. The SCMP set out to constrain exploitation rates (ERs; defined as total fishing mortality divided by total fishing mortality plus escapement) below maximum levels (caps) on selected management units in order to achieve long-term Maximum Sustainable Harvests (MSH). These constraints are implemented by specifying ER caps for the individual MUs dependent on annual abundance status. During their respective preseason planning processes, the Parties use management reference points to classify the status of each MU as low, moderate, or abundant. The parties then exchange these status determinations as a key input in the development of pre-season plans.</p>
-<p>When a new Coho Management Plan was agreed upon in 2008 (implemented 2009 through 2018; <span class="citation" data-cites="PSC_2009">(<a href="#ref-PSC_2009" role="doc-biblioref">Pacific Salmon Commission 2009</a>)</span>) and the latest agreement finalized (applies to the period from catch years 2019 through 2028; <span class="citation" data-cites="PSC_2022">(<a href="#ref-PSC_2022" role="doc-biblioref">Pacific Salmon Commission 2022</a>)</span>), modifications were made to the list of specified MUs and to the manner in which exploitation rate caps are established. This periodic report presents information for the MUs identified in the most current Pacific Salmon Treaty’s (PST) Southern Coho Management Plan (Chapter 5 of Annex IV in the current PST). In the 2008 SCMP abundance-based management regimes were established to constrain exploitation rates (ERs) on 13 Management Units (MUs) of naturally-spawning Coho Salmon originating in rivers along the Washington/British Columbia (BC) border. Beggining in 2019, the most recent Management Plan <span class="citation" data-cites="PSC_2022">(<a href="#ref-PSC_2022" role="doc-biblioref">Pacific Salmon Commission 2022</a>)</span> combined two of the Canadian MUs, the Georgia Strait Vancouver Island and the Georgia Strait Mainland MU into the Strait of Georgia MU. The 12 MUs in the current PST are listed below.</p>
+<p>When a new Coho Management Plan was agreed upon in 2008 (implemented 2009 through 2018; <span class="citation" data-cites="PSC_2009">(<a href="#ref-PSC_2009" role="doc-biblioref">Pacific Salmon Commission 2009</a>)</span>) and the latest agreement finalized (applies to the period from catch years 2019 through 2028; <span class="citation" data-cites="PSC_2022">(<a href="#ref-PSC_2022" role="doc-biblioref">Pacific Salmon Commission 2022</a>)</span>), modifications were made to the list of specified MUs and to the manner in which exploitation rate caps are established. This periodic report presents information for the MUs identified in the most current Pacific Salmon Treaty’s (PST) Southern Coho Management Plan (Chapter 5 of Annex IV in the current PST). In the 2008 SCMP abundance-based management regimes were established to constrain exploitation rates (ERs) on 13 Management Units (MUs) of naturally-spawning Coho Salmon originating in rivers along the Washington/British Columbia (BC) border. Beggining in 2019, the most recent Management Plan <span class="citation" data-cites="PSC_2022">(<a href="#ref-PSC_2022" role="doc-biblioref">Pacific Salmon Commission 2022</a>)</span> combined two of the Canadian MUs, the Georgia Strait Vancouver Island and the Georgia Strait Mainland MUs into the Strait of Georgia MU. The 12 MUs in the current PST are listed below.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div id="jhpatlvkbi" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#jhpatlvkbi table {
+<div id="hxmmlmsrey" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#hxmmlmsrey table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#jhpatlvkbi thead, #jhpatlvkbi tbody, #jhpatlvkbi tfoot, #jhpatlvkbi tr, #jhpatlvkbi td, #jhpatlvkbi th {
+#hxmmlmsrey thead, #hxmmlmsrey tbody, #hxmmlmsrey tfoot, #hxmmlmsrey tr, #hxmmlmsrey td, #hxmmlmsrey th {
   border-style: none;
 }
 
-#jhpatlvkbi p {
+#hxmmlmsrey p {
   margin: 0;
   padding: 0;
 }
 
-#jhpatlvkbi .gt_table {
+#hxmmlmsrey .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -360,12 +353,12 @@ div.csl-indent {
   border-left-color: #D3D3D3;
 }
 
-#jhpatlvkbi .gt_caption {
+#hxmmlmsrey .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#jhpatlvkbi .gt_title {
+#hxmmlmsrey .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -377,7 +370,7 @@ div.csl-indent {
   border-bottom-width: 0;
 }
 
-#jhpatlvkbi .gt_subtitle {
+#hxmmlmsrey .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -389,7 +382,7 @@ div.csl-indent {
   border-top-width: 0;
 }
 
-#jhpatlvkbi .gt_heading {
+#hxmmlmsrey .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -401,13 +394,13 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#jhpatlvkbi .gt_bottom_border {
+#hxmmlmsrey .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#jhpatlvkbi .gt_col_headings {
+#hxmmlmsrey .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -422,7 +415,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#jhpatlvkbi .gt_col_heading {
+#hxmmlmsrey .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -442,7 +435,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-#jhpatlvkbi .gt_column_spanner_outer {
+#hxmmlmsrey .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -454,15 +447,15 @@ div.csl-indent {
   padding-right: 4px;
 }
 
-#jhpatlvkbi .gt_column_spanner_outer:first-child {
+#hxmmlmsrey .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#jhpatlvkbi .gt_column_spanner_outer:last-child {
+#hxmmlmsrey .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#jhpatlvkbi .gt_column_spanner {
+#hxmmlmsrey .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -474,11 +467,11 @@ div.csl-indent {
   width: 100%;
 }
 
-#jhpatlvkbi .gt_spanner_row {
+#hxmmlmsrey .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#jhpatlvkbi .gt_group_heading {
+#hxmmlmsrey .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -504,7 +497,7 @@ div.csl-indent {
   text-align: left;
 }
 
-#jhpatlvkbi .gt_empty_group_heading {
+#hxmmlmsrey .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -519,15 +512,15 @@ div.csl-indent {
   vertical-align: middle;
 }
 
-#jhpatlvkbi .gt_from_md > :first-child {
+#hxmmlmsrey .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#jhpatlvkbi .gt_from_md > :last-child {
+#hxmmlmsrey .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#jhpatlvkbi .gt_row {
+#hxmmlmsrey .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -546,7 +539,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-#jhpatlvkbi .gt_stub {
+#hxmmlmsrey .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -559,7 +552,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#jhpatlvkbi .gt_stub_row_group {
+#hxmmlmsrey .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -573,15 +566,15 @@ div.csl-indent {
   vertical-align: top;
 }
 
-#jhpatlvkbi .gt_row_group_first td {
+#hxmmlmsrey .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#jhpatlvkbi .gt_row_group_first th {
+#hxmmlmsrey .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#jhpatlvkbi .gt_summary_row {
+#hxmmlmsrey .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -591,16 +584,16 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#jhpatlvkbi .gt_first_summary_row {
+#hxmmlmsrey .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#jhpatlvkbi .gt_first_summary_row.thick {
+#hxmmlmsrey .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#jhpatlvkbi .gt_last_summary_row {
+#hxmmlmsrey .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -610,7 +603,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#jhpatlvkbi .gt_grand_summary_row {
+#hxmmlmsrey .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -620,7 +613,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#jhpatlvkbi .gt_first_grand_summary_row {
+#hxmmlmsrey .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -630,7 +623,7 @@ div.csl-indent {
   border-top-color: #D3D3D3;
 }
 
-#jhpatlvkbi .gt_last_grand_summary_row_top {
+#hxmmlmsrey .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -640,11 +633,11 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#jhpatlvkbi .gt_striped {
+#hxmmlmsrey .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#jhpatlvkbi .gt_table_body {
+#hxmmlmsrey .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -653,7 +646,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#jhpatlvkbi .gt_footnotes {
+#hxmmlmsrey .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -667,7 +660,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#jhpatlvkbi .gt_footnote {
+#hxmmlmsrey .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -676,7 +669,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#jhpatlvkbi .gt_sourcenotes {
+#hxmmlmsrey .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -690,7 +683,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#jhpatlvkbi .gt_sourcenote {
+#hxmmlmsrey .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -698,72 +691,72 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#jhpatlvkbi .gt_left {
+#hxmmlmsrey .gt_left {
   text-align: left;
 }
 
-#jhpatlvkbi .gt_center {
+#hxmmlmsrey .gt_center {
   text-align: center;
 }
 
-#jhpatlvkbi .gt_right {
+#hxmmlmsrey .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#jhpatlvkbi .gt_font_normal {
+#hxmmlmsrey .gt_font_normal {
   font-weight: normal;
 }
 
-#jhpatlvkbi .gt_font_bold {
+#hxmmlmsrey .gt_font_bold {
   font-weight: bold;
 }
 
-#jhpatlvkbi .gt_font_italic {
+#hxmmlmsrey .gt_font_italic {
   font-style: italic;
 }
 
-#jhpatlvkbi .gt_super {
+#hxmmlmsrey .gt_super {
   font-size: 65%;
 }
 
-#jhpatlvkbi .gt_footnote_marks {
+#hxmmlmsrey .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#jhpatlvkbi .gt_asterisk {
+#hxmmlmsrey .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#jhpatlvkbi .gt_indent_1 {
+#hxmmlmsrey .gt_indent_1 {
   text-indent: 5px;
 }
 
-#jhpatlvkbi .gt_indent_2 {
+#hxmmlmsrey .gt_indent_2 {
   text-indent: 10px;
 }
 
-#jhpatlvkbi .gt_indent_3 {
+#hxmmlmsrey .gt_indent_3 {
   text-indent: 15px;
 }
 
-#jhpatlvkbi .gt_indent_4 {
+#hxmmlmsrey .gt_indent_4 {
   text-indent: 20px;
 }
 
-#jhpatlvkbi .gt_indent_5 {
+#hxmmlmsrey .gt_indent_5 {
   text-indent: 25px;
 }
 
-#jhpatlvkbi .katex-display {
+#hxmmlmsrey .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#jhpatlvkbi div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#hxmmlmsrey div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -791,12 +784,12 @@ div.csl-indent {
 <td class="gt_row gt_left" style="text-align: left;" headers="US Outside">Hoh</td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_left" style="text-align: left;" headers="Southern BC">Georgia Strait Vancouver Island</td>
+<td class="gt_row gt_left" style="text-align: left;" headers="Southern BC">Strait of Georgia</td>
 <td class="gt_row gt_left" style="text-align: left;" headers="US Inside">Snohomish</td>
 <td class="gt_row gt_left" style="text-align: left;" headers="US Outside">Queets</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" style="text-align: left;" headers="Southern BC">Georgia Strait Mainland</td>
+<td class="gt_row gt_left" style="text-align: left;" headers="Southern BC"></td>
 <td class="gt_row gt_left" style="text-align: left;" headers="US Inside">Hood Canal</td>
 <td class="gt_row gt_left" style="text-align: left;" headers="US Outside">Grays Harbor</td>
 </tr>
@@ -811,7 +804,7 @@ div.csl-indent {
 </div>
 </div>
 </div>
-<p>The objective of the SCMP, as described in the Treaty, is to manage the salmon directed fisheries impact on Southern Coho stocks by limiting the total fishery exploitation and allow the different MUs to produce long-term Maximum Sustainable Harvest (MSH), while maintaining the genetic and ecological diversity of the individual populations. In addition, the plan is designed to improve the prospect of sustaining healthy fisheries for both parties over the long-term. The plan is intended to be cost-effective and flexible to available technical capacity and information, while providing a predictable framework for planning fisheries impacts and allowing for objective monitoring, evaluation and modification.</p>
+<p>The objective of the SCMP, as described in the Treaty, is to manage salmon directed fisheries impact on Southern Coho stocks by limiting the total fishery exploitation and allow the different MUs to produce long-term Maximum Sustainable Harvest (MSH), while maintaining the genetic and ecological diversity of the individual populations. In addition, the plan is designed to improve the prospect of sustaining healthy fisheries for both parties over the long-term. The plan is intended to be cost-effective and flexible to available technical capacity and information, while providing a predictable framework for planning fisheries impacts and allowing for objective monitoring, evaluation and modification.</p>
 <p>Under the Agreement, the United States and Canada (the “Parties”) are required to establish escapement goals or ERs that achieve MSH, determine MSH ERs for each MU, and establish ERs for each MU and status category (low, moderate, and abundant). Until such time as the Parties provide MU-specific ER targets, the SCMP identified default ER ceilings for the following MU status categories:</p>
 <table class="caption-top table">
 <thead>
@@ -844,23 +837,23 @@ div.csl-indent {
 <p>The US Outside MUs consist of naturally-spawning populations from the Quillayute, Hoh, Queets, and Grays Harbor basins. All US Outside MUs, except the Grays Harbor MU, are part of the Olympic Peninsula ESU. Populations from the western portion of the Strait of Juan de Fuca MU are also in this ESU. The Grays Harbor MU is part of the Southwest Washington ESU.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div id="kkqeeezhiy" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#kkqeeezhiy table {
+<div id="iomowwhyhy" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#iomowwhyhy table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#kkqeeezhiy thead, #kkqeeezhiy tbody, #kkqeeezhiy tfoot, #kkqeeezhiy tr, #kkqeeezhiy td, #kkqeeezhiy th {
+#iomowwhyhy thead, #iomowwhyhy tbody, #iomowwhyhy tfoot, #iomowwhyhy tr, #iomowwhyhy td, #iomowwhyhy th {
   border-style: none;
 }
 
-#kkqeeezhiy p {
+#iomowwhyhy p {
   margin: 0;
   padding: 0;
 }
 
-#kkqeeezhiy .gt_table {
+#iomowwhyhy .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -886,12 +879,12 @@ div.csl-indent {
   border-left-color: #D3D3D3;
 }
 
-#kkqeeezhiy .gt_caption {
+#iomowwhyhy .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#kkqeeezhiy .gt_title {
+#iomowwhyhy .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -903,7 +896,7 @@ div.csl-indent {
   border-bottom-width: 0;
 }
 
-#kkqeeezhiy .gt_subtitle {
+#iomowwhyhy .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -915,7 +908,7 @@ div.csl-indent {
   border-top-width: 0;
 }
 
-#kkqeeezhiy .gt_heading {
+#iomowwhyhy .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -927,13 +920,13 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#kkqeeezhiy .gt_bottom_border {
+#iomowwhyhy .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#kkqeeezhiy .gt_col_headings {
+#iomowwhyhy .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -948,7 +941,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#kkqeeezhiy .gt_col_heading {
+#iomowwhyhy .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -968,7 +961,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-#kkqeeezhiy .gt_column_spanner_outer {
+#iomowwhyhy .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -980,15 +973,15 @@ div.csl-indent {
   padding-right: 4px;
 }
 
-#kkqeeezhiy .gt_column_spanner_outer:first-child {
+#iomowwhyhy .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#kkqeeezhiy .gt_column_spanner_outer:last-child {
+#iomowwhyhy .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#kkqeeezhiy .gt_column_spanner {
+#iomowwhyhy .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1000,11 +993,11 @@ div.csl-indent {
   width: 100%;
 }
 
-#kkqeeezhiy .gt_spanner_row {
+#iomowwhyhy .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#kkqeeezhiy .gt_group_heading {
+#iomowwhyhy .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1030,7 +1023,7 @@ div.csl-indent {
   text-align: left;
 }
 
-#kkqeeezhiy .gt_empty_group_heading {
+#iomowwhyhy .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1045,15 +1038,15 @@ div.csl-indent {
   vertical-align: middle;
 }
 
-#kkqeeezhiy .gt_from_md > :first-child {
+#iomowwhyhy .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#kkqeeezhiy .gt_from_md > :last-child {
+#iomowwhyhy .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#kkqeeezhiy .gt_row {
+#iomowwhyhy .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1072,7 +1065,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-#kkqeeezhiy .gt_stub {
+#iomowwhyhy .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1085,7 +1078,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#kkqeeezhiy .gt_stub_row_group {
+#iomowwhyhy .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1099,15 +1092,15 @@ div.csl-indent {
   vertical-align: top;
 }
 
-#kkqeeezhiy .gt_row_group_first td {
+#iomowwhyhy .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#kkqeeezhiy .gt_row_group_first th {
+#iomowwhyhy .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#kkqeeezhiy .gt_summary_row {
+#iomowwhyhy .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1117,16 +1110,16 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#kkqeeezhiy .gt_first_summary_row {
+#iomowwhyhy .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#kkqeeezhiy .gt_first_summary_row.thick {
+#iomowwhyhy .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#kkqeeezhiy .gt_last_summary_row {
+#iomowwhyhy .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1136,7 +1129,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#kkqeeezhiy .gt_grand_summary_row {
+#iomowwhyhy .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1146,7 +1139,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#kkqeeezhiy .gt_first_grand_summary_row {
+#iomowwhyhy .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1156,7 +1149,7 @@ div.csl-indent {
   border-top-color: #D3D3D3;
 }
 
-#kkqeeezhiy .gt_last_grand_summary_row_top {
+#iomowwhyhy .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1166,11 +1159,11 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#kkqeeezhiy .gt_striped {
+#iomowwhyhy .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#kkqeeezhiy .gt_table_body {
+#iomowwhyhy .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1179,7 +1172,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#kkqeeezhiy .gt_footnotes {
+#iomowwhyhy .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1193,7 +1186,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#kkqeeezhiy .gt_footnote {
+#iomowwhyhy .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1202,7 +1195,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#kkqeeezhiy .gt_sourcenotes {
+#iomowwhyhy .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1216,7 +1209,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#kkqeeezhiy .gt_sourcenote {
+#iomowwhyhy .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1224,72 +1217,72 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#kkqeeezhiy .gt_left {
+#iomowwhyhy .gt_left {
   text-align: left;
 }
 
-#kkqeeezhiy .gt_center {
+#iomowwhyhy .gt_center {
   text-align: center;
 }
 
-#kkqeeezhiy .gt_right {
+#iomowwhyhy .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#kkqeeezhiy .gt_font_normal {
+#iomowwhyhy .gt_font_normal {
   font-weight: normal;
 }
 
-#kkqeeezhiy .gt_font_bold {
+#iomowwhyhy .gt_font_bold {
   font-weight: bold;
 }
 
-#kkqeeezhiy .gt_font_italic {
+#iomowwhyhy .gt_font_italic {
   font-style: italic;
 }
 
-#kkqeeezhiy .gt_super {
+#iomowwhyhy .gt_super {
   font-size: 65%;
 }
 
-#kkqeeezhiy .gt_footnote_marks {
+#iomowwhyhy .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#kkqeeezhiy .gt_asterisk {
+#iomowwhyhy .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#kkqeeezhiy .gt_indent_1 {
+#iomowwhyhy .gt_indent_1 {
   text-indent: 5px;
 }
 
-#kkqeeezhiy .gt_indent_2 {
+#iomowwhyhy .gt_indent_2 {
   text-indent: 10px;
 }
 
-#kkqeeezhiy .gt_indent_3 {
+#iomowwhyhy .gt_indent_3 {
   text-indent: 15px;
 }
 
-#kkqeeezhiy .gt_indent_4 {
+#iomowwhyhy .gt_indent_4 {
   text-indent: 20px;
 }
 
-#kkqeeezhiy .gt_indent_5 {
+#iomowwhyhy .gt_indent_5 {
   text-indent: 25px;
 }
 
-#kkqeeezhiy .katex-display {
+#iomowwhyhy .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#kkqeeezhiy div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#iomowwhyhy div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1337,6 +1330,7 @@ div.csl-indent {
 </div>
 </div>
 </div>
+<p><span style="color: red;"><strong>Carrie: This table looks identical to the one in the last section. Do we need this duplication?</strong></span></p>
 </section>
 <section id="fishery-overview" class="level2" data-number="1.2">
 <h2 data-number="1.2" class="anchored" data-anchor-id="fishery-overview"><span class="header-section-number">1.2</span> Fishery Overview</h2>
@@ -1347,7 +1341,7 @@ div.csl-indent {
 <img src="images/PFMA_CDFO.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dfomap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1.1: Canadian DFO Southern BC Pacific Fisheries Management Areas
+Figure&nbsp;1.1: Canadian DFO Southern BC Pacific Fisheries Management Areas.
 </figcaption>
 </figure>
 </div>
@@ -1357,7 +1351,7 @@ Figure&nbsp;1.1: Canadian DFO Southern BC Pacific Fisheries Management Areas
 <img src="images/WA_MFA.jpg" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-wdfwmap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1.2: Washington Coast and Puget Sound Marine Fishery Areas
+Figure&nbsp;1.2: Washington Coast and Puget Sound Marine Fishery Areas.
 </figcaption>
 </figure>
 </div>
@@ -1367,32 +1361,33 @@ Figure&nbsp;1.2: Washington Coast and Puget Sound Marine Fishery Areas
 <img src="images/OR_SMA.jpg" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-odfwmap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1.3: Oregon Ocean Salmon Management Areas and Major Port Locations
+Figure&nbsp;1.3: Oregon Ocean Salmon Management Areas and Major Port Locations.
 </figcaption>
 </figure>
 </div>
 <section id="canadian-fisheries-cotc-note---this-needs-updating" class="level3" data-number="1.2.1">
 <h3 data-number="1.2.1" class="anchored" data-anchor-id="canadian-fisheries-cotc-note---this-needs-updating"><span class="header-section-number">1.2.1</span> Canadian Fisheries (CoTC note - this needs updating)</h3>
-<p>Southern BC Coho Salmon are caught in First Nations, recreational, and commercial troll and net fisheries. Since Coho Salmon [<strong>Jeromy comment: This has “Coho Salmon”, but next sentence only uses “Coho”. Would be good to have a consistent lexicon throughout if possible.</strong>] rear in areas near the coast they are readily caught in directed fisheries and as bycatch in fisheries targeting other species. As a result, Coho are harvested in mixed-stock fisheries, creating many challenges for the assessment and management of the species.</p>
-<p>Coho catches on the south coast of BC have declined since the mid-1980s, initially due to declining abundance and more recently because of severe conservation measures in response to the declining abundance. Total fishery ERs in Canada were reduced from a range of 75 to 80% in the mid-1980s to 60% in 1995, 37% in 1997, 5% in 1998, and are currently estimated by Backwards Coho Fisheries Regulation Assessment Model (FRAM) during catch years 2011 through 2021 at less than 10%.</p>
+<p>Southern BC Coho Salmon are caught in First Nations, recreational, and commercial troll and net fisheries. Since Coho Salmon [<strong>Jeromy comment: This has “Coho Salmon”, but next sentence only uses “Coho”. Would be good to have a consistent lexicon throughout if possible.</strong>] rear in areas near the coast they are readily caught in directed fisheries and as bycatch in fisheries targeting other species. As a result, Coho Salmon are harvested in mixed-stock fisheries, creating many challenges for the assessment and management of the species.</p>
+<p>Coho Salmon catches on the south coast of BC have declined since the mid-1980s, initially due to declining abundance and more recently because of severe conservation measures in response to the declining abundance. Total fishery ERs in Canada were reduced from a range of 75 to 80% in the mid-1980s to 60% in 1995, 37% in 1997, 5% in 1998, and are currently estimated by Backwards Coho Fisheries Regulation Assessment Model (FRAM) during catch years 2011 through 2021 at less than 10%.</p>
 <p>Historically 89% of the commercial Coho catch on the south coast of BC was taken by the troll sector with the remainder harvested by commercial net fisheries. The West Coast of Vancouver Island (WCVI) troll fishery was the single largest commercial harvester, taking an average of 1.5 million Coho in the 10-year period before 1997, when major fishing restrictions were imposed. This fishery intercepted stocks from the US, Strait of Georgia, and WCVI. Since 2001, average catch retained in the WCVI troll fishery has been 725 Coho, due primarily to the timing and non-retention restrictions in place for this fishery. Historically, catch in the Strait of Georgia troll fishery, comprised predominantly of Strait of Georgia stocks, was much smaller than the WCVI troll fishery (1986-1995 averaged 150,000 Coho, annually). The Strait of Georgia troll fishery has not been permitted to retain Coho Salmon since 1995.</p>
-<p>Net fisheries in Johnstone Strait, Strait of Juan de Fuca and the Strait of Georgia harvest Coho incidentally during directed fisheries on Sockeye (<em>O. nerka</em>), Pink (<em>O. gorbuscha</em>), and Chum (<em>O. keta</em>) Salmon. Net fisheries have been curtailed in recent years due to low returns of the target species and concerns for Chinook (<em>O. tshawytscha</em>) and Coho Salmon bycatch.</p>
-<p>While the First Nations’ harvest of Coho is small compared with other salmon species, several First Nations harvest Coho for food, social, and ceremonial (FSC) purposes. Coho are caught in hook and line, net, and spear fisheries in or near their local streams. They are also caught incidentally in other First Nations’ salmon fisheries directed on other species, such as Sockeye and Chum Salmon.</p>
-<p>Recreational fishing for Coho in BC tidal waters continues to be important to residents and visitors. Until the recent decline in Coho abundance and subsequent severe fishing restrictions, 70% of tidal recreational fishing took place within the Strait of Georgia. Since 1995, most Coho recreational fishery effort and catch has shifted from the Strait of Georgia to the WCVI, in part due to low abundance of Coho inside Vancouver Island. Overall, the proportion of Coho harvested by the recreational fishery has increased as commercial harvest has been significantly reduced as a result of the timing and non-retention harvest restrictions, as well as domestic allocation considerations in Canada that were implemented in response to the low abundance of Coho.</p>
-<p>Due to conservation concerns, most notably for the Interior Fraser MU, Canadian Coho Salmon fisheries have seen unprecedented restrictions since 1997. In 1998 and 1999, no directed fisheries on naturally-spawning stocks of Coho were permitted; mandatory non-retention and non-possession of incidentally caught Coho was implemented in all areas, with the exception of some terminal hatchery locations. In the Pacific Region, (i.e., all marine waters of BC), barbless hooks became required for all salmon-directed commercial and recreational hook and line gear in 1998, a regulation that remains in effect. Pacific Region waters were classified as red or yellow zones. In red zones, areas where Thompson River Coho from the Interior Fraser River MU were known to be prevalent, fishing was restricted to very limited experimental selective fisheries, as well as some limited First Nations’ fisheries to meet food, social, and ceremonial requirements. Red zones included inshore waters of Victoria to Barkley Sound and offshore waters of Barkley Sound to Quatsino Sound, from June to September. Special management zones (SMZs), areas of mandatory Coho non-retention with special restrictions, were identified with the intent to avoid Coho encounters. Fisheries were only permitted in locations and times when Thompson River Coho could be avoided or released unharmed. These areas were subject to in-season adjustments, including time and area closures for all sectors. Fisheries conducted in these SMZs were monitored to ensure Coho encounter rates did not become too high, and tissue samples were taken for stock identification. In yellow zones, where endangered stocks were not prevalent, a selective fishing strategy was implemented for all commercial and recreational fisheries [<strong>Jeromy comment: Does this mean in red zones, endangered stocks (under SARA?) are prevalent? This context is not provided.</strong>]. These fisheries were required to release any live Coho that were caught during operations. Mandatory logbooks and an onboard observer program were initiated in commercial fisheries. Limited Coho retention was allowed only for First Nations and recreational fisheries.</p>
-<p>Since 2000, fisheries impacting naturally-spawning Coho from southern BC, Washington State, and Oregon have been managed under the PST ABM regime. The ABM plan constrains total fishery exploitation on key stock MUs in BC For each MU, annual limits of fishing mortality are established based on the categorical level of abundance and the health of the naturally-spawning stocks. In Canada, low status of Interior Fraser Coho has constrained southern BC fisheries for the last decade. The Southern US has been limited to 10% ER on Coho originating from the Interior Fraser MU. Southern BC fisheries, in waters south of Cape Caution where Interior Fraser Coho are prevalent, have been managed to a maximum 3% total fishing mortality rate on the Interior Fraser Coho MU. Non-retention of naturally-spawning Coho is generally in effect except for First Nations FSC opportunities in specific terminal systems where abundance permits and where retention of by-catch during fisheries for other species is permitted. Release of unmarked Coho Salmon during periods when Interior Fraser Coho may be caught is required in all Canadian commercial and recreational fisheries.</p>
+<p>Net fisheries in Johnstone Strait, Strait of Juan de Fuca and the Strait of Georgia harvest Coho Salmon incidentally during directed fisheries on Sockeye (<em>O. nerka</em>), Pink (<em>O. gorbuscha</em>), and Chum (<em>O. keta</em>) Salmon. Net fisheries have been curtailed in recent years due to low returns of the target species and concerns for Chinook (<em>O. tshawytscha</em>) and Coho Salmon bycatch.</p>
+<p>While the First Nations’ harvest of Coho Salmon is small compared with other salmon species, several First Nations harvest Coho Salmon for food, social, and ceremonial (FSC) purposes. They are caught in hook and line, net, and spear fisheries in or near their local streams. They are also caught incidentally in other First Nations’ salmon fisheries directed on other species, such as Sockeye and Chum Salmon.</p>
+<p>Recreational fishing for Coho Salmon in BC tidal waters continues to be important to residents and visitors. Until the recent decline in Coho Salmon abundance and subsequent severe fishing restrictions, 70% of tidal recreational fishing took place within the Strait of Georgia. Since 1995, most Coho recreational fishery effort and catch has shifted from the Strait of Georgia to the WCVI, in part due to low abundance of Coho Salmon inside Vancouver Island. Overall, the proportion of Coho Salmon harvested by the recreational fishery has increased as commercial harvest has been significantly reduced as a result of the timing and non-retention harvest restrictions, as well as domestic allocation considerations in Canada that were implemented in response to the low abundance of Coho Salmon.</p>
+<p>Due to conservation concerns, most notably for the Interior Fraser MU, Canadian Coho Salmon fisheries have seen unprecedented restrictions since 1997. In 1998 and 1999, no directed fisheries on naturally-spawning stocks of Coho Salmon were permitted; mandatory non-retention and non-possession of incidentally caught Coho Salmon was implemented in all areas, with the exception of some terminal hatchery locations. In the Pacific Region, (i.e., all marine waters of BC), barbless hooks became required for all salmon-directed commercial and recreational hook and line gear in 1998, a regulation that remains in effect. Pacific Region waters were classified as red or yellow zones. In red zones, areas where Thompson River Coho from the Interior Fraser River MU were known to be prevalent, fishing was restricted to very limited experimental selective fisheries, as well as some limited First Nations’ fisheries to meet food, social, and ceremonial requirements. Red zones included inshore waters of Victoria to Barkley Sound and offshore waters of Barkley Sound to Quatsino Sound, from June to September. Special management zones (SMZs), areas of mandatory Coho Salmon non-retention with special restrictions, were identified with the intent to avoid Coho Salmon encounters. Fisheries were only permitted in locations and times when Thompson River Coho Salmon could be avoided or released unharmed. These areas were subject to in-season adjustments, including time and area closures for all sectors. Fisheries conducted in these SMZs were monitored to ensure Coho encounter rates did not become too high, and tissue samples were taken for stock identification. In yellow zones, where endangered stocks were not prevalent, a selective fishing strategy was implemented for all commercial and recreational fisheries [<strong>Jeromy comment: Does this mean in red zones, endangered stocks (under SARA?) are prevalent? This context is not provided.</strong>]. These fisheries were required to release any live Coho Salmon that were caught during operations. Mandatory logbooks and an onboard observer program were initiated in commercial fisheries. Limited Coho Salmon retention was allowed only for First Nations and recreational fisheries.</p>
+<p>Since 2000, fisheries impacting naturally-spawning Coho Salmon from southern BC, Washington State, and Oregon have been managed under the PST ABM regime. The ABM plan constrains total fishery exploitation on key stock MUs in BC For each MU, annual limits of fishing mortality are established based on the categorical level of abundance and the health of the naturally-spawning stocks. In Canada, low status of Interior Fraser Coho Salmon has constrained southern BC fisheries for the last decade. The Southern US has been limited to 10% ER on Coho originating from the Interior Fraser MU. Southern BC fisheries, in waters south of Cape Caution where Interior Fraser Coho are prevalent, have been managed to a maximum 3% total fishing mortality rate on the Interior Fraser Coho MU. Non-retention of naturally-spawning Coho is generally in effect except for First Nations <button class="glossary" title="Food, Social, Ceremonial">FSC</button> opportunities in specific terminal systems where abundance permits and where retention of by-catch during fisheries for other species is permitted. Release of unmarked Coho Salmon during periods when Interior Fraser Coho may be caught is required in all Canadian commercial and recreational fisheries.</p>
 </section>
 <section id="us-fisheries" class="level3" data-number="1.2.2">
 <h3 data-number="1.2.2" class="anchored" data-anchor-id="us-fisheries"><span class="header-section-number">1.2.2</span> US Fisheries</h3>
 <p>Current US fisheries are constrained by domestic and PST conservation objectives. For the Puget Sound MUs, the current PST Southern Coho Agreement of CoABM uses the thresholds and stepped harvest rate goals from the Comprehensive Coho Agreement <span class="citation" data-cites="CCW_1998">(<a href="#ref-CCW_1998" role="doc-biblioref">Comprehensive Coho Workgroup 1998</a>)</span>, developed by Washington State and the Puget Sound tribes, and adopted by the Pacific Fishery Management Council as Fishery Management Plan conservation objectives in November 2009. Actual ER constraints for Canadian fisheries on US Coho MUs are determined by formulas that specify sharing of allowable total ERs and a “composite rule”. The composite rule adjusts constraints for Canadian fishery ERs based on the number of US MUs that fall in a given category. For example, if only one Washington coastal Coho MU is in low status, Canadian fisheries are constrained to a total ER on that unit of 12%; if two or more Washington coastal MUs are in low status, the constraint becomes 10%. The most restrictive ER limit for Canadian fishery impacts on US Coho MUs is 10%.</p>
 <p>Fisheries between Cape Falcon, Oregon and the US/Canada Border are constrained by four factors: (1) management objectives and treaty Indian obligations for individual stock US MUs; (2) treaty Indian/non-Indian and ocean/in-river sharing agreements; (3) stocks listed under the ESA; and (4) requirements of the PST. The starting point for implementing these constraints is the forecasted January age-3 (JA3) abundance and the modeled ocean distribution of each Coho stock.</p>
 <p>Most Coho-directed recreational fisheries [<strong>Jeromy comment: Freshwater and marine? I think so, for WA, and Columbia River but would be good to add this qualifier in if true. More recently the OR coast freshwater fisheries are all non-selective, hence why I am asking for a bit of a qualifier here if possible.</strong>] have been mark-selective since 1999. Non-Indian commercial troll fisheries have been mostly restricted to mark-selective Coho retention since 2000. Treaty Indian fisheries are not restricted to mark-selective retention of Coho Salmon.</p>
+<p><span style="color: red;"><strong>Carrie: With the fram databases we have, we could plot MSF vs non MSF by fishery type through time. Not sure if that would be helpful. </strong></span></p>
 </section>
 </section>
 <section id="bilateral-assessment-tool-fram-overview" class="level2" data-number="1.3">
 <h2 data-number="1.3" class="anchored" data-anchor-id="bilateral-assessment-tool-fram-overview"><span class="header-section-number">1.3</span> Bilateral Assessment Tool (FRAM) Overview</h2>
 <p>Coho fisheries are evaluated with the Coho Fisheries Regulation Assessment Model <a href="https://framverse.github.io/fram_doc/calcs_data_coho.html">(Coho FRAM)</a>, a bilaterally developed tool that is employed for both pre-season fishery planning and post-season estimation of escapements and exploitation rates <a href="https://framverse.github.io/fram_doc/apps_coho.html">(see: pre- and post-season applications)</a>.</p>
-<p>Coho FRAM is an annual mixed-stock accounting model that evaluates a set of stock units within a set of fisheries over time periods within a single fishing year (the calendar year for Coho) (documentation on FRAM can be found here: https://framverse.github.io/fram_doc/). It can be used to estimate catch and escapement based on forecast abundance and planned fisheries (‘forward’), or it can be used to reconstruct ocean abundance from observed escapements and fisheries (‘backward’).</p>
+<p>Coho FRAM is an annual mixed-stock accounting model that evaluates a set of stock units within a set of fisheries over time periods within a single fishing year (the calendar year for Coho) (documentation on FRAM can be found here: <a href="https://framverse.github.io/fram_doc/">https://framverse.github.io/fram_doc/</a>). It can be used to estimate catch and escapement based on forecast abundance and planned fisheries (‘forward’), or it can be used to reconstruct ocean abundance from observed escapements and fisheries (‘backward’).</p>
 <p>The Coho FRAM base period parameterization, determinining stock-fishery-timestep impacts, was constructed from stock-specific fishery recoveries of coded-wire tags (CWTs) within the time steps January to June, July, August, September, and October to December during coast wide fisheries from 1986 to 1992. The procedure used to generate base period data is depicted below (<a href="#fig-FRAMdev" class="quarto-xref">Figure&nbsp;1.4</a>). For each base period year, post-season reconstruction of cohort abundances for each Coho MU is based on two different models: the Mixed-Stock Model (MSM) that estimates the Production Expansion Factors for each Production Region and RRTERM program that estimates stock-specific impacts for terminal marine and freshwater fisheries. The MSM uses CWT recoveries for each model stock expanded by the Production Expansion Factors to best describe the total catch in each marine mixed-stock fishery. The MSM/RRTERM cohort analysis has been used for post-season reconstructions for catch years 1986-2007. However, beginning with catch year 1993, too few coded-wire tags were recovered in mixed-stock fisheries to perform robust cohort analyses using the mixed-stock model.</p>
 <div id="fig-FRAMdev" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1406,7 +1401,7 @@ Figure&nbsp;1.4: Procedure used to generate base period data for Coho FRAM.
 </div>
 <section id="key-uncertainties-with-fram-analysis" class="level3" data-number="1.3.1">
 <h3 data-number="1.3.1" class="anchored" data-anchor-id="key-uncertainties-with-fram-analysis"><span class="header-section-number">1.3.1</span> Key Uncertainties with FRAM analysis</h3>
-<p>FRAM is a deterministic model that reports point estimates of cohort abundances and ERs without explicit measures of uncertainty associated with them. Managers should consider the following data limitations and model assumptions when interpreting FRAM results: - Cohort abundances and ERs are sensitive to the quality of escapement estimates, with estimation practices varying substantially among stocks. For example, Puget Sound net pens programs often lack escapement estimates. For these programs, pre-season abundances were used or were scaled to a nearby hatchery program using a pre-post ratio. - Marine survival indices are used to estimate Canadian MU abundances, except for Interior Fraser, in both pre- and post-season FRAM runs because abundance forecasts and escapement estimates are highly uncertain or unavailable for the remaining two Canadian MUs. - It is unknown if average ocean distribution during the FRAM base period (derived using catch year 1986 to 1992 CWT data) reflect the true annual ocean distribution of Coho stocks in contemporary years; this leads to increased uncertainty in fishery-specific stock impacts. - Complex regulations, such as fine-scale spatial/temporal and mixed retention limits for natural and hatchery Coho within a fishery, are difficult to represent and assess within FRAM and as a result, FRAM may not accurately represent stock-specific impacts within fisheries with these regulations. - Spatial and temporal gaps in catch monitoring of some Canadian fisheries result in underestimation of catch. - Uncertainty in mortality estimates arises from several sources, including incomplete creel census and inaccuracy of fisher reported data, as well as assumed non-retention mortality rates, which are used in the FRAM model. - Natural mortality built [<strong>Jeromy comment: Can we describe the year or years it was built in, and that it has not been updated since.</strong>] into FRAM is constant and does not reflect inter-annual variability in survival during adult ocean residence (January Age-3 through FRAM’s final time step).</p>
+<p>FRAM is a deterministic model that reports point estimates of cohort abundances and ERs without explicit measures of uncertainty associated with them. Managers should consider the following data limitations and model assumptions when interpreting FRAM results: - Cohort abundances and ERs are sensitive to the quality of escapement estimates, with estimation practices varying substantially among stocks. For example, Puget Sound net pens programs often lack escapement estimates. For these programs, pre-season abundances were used or were scaled to a nearby hatchery program using a pre-post ratio. - Marine survival indices are used to estimate Canadian MU abundances, except for Interior Fraser, in both pre- and post-season FRAM runs because abundance forecasts and escapement estimates are highly uncertain or unavailable for the remaining two Canadian MUs. - It is unknown if average ocean distribution during the FRAM base period (derived using catch year 1986 to 1992 CWT data) reflect the true annual ocean distribution of Coho Salmon stocks in contemporary years; this leads to increased uncertainty in fishery-specific stock impacts. - Complex regulations, such as fine-scale spatial/temporal and mixed retention limits for natural and hatchery Coho Salmon within a fishery, are difficult to represent and assess within FRAM and as a result, FRAM may not accurately represent stock-specific impacts within fisheries with these regulations. - Spatial and temporal gaps in catch monitoring of some Canadian fisheries result in underestimation of catch. - Uncertainty in mortality estimates arises from several sources, including incomplete creel census and inaccuracy of fisher reported data, as well as assumed non-retention mortality rates, which are used in the FRAM model. - Natural mortality built [<strong>Jeromy comment: Can we describe the year or years it was built in, and that it has not been updated since.</strong>] into FRAM is constant and does not reflect inter-annual variability in survival during adult ocean residence (January Age-3 through FRAM’s final time step).</p>
 </section>
 </section>
 <section id="environmental-trends-contextualizing-management" class="level2" data-number="1.4">
@@ -1469,11 +1464,11 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
 <p>[<strong>Jeromy comment: the font has changed in this paragraph (in Word version)</strong>]</p>
 <p>Procedures for determining the pre-season status of Canadian MUs are being developed concurrently with determination of Conservation Unit (CU) status benchmarks required with implementation of the Canada Department of Fisheries and Oceans’ (CDFO) Wild Salmon Policy. Methods have been approved through the CDFO’s internal peer review process, Center for Scientific Advice - Pacific (CSAP) [<span class="citation" data-cites="Holt_et_al_2009">Holt et al. (<a href="#ref-Holt_et_al_2009" role="doc-biblioref">2009</a>)</span>). Work in 2018 identified a framework to develop potential Management Reference Points for Canadian MUs (DFO 2018, Korman et al.&nbsp;2019; https://www.pac.dfo-mpo.gc.ca/consultation/smon/pst-coho-tsp/index-eng.html) included spawner abundance targets but also CWT smolt-to-adult (or “marine”) survival index targets. It was deemed that targets must contain spawner abundance targets, which limited creation of management reference points to the Interior Fraser River MU because it was the only unit with an aggregate abundance timeseries.</p>
 <p>Since 2002, in the absence of benchmarks, the CDFO Stock Assessment staff has provided a categorical outlook for the next year’s salmon status. The <a href="http://www.pac.dfo-mpo.gc.ca/fm-gp/species-especes/salmon-saumon/index-eng.htm">outlook</a> is intended to provide an objective and consistent context within which to initiate fisheries planning.The category reflects the current interpretation of existing quantitative and qualitative information, including pre-season forecasts if available, and the opinion of CDFO Area stock assessment staff. Where management targets for stocks have not been formally described, interim targets were either based on historical return levels or, if necessary, opinion of local staff.</p>
-<p>Canadian Coho Salmon abundance has declined, particularly in southern BC. Interior Fraser River Coho was assessed as endangered by the Committee on the Status of Endangered Wildlife in Canada (COSEWIC) in2002 and then reassessed as threatened in 2016. Interior Fraser River Coho have not been listed on Schedule 1 of the Species at Risk Act, which would afford additional protections to the stock. However, the Canadian Minister of Fisheries and Oceans has established a domestic ER cap of 3-5% for Canadian fishery impacts on Interior Fraser Coho. The Interior Fraser MU is comprised of five Conservation Units (CU; North Thompson, South Thompson, Lower Thompson, Fraser Canyon, and Upper Fraser). The Interior Fraser River Coho recovery planning process has determined the critical benchmark needed to maintain population viability. Even with the reduction in fisheries exploitation, all Southern BC MUs have followed a similar dramatic declining trend in both marine survival and total abundance from the high levels observed in the 1980s and early 1990s. Spawning escapements have responded to the decreased exploitation and are within the range observed during the 1970s and 1980s. However, the sustained low marine survival has resulted in a decreased total abundance.</p>
+<p>Canadian Coho Salmon abundance has declined, particularly in southern BC. Interior Fraser River Coho was assessed as endangered by the Committee on the Status of Endangered Wildlife in Canada (COSEWIC) in2002 and then reassessed as threatened in 2016. Interior Fraser River Coho Salmon have not been listed on Schedule 1 of the Species at Risk Act, which would afford additional protections to the stock. However, the Canadian Minister of Fisheries and Oceans has established a domestic ER cap of 3-5% for Canadian fishery impacts on Interior Fraser Coho Salmon. The Interior Fraser MU is comprised of five Conservation Units (CU; North Thompson, South Thompson, Lower Thompson, Fraser Canyon, and Upper Fraser). The Interior Fraser River Coho Salmon recovery planning process has determined the critical benchmark needed to maintain population viability. Even with the reduction in fisheries exploitation, all Southern BC MUs have followed a similar dramatic declining trend in both marine survival and total abundance from the high levels observed in the 1980s and early 1990s. Spawning escapements have responded to the decreased exploitation and are within the range observed during the 1970s and 1980s. However, the sustained low marine survival has resulted in a decreased total abundance.</p>
 <p>Because of the absence of programs to estimate total abundance and escapement for the Strait of Georgia and Lower Fraser River Canadian MUs, the bilaterally-developed tool, Backwards Coho FRAM, is relied upon to generate estimates of ocean age-3 cohort abundance and ERs using post-season data scalars. Cohort abundances (catch and escapement) of Canadian MUs, estimated by Backwards Coho FRAM based on modelled scalars, are depicted in Figure @ref(fig:BCAbundance). Reduced abundances apparent since 1996 were a major consideration that led to the development of ABM regimes for management of southern Coho Salmon.</p>
 <p>ASK DAN –&gt; why is this figure not working?</p>
-<section id="ifr-mu" class="level3" data-number="2.1.1">
-<h3 data-number="2.1.1" class="anchored" data-anchor-id="ifr-mu"><span class="header-section-number">2.1.1</span> IFR MU</h3>
+<section id="ifr-mu-this-needs-to-be-moved" class="level3" data-number="2.1.1">
+<h3 data-number="2.1.1" class="anchored" data-anchor-id="ifr-mu-this-needs-to-be-moved"><span class="header-section-number">2.1.1</span> IFR MU (*this needs to be moved!)</h3>
 <p>Prior to the establishment of PST Management Reference Points, IFR have been assessed by COSEWIC and CDFO.</p>
 <p>A COSEWIC assessment in 2002 (Irvine 2002) identified IFR status as endangered while the COSEWIC re-assessment in 2016 (COSEWIC 2016) identified their status as threatened. Between 1990-2000, IFR experienced declines in recruitment in excess of 60% due to changes in freshwater and marine habitats and lagged reductions in harvest, resulting in a status of endangered in 2002. Since 2000, the population has persisted at relatively low abundance and low smolt-to-adult survival rates and was therefore re-assessed as threatened in 2016.</p>
 <p>In a review done in 2014, estimated abundance of IFR was below the Interior Fraser Recovery Team (IFCRT) lower benchmark of 23,000 spawners in five out of 10 years, and was below the upper rebuilding benchmark of 35,000 spawners in all 10 years (Decker et al.&nbsp;2014). For two decades (1992-2011), abundance was also below the lower and upper benchmarks in 50% and 100% of the years respectively. Based on the criteria proposed by the IFCRT (2006), this would indicate that recent abundances of Interior Fraser Coho may be insufficient to conserve genetic diversity and to provide a reasonable expectation of growth and recovery for some of the local populations within the MU. For returns prior to 1992, abundance exceeded the upper benchmark every year going back to 1975.</p>
@@ -1496,13 +1491,13 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
 <h2 data-number="2.4" class="anchored" data-anchor-id="us-management-units-federal-status"><span class="header-section-number">2.4</span> US Management Units Federal Status</h2>
 <p>Coho Salmon were the first Pacific salmon species for which coast-wide evolutionarily significant units (ESUs) were delineated <span class="citation" data-cites="Ford_2011">(<a href="#ref-Ford_2011" role="doc-biblioref">Ford 2011</a>)</span>. Based on genetic and life history information, the US MUs subject to the PST belong to three different Coho Salmon ESUs, the Puget Sound/Strait of Georgia, the Olympic Peninsula, and the Southwest Washington ESUs. The Puget Sound/Strait of Georgia Coho ESU is currently a species of concern under the US Endangered Species Act [ESA; <span class="citation" data-cites="Ford_2011">Ford (<a href="#ref-Ford_2011" role="doc-biblioref">2011</a>)</span>; Species of Concern 4/15/04, 69FR19975]. The Olympic Peninsula ESU was evaluated for listing under the ESA and was determined to be not warranted (ADD link to: 60 FR 38011; July 25, 1995). The Southwest Washington ESU is currently categorized as “undetermined”. Puget Sound/Strait of Georgia Coho are not currently candidates for listing in Washington as State Endangered, Threatened, or Sensitive <span class="citation" data-cites="WDFW_2020_state">(<a href="#ref-WDFW_2020_state" role="doc-biblioref">Washington Department of Fish and Wildlife 2020</a>)</span>.</p>
 <p>At the federal level, species of concern do not have formal protection under the ESA. The primary purpose of identifying species of concern is to prevent the need to list them as threatened or endangered under the ESA. This purpose can be achieved by the following actions: (1) identifying species potentially at risk; (2) increasing public awareness about those species; (3) identifying data deficiencies and uncertainties in species’ status and threats; (4) stimulating cooperative research efforts to obtain the information necessary to evaluate species’ status and threats; and, (5) fostering voluntary efforts to conserve the species before listing becomes warranted.</p>
-<p>Additionally, at the federal level, Coho Salmon caught in coastal waters of the U.S. (e.g., greater than 3 but within 200 nautical miles offshore) are managed under the Magnuson-Stevens Fishery Conservation and Management Act (MSA), which is the legislation providing for the management of marine fisheries in U.S. waters. In 2018, the National Marine Fisheries Service (NMFS) notified the Pacific Fishery Management Council (Council) that the Strait of Juan de Fuca, Queets, and Snohomish natural Coho salmon stocks managed under the Council’s Pacific Coast Salmon Fishery Management Plan (FMP) met the overfished criteria of the FMP and the MSA. NMFS determined that these stocks were overfished under the MSA, due to spawning escapement falling below the required level for the 3-year period 2014-2016. The MSA requires overfished stocks to be rebuilt in as short a time as possible, not to exceed 10 years. The overfished determinations were announced in the Federal Register on August 6, 2018 (83 FR 38292). In response to the overfished determination, the Council developed rebuilding plans for these stocks and provided them to NMFS in 2019. In 2021, NMFS issued a final rule under the authority of the MSA to approve and implement rebuilding plans recommended by the Council for the three stocks (86 FR 9301; https://www.federalregister.gov/documents/2021/02/12/2021-02834/fisheries-off-west-coast-states-west-coast-salmon-fisheries-rebuilding-Coho-salmon-stocks). This final rule adopts the existing harvest control rules, which use an annual abundance-based stepped harvest rate control rule with stock-specific abundance levels governing the total ERs applied to forecast stock abundance levels. For Snohomish natural Coho, this final rule amends the existing harvest control rule by adding a 10% buffer to the existing escapement goal and adjusting the abundance steps during the rebuilding period. For all three Coho salmon stocks, the Council’s Salmon Technical Team’s analysis determined that freshwater and marine habitat conditions were the primary cause of these stocks meeting the FMP’s criteria for being overfished rather than fishing. Recently, it was determined that the Queets and Strait of Juan de Fuca MUs have met the criteria for rebuilt status based on the most recent three-year geometric mean of escapement estimates (2020-2022) <span class="citation" data-cites="PFMC_3_2024">(<a href="#ref-PFMC_3_2024" role="doc-biblioref">Pacific Fishery Management Council 2024</a>)</span>.</p>
+<p>Additionally, at the federal level, Coho Salmon caught in coastal waters of the U.S. (e.g., greater than 3 but within 200 nautical miles offshore) are managed under the Magnuson-Stevens Fishery Conservation and Management Act (MSA), which is the legislation providing for the management of marine fisheries in U.S. waters. In 2018, the National Marine Fisheries Service (NMFS) notified the Pacific Fishery Management Council (Council) that the Strait of Juan de Fuca, Queets, and Snohomish natural Coho Salmon stocks managed under the Council’s Pacific Coast Salmon Fishery Management Plan (FMP) met the overfished criteria of the FMP and the MSA. NMFS determined that these stocks were overfished under the MSA, due to spawning escapement falling below the required level for the 3-year period 2014-2016. The MSA requires overfished stocks to be rebuilt in as short a time as possible, not to exceed 10 years. The overfished determinations were announced in the Federal Register on August 6, 2018 (83 FR 38292). In response to the overfished determination, the Council developed rebuilding plans for these stocks and provided them to NMFS in 2019. In 2021, NMFS issued a final rule under the authority of the MSA to approve and implement rebuilding plans recommended by the Council for the three stocks (86 FR 9301; https://www.federalregister.gov/documents/2021/02/12/2021-02834/fisheries-off-west-coast-states-west-coast-salmon-fisheries-rebuilding-Coho-salmon-stocks). This final rule adopts the existing harvest control rules, which use an annual abundance-based stepped harvest rate control rule with stock-specific abundance levels governing the total ERs applied to forecast stock abundance levels. For Snohomish natural Coho, this final rule amends the existing harvest control rule by adding a 10% buffer to the existing escapement goal and adjusting the abundance steps during the rebuilding period. For all three Coho Salmon stocks, the Council’s Salmon Technical Team’s analysis determined that freshwater and marine habitat conditions were the primary cause of these stocks meeting the FMP’s criteria for being overfished rather than fishing. Recently, it was determined that the Queets and Strait of Juan de Fuca MUs have met the criteria for rebuilt status based on the most recent three-year geometric mean of escapement estimates (2020-2022) <span class="citation" data-cites="PFMC_3_2024">(<a href="#ref-PFMC_3_2024" role="doc-biblioref">Pacific Fishery Management Council 2024</a>)</span>.</p>
 </section>
 </section>
 <section id="annual-implementation-of-the-southern-coho-management-plan" class="level1" data-number="3">
 <h1 data-number="3"><span class="header-section-number">3</span> Annual Implementation of the Southern Coho Management Plan</h1>
-<p>The Coho Fisheries Regulation Assessment Model (Coho FRAM, Model Evaluation Workgroup (MEW). 2008) has been the tool used to plan US preseason fisheries and also to evaluate, postseason, exploitation rates (ERs) by the fisheries of both Parties on the naturally spawning Coho management units (MUs) specified by the CoABM. Canada has not been using Coho FRAM preseason, instead using a combination of a ‘domestic model’ for planning marine fisheries and a ‘decay model’ for planning Fraser River fisheries.</p>
-<p>Each country manages the Coho harvest within its ER cap through its own domestic fisheries management processes and annual fisheries plans. For Canada, the annual domestic planning process is documented in the salmon Integrated Fisheries Management Plan (IFMP). For the US, the North of Cape Falcon ocean salmon fishing plans are reported in Preseason Report III (PFMC documents). For US Inside MUs, the 2019 PST uses the exploitation rate thresholds and stepped harvest rate goals from the Comprehensive Coho Agreement and adopted as (Fishery Management Plan) FMP conservation objectives in 2009. For US Outside MUs, exploitation rate constraints represent the Maximum Fishing Mortality Threshold (MFMT). For US domestic purposes, the Pacific Fishery Management Council MU status categories are “critical”, “low”, and “normal”, which correspond to the PSC categories of “low”, “moderate” and “abundant”, respectively <span class="citation" data-cites="PFMC_2022b">(<a href="#ref-PFMC_2022b" role="doc-biblioref"><strong>PFMC_2022b?</strong></a>)</span>.</p>
+<p>The Coho FRAM (Coho FRAM, Model Evaluation Workgroup (MEW). 2008) has been the tool used to plan US preseason fisheries and also to evaluate, postseason, ERs by the fisheries of both Parties on the naturally spawning Coho MUs specified by the CoABM. Canada has not been using Coho FRAM preseason, instead using a combination of a ‘domestic model’ for planning marine fisheries and a ‘decay model’ for planning Fraser River fisheries. (<em>Jeromy’s comment - Can we describe what get’s exchanged during the preseason process to reconcile this difference here in one or two sentences?</em>)</p>
+<p>Each country manages the Coho harvest within its ER cap through its own domestic fisheries management processes and annual fisheries plans. For Canada, the annual domestic planning process is documented in the salmon Integrated Fisheries Management Plan (IFMP) at the culmination of the process each June (<em>is June correct?</em>). For the US, the North of Cape Falcon ocean salmon fishing plans are reported in Preseason Report III (PFMC documents) at the culmination of the Council process each April. For US Inside MUs, the 2019 PST uses the exploitation rate thresholds and stepped harvest rate goals from the Comprehensive Coho Agreement and adopted as (Fishery Management Plan) FMP conservation objectives in 2009. For US Outside MUs, exploitation rate constraints represent the Maximum Fishing Mortality Threshold (MFMT). For US domestic purposes, the Pacific Fishery Management Council MU status categories are “critical”, “low”, and “normal”, which correspond to the PSC categories of “low”, “moderate” and “abundant”, respectively <span class="citation" data-cites="PFMC_2022b">(<a href="#ref-PFMC_2022b" role="doc-biblioref"><strong>PFMC_2022b?</strong></a>)</span>.</p>
 <p>The US FMP includes status determination criteria (SDC) for overfishing, approaching an overfished condition, overfished, not overfished/rebuilding, and rebuilt <span class="citation" data-cites="PFMC_1_2023">(<a href="#ref-PFMC_1_2023" role="doc-biblioref">Pacific Fishery Management Council 2023b</a>)</span>. These criteria are:</p>
 <ul>
 <li><p>Overfishing occurs when a single year exploitation rate exceeds the maximum fishing mortality threshold (MFMT), which is based on the maximum sustainable yield exploitation rate (FMSY);</p></li>
@@ -1532,8 +1527,8 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
 <li>Stocks’ observed escapement</li>
 <li>Fisheries’ observed catch and non-retention mortality by FRAM time period</li>
 </ul>
-<p>Because the domestic planning processes of the Parties are not synchronous, a single pre-season command file containing expectations for both Canada and the US is not available prior to the conclusion of the PFMC process (US pre-season fishery planning) in April. The pre-season command file used by the PFMC incorporates cohort abundance for both Canadian and US MUs, but planned fishery regulations for US fisheries only. Unless other information is available, Canadian regulations are assumed to be similar to those implemented in the previous year. Subsequent to this process, additional command files are generated to represent the actual Canadian fishing plans. Command files used in pre-season planning from 2004 to 2023 are detailed in the table below. These files contain specific information used at the time to model fisheries along with the pre-season forecasts of stock abundances.</p>
-<p><strong>Pre- and post-season command files and base period used in FRAM to evalaute exploitation rates MUs over catch years 2004 through 2023. “Post-season Original” command files are those used to generate estimates for the Annual ER Report provided to the Southern Panel during the PSC Annual Meeting. </strong></p>
+<p>Because the domestic planning processes of the Parties are not synchronous, a single pre-season command file containing expectations for both Canada and the US is not available prior to the conclusion of the Council process (US pre-season fishery planning) in April. Therefor, in any given year the pre-season command file used by the Council incorporates cohort abundance for both Canadian and US MUs, but planned fishery regulations for US fisheries only. Unless other information is available, Canadian regulations are assumed to be similar to those implemented in the previous year. Subsequent to this process, additional command files are generated to represent the actual Canadian fishing plans. Command files used in pre-season planning from 2004 to 2023 are detailed in <strong>Appendix table X</strong>. These files contain specific information used at the time to model fisheries along with the pre-season forecasts of stock abundances.</p>
+<p>(<em>pull from excel file???</em>) <strong>Pre- and post-season command files and base period used in FRAM to evaluate exploitation rates MUs over catch years 2004 through 2023. “Post-season Original” command files are those used to generate estimates for the Annual ER Report provided to the Southern Panel during the PSC Annual Meeting. </strong></p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 11%">
@@ -1718,28 +1713,26 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
 </table>
 <section id="us-preseason-abundance-forecasts" class="level3" data-number="3.2.1">
 <h3 data-number="3.2.1" class="anchored" data-anchor-id="us-preseason-abundance-forecasts"><span class="header-section-number">3.2.1</span> US Preseason Abundance Forecasts</h3>
-<p>The US forecast development commences in January of every year. US Forecasts for both Coho and Chinook stocks are finalized in late February and published in the annual Pacific Fisheries Management Council’s (PFMC) Pre I Report. In mid-March, the Parties share general expectations for stock abundance and fisheries though a manager-to-manager information exchange (see Development of Canadian Preseason Coho FRAM Inputs). These forecasts are then used throughout the PFMC/NOF (North of Falcon) salmon fishery planning meetings which conclude at the April PFMC meeting.</p>
+<p>US forecast development commences in January of every year. US Forecasts for both Coho and Chinook stocks are finalized in late February and published in the annual Council’s Pre I Report (https://www.pcouncil.org/salmon-management-documents/#access-salmon-safe-and-management-documents-toc-7e081b15-e1b0-409d-a12e-1a77c0b34e2b). In mid-March, the Parties share general expectations for stock abundance and fisheries though a manager-to-manager information exchange (see Development of Canadian Preseason Coho FRAM Inputs). These forecasts are then used throughout the Council/NOF (North of Falcon) salmon fishery planning meetings which conclude at the April Council meeting.</p>
 <p>The forecast methodologies for many US stocks’ are generally based upon the products of two estimates specific to each production source: 1) number of smolts leaving freshwaters; and, 2) expected regional marine survival rates. Numbers of naturally produced smolts are estimated in a variety of ways but are based upon a large and widely distributed system of smolt traps. The number of smolts released from hatcheries are known. Marine survival is defined as, and calculated from, catch plus escapement from CWT data. Sibling relationships, between jack returns and subsequent return to the mature cohort, have also been used as an index to predict marine survival. Environmental conditions have been increasingly relied upon as predictors of anticipated survival from smolt to adults entering the fisheries.</p>
 <p>In recent years, a variety of preseason abundance estimators have been employed for Puget Sound and Washington coastal Coho stocks, primarily based on smolt production and survival <span class="citation" data-cites="PFMC_1_2023">(<a href="#ref-PFMC_1_2023" role="doc-biblioref">Pacific Fishery Management Council 2023b</a>)</span>. These estimators are used to forecast preseason abundance of adult Ocean Age 3 recruits. Forecasts for natural Puget Sound Coho stocks were generally derived by measured or predicted smolt production from each major watershed or region, multiplied by stock-specific marine survival rate predictions based on a jack return model from the WDFW Big Beef Creek Research Station in Hood Canal, natural Coho CWT tagging programs at Baker Lake (Skagit River basin) and South Fork Skykomish River, adult recruits/smolt data generated from the WDFW Deschutes River Research Station, or other information.</p>
 </section>
 <section id="development-of-us-preseason-fram-inputs" class="level3" data-number="3.2.2">
 <h3 data-number="3.2.2" class="anchored" data-anchor-id="development-of-us-preseason-fram-inputs"><span class="header-section-number">3.2.2</span> Development of US Preseason FRAM Inputs</h3>
-<p>US fishery planning relies upon both the Coho and Chinook FRAM models. The process starts at the early March PFMC meeting, proceeds through March at a variety of regional meetings (including the NOF meetings), and concludes in early/mid April at the next PFMC meeting.</p>
+<p>US fishery planning relies upon both the Coho and Chinook FRAM models. The process starts at the early March Council meeting, proceeds through March at a variety of regional meetings (including the NOF meetings), and concludes in early/mid April at the next Council meeting.</p>
 <p><strong>US Coho FRAM Stock Abundance Inputs:</strong> Abundance forecasts are incorporated into two models, Coho FRAM and Chinook FRAM, both of which rely on similar algorithms and common computer code. Mass marked and unmarked naturally and hatchery produced stocks (components of MUs) are represented in US Coho FRAM (e.g., Queets naturally produced unmarked, Queets naturally produced marked, Queets hatchery unmarked, Queets hatchery marked). For the MUs specified by the CoABM, appropriate unmarked naturally produced stocks are combined. Numeric forecasts for southern US Coho stocks are provided from regional managers which utilize a variety of methodologies. The annual forecasts of Coho FRAM stocks are entered as Abundance Scalars, applied within the model to Base Period Stock Abundance.</p>
-<p>Prior to the March PFMC meeting, an initial Coho FRAM model run with last year’s planned fisheries and the current year’s US forecasts serves to inform, in a general sense, how the fishery plan from the previous year needs to change to accommodate the current year’s stocks’ abundances. The results from this model run are included in the PFMC’s Pre I Report.</p>
-<p>Starting with this initial model run, the US domestic salmon planning process is affected by the timing and quality of forecasts for Canadian Coho stocks. Coho FRAM performs best when data for all stocks are incorporated. The US domestic process is, in theory, at the half way point before Canadian forecasts are provided and combined with US forecasts for FRAM modeling at the NOF 2 meeting in late March. Thus, at the March PFMC meeting and the NOF 1 meeting there is hesitation to fully use the FRAM results for planning domestic fisheries as those results will likely change when Canadian forecasts are incorporated.</p>
-<p><strong>US FRAM Fishery Inputs:</strong> Expected fishery catch and/or mortality is the other major category of preseason inputs to Coho FRAM. At the March PFMC meeting three options (e.g., catch levels, retention restrictions, harvest rate scalars, seasons) are developed (low, moderate, high) for the US ocean fisheries (California, Oregon, and Washington coasts). The FRAM results for both Coho and Chinook from these March options are published in the annual PFMC Pre II Report.</p>
-<p>During the course of March and early April US meetings, the North of Falcon (NOF) domestic planning refines fishery inputs to insure compliance with various agreements. These include the PFMC Salmon Framework Plan, domestic and international treaties; and the US Endangered Species Act which collectively establish constraints on fishery impacts upon US Coho and Chinook stocks.</p>
-<p>For the PFMC ocean fisheries the model inputs are Catch Quotas and regulations such as mark-selective fisheries, with the expectation that subsequent inseason monitoring will close fisheries without exceeding quotas. The model inputs for most sport and commercial US Puget Sound marine and terminal area fisheries are expected catch or expected harvest rates, generally based upon recent year averages and anticipated fisheries for Fraser Sockeye, Pink and Chum Salmon, and regulations such as mark selective fishing. In some cases the Catch Quota management approach is also used within Puget Sound with planned fishery closure as inseason observations indicate FRAM total fishery mortality estimates are being approached. The mortality associated with Coho non-retention is another class of fishery inputs.</p>
-<p>Through the month of March the NOF meetings shape inside fisheries (Washington Coastal terminal, Puget Sound marine and freshwater) for both Coho and Chinook for compliance with domestic and international requirements. The NOF planning informs the April PFMC meeting toward the development of the final set of ocean, inside, and terminal fisheries. The FRAM modeling results of the final adopted regulations for ocean fisheries are published in the PFMC Pre III Report, and submitted to the US Department of Commerce for confirmation of compliance with the US Endangered Species Act and other domestic obligations. Inside fisheries are formalized by regional agreements by state and tribal managers. There is virtually no ability to modify the regulations and agreements after they are adopted.</p>
-<p>Throughout this process, the January post season, Pre I-III reports are provided to Canada as information. The Final April PFMC Coho FRAM run is also provided to Canada. It is the April PFMC model run that until recently has provided the information for post season assessment of exploitation rates (see Canadian section of “Timing of Domestic Planning” for potential exception).</p>
+<p>Prior to the March Council meeting, an initial Coho FRAM model run with last year’s planned fisheries and the current year’s US forecasts serves to inform, in a general sense, how the fishery plan from the previous year needs to change to accommodate the current year’s stocks’ abundances. The results from this model run are included in the Council’s Pre I Report (for these reports see: https://www.pcouncil.org/salmon-management-documents/#access-salmon-safe-and-management-documents-toc-7e081b15-e1b0-409d-a12e-1a77c0b34e2b).</p>
+<p>Starting with this initial model run, the US domestic salmon planning process is affected by the timing and quality of forecasts for Canadian Coho stocks. Coho FRAM performs best when data for all stocks are incorporated. The US domestic process is, in theory, at the half way point before Canadian forecasts are provided and combined with US forecasts for FRAM modeling at the NOF 2 meeting in late March. Thus, at the March Council meeting and the NOF 1 meeting there is hesitation to fully use the FRAM results for planning domestic fisheries as those results will likely change when Canadian forecasts are incorporated.</p>
+<p><strong>US FRAM Fishery Inputs:</strong> Expected fishery catch and/or mortality is the other major category of preseason inputs to Coho FRAM. At the March Council meeting three options (e.g., catch levels, retention restrictions, harvest rate scalars, seasons) are developed (low, moderate, high) for the US ocean fisheries (California, Oregon, and Washington coasts). The FRAM results for both Coho and Chinook from these March options are published in the annual PFMC Pre II Report.</p>
+<p>During the course of March and early April US meetings, the NOF domestic planning refines fishery inputs to insure compliance with various agreements. These include the Council Salmon FMP, domestic and international treaties; and the US ESA which collectively establish constraints on fishery impacts upon US Coho and Chinook stocks.</p>
+<p>For the Council ocean fisheries the model inputs are Catch Quotas and regulations such as mark-selective fisheries, with the expectation that subsequent inseason monitoring will close fisheries without exceeding quotas. The model inputs for most sport and commercial US Puget Sound marine and terminal area fisheries are expected catch or expected harvest rates, generally based upon recent year averages and anticipated fisheries for Fraser Sockeye, Pink and Chum Salmon, and regulations such as mark selective fishing. In some cases the Catch Quota management approach is also used within Puget Sound with planned fishery closure as inseason observations indicate FRAM total fishery mortality estimates are being approached. The mortality associated with Coho non-retention is another class of fishery inputs.</p>
+<p>Through the month of March the NOF meetings shape inside fisheries (Washington Coastal terminal, Puget Sound marine and freshwater) for both Coho and Chinook for compliance with domestic and international requirements. The NOF planning informs the April Council meeting toward the development of the final set of ocean, inside, and terminal fisheries. The FRAM modeling results of the final adopted regulations for ocean fisheries are published in the Council Pre III Report, and submitted to the US Department of Commerce for approval under the MSA and confirmation of compliance with the US ESA and other domestic obligations. Inside fisheries are formalized by regional agreements by state and tribal managers. There is no ability to modify the regulations and agreements after they are adopted.</p>
+<p>Throughout this process, the January post season, Pre I-III reports are provided to Canada as information. The Final April Council Coho FRAM run is also provided to Canada. It is the April Council model run that until recently has provided the information for post season assessment of exploitation rates (see Canadian section of “Timing of Domestic Planning” for potential exception).</p>
 </section>
 <section id="us-inseason-management" class="level3" data-number="3.2.3">
 <h3 data-number="3.2.3" class="anchored" data-anchor-id="us-inseason-management"><span class="header-section-number">3.2.3</span> US Inseason Management</h3>
 <p>Inseason changes to planned U.S fisheries are limited, but have been implemented under some specific conditions. When ocean area/fishery specific quotas are not being caught in an ocean area then part of the quota may be transferred to another ocean area/fishery, based upon FRAM estimates of neutral impacts to the limiting stock(s); this may include adjustments to bag limits, seasons, and/or MSF regulations. The preseason planned prosecution of some fisheries is dependent upon the results of test fisheries, i.e.&nbsp;the Fraser Panel Sockeye directed commercial fisheries. Emergency closures due to attaining or exceeding planned catch quotas or in response to indications of reduced abundance.</p>
-</section>
-<section id="us-management-units-2023-exploitation-rate-constraints" class="level3" data-number="3.2.4">
-<h3 data-number="3.2.4" class="anchored" data-anchor-id="us-management-units-2023-exploitation-rate-constraints"><span class="header-section-number">3.2.4</span> US Management Units 2023 Exploitation Rate Constraints</h3>
+<p>(*this would be updated with the most current year of information** ### US Management Units 2023 Exploitation Rate Constraints</p>
 <p>For 2023, Puget Sound and Washington coast Coho Salmon constraints are as follows <span class="citation" data-cites="PFMC_3_2023">(<a href="#ref-PFMC_3_2023" role="doc-biblioref">Pacific Fishery Management Council 2023a</a>)</span>:</p>
 <p><strong>Fishery Management Plan (FMP)</strong></p>
 <table class="caption-top table">
@@ -1865,22 +1858,22 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
 </tr>
 </tbody>
 </table>
-<p>FMP total ER constraint is preliminary. For Puget Sound stocks, the exploitation rate constraints and categorical status (Normal, Low, Critical) reflect application of Comprehensive Coho Agreement rules, as adopted in the FMP. For Washington Coast stocks, exploitation rate constraints represent MFMT. Note that under US v. Washington and Hoh v. Baldrige case law, the management objectives can differ from FMP objectives provided there is an annual agreement among the state and tribal comanagers; therefore, the exploitation rates used to report categorical status do not necessarily represent maximum allowable rates for these stocks.</p>
-<p>PST Southern Coho Management Plan constraint is Preliminary. For Puget Sound and Washington Coast management units, the exploitation rate constraints reflect application of the 2019 PST Southern Coho Management Plan.</p>
-<p>Under the PST Southern Coho Management Plan, categories (Abundant, Moderate, Low) correspond to the general exploitation rate ranges depicted in paragraph 8(b)(iii) of the 2019 PST Southern Coho Management Plan. For Washington Coast stocks, categorical status is determined by the exploitation rate associated with meeting the escapement goal (or the lower end of the escapement goal range). As Washington Coast stocks are managed to achieve agreed escapement goals, this exploitation rate also becomes an approximation of the maximum allowable rate unless the stock is in the “Low” status. In that case, an ER of up to 20% is allowed.</p>
+<p>FMP total ER constraint is preliminary. For Puget Sound stocks, the ER constraints and categorical status (Normal, Low, Critical) reflect application of Comprehensive Coho Agreement rules, as adopted in the FMP. For Washington Coast stocks, ER constraints represent MFMT. Note that under US v. Washington and Hoh v. Baldrige case law, the management objectives can differ from FMP objectives provided there is an annual agreement among the state and tribal comanagers; therefore, the ERs used to report categorical status do not necessarily represent maximum allowable rates for these stocks.</p>
+<p>PST Southern Coho Management Plan constraint is Preliminary. For Puget Sound and Washington Coast management units, the ER constraints reflect application of the 2019 PST Southern Coho Management Plan.</p>
+<p>Under the PST Southern Coho Management Plan, categories (Abundant, Moderate, Low) correspond to the general ER ranges depicted in paragraph 8(b)(iii) of the 2019 PST Southern Coho Management Plan. For Washington Coast stocks, categorical status is determined by the ER associated with meeting the escapement goal (or the lower end of the escapement goal range). As Washington Coast stocks are managed to achieve agreed escapement goals, this ER also becomes an approximation of the maximum allowable rate unless the stock is in the “Low” status. In that case, an ER of up to 20% is allowed.</p>
 <p>Grays Harbor constraints are based on projected natural area spawners (wild plus hatchery strays) and MSP escapement goal of 35,400. Exploitation rate constraint subject to change should comanagers agree to a modified escapement goal under US v. Washington and Hoh v. Baldrige case law.</p>
 <p>Key considerations for Canadian fishery management for Coho in 2023 are expected to include:</p>
 <ol type="1">
 <li>meeting domestic conservation obligations for Interior Fraser (including Thompson River) Coho;</li>
 <li>Coho harvests by First Nations fisheries;</li>
-<li>incidental impacts during commercial and First Nations fisheries directed atChinook, chum, and especially Fraser Sockeye salmon which will see a dominant late run return in 2023 <span class="citation" data-cites="PFMC_3_2023">(<a href="#ref-PFMC_3_2023" role="doc-biblioref">Pacific Fishery Management Council 2023a</a>)</span>.</li>
+<li>incidental impacts during commercial and First Nations fisheries directed at Chinook, chum, and especially Fraser Sockeye salmon which will see a dominant late run return in 2023 <span class="citation" data-cites="PFMC_3_2023">(<a href="#ref-PFMC_3_2023" role="doc-biblioref">Pacific Fishery Management Council 2023a</a>)</span>.</li>
 </ol>
-<p>The Canadian fishery regimes affecting Coho are expected to be driven by Canadian domestic allowable impacts on the Thompson River component of the Interior Fraser management unit, Fraser Chinook concerns and Fraser Sockeye stocks of concern co-migrating with the late run. In years prior to 2014, Canadian fisheries were managed so as not to exceed a three percent maximum exploitation rate. In May 2014, Canada decided to permit up to a 16 percent exploitation rate on upper Fraser Coho in Canadian fisheries to allow for impacts in fisheries directed at a record Fraser Sockeye Salmon forecast. Since 2015, upper Fraser Coho in Canadian fisheries have been managed per low status limitations. The projected status of Canadian Coho management units in 2023 indicates continuing concerns for the condition of Interior Fraser Coho. The Interior Fraser Coho management unit is anticipated to remain in low abundance status, resulting in a requirement to constrain the total mortality fishery exploitation rate for 2023 Southern US fisheries to a maximum of 10.0%.</p>
+<p>The Canadian fishery regimes affecting Coho are expected to be driven by Canadian domestic allowable impacts on the Thompson River component of the Interior Fraser management unit, Fraser Chinook concerns and Fraser Sockeye stocks of concern co-migrating with the late run. In years prior to 2014, Canadian fisheries were managed so as not to exceed a three percent maximum ER. In May 2014, Canada decided to permit up to a 16% ER on upper Fraser Coho in Canadian fisheries to allow for impacts in fisheries directed at a record Fraser Sockeye Salmon forecast. Since 2015, upper Fraser Coho in Canadian fisheries have been managed per low status limitations. The projected status of Canadian Coho management units in 2023 indicates continuing concerns for the condition of Interior Fraser Coho. The Interior Fraser Coho management unit is anticipated to remain in low abundance status, resulting in a requirement to constrain the total mortality fishery ER for 2023 Southern US fisheries to a maximum of 10.0%.</p>
 </section>
 </section>
 <section id="canadian-fishery-planning-process" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="canadian-fishery-planning-process"><span class="header-section-number">3.3</span> Canadian Fishery Planning Process</h2>
-<p>Annual Canadian fisheries are planned using a combination of two domestic models (marine fisheries and freshwater decay models) and tools focused upon Interior Fraser River (IFR) Coho. The planning process starts early in the year. A draft Integrated Salmon Fishery Management Plan (IFMP) is available for stakeholder comment in April, but the IFMP is not finalized until formally approved by the Fisheries Minister in June.</p>
+<p>Annual Canadian fisheries are planned using a combination of two domestic models (marine fisheries and freshwater decay models) and tools focused upon Interior Fraser River (IFR) Coho. The planning process starts early in the year. A draft IFMP is available for stakeholder comment in April, but the IFMP is not finalized until formally approved by the Fisheries Minister in June.</p>
 <p>In the domestic process, initial planning scenarios are developed based on discussions with Fishery Managers, preliminary salmon outlook for stock status (prepared in November of previous year), effort expectation (targeted or incidental impact on IFR Coho) given ER constraints, and domestic allocation policy. Once stock abundance forecasts are available in March and timing and diversion forecasts for Fraser Sockeye are available in June, the final Salmon IFMP is submitted to the Minister for approval. The Canadian domestic model does not use Coho abundance forecasts directly, relying instead upon past relationships between fisheries’ effort and IFR ER, to estimate preseason projected ER for IFR. Depending on what species or fishery specific objectives are in place for the upcoming season, the domestic model is populated with anticipated effort based on trends in recent years and scaled to base period (1986–1997) effort. Multiple scenarios are run based on adjusting preliminary fishing plans (species, effort, month, gear, regulations) and results are reviewed by Fisheries Managers and evaluated for multiple objectives, in particular, meeting the preseason ER objectives for IFR Coho.</p>
 <section id="development-of-canadian-preseason-coho-fram-inputs" class="level3" data-number="3.3.1">
 <h3 data-number="3.3.1" class="anchored" data-anchor-id="development-of-canadian-preseason-coho-fram-inputs"><span class="header-section-number">3.3.1</span> Development of Canadian Preseason Coho FRAM Inputs</h3>
@@ -1913,7 +1906,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
 </ol>
 <p>Estimates of freshwater production (smolt out-migrants) for hatchery produced Coho, by FRAM production region, are scaled to Base Period production. Next the annual expected regional marine survival (MS) is scaled to Base Period marine survival. Both ratios are applied to a stock’s Base Period Abundance to produce the annual adult abundance forecasts. To illustrate (<em>by stock</em>):</p>
 <p>Adult H Abundance = (<em>Annual H Smolts</em>) / (<em>Base H Smolts</em>) X (<em>Expected MS</em>) / (<em>Base MS</em>) X (*Base Adult Abundance)</p>
-<p>Hatchery smolt data are obtained from the Canadian Salmon Enhancement Program. Where naturally produced smolt out-migrant estimates exists (2 of 14 Canadian production regions), the values are used. For the production regions where naturally produced smolt data are not available (the remaining 12 of 14 Canadian production regions), the default production starting values has been the same as the annual hatchery output for the same FRAM production region, assuming similar smolt abundance trends between naturally produced and hatchery smolts. As hatchery production has been reduced over time it has become necessary to find other means to obtain the surrogates for naturally produced smolt production.</p>
+<p>Hatchery smolt data are obtained from the Canadian Salmon Enhancement Program. Where naturally produced smolt out-migrant estimates exists (2 of 14 Canadian production regions), the values are used. For the production regions where naturally produced smolt data are not available (the remaining 12 of 14 Canadian production regions), the default production starting values has been the same as the annual hatchery output for the same FRAM production region, which assumes similar smolt abundance trends between naturally produced and hatchery smolts occurs across time. (<em>Jeromy comment - “Correct? If so, can we say in a sentence or two how reliable, or potentially unreliable this practice is going forward?”</em>) As hatchery production has been reduced over time it has become necessary to find other means to obtain the surrogates for naturally produced smolt production.</p>
 <p>Marine survival expectations have been based upon hatchery and wild indicator CWT returns. As the number of Coho indicators has been reduced over time it has become necessary to use adjacent MU indicators to estimate marine survival for some MUs and use hatchery indicators to estimate survival of naturally spawning Coho.</p>
 <p>For IFR, where naturally produced smolt output is not available, the forecasted adult returns are used as inputs to Coho FRAM. This forecast is based on a naive model, usually an average of the previous three years estimated ocean adult abundance. However, the forecast may be “as observed last year” when it appears a longer term average is not appropriate; this was the case for the 2016 fishing year forecast. Several US 2016 forecasts also used the “as observed last year” approach due to the extremely poor returns in 2015 and the observations that those same poor environmental conditions existed for the smolts entering the ocean in 2015 (i.e., the 2016 adults).</p>
 <p><strong>Canadian FRAM Fishery Inputs:</strong></p>
@@ -1930,18 +1923,18 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
 </section>
 <section id="joint-canadian-and-us-postseason-evaluations" class="level2" data-number="3.4">
 <h2 data-number="3.4" class="anchored" data-anchor-id="joint-canadian-and-us-postseason-evaluations"><span class="header-section-number">3.4</span> Joint Canadian and US Postseason Evaluations</h2>
-<p>“Backwards Coho FRAM” is used to generate estimates of exploitation rates that are used to evaluate management performance relative to constraints set forth in the CoABM. Data required to populate FRAM are not available until one year after the fisheries were prosecuted, thus the 2021 postseason ER estimates were produced in February of 2023. The Backwards Coho FRAM is also employed to produce estimates of historic exploitation rates reported in this Periodic Report.</p>
+<p>“Backwards Coho FRAM” is used to generate estimates of exploitation rates that are used to evaluate management performance relative to constraints set forth in the CoABM. Data required to populate FRAM are not available until one year after the fisheries were prosecuted, thus the 2021 postseason ER estimates were produced in February of 2023. The Backwards Coho FRAM is also employed to produce estimates of historic ERs reported in this Periodic Report.</p>
 <p>Backwards Coho FRAM requires estimated mortalities by fishery strata (uses the Base Period stock-fishery-time steps; terminal IFR fisheries have been incorporated recently) and available estimates of escapements to reconstruct annual cohort abundances and generate post-season estimates of ERs. The escapement estimates for Coho FRAM stocks and catch information (catch, type of fishery –Mark Selective, Non-retention, Quota) for FRAM fisheries are compiled from various government agencies (USA: Federal, State and Tribal; Canada: Federal, and First Nations) and reviewed by the CoTC.</p>
 <p>The Backwards Coho FRAM derives total cohort abundance of Coho FRAM stocks through an iterative process of estimating the set of stock abundance scalars that best explain observed escapements and reported catches. FRAM calculation of stock abundance scalars is the preferred method and occurs when escapement data are available (almost all US stocks). When escapement estimates are not available (almost all Canadian stocks), the stock abundance scalars are calculated externally and entered into FRAM; an estimate of “observed” marine survival has been used as a surrogate to recalculate Canadian stock abundances per the preseason method previously described. Consequently, FRAM’s iterative process of estimating a full set of stock abundance scalars is not possible and this has implications for backwards FRAM estimates of abundance for all stocks. Ideally total cohort abundance for each MU is derived by summing model estimated stock specific: pre-terminal catch, terminal catch, and escapement.</p>
-<p>The Backwards Coho FRAM provides two estimates of cohort abundance, termed “Ocean age-3” and “January age-3”. Ocean age-3 abundance includes escapement and fishery impacts. January age-3 includes escapement, fishery impacts, and natural mortality. Ocean age-3 is the basis for Pacific Salmon Treaty stock status and is therefore the measure provided in the tables and figures in this report, and in the annual postseason evaluations.</p>
+<p>The Backwards Coho FRAM provides two estimates of cohort abundance, termed “Ocean age-3” and “January age-3”. Ocean age-3 abundance includes escapement and fishery impacts. January age-3 includes escapement, fishery impacts, and natural mortality. Ocean age-3 is the basis for PST stock status and is therefore the measure provided in the tables and figures in this report, and in the annual postseason evaluations.</p>
 <p>These estimates of cohort abundance, catches and escapements are used to generate estimates of ERs and determine MU status for post season reporting to the Southern Panel.</p>
 </section>
 <section id="overview-of-coded-wire-tag-use" class="level2" data-number="3.5">
 <h2 data-number="3.5" class="anchored" data-anchor-id="overview-of-coded-wire-tag-use"><span class="header-section-number">3.5</span> Overview of Coded Wire Tag Use</h2>
 <p>The use of the term indicator stock within this report does not imply a set list of agreed to indicator stocks. Instead, the CoTC assesses all available CWT data for inclusion in the Mixed-Stock Model (MSM), cohort reconstructions, and other processes. With the base period spanning many years, it is beneficial if a stock is well tagged and well sampled over a long period of time. The coded-wire tag indicator stocks provide the primary data for predicting, monitoring, and modeling harvest impacts on individual Coho Salmon populations. The Joint Coho Technical Committee (CoTC) uses CWT recoveries from the indicator stocks to reconstruct cohorts coastwide. While a few indicator tag groups are naturally-spawning fish, the vast majority consist of hatchery fish intended to represent each MU. Hatchery indicator stocks are selected on the basis of brood stock, rearing, and release strategies and are assumed to be surrogates for the naturally-spawning fish. The indicator program assumes that tagged and untagged fish experience similar trends in marine survival and similar exploitation patterns. Coastwide, approximately eight million juvenile Coho Salmon are coded-wire tagged annually <span class="citation" data-cites="Nandor_et_al_2010">(<a href="#ref-Nandor_et_al_2010" role="doc-biblioref">Nandor et al. 2010</a>)</span>.</p>
-<p>Some major changes in the CWT indicator stock program have occurred since the Pacific Salmon Treaty was signed in 1985. One of the most notable changes is the mass marking of hatchery fish in the Pacific Northwest. For many years, an adipose fin clip was used as an external mark to identify fish (natural spawning or hatchery) with a CWT. However, since brood year 1995 in the US and 1996 in Canada, the adipose fin clip has been used as a mass mark to identify hatchery-origin fish and no longer uniquely indicates a coded-wire-tagged fish. With the advent of mark-selective fishing, marked (adipose fin-clipped) and unmarked fish do not have the same patterns of exploitation, violating the fundamental assumption of the indicator tag program. These changes in marking and fishing have resulted in the development and use of double index tag (DIT) releases in the indicator tag programs. The DIT group consists of two groups of hatchery fish, each 100% tagged with its own unique CWT. The two groups are presumed to be identical, except that one tagged group is unmarked and the other group is marked with an adipose fin clip. In a MSF, catches of marked fish will be retained whereas catches of unmarked fish will be released. The difference in return rates to the hatchery reflects the difference in ocean ERs in selective fisheries. A DIT group is recommended when the stock of interest is expected to be exploited by a mark-selective fishery (MSF). Unpaired (non-DIT) tag groups are either marked or unmarked and are considered single index tag (SIT) groups in this document.</p>
+<p>Some major changes in the CWT indicator stock program have occurred since the PST was signed in 1985. One of the most notable changes is the mass marking of hatchery fish in the Pacific Northwest. For many years, an adipose fin clip was used as an external mark to identify fish (natural spawning or hatchery) with a CWT. However, since brood year 1995 in the US and 1996 in Canada, the adipose fin clip has been used as a mass mark to identify hatchery-origin fish and no longer uniquely indicates a coded-wire-tagged fish. With the advent of mark-selective fishing, marked (adipose fin-clipped) and unmarked fish do not have the same patterns of exploitation, violating the fundamental assumption of the indicator tag program. These changes in marking and fishing have resulted in the development and use of double index tag (DIT) releases in the indicator tag programs. The DIT group consists of two groups of hatchery fish, each 100% tagged with its own unique CWT. The two groups are presumed to be identical, except that one tagged group is unmarked and the other group is marked with an adipose fin clip. In a MSF, catches of marked fish will be retained whereas catches of unmarked fish will be released. The difference in return rates to the hatchery reflects the difference in ocean ERs in selective fisheries. A DIT group is recommended when the stock of interest is expected to be exploited by a mark-selective fishery (MSF). Unpaired (non-DIT) tag groups are either marked or unmarked and are considered single index tag (SIT) groups in this document.</p>
 <p>To obtain unbiased estimates of fishery-specific impacts on individual stocks, a known proportion of both the catch and escapement must be sampled for CWTs throughout the migratory range of the stock and the proportion sampled must be adequate to produce a statistically reliable expansion of sampled Coho. Mass marking creates the following two additional complexities for sampling of CWTs: (1) DIT stocks are unmarked but contain CWTs; and (2) marked fish do not necessarily contain CWTs. Therefore, all fish, not just marked fish (with an adipose fin-clip), must be sampled for CWTs. Detection of CWTs in unmarked fish requires electronic sampling using wands or tubes. Detection of CWTs in marked fish requires either field-based electronic sampling or collection of snouts for processing in the laboratory. For complete accounting, fish must be sampled throughout their range, in catch and escapement. Electronic sampling of both unmarked and marked Coho places an additional burden of time and expense on agencies</p>
-<p>At present, the utility of the DIT programs and the CWT programs in general for Coho is reduced due to low tagging rates, insufficient MU representation, low recovery rates, and incomplete coastwide coverage of electronic sampling programs <span class="citation" data-cites="PSCCWTW_2008">(<a href="#ref-PSCCWTW_2008" role="doc-biblioref">Pacific Salmon Commission Coded Wire Tag Workgroup 2008</a>)</span>. In addition, the CWT programs: (1) currently provide overall differences in ocean ERs – can’t discriminate individual fisheries; (2) have sample sizes that are generally small, so confidence limits are wide and estimates of differential impacts are imprecise; (3) are expensive and agencies are reluctant to fund tagging programs; and (4) unmarked DIT fish are unavailable for harvest in MSFs.</p>
+<p>At present, the utility of the DIT programs and the CWT programs in general for Coho is reduced due to low tagging rates, insufficient MU representation (<em>list which ones lack DITs - look at Table below</em>), low recovery rates, and incomplete coastwide coverage of electronic sampling programs <span class="citation" data-cites="PSCCWTW_2008">(<a href="#ref-PSCCWTW_2008" role="doc-biblioref">Pacific Salmon Commission Coded Wire Tag Workgroup 2008</a>)</span>. In addition, the CWT programs: (1) currently provide overall differences in ocean ERs – can’t discriminate individual fisheries; (2) have sample sizes that are generally small, so confidence limits are wide and estimates of differential impacts are imprecise; (3) are expensive and agencies are reluctant to fund tagging programs; and (4) unmarked DIT fish are unavailable for harvest in MSFs.</p>
 <p>Most MUs in the US have CWT indicator stocks and DIT programs. However, some of the programs have been eliminated in recent years due to budgetary constraints. Canada has discontinued all of their Coho Salmon DIT programs. The current Coho CWT indicator stocks for each MU and the brood years with DIT groups are listed below. The tag codes used in the Mixed-Stock-Model to develop the FRAM base period for catch years 1986-1997 are also listed below. All DIT groups released within US MUs to date are also listed below.</p>
 <p><strong>Coded-wire-tag indicator stocks and brood years with single index tag (SIT) and double index tag (DIT) groups for each Coho Management Unit (MU), beginning with brood year 1983. Indicator stocks are hatchery-produced Coho unless specified as “Wild” (Release data downloaded from RMIS 1-10-2023). SIT groups may be either marked or unmarked releases of CWT Coho. DIT groups are marked (adipose-fin clipped) and unmarked pairs of CWT Coho.</strong></p>
 <table class="caption-top table">
@@ -2396,23 +2389,23 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
 <p>** Post-season estimates of Ocean Age-3 total abundances and their associated status categories [A = abundanct, M = moderate, L= low] by MU for catch years 2004 through 2021. Management Units in the Abundant category have green highlighted cells, Moderate ones are not highlighted, and those in Low status are highlighted orange.** (note - need to make table fit unto a single page in Word)</p>
 <div class="cell">
 <div class="cell-output-display">
-<div id="zsbxxlgmqo" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#zsbxxlgmqo table {
+<div id="vnykekdofb" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#vnykekdofb table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#zsbxxlgmqo thead, #zsbxxlgmqo tbody, #zsbxxlgmqo tfoot, #zsbxxlgmqo tr, #zsbxxlgmqo td, #zsbxxlgmqo th {
+#vnykekdofb thead, #vnykekdofb tbody, #vnykekdofb tfoot, #vnykekdofb tr, #vnykekdofb td, #vnykekdofb th {
   border-style: none;
 }
 
-#zsbxxlgmqo p {
+#vnykekdofb p {
   margin: 0;
   padding: 0;
 }
 
-#zsbxxlgmqo .gt_table {
+#vnykekdofb .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -2438,12 +2431,12 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-left-color: #D3D3D3;
 }
 
-#zsbxxlgmqo .gt_caption {
+#vnykekdofb .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#zsbxxlgmqo .gt_title {
+#vnykekdofb .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -2455,7 +2448,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-bottom-width: 0;
 }
 
-#zsbxxlgmqo .gt_subtitle {
+#vnykekdofb .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -2467,7 +2460,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-top-width: 0;
 }
 
-#zsbxxlgmqo .gt_heading {
+#vnykekdofb .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -2479,13 +2472,13 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-right-color: #D3D3D3;
 }
 
-#zsbxxlgmqo .gt_bottom_border {
+#vnykekdofb .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#zsbxxlgmqo .gt_col_headings {
+#vnykekdofb .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2500,7 +2493,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-right-color: #D3D3D3;
 }
 
-#zsbxxlgmqo .gt_col_heading {
+#vnykekdofb .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2520,7 +2513,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   overflow-x: hidden;
 }
 
-#zsbxxlgmqo .gt_column_spanner_outer {
+#vnykekdofb .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2532,15 +2525,15 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   padding-right: 4px;
 }
 
-#zsbxxlgmqo .gt_column_spanner_outer:first-child {
+#vnykekdofb .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#zsbxxlgmqo .gt_column_spanner_outer:last-child {
+#vnykekdofb .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#zsbxxlgmqo .gt_column_spanner {
+#vnykekdofb .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -2552,11 +2545,11 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   width: 100%;
 }
 
-#zsbxxlgmqo .gt_spanner_row {
+#vnykekdofb .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#zsbxxlgmqo .gt_group_heading {
+#vnykekdofb .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2582,7 +2575,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   text-align: left;
 }
 
-#zsbxxlgmqo .gt_empty_group_heading {
+#vnykekdofb .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2597,15 +2590,15 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   vertical-align: middle;
 }
 
-#zsbxxlgmqo .gt_from_md > :first-child {
+#vnykekdofb .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#zsbxxlgmqo .gt_from_md > :last-child {
+#vnykekdofb .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#zsbxxlgmqo .gt_row {
+#vnykekdofb .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2624,7 +2617,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   overflow-x: hidden;
 }
 
-#zsbxxlgmqo .gt_stub {
+#vnykekdofb .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2637,7 +2630,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   padding-right: 5px;
 }
 
-#zsbxxlgmqo .gt_stub_row_group {
+#vnykekdofb .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2651,15 +2644,15 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   vertical-align: top;
 }
 
-#zsbxxlgmqo .gt_row_group_first td {
+#vnykekdofb .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#zsbxxlgmqo .gt_row_group_first th {
+#vnykekdofb .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#zsbxxlgmqo .gt_summary_row {
+#vnykekdofb .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2669,16 +2662,16 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   padding-right: 5px;
 }
 
-#zsbxxlgmqo .gt_first_summary_row {
+#vnykekdofb .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#zsbxxlgmqo .gt_first_summary_row.thick {
+#vnykekdofb .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#zsbxxlgmqo .gt_last_summary_row {
+#vnykekdofb .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2688,7 +2681,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-bottom-color: #D3D3D3;
 }
 
-#zsbxxlgmqo .gt_grand_summary_row {
+#vnykekdofb .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2698,7 +2691,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   padding-right: 5px;
 }
 
-#zsbxxlgmqo .gt_first_grand_summary_row {
+#vnykekdofb .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2708,7 +2701,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-top-color: #D3D3D3;
 }
 
-#zsbxxlgmqo .gt_last_grand_summary_row_top {
+#vnykekdofb .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2718,11 +2711,11 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-bottom-color: #D3D3D3;
 }
 
-#zsbxxlgmqo .gt_striped {
+#vnykekdofb .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#zsbxxlgmqo .gt_table_body {
+#vnykekdofb .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2731,7 +2724,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-bottom-color: #D3D3D3;
 }
 
-#zsbxxlgmqo .gt_footnotes {
+#vnykekdofb .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2745,7 +2738,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-right-color: #D3D3D3;
 }
 
-#zsbxxlgmqo .gt_footnote {
+#vnykekdofb .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -2754,7 +2747,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   padding-right: 5px;
 }
 
-#zsbxxlgmqo .gt_sourcenotes {
+#vnykekdofb .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2768,7 +2761,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-right-color: #D3D3D3;
 }
 
-#zsbxxlgmqo .gt_sourcenote {
+#vnykekdofb .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -2776,72 +2769,72 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   padding-right: 5px;
 }
 
-#zsbxxlgmqo .gt_left {
+#vnykekdofb .gt_left {
   text-align: left;
 }
 
-#zsbxxlgmqo .gt_center {
+#vnykekdofb .gt_center {
   text-align: center;
 }
 
-#zsbxxlgmqo .gt_right {
+#vnykekdofb .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#zsbxxlgmqo .gt_font_normal {
+#vnykekdofb .gt_font_normal {
   font-weight: normal;
 }
 
-#zsbxxlgmqo .gt_font_bold {
+#vnykekdofb .gt_font_bold {
   font-weight: bold;
 }
 
-#zsbxxlgmqo .gt_font_italic {
+#vnykekdofb .gt_font_italic {
   font-style: italic;
 }
 
-#zsbxxlgmqo .gt_super {
+#vnykekdofb .gt_super {
   font-size: 65%;
 }
 
-#zsbxxlgmqo .gt_footnote_marks {
+#vnykekdofb .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#zsbxxlgmqo .gt_asterisk {
+#vnykekdofb .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#zsbxxlgmqo .gt_indent_1 {
+#vnykekdofb .gt_indent_1 {
   text-indent: 5px;
 }
 
-#zsbxxlgmqo .gt_indent_2 {
+#vnykekdofb .gt_indent_2 {
   text-indent: 10px;
 }
 
-#zsbxxlgmqo .gt_indent_3 {
+#vnykekdofb .gt_indent_3 {
   text-indent: 15px;
 }
 
-#zsbxxlgmqo .gt_indent_4 {
+#vnykekdofb .gt_indent_4 {
   text-indent: 20px;
 }
 
-#zsbxxlgmqo .gt_indent_5 {
+#vnykekdofb .gt_indent_5 {
   text-indent: 25px;
 }
 
-#zsbxxlgmqo .katex-display {
+#vnykekdofb .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#zsbxxlgmqo div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#vnykekdofb div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -3215,23 +3208,23 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
 <p><strong>Total xxploitation rates by MU, catch years 2011 through 2021.</strong> (note - need to move Canadian MUs to top of table)</p>
 <div class="cell">
 <div class="cell-output-display">
-<div id="fmhjilpncg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#fmhjilpncg table {
+<div id="xakffpgjqm" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#xakffpgjqm table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#fmhjilpncg thead, #fmhjilpncg tbody, #fmhjilpncg tfoot, #fmhjilpncg tr, #fmhjilpncg td, #fmhjilpncg th {
+#xakffpgjqm thead, #xakffpgjqm tbody, #xakffpgjqm tfoot, #xakffpgjqm tr, #xakffpgjqm td, #xakffpgjqm th {
   border-style: none;
 }
 
-#fmhjilpncg p {
+#xakffpgjqm p {
   margin: 0;
   padding: 0;
 }
 
-#fmhjilpncg .gt_table {
+#xakffpgjqm .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -3257,12 +3250,12 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-left-color: #D3D3D3;
 }
 
-#fmhjilpncg .gt_caption {
+#xakffpgjqm .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#fmhjilpncg .gt_title {
+#xakffpgjqm .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -3274,7 +3267,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-bottom-width: 0;
 }
 
-#fmhjilpncg .gt_subtitle {
+#xakffpgjqm .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -3286,7 +3279,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-top-width: 0;
 }
 
-#fmhjilpncg .gt_heading {
+#xakffpgjqm .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -3298,13 +3291,13 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-right-color: #D3D3D3;
 }
 
-#fmhjilpncg .gt_bottom_border {
+#xakffpgjqm .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#fmhjilpncg .gt_col_headings {
+#xakffpgjqm .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -3319,7 +3312,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-right-color: #D3D3D3;
 }
 
-#fmhjilpncg .gt_col_heading {
+#xakffpgjqm .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3339,7 +3332,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   overflow-x: hidden;
 }
 
-#fmhjilpncg .gt_column_spanner_outer {
+#xakffpgjqm .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3351,15 +3344,15 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   padding-right: 4px;
 }
 
-#fmhjilpncg .gt_column_spanner_outer:first-child {
+#xakffpgjqm .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#fmhjilpncg .gt_column_spanner_outer:last-child {
+#xakffpgjqm .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#fmhjilpncg .gt_column_spanner {
+#xakffpgjqm .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -3371,11 +3364,11 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   width: 100%;
 }
 
-#fmhjilpncg .gt_spanner_row {
+#xakffpgjqm .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#fmhjilpncg .gt_group_heading {
+#xakffpgjqm .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3401,7 +3394,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   text-align: left;
 }
 
-#fmhjilpncg .gt_empty_group_heading {
+#xakffpgjqm .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -3416,15 +3409,15 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   vertical-align: middle;
 }
 
-#fmhjilpncg .gt_from_md > :first-child {
+#xakffpgjqm .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#fmhjilpncg .gt_from_md > :last-child {
+#xakffpgjqm .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#fmhjilpncg .gt_row {
+#xakffpgjqm .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3443,7 +3436,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   overflow-x: hidden;
 }
 
-#fmhjilpncg .gt_stub {
+#xakffpgjqm .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3456,7 +3449,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   padding-right: 5px;
 }
 
-#fmhjilpncg .gt_stub_row_group {
+#xakffpgjqm .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3470,15 +3463,15 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   vertical-align: top;
 }
 
-#fmhjilpncg .gt_row_group_first td {
+#xakffpgjqm .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#fmhjilpncg .gt_row_group_first th {
+#xakffpgjqm .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#fmhjilpncg .gt_summary_row {
+#xakffpgjqm .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -3488,16 +3481,16 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   padding-right: 5px;
 }
 
-#fmhjilpncg .gt_first_summary_row {
+#xakffpgjqm .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#fmhjilpncg .gt_first_summary_row.thick {
+#xakffpgjqm .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#fmhjilpncg .gt_last_summary_row {
+#xakffpgjqm .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3507,7 +3500,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-bottom-color: #D3D3D3;
 }
 
-#fmhjilpncg .gt_grand_summary_row {
+#xakffpgjqm .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -3517,7 +3510,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   padding-right: 5px;
 }
 
-#fmhjilpncg .gt_first_grand_summary_row {
+#xakffpgjqm .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3527,7 +3520,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-top-color: #D3D3D3;
 }
 
-#fmhjilpncg .gt_last_grand_summary_row_top {
+#xakffpgjqm .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3537,11 +3530,11 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-bottom-color: #D3D3D3;
 }
 
-#fmhjilpncg .gt_striped {
+#xakffpgjqm .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#fmhjilpncg .gt_table_body {
+#xakffpgjqm .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -3550,7 +3543,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-bottom-color: #D3D3D3;
 }
 
-#fmhjilpncg .gt_footnotes {
+#xakffpgjqm .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -3564,7 +3557,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-right-color: #D3D3D3;
 }
 
-#fmhjilpncg .gt_footnote {
+#xakffpgjqm .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -3573,7 +3566,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   padding-right: 5px;
 }
 
-#fmhjilpncg .gt_sourcenotes {
+#xakffpgjqm .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -3587,7 +3580,7 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   border-right-color: #D3D3D3;
 }
 
-#fmhjilpncg .gt_sourcenote {
+#xakffpgjqm .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -3595,72 +3588,72 @@ Figure&nbsp;1.6: Time series of shifts in sign of the Pacific Decadal Oscillatio
   padding-right: 5px;
 }
 
-#fmhjilpncg .gt_left {
+#xakffpgjqm .gt_left {
   text-align: left;
 }
 
-#fmhjilpncg .gt_center {
+#xakffpgjqm .gt_center {
   text-align: center;
 }
 
-#fmhjilpncg .gt_right {
+#xakffpgjqm .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#fmhjilpncg .gt_font_normal {
+#xakffpgjqm .gt_font_normal {
   font-weight: normal;
 }
 
-#fmhjilpncg .gt_font_bold {
+#xakffpgjqm .gt_font_bold {
   font-weight: bold;
 }
 
-#fmhjilpncg .gt_font_italic {
+#xakffpgjqm .gt_font_italic {
   font-style: italic;
 }
 
-#fmhjilpncg .gt_super {
+#xakffpgjqm .gt_super {
   font-size: 65%;
 }
 
-#fmhjilpncg .gt_footnote_marks {
+#xakffpgjqm .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#fmhjilpncg .gt_asterisk {
+#xakffpgjqm .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#fmhjilpncg .gt_indent_1 {
+#xakffpgjqm .gt_indent_1 {
   text-indent: 5px;
 }
 
-#fmhjilpncg .gt_indent_2 {
+#xakffpgjqm .gt_indent_2 {
   text-indent: 10px;
 }
 
-#fmhjilpncg .gt_indent_3 {
+#xakffpgjqm .gt_indent_3 {
   text-indent: 15px;
 }
 
-#fmhjilpncg .gt_indent_4 {
+#xakffpgjqm .gt_indent_4 {
   text-indent: 20px;
 }
 
-#fmhjilpncg .gt_indent_5 {
+#xakffpgjqm .gt_indent_5 {
   text-indent: 25px;
 }
 
-#fmhjilpncg .katex-display {
+#xakffpgjqm .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#fmhjilpncg div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#xakffpgjqm div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -4219,7 +4212,7 @@ Figure&nbsp;4.10: Inch Creek Coho indicator stock smolt to adult survival estima
 <p>Under the PST, DFO is required to annually monitor fishery impacts to all Coho MUs to determine retained catch, CWT recovery rates, and incidental mortalities. Defining MU-specific fishery impacts allows Resource Managers to accurately evaluate ER relative to PST prescribed limits.</p>
 <p>Due to management measures implemented to protect IFR Coho, retention of all Coho is limited in all fisheries. Generally, Coho impacts are monitored through programs carried out in non-target fisheries where bycatch is possible. However, some fisheries have been permitted to retain hatchery marked Coho. Nations with access to terminal hatchery systems may have the opportunity to retain adipose fin-clipped (AFC) Coho, such as fish bound for the Inch Creek, the Chilliwack, or the Chehalis hatcheries. Additionally, mark-selective recreational fisheries can be authorized in some areas (Fisheries and Oceans Canada 2020). All fisheries mentioned above are monitored according to the Strategic Framework for Fishery Monitoring and Catch Reporting in Pacific Fisheries (Fisheries and Oceans Canada 2012).</p>
 <p>Catch monitoring programs vary depending on the characteristics of the fishery and available resources. Data is collected through either fisher-dependent or fisher-independent methods. Fisher-dependant estimates are collected through interviews either orally or in writing, while fisher-independent estimates are based on catch observed or verified by fishery monitors. Most fisheries are monitored using a combination of fisher-dependant and fisher-independent methods.</p>
-<p>Food, Social, and Ceremonial (FSC) and Economic Opportunity (EO) Fisheries Nations fishing for FSC needs are subject to different types of monitoring depending on the type of net and the location of the fishing area. Generally, all catch rate data is based on interviews with fishers. In some cases, the retained catch is counted by fishery monitors, either onboard or observed on the water. Nations fishing in an EO opening are required to land their catch at landing sites where a stationed monitor counts catch and collects release and effort data. Frequent vessel patrols and overflights are conducted in some areas to calculate instantaneous effort counts in both FSC and EO gillnet fisheries. Patrols in selective fisheries such as beach seines and shallow seines are used to ensure bycatch is recorded correctly.</p>
+<p>Food, Social, and Ceremonial (FSC) and Economic Opportunity (EO) Fisheries Nations fishing for <button class="glossary" title="Food, Social, Ceremonial">FSC</button> needs are subject to different types of monitoring depending on the type of net and the location of the fishing area. Generally, all catch rate data is based on interviews with fishers. In some cases, the retained catch is counted by fishery monitors, either onboard or observed on the water. Nations fishing in an EO opening are required to land their catch at landing sites where a stationed monitor counts catch and collects release and effort data. Frequent vessel patrols and overflights are conducted in some areas to calculate instantaneous effort counts in both <button class="glossary" title="Food, Social, Ceremonial">FSC</button> and EO gillnet fisheries. Patrols in selective fisheries such as beach seines and shallow seines are used to ensure bycatch is recorded correctly.</p>
 <p><em>Commercial Fisheries</em> Commercial catch is reported via phone-in log reports. Data is also verified through daily patrols where on the water monitors validate kept and release numbers. Commercial vessels are mandated to have an onboard revival tank to lower impacts to bycatch species such as wild Coho. Some commercial fleets are required to have onboard at-sea-observers to assess Coho encounter rates and fish conditions. Vessel patrols and overflights estimate boat counts to calculate instantaneous effort.</p>
 <p><em>Recreational Fisheries</em> Creel surveys are the primary tool used to estimate catch in recreational fisheries in both the marine and freshwater areas. Creel surveyors interview fishers to collect catch and effort data to define catch rates. In 2014 DFO developed a survey used to reach areas in the marine waters where creel monitors are not available, called the internet-based recreational fishery (iREC). The iREC platform uses a monthly online survey to collect detailed recreational fishing catch and effort information from randomly selected tidal waters license holders. In some areas, vessel patrols and overflights are deployed to estimate boat counts to calculate instantaneous effort.</p>
 </section>
@@ -7086,23 +7079,23 @@ The climate varies widely throughout the MU, with higher annual precipitation to
 <h1 data-number="5"><span class="header-section-number">5</span> Members</h1>
 <div class="cell">
 <div class="cell-output-display">
-<div id="xtoahabfia" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#xtoahabfia table {
+<div id="pxbkznsgax" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#pxbkznsgax table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#xtoahabfia thead, #xtoahabfia tbody, #xtoahabfia tfoot, #xtoahabfia tr, #xtoahabfia td, #xtoahabfia th {
+#pxbkznsgax thead, #pxbkznsgax tbody, #pxbkznsgax tfoot, #pxbkznsgax tr, #pxbkznsgax td, #pxbkznsgax th {
   border-style: none;
 }
 
-#xtoahabfia p {
+#pxbkznsgax p {
   margin: 0;
   padding: 0;
 }
 
-#xtoahabfia .gt_table {
+#pxbkznsgax .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -7128,12 +7121,12 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-left-color: #D3D3D3;
 }
 
-#xtoahabfia .gt_caption {
+#pxbkznsgax .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#xtoahabfia .gt_title {
+#pxbkznsgax .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -7145,7 +7138,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-bottom-width: 0;
 }
 
-#xtoahabfia .gt_subtitle {
+#pxbkznsgax .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -7157,7 +7150,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-top-width: 0;
 }
 
-#xtoahabfia .gt_heading {
+#pxbkznsgax .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -7169,13 +7162,13 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-right-color: #D3D3D3;
 }
 
-#xtoahabfia .gt_bottom_border {
+#pxbkznsgax .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#xtoahabfia .gt_col_headings {
+#pxbkznsgax .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -7190,7 +7183,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-right-color: #D3D3D3;
 }
 
-#xtoahabfia .gt_col_heading {
+#pxbkznsgax .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -7210,7 +7203,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   overflow-x: hidden;
 }
 
-#xtoahabfia .gt_column_spanner_outer {
+#pxbkznsgax .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -7222,15 +7215,15 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   padding-right: 4px;
 }
 
-#xtoahabfia .gt_column_spanner_outer:first-child {
+#pxbkznsgax .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#xtoahabfia .gt_column_spanner_outer:last-child {
+#pxbkznsgax .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#xtoahabfia .gt_column_spanner {
+#pxbkznsgax .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -7242,11 +7235,11 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   width: 100%;
 }
 
-#xtoahabfia .gt_spanner_row {
+#pxbkznsgax .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#xtoahabfia .gt_group_heading {
+#pxbkznsgax .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -7272,7 +7265,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   text-align: left;
 }
 
-#xtoahabfia .gt_empty_group_heading {
+#pxbkznsgax .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -7287,15 +7280,15 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   vertical-align: middle;
 }
 
-#xtoahabfia .gt_from_md > :first-child {
+#pxbkznsgax .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#xtoahabfia .gt_from_md > :last-child {
+#pxbkznsgax .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#xtoahabfia .gt_row {
+#pxbkznsgax .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -7314,7 +7307,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   overflow-x: hidden;
 }
 
-#xtoahabfia .gt_stub {
+#pxbkznsgax .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -7327,7 +7320,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   padding-right: 5px;
 }
 
-#xtoahabfia .gt_stub_row_group {
+#pxbkznsgax .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -7341,15 +7334,15 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   vertical-align: top;
 }
 
-#xtoahabfia .gt_row_group_first td {
+#pxbkznsgax .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#xtoahabfia .gt_row_group_first th {
+#pxbkznsgax .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#xtoahabfia .gt_summary_row {
+#pxbkznsgax .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -7359,16 +7352,16 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   padding-right: 5px;
 }
 
-#xtoahabfia .gt_first_summary_row {
+#pxbkznsgax .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#xtoahabfia .gt_first_summary_row.thick {
+#pxbkznsgax .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#xtoahabfia .gt_last_summary_row {
+#pxbkznsgax .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -7378,7 +7371,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-bottom-color: #D3D3D3;
 }
 
-#xtoahabfia .gt_grand_summary_row {
+#pxbkznsgax .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -7388,7 +7381,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   padding-right: 5px;
 }
 
-#xtoahabfia .gt_first_grand_summary_row {
+#pxbkznsgax .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -7398,7 +7391,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-top-color: #D3D3D3;
 }
 
-#xtoahabfia .gt_last_grand_summary_row_top {
+#pxbkznsgax .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -7408,11 +7401,11 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-bottom-color: #D3D3D3;
 }
 
-#xtoahabfia .gt_striped {
+#pxbkznsgax .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#xtoahabfia .gt_table_body {
+#pxbkznsgax .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -7421,7 +7414,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-bottom-color: #D3D3D3;
 }
 
-#xtoahabfia .gt_footnotes {
+#pxbkznsgax .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -7435,7 +7428,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-right-color: #D3D3D3;
 }
 
-#xtoahabfia .gt_footnote {
+#pxbkznsgax .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -7444,7 +7437,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   padding-right: 5px;
 }
 
-#xtoahabfia .gt_sourcenotes {
+#pxbkznsgax .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -7458,7 +7451,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-right-color: #D3D3D3;
 }
 
-#xtoahabfia .gt_sourcenote {
+#pxbkznsgax .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -7466,72 +7459,72 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   padding-right: 5px;
 }
 
-#xtoahabfia .gt_left {
+#pxbkznsgax .gt_left {
   text-align: left;
 }
 
-#xtoahabfia .gt_center {
+#pxbkznsgax .gt_center {
   text-align: center;
 }
 
-#xtoahabfia .gt_right {
+#pxbkznsgax .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#xtoahabfia .gt_font_normal {
+#pxbkznsgax .gt_font_normal {
   font-weight: normal;
 }
 
-#xtoahabfia .gt_font_bold {
+#pxbkznsgax .gt_font_bold {
   font-weight: bold;
 }
 
-#xtoahabfia .gt_font_italic {
+#pxbkznsgax .gt_font_italic {
   font-style: italic;
 }
 
-#xtoahabfia .gt_super {
+#pxbkznsgax .gt_super {
   font-size: 65%;
 }
 
-#xtoahabfia .gt_footnote_marks {
+#pxbkznsgax .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#xtoahabfia .gt_asterisk {
+#pxbkznsgax .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#xtoahabfia .gt_indent_1 {
+#pxbkznsgax .gt_indent_1 {
   text-indent: 5px;
 }
 
-#xtoahabfia .gt_indent_2 {
+#pxbkznsgax .gt_indent_2 {
   text-indent: 10px;
 }
 
-#xtoahabfia .gt_indent_3 {
+#pxbkznsgax .gt_indent_3 {
   text-indent: 15px;
 }
 
-#xtoahabfia .gt_indent_4 {
+#pxbkznsgax .gt_indent_4 {
   text-indent: 20px;
 }
 
-#xtoahabfia .gt_indent_5 {
+#pxbkznsgax .gt_indent_5 {
   text-indent: 25px;
 }
 
-#xtoahabfia .katex-display {
+#pxbkznsgax .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#xtoahabfia div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#pxbkznsgax div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -7592,23 +7585,23 @@ The climate varies widely throughout the MU, with higher annual precipitation to
 <h1 data-number="6"><span class="header-section-number">6</span> Acronyms</h1>
 <div class="cell">
 <div class="cell-output-display">
-<div id="xpbujlmmot" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#xpbujlmmot table {
+<div id="ildmxgmdpv" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ildmxgmdpv table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#xpbujlmmot thead, #xpbujlmmot tbody, #xpbujlmmot tfoot, #xpbujlmmot tr, #xpbujlmmot td, #xpbujlmmot th {
+#ildmxgmdpv thead, #ildmxgmdpv tbody, #ildmxgmdpv tfoot, #ildmxgmdpv tr, #ildmxgmdpv td, #ildmxgmdpv th {
   border-style: none;
 }
 
-#xpbujlmmot p {
+#ildmxgmdpv p {
   margin: 0;
   padding: 0;
 }
 
-#xpbujlmmot .gt_table {
+#ildmxgmdpv .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -7634,12 +7627,12 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-left-color: #D3D3D3;
 }
 
-#xpbujlmmot .gt_caption {
+#ildmxgmdpv .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#xpbujlmmot .gt_title {
+#ildmxgmdpv .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -7651,7 +7644,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-bottom-width: 0;
 }
 
-#xpbujlmmot .gt_subtitle {
+#ildmxgmdpv .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -7663,7 +7656,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-top-width: 0;
 }
 
-#xpbujlmmot .gt_heading {
+#ildmxgmdpv .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -7675,13 +7668,13 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-right-color: #D3D3D3;
 }
 
-#xpbujlmmot .gt_bottom_border {
+#ildmxgmdpv .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#xpbujlmmot .gt_col_headings {
+#ildmxgmdpv .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -7696,7 +7689,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-right-color: #D3D3D3;
 }
 
-#xpbujlmmot .gt_col_heading {
+#ildmxgmdpv .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -7716,7 +7709,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   overflow-x: hidden;
 }
 
-#xpbujlmmot .gt_column_spanner_outer {
+#ildmxgmdpv .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -7728,15 +7721,15 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   padding-right: 4px;
 }
 
-#xpbujlmmot .gt_column_spanner_outer:first-child {
+#ildmxgmdpv .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#xpbujlmmot .gt_column_spanner_outer:last-child {
+#ildmxgmdpv .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#xpbujlmmot .gt_column_spanner {
+#ildmxgmdpv .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -7748,11 +7741,11 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   width: 100%;
 }
 
-#xpbujlmmot .gt_spanner_row {
+#ildmxgmdpv .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#xpbujlmmot .gt_group_heading {
+#ildmxgmdpv .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -7778,7 +7771,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   text-align: left;
 }
 
-#xpbujlmmot .gt_empty_group_heading {
+#ildmxgmdpv .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -7793,15 +7786,15 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   vertical-align: middle;
 }
 
-#xpbujlmmot .gt_from_md > :first-child {
+#ildmxgmdpv .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#xpbujlmmot .gt_from_md > :last-child {
+#ildmxgmdpv .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#xpbujlmmot .gt_row {
+#ildmxgmdpv .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -7820,7 +7813,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   overflow-x: hidden;
 }
 
-#xpbujlmmot .gt_stub {
+#ildmxgmdpv .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -7833,7 +7826,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   padding-right: 5px;
 }
 
-#xpbujlmmot .gt_stub_row_group {
+#ildmxgmdpv .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -7847,15 +7840,15 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   vertical-align: top;
 }
 
-#xpbujlmmot .gt_row_group_first td {
+#ildmxgmdpv .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#xpbujlmmot .gt_row_group_first th {
+#ildmxgmdpv .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#xpbujlmmot .gt_summary_row {
+#ildmxgmdpv .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -7865,16 +7858,16 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   padding-right: 5px;
 }
 
-#xpbujlmmot .gt_first_summary_row {
+#ildmxgmdpv .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#xpbujlmmot .gt_first_summary_row.thick {
+#ildmxgmdpv .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#xpbujlmmot .gt_last_summary_row {
+#ildmxgmdpv .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -7884,7 +7877,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-bottom-color: #D3D3D3;
 }
 
-#xpbujlmmot .gt_grand_summary_row {
+#ildmxgmdpv .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -7894,7 +7887,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   padding-right: 5px;
 }
 
-#xpbujlmmot .gt_first_grand_summary_row {
+#ildmxgmdpv .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -7904,7 +7897,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-top-color: #D3D3D3;
 }
 
-#xpbujlmmot .gt_last_grand_summary_row_top {
+#ildmxgmdpv .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -7914,11 +7907,11 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-bottom-color: #D3D3D3;
 }
 
-#xpbujlmmot .gt_striped {
+#ildmxgmdpv .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#xpbujlmmot .gt_table_body {
+#ildmxgmdpv .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -7927,7 +7920,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-bottom-color: #D3D3D3;
 }
 
-#xpbujlmmot .gt_footnotes {
+#ildmxgmdpv .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -7941,7 +7934,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-right-color: #D3D3D3;
 }
 
-#xpbujlmmot .gt_footnote {
+#ildmxgmdpv .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -7950,7 +7943,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   padding-right: 5px;
 }
 
-#xpbujlmmot .gt_sourcenotes {
+#ildmxgmdpv .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -7964,7 +7957,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-right-color: #D3D3D3;
 }
 
-#xpbujlmmot .gt_sourcenote {
+#ildmxgmdpv .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -7972,72 +7965,72 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   padding-right: 5px;
 }
 
-#xpbujlmmot .gt_left {
+#ildmxgmdpv .gt_left {
   text-align: left;
 }
 
-#xpbujlmmot .gt_center {
+#ildmxgmdpv .gt_center {
   text-align: center;
 }
 
-#xpbujlmmot .gt_right {
+#ildmxgmdpv .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#xpbujlmmot .gt_font_normal {
+#ildmxgmdpv .gt_font_normal {
   font-weight: normal;
 }
 
-#xpbujlmmot .gt_font_bold {
+#ildmxgmdpv .gt_font_bold {
   font-weight: bold;
 }
 
-#xpbujlmmot .gt_font_italic {
+#ildmxgmdpv .gt_font_italic {
   font-style: italic;
 }
 
-#xpbujlmmot .gt_super {
+#ildmxgmdpv .gt_super {
   font-size: 65%;
 }
 
-#xpbujlmmot .gt_footnote_marks {
+#ildmxgmdpv .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#xpbujlmmot .gt_asterisk {
+#ildmxgmdpv .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#xpbujlmmot .gt_indent_1 {
+#ildmxgmdpv .gt_indent_1 {
   text-indent: 5px;
 }
 
-#xpbujlmmot .gt_indent_2 {
+#ildmxgmdpv .gt_indent_2 {
   text-indent: 10px;
 }
 
-#xpbujlmmot .gt_indent_3 {
+#ildmxgmdpv .gt_indent_3 {
   text-indent: 15px;
 }
 
-#xpbujlmmot .gt_indent_4 {
+#ildmxgmdpv .gt_indent_4 {
   text-indent: 20px;
 }
 
-#xpbujlmmot .gt_indent_5 {
+#ildmxgmdpv .gt_indent_5 {
   text-indent: 25px;
 }
 
-#xpbujlmmot .katex-display {
+#ildmxgmdpv .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#xpbujlmmot div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#ildmxgmdpv div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -8387,23 +8380,23 @@ The climate varies widely throughout the MU, with higher annual precipitation to
 <h1 data-number="7"><span class="header-section-number">7</span> Glossary</h1>
 <div class="cell">
 <div class="cell-output-display">
-<div id="fsnnlrinuz" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#fsnnlrinuz table {
+<div id="xptrkmboze" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#xptrkmboze table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#fsnnlrinuz thead, #fsnnlrinuz tbody, #fsnnlrinuz tfoot, #fsnnlrinuz tr, #fsnnlrinuz td, #fsnnlrinuz th {
+#xptrkmboze thead, #xptrkmboze tbody, #xptrkmboze tfoot, #xptrkmboze tr, #xptrkmboze td, #xptrkmboze th {
   border-style: none;
 }
 
-#fsnnlrinuz p {
+#xptrkmboze p {
   margin: 0;
   padding: 0;
 }
 
-#fsnnlrinuz .gt_table {
+#xptrkmboze .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -8429,12 +8422,12 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-left-color: #D3D3D3;
 }
 
-#fsnnlrinuz .gt_caption {
+#xptrkmboze .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#fsnnlrinuz .gt_title {
+#xptrkmboze .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -8446,7 +8439,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-bottom-width: 0;
 }
 
-#fsnnlrinuz .gt_subtitle {
+#xptrkmboze .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -8458,7 +8451,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-top-width: 0;
 }
 
-#fsnnlrinuz .gt_heading {
+#xptrkmboze .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -8470,13 +8463,13 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-right-color: #D3D3D3;
 }
 
-#fsnnlrinuz .gt_bottom_border {
+#xptrkmboze .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#fsnnlrinuz .gt_col_headings {
+#xptrkmboze .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -8491,7 +8484,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-right-color: #D3D3D3;
 }
 
-#fsnnlrinuz .gt_col_heading {
+#xptrkmboze .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -8511,7 +8504,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   overflow-x: hidden;
 }
 
-#fsnnlrinuz .gt_column_spanner_outer {
+#xptrkmboze .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -8523,15 +8516,15 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   padding-right: 4px;
 }
 
-#fsnnlrinuz .gt_column_spanner_outer:first-child {
+#xptrkmboze .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#fsnnlrinuz .gt_column_spanner_outer:last-child {
+#xptrkmboze .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#fsnnlrinuz .gt_column_spanner {
+#xptrkmboze .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -8543,11 +8536,11 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   width: 100%;
 }
 
-#fsnnlrinuz .gt_spanner_row {
+#xptrkmboze .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#fsnnlrinuz .gt_group_heading {
+#xptrkmboze .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -8573,7 +8566,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   text-align: left;
 }
 
-#fsnnlrinuz .gt_empty_group_heading {
+#xptrkmboze .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -8588,15 +8581,15 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   vertical-align: middle;
 }
 
-#fsnnlrinuz .gt_from_md > :first-child {
+#xptrkmboze .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#fsnnlrinuz .gt_from_md > :last-child {
+#xptrkmboze .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#fsnnlrinuz .gt_row {
+#xptrkmboze .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -8615,7 +8608,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   overflow-x: hidden;
 }
 
-#fsnnlrinuz .gt_stub {
+#xptrkmboze .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -8628,7 +8621,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   padding-right: 5px;
 }
 
-#fsnnlrinuz .gt_stub_row_group {
+#xptrkmboze .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -8642,15 +8635,15 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   vertical-align: top;
 }
 
-#fsnnlrinuz .gt_row_group_first td {
+#xptrkmboze .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#fsnnlrinuz .gt_row_group_first th {
+#xptrkmboze .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#fsnnlrinuz .gt_summary_row {
+#xptrkmboze .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -8660,16 +8653,16 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   padding-right: 5px;
 }
 
-#fsnnlrinuz .gt_first_summary_row {
+#xptrkmboze .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#fsnnlrinuz .gt_first_summary_row.thick {
+#xptrkmboze .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#fsnnlrinuz .gt_last_summary_row {
+#xptrkmboze .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -8679,7 +8672,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-bottom-color: #D3D3D3;
 }
 
-#fsnnlrinuz .gt_grand_summary_row {
+#xptrkmboze .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -8689,7 +8682,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   padding-right: 5px;
 }
 
-#fsnnlrinuz .gt_first_grand_summary_row {
+#xptrkmboze .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -8699,7 +8692,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-top-color: #D3D3D3;
 }
 
-#fsnnlrinuz .gt_last_grand_summary_row_top {
+#xptrkmboze .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -8709,11 +8702,11 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-bottom-color: #D3D3D3;
 }
 
-#fsnnlrinuz .gt_striped {
+#xptrkmboze .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#fsnnlrinuz .gt_table_body {
+#xptrkmboze .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -8722,7 +8715,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-bottom-color: #D3D3D3;
 }
 
-#fsnnlrinuz .gt_footnotes {
+#xptrkmboze .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -8736,7 +8729,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-right-color: #D3D3D3;
 }
 
-#fsnnlrinuz .gt_footnote {
+#xptrkmboze .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -8745,7 +8738,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   padding-right: 5px;
 }
 
-#fsnnlrinuz .gt_sourcenotes {
+#xptrkmboze .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -8759,7 +8752,7 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   border-right-color: #D3D3D3;
 }
 
-#fsnnlrinuz .gt_sourcenote {
+#xptrkmboze .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -8767,72 +8760,72 @@ The climate varies widely throughout the MU, with higher annual precipitation to
   padding-right: 5px;
 }
 
-#fsnnlrinuz .gt_left {
+#xptrkmboze .gt_left {
   text-align: left;
 }
 
-#fsnnlrinuz .gt_center {
+#xptrkmboze .gt_center {
   text-align: center;
 }
 
-#fsnnlrinuz .gt_right {
+#xptrkmboze .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#fsnnlrinuz .gt_font_normal {
+#xptrkmboze .gt_font_normal {
   font-weight: normal;
 }
 
-#fsnnlrinuz .gt_font_bold {
+#xptrkmboze .gt_font_bold {
   font-weight: bold;
 }
 
-#fsnnlrinuz .gt_font_italic {
+#xptrkmboze .gt_font_italic {
   font-style: italic;
 }
 
-#fsnnlrinuz .gt_super {
+#xptrkmboze .gt_super {
   font-size: 65%;
 }
 
-#fsnnlrinuz .gt_footnote_marks {
+#xptrkmboze .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#fsnnlrinuz .gt_asterisk {
+#xptrkmboze .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#fsnnlrinuz .gt_indent_1 {
+#xptrkmboze .gt_indent_1 {
   text-indent: 5px;
 }
 
-#fsnnlrinuz .gt_indent_2 {
+#xptrkmboze .gt_indent_2 {
   text-indent: 10px;
 }
 
-#fsnnlrinuz .gt_indent_3 {
+#xptrkmboze .gt_indent_3 {
   text-indent: 15px;
 }
 
-#fsnnlrinuz .gt_indent_4 {
+#xptrkmboze .gt_indent_4 {
   text-indent: 20px;
 }
 
-#fsnnlrinuz .gt_indent_5 {
+#xptrkmboze .gt_indent_5 {
   text-indent: 25px;
 }
 
-#fsnnlrinuz .katex-display {
+#xptrkmboze .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#fsnnlrinuz div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#xptrkmboze div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
