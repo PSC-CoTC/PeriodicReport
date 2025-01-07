@@ -27,6 +27,7 @@ format:
     linkcolor: blue
   docx:
     reference-doc: /Users/auerbdaa/O/code/quarto_template.docx
+embed-resources: true
 ---
 
 Dev note: using quarto-glossary to add hover-over text. Details and installation guide here: https://debruine.github.io/quarto-glossary/
