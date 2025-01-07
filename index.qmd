@@ -8,7 +8,7 @@ params:
   static_tables: StaticTables.xlsx
   mdb_pre: ../PeriodicReportData/PSC_CoTC_Preseason_CohoFRAMDB_thru2024_06182024.mdb
   mdb_pst: ../PeriodicReportData/PSC_CoTC_PostSeason_CohoFRAMDB_thru2022_03042024.mdb
-  clean_run: true
+  clean_run: false
 editor_options:
   chunk_output_type: console
 glossary:
@@ -80,6 +80,9 @@ library("readxl")
 library("kableExtra", quietly = T)
 library("patchwork")
 library("gt")
+library("glue")
+library("scales")
+library("rvest")
 theme_set(theme_light())
 
 # #can load an entire environment built ahead of time and save time on reknitting
@@ -607,12 +610,13 @@ The Coho FRAM base period parameterization, determining stock-fishery-timestep i
 ### Key Uncertainties with FRAM analysis
 
 FRAM is a deterministic model that reports point estimates of cohort abundances and ERs without explicit measures of uncertainty associated with them. Managers should consider the following data limitations and model assumptions when interpreting FRAM results:
+
 -	Cohort abundances and ERs are sensitive to the quality of escapement estimates, with estimation practices varying substantially among stocks. For example, Puget Sound net pens programs often lack escapement estimates. For these programs, pre-season abundances were used or were scaled to a nearby hatchery program using a pre-post ratio.
 -	Marine survival indices are used to estimate Canadian MU abundances, except for Interior Fraser, in both pre- and post-season FRAM runs because abundance forecasts and escapement estimates are highly uncertain or unavailable for the remaining two Canadian MUs.
 -	It is unknown if average ocean distribution during the FRAM base period (derived using catch year 1986 to 1992 CWT data) reflect the true annual ocean distribution of Coho Salmon stocks in contemporary years; this leads to increased uncertainty in fishery-specific stock impacts.
 -	Complex regulations, such as fine-scale spatial/temporal and mixed retention limits for natural and hatchery Coho Salmon within a fishery, are difficult to represent and assess within FRAM and as a result, FRAM may not accurately represent stock-specific impacts within fisheries with these regulations.
 -	Spatial and temporal gaps in catch monitoring of some Canadian fisheries result in underestimation of catch.
--	Uncertainty in mortality estimates arises from several sources, including incomplete creel census and inaccuracy of fisher reported data, as well as assumed non-retention mortality rates, which are used in the FRAM model.
+-	Uncertainty in mortality estimates arises from several sources, including incomplete creel census and inaccuracy of fisher reported data, as well as assumed non-retention mortality rates, which are used in the FRAM model.  <span style="color: red;">**Carrie: I'm not in love this one. All of our model estimates have uncertainty associated with them, but we're singling out creel census and angler reporting specifically. I assume this is here for political / historical reasons?**</span>
 -	Natural mortality built [**Jeromy comment: Can we describe the year or years it was built in, and that it has not been updated since.**] into FRAM is constant and does not reflect inter-annual variability in survival during adult ocean residence (January Age-3 through FRAM’s final time step).
 
 ## Environmental Trends Contextualizing Management
@@ -623,11 +627,126 @@ The productivity of Pacific salmon populations is influenced by numerous factors
 
 Annual average temperatures and precipitation by water year (Oct–Sep) provide a broad-brush view of terrestrial conditions across the Pacific Northwest. A strong and persistent warming trend and large year-to-year variations in precipitation are among the most notable features in recent decades (@fig-envi1). Within snow-dominated watersheds, warmer winters and springs experienced in recent years reduce snow accumulation and hasten snowmelt. Reduced snowpack causes an earlier and smaller freshet in spring and can result in lower minimum flows and higher stream temperatures in summer.  
 
-![Water year (Oct–Sep) surface air temperature (top) and precipitation (bottom) for the Pacific Northwest (OR, WA, and ID combined). The historical average for 1981–2010 is shown with a black horizontal line. Data from https://www.ncdc.noaa.gov/ cag/regional/time-series.](images/Env_fig1.jpg){#fig-envi1}
+
+```{r noaa weather data}
+#| label: fig-envi1
+#| fig-cap: "Water year (Oct–Sep) surface air temperature (top) and precipitation (bottom) for the Pacific Northwest (OR, WA, and ID combined). The historical average is shown with a black horizontal line. Data from NOAA: https://www.ncdc.noaa.gov/cag/regional/time-series."
+#| fig-height: 10
+## Update notes: 
+## Temperature data can be found here:
+## https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/regional/time-series/108/tavg/12/9/1895-2024?base_prd=true&begbaseyear=1901&endbaseyear=2000
+## Use the following settings:
+## 
+## Parameter: annual temperature, 
+## Time Scale: 12-Month, 
+## Month: September
+## Start Year: 1895
+## End Year: [current year]
+## Region: Northwest
+## 
+## Download as CSV, save as "NOAA-temperature.csv" into the data folder
+## 
+## Precipitation data can be found here: 
+## https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/regional/time-series/108/pcp/12/9/1895-2024?base_prd=true&begbaseyear=1901&endbaseyear=2000
+## ## Use the following settings:
+## 
+## Parameter: Precipitation, 
+## Time Scale: 12-Month, 
+## Month: September
+## Start Year: 1895
+## End Year: [current year]
+## Region: Northwest
+## 
+## Download as CSV, save as "NOAA-precipitation.csv" into the data folder
+## 
+## Note: dates are stored in funny format! First 4 digits are year, last two digits are month.
+dat.temp = read_csv(here("data/NOAA-temperature.csv"), skip = 4) |> 
+  janitor::clean_names() |> 
+  mutate(value = if_else(value == -99, NA, value)) |> 
+  mutate(year = as.numeric(substr(as.character(date), 1, 4)))
+dat.precip = read_csv(here("data/NOAA-precipitation.csv"), skip = 4)|> 
+  janitor::clean_names() |> 
+  mutate(value = if_else(value == -99, NA, value)) |> 
+  mutate(year = as.numeric(substr(as.character(date), 1, 4)))
+
+temp.breaks = seq(floor(min(dat.temp$value)),
+                  ceiling(max(dat.temp$value)),
+                  by = 1)
+f_to_c = function(x) { 5/9*(x - 32)} 
+
+gp1 = ggplot(dat.temp, aes(x = year, y = value))+
+  geom_area(fill = 'coral', alpha = 0.4)+
+  geom_path(col = 'coral')+
+  geom_point(col = 'coral', size = 2)+
+  scale_y_continuous(breaks = temp.breaks,
+                     labels = function(x){paste0(format(x, nsmall = 1), "\u00B0F")},
+                     sec.axis = dup_axis(
+                       breaks = temp.breaks,
+                       labels = function(x) {
+                         paste0(format(round(f_to_c(x),1), nsmall = 1), "\u00B0C")
+                       }
+                     ),
+                     limits = range(dat.temp$value, na.rm = T),
+                     oob = scales::oob_keep
+  )+
+  scale_x_continuous(breaks = seq(round(min(dat.temp$year), -1),
+                                  round(max(dat.temp$year), -1),
+                                  by = 10),
+                     expand = c(0,0)
+  )+
+  geom_hline(yintercept = mean(dat.temp$value),
+             linetype = 2, linewidth = 1)+
+  geom_label(x = min(dat.temp$year),
+             y = mean(dat.temp$value),
+             label = glue("{min(dat.temp$year)}-{max(dat.temp$year)} Mean: {round(mean(dat.temp$value),2)}\u00B0F"),
+             hjust = 0,
+             vjust = -0.4,
+             fill = alpha(c("white"),0.1))+
+  labs(x = "", y = "", title = "Northwest Average Temperature (NOAA)",
+       subtitle = "October-September")
+
+in_to_mm = function(x) { x * 25.4} 
+
+gp2 =
+  ggplot(dat.precip, aes(x = year, y = value))+
+  geom_area(fill = 'cornflowerblue', alpha = 0.4)+
+  geom_path(col = 'cornflowerblue')+
+  geom_point(col = 'cornflowerblue', size = 2)+
+  scale_y_continuous(breaks = seq(20, 50, by = 5),
+                     labels = function(x){paste0(format(x, nsmall = 2), "in")},
+                     sec.axis = dup_axis(
+                       labels = function(x) {
+                         paste0(format(round(in_to_mm(x),1), nsmall = 2), "mm")
+                       }
+                     ),
+                     limits = c(20, 50),
+                     oob = scales::oob_keep
+  )+
+  scale_x_continuous(breaks = seq(round(min(dat.temp$year), -1),
+                                  round(max(dat.temp$year), -1),
+                                  by = 10),
+                     expand = c(0,0)
+  )+
+  geom_hline(yintercept = mean(dat.precip$value),
+             linetype = 2, linewidth = 1)+
+  geom_label(x = min(dat.precip$year),
+             y = mean(dat.precip$value),
+             label = glue("{min(dat.precip$year)}-{max(dat.precip$year)} Mean: {round(mean(dat.precip$value),2)}in"),
+             hjust = 0,
+             vjust = -0.4,
+             fill = alpha(c("white"),0.1))+
+  labs(x = "", y = "", title = "Northwest Precipitation",
+       subtitle = "October-September")
+
+gp1 / gp2
+```
+
+<!-- ![Water year (Oct–Sep) surface air temperature (top) and precipitation (bottom) for the Pacific Northwest (OR, WA, and ID combined). The historical average for 1981–2010 is shown with a black horizontal line. Data from https://www.ncdc.noaa.gov/cag/regional/time-series.](images/Env_fig1.jpg){#fig-envi1} -->
+
 
 For the Pacific Northwest, water year 2015 stands out as the warmest year on record (@fig-envi1). The combination of below-average precipitation and record-high surface air temperature in 2015 brought record-low springtime snowpack to much of the west. Diminished snowpack and high surface temperatures combined with low springtime precipitation yielded especially low runoff to western watersheds in spring and early summer 2015. Unusually low flows and warm stream temperatures in spring/summer 2015 caused widespread problems for salmon throughout the western United States, including large mortality events for returning Sockeye Salmon to the Fraser and Columbia Rivers. 
 
-In June 2021, record-breaking terrestrial temperatures were recorded across western North America due to a ‘heat dome’ [@White_et_al_2023]. It resulted in some of the highest temperatures ever recorded across large parts of British Columbia, Oregon, and Washington (11–19°C, 20–35°F above normal temperatures), including the highest temperature ever recorded in Canada (49.5°C, 121.3°F).  This 1,000-year event was due to an exceptionally strong ridge centered over the area, whose strength was greatly increased by climate change. The heat wave sparked numerous extensive wildfires, extensive damage to forest vegetation and crops, and was responsible for the deaths of nearly 1,400 people across the region.
+In June 2021, record-breaking terrestrial temperatures were recorded across western North America due to a ‘heat dome’ [@White_et_al_2023]. It resulted in some of the highest temperatures ever recorded across large parts of British Columbia, Oregon, and Washington (11–19°C, 20–35°F above normal temperatures), including the highest temperature ever recorded in Canada (49.5°C, 121.3°F).  This 1,000-year event was due to an exceptionally strong ridge centered over the area (the "heat dome"), whose strength was greatly increased by climate change. The heat wave sparked numerous extensive wildfires, extensive damage to forest vegetation and crops, and was responsible for the deaths of nearly 1,400 people across the region.
 
 Coho Salmon inhabiting streams, rivers, and marine environments were likely affected by the heat dome, although many of these impacts are not well documented. Streams temperatures across the region increased dramatically in response to the heat dome, which also decreases oxygen saturation, potentially causing to physiological stress to stream-dwelling fish. In intertidal environments in the Salish Sea, an estimated 1 billion animals (primarily shellfish) died as a result of the heat wave coinciding with extreme low tides, which then impacted water quality [@Raymond_et_al_2022]. The true impacts of the 2021 heat dome on Coho Salmon populations managed under PST will likely never be known, but may include generally decreased productivity and survival for the 2020 year class (which returns as adults in 2023), because it was residing in freshwater during the extraordinary event.
 
@@ -635,7 +754,91 @@ Coho Salmon inhabiting streams, rivers, and marine environments were likely affe
 
 Surface temperatures in the northeastern Pacific Ocean vary on decadal time scales, with periods of above and below average temperatures, as indicated by the Pacific Decadal Oscillation (PDO; [@Mantua_et_al_1997). Recently, surface temperatures were notably cooler than average from 1999–2002, 2008–13 and again starting in 2020 (@fig-envi2). They were warmer than normal from 2003–05, and at record highs for much of the period from fall 2013–20 due to a series of marine heat waves. For the California Current region, surface temperatures reached record high levels from 2014–16, with 2015 being the single warmest year in the historical record [@Jacox_et_al_2018]. In most years, positive PDO values correspond to El Niño events (e.g., the 2015/2016 El Niño), while negative PDO values correspond to La Niña events (e.g., 2021, 2022, and 2023 La Niñas).
 
-![Time series of shifts in sign of the Pacific Decadal Oscillation (PDO; bars) and the Ocean Niño Index (ONI; line) from 1996 to the present. Red bars indicate positive (warm) years; blue bars are negative (cool) years. Credit: NOAA Fisheries.](images/Env_fig2.png){#fig-envi2}
+```{r}
+#| label: fig-envi2
+#| fig-cap: "Time series of shifts in sign of the Pacific Decadal Oscillation (PDO; bars) and the Ocean Niño Index (ONI; line) from 1996 to the present. Red bars indicate positive (warm) years; blue bars are negative (cool) year. Data from NOAA: https://www.ncei.noaa.gov/pub/data/cmb/ersst/v5/index/ersst.v5.pdo.dat, https://origin.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ONI_v5.php."
+# PDO Data is pulled directly from here:
+# https://www.ncei.noaa.gov/pub/data/cmb/ersst/v5/index/ersst.v5.pdo.dat
+# ONI data is pulled directly from here: 
+# https://origin.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ONI_v5.php
+
+raw.pdo = read_table("https://www.ncei.noaa.gov/pub/data/cmb/ersst/v5/index/ersst.v5.pdo.dat",
+                     skip = 1) |> 
+  janitor::clean_names()
+
+dat.pdo = raw.pdo |> 
+  pivot_longer(cols = jan:dec,
+               names_to = "month") |> 
+  mutate(month.num = case_match(month,
+                                "jan" ~ 1,
+                                "feb" ~ 2,
+                                "mar" ~ 3,
+                                "apr" ~ 4,
+                                "may" ~ 5,
+                                "jun" ~ 6,
+                                "jul" ~ 7,
+                                "aug" ~ 8,
+                                "sep" ~ 9,
+                                "oct" ~ 10,
+                                "nov" ~ 11,
+                                "dec" ~ 12,
+                                .default = -99
+                                
+  )) |> 
+  mutate(date = as_date(glue("{year}-{month.num}-15")))
+
+raw.oni <- "https://origin.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ONI_v5.php" %>% 
+  read_html() %>% 
+  html_nodes("table") %>% 
+  html_table(fill = T)
+mat.oni = raw.oni[[9]]
+
+
+dat.oni = data.frame(mat.oni[-which(mat.oni$X1=="Year"),])
+names(dat.oni) = mat.oni[1,]
+dat.oni = dat.oni |> 
+  pivot_longer(DJF:NDJ) |> 
+  ## each of the names is the initials of 3 months; we want the central month in numeric form
+  mutate(month.num = case_match(name, 
+                                "DJF" ~ 1, 
+                                "JFM" ~ 2, 
+                                "FMA" ~ 3, 
+                                "MAM" ~ 4,
+                                "AMJ" ~ 5,
+                                "MJJ" ~ 6,
+                                "JJA" ~ 7,
+                                "JAS" ~ 8,
+                                "ASO" ~ 9,
+                                "SON" ~ 10,
+                                "OND" ~ 11,
+                                "NDJ" ~ 12)) |> 
+  mutate(date = as_date(glue("{Year}-{month.num}-15"))) |> 
+  mutate(value = as.numeric(value))
+
+ggplot(dat.pdo |> 
+         filter(year>=1996),
+       aes(x = date, y = value))+
+  geom_col(aes(fill = value>0))+
+  geom_path(data = dat.oni |> 
+              filter(Year>=1996),
+            linewidth = 1)+
+  geom_point(data = dat.oni |> 
+              filter(Year>=1996),
+             size = 2)+
+  scale_fill_manual(breaks = c("TRUE", "FALSE"),
+                    values = c(alpha("darkred", .6), alpha("darkblue", .6)))+
+  xlab("Year")+
+  ylab("PDO & ONI")+
+  ggtitle("PDO (bars) and ONI (line)")+
+  scale_x_date(breaks = "1 year",
+               minor_breaks = "1 year",
+               labels = scales::label_date(format = "%y"),
+               expand = c(0,0))+
+  theme(legend.position = "none")
+```
+
+
+<!-- ![Time series of shifts in sign of the Pacific Decadal Oscillation (PDO; bars) and the Ocean Niño Index (ONI; line) from 1996 to the present. Red bars indicate positive (warm) years; blue bars are negative (cool) year. Data from NOAA, https://www.ncei.noaa.gov/pub/data/cmb/ersst/v5/index/ersst.v5.pdo.dat](images/Env_fig2.png){#fig-envi2} -->
 
 Since the original “blob” in 2014–16 [@Bond_et_al_2015], a series of marine heat waves have spread across large parts of the North Pacific Ocean in 2019, 2020, 2022, and 2023. These heat waves not only cause elevated water temperatures, but are also associated with extremely low nutrient levels. These heat waves vary greatly in their location across the North Pacific Ocean and although largely offshore, they occasionally spread to coastal waters such as 2015.
 
