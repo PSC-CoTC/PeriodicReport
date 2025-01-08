@@ -535,32 +535,6 @@ The US Inside MUs consist of naturally spawning populations originating in the S
 
 The US Outside MUs consist of naturally-spawning populations from the Quillayute, Hoh, Queets, and Grays Harbor basins. All US Outside MUs, except the Grays Harbor MU, are part of the Olympic Peninsula ESU. Populations from the western portion of the Strait of Juan de Fuca MU are also in this ESU. The Grays Harbor MU is part of the Southwest Washington ESU.
 
-```{r mu_table}
-# psc_pst |> 
-#   distinct(Region = PSC_Region, `Management Units` =  PSC_StockName) |> 
-#   arrange(Region) |>  
-#   mutate(Region = str_replace(Region, "Canada", "Southern BC")) |> 
-#   gt(groupname_col = "Region") |> 
-#   tab_options(table.width = px(300)) |> 
-#   tab_style(locations = cells_column_labels(), style = cell_text(align = "center")) |> 
-#   tab_style(locations = cells_row_groups(), style = cell_text(align = "left", weight = "bold")) |> 
-#   tab_style(locations = cells_body(), style = cell_text(align = "right"))
-
-tibble(
-  `Southern BC` = c("Interior Fraser", "Lower Fraser", "Strait of Georgia", "", ""),
-  `US Inside` = c("Skagit", "Stillaguamish", "Snohomish", "Hood Canal", "US Strait JDF"),
-  `US Outside` = c("Quillayute", "Hoh", "Queets", "Grays Harbor", "")
-) |> 
-  gt() |> 
-  tab_options(table.width = px(400)) |> 
-  tab_style(locations = cells_column_labels(), style = cell_text(align = "center", weight = "bold")) |> 
-  tab_style(locations = cells_body(), style = cell_text(align = "left")) |> 
-  tab_header(title = "Management Units within the current Pacific Salmon Treaty Southern Coho Management Plan")
-
-```
-
-<span style="color: red;">**Carrie: This table looks identical to the one in the last section. Do we need this duplication?**</span>
-
 ## Fishery Overview
 
 Under the CoABM regime, each Party is required to regulate its fisheries so as not to exceed ER constraints on MUs. Fishery Management Areas for British Columbia (@fig-dfomap), Washington (@fig-wdfwmap), and Oregon (@fig-odfwmap) are shown below.
@@ -597,7 +571,7 @@ Fisheries between Cape Falcon, Oregon and the US/Canada Border are constrained b
 
 Most Coho-directed recreational fisheries [**Jeromy comment: Freshwater and marine?  I think so, for WA, and Columbia River but would be good to add this qualifier in if true. More recently the OR coast freshwater fisheries are all non-selective, hence why I am asking for a bit of a qualifier here if possible.**] have been mark-selective since 1999. Non-Indian commercial troll fisheries have been mostly restricted to mark-selective Coho retention since 2000. Treaty Indian fisheries are not restricted to mark-selective retention of Coho Salmon.
 
-<span style="color: red;">**Carrie: With the fram databases we have, we could plot MSF vs non MSF by fishery type through time. Not sure if that would be helpful. **</span>
+<!-- <span style="color: red;">**Carrie: With the fram databases we have, we could plot MSF vs non MSF by fishery type through time. Not sure if that would be helpful. **</span> -->
 
 ## Bilateral Assessment Tool (FRAM) Overview
 
@@ -618,8 +592,9 @@ FRAM is a deterministic model that reports point estimates of cohort abundances 
 -	It is unknown if average ocean distribution during the FRAM base period (derived using catch year 1986 to 1992 CWT data) reflect the true annual ocean distribution of Coho Salmon stocks in contemporary years; this leads to increased uncertainty in fishery-specific stock impacts.
 -	Complex regulations, such as fine-scale spatial/temporal and mixed retention limits for natural and hatchery Coho Salmon within a fishery, are difficult to represent and assess within FRAM and as a result, FRAM may not accurately represent stock-specific impacts within fisheries with these regulations.
 -	Spatial and temporal gaps in catch monitoring of some Canadian fisheries result in underestimation of catch.
--	Uncertainty in mortality estimates arises from several sources, including incomplete creel census and inaccuracy of fisher reported data, as well as assumed non-retention mortality rates, which are used in the FRAM model.  <span style="color: red;">**Carrie: I'm not in love this one. All of our model estimates have uncertainty associated with them, but we're singling out creel census and angler reporting specifically. I assume this is here for political / historical reasons?**</span>
--	Natural mortality built [**Jeromy comment: Can we describe the year or years it was built in, and that it has not been updated since.**] into FRAM is constant and does not reflect inter-annual variability in survival during adult ocean residence (January Age-3 through FRAM’s final time step).
+-	Uncertainty in mortality estimates arises from several sources, including creel census and catch estimation.
+-	Within time steps in FRAM, natural mortality is constant; additionally, natural mortality does not reflect inter-annual variability in survival during adult ocean residence (January Age-3 through FRAM’s final time step). [**Jeromy comment: Can we describe the year or years it was built in, and that it has not been updated since.**  *note from 1/7/25: ever since this was a spreadsheet model, these have been built in. Unclear if they've changed during that time*.]
+
 
 ## Environmental Trends Contextualizing Management
 
