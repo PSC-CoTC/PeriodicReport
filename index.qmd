@@ -47,6 +47,7 @@ Dev note: using quarto-glossary to add hover-over text. Details and installation
 - abundance figures overlaying MUs within regions (US in, US out, BC)
 - CBE: Populate glossary hover-over tooltips, using glossary.yml and inserting based on nomenclature here: https://debruine.github.io/quarto-glossary/
 - add the rmis summary data process to our documentation for rerunning this, and to Collin's scripts (automate the SQL call)
+- add the updated coho_lut operation with "TERM" column into the SQL workflow
 
 **CBE change log**
 
@@ -584,7 +585,7 @@ Coho fisheries are evaluated with the Coho Fisheries Regulation Assessment Model
 
 Coho FRAM is an annual mixed-stock accounting model that evaluates a set of stock units within a set of fisheries over time periods within a single fishing year (the calendar year for Coho) (documentation on FRAM can be found here: [https://framverse.github.io/fram_doc/](https://framverse.github.io/fram_doc/)). It can be used to estimate catch and escapement based on forecast abundance and planned fisheries (‘forward’), or it can be used to reconstruct ocean abundance from observed escapements and fisheries (‘backward’). 
 
-The Coho FRAM base period parameterization, determining stock-fishery-timestep impacts, was constructed from stock-specific fishery recoveries of coded-wire tags {{< glossary CWTs >}} within the time steps January to June, July, August, September, and October to December during coast wide fisheries from 1986 to 1992. The procedure used to generate base period data is depicted below (@fig-FRAMdev). For each base period year, post-season reconstruction of cohort abundances for each Coho {{< glossary MU >}} is based on two different models: the Mixed-Stock Model (MSM) that estimates the Production Expansion Factors for each Production Region and RRTERM program that estimates stock-specific impacts for terminal marine and freshwater fisheries. The MSM uses {{< glossary CWT >}} recoveries for each model stock expanded by the Production Expansion Factors to best describe the total catch in each marine mixed-stock fishery. The MSM/RRTERM cohort analysis has been used for post-season reconstructions for catch years 1986-2007. However, beginning with catch year 1993, too few coded-wire tags were recovered in mixed-stock fisheries to perform robust cohort analyses using the mixed-stock model.
+The Coho FRAM base period parameterization, determining stock-fishery-timestep impacts, was constructed from stock-specific fishery recoveries of coded-wire tags {{< glossary CWTs >}} within the time steps January to June, July, August, September, and October to December during coast wide fisheries from 1986 to 1992. The procedure used to generate base period data is depicted below (@fig-FRAMdev). For each base period year, post-season reconstruction of cohort abundances for each Coho {{< glossary MU >}} is based on two different models: the Mixed-Stock Model (MSM) that estimates the Production Expansion Factors for each Production Region and RRTERM program that estimates stock-specific impacts for terminal marine and freshwater fisheries. The MSM uses {{< glossary CWT >}} recoveries for each model stock expanded by the Production Expansion Factors to best describe the total catch in each marine mixed-stock fishery. The MSM/RRTERM cohort analysis has been used for post-season reconstructions for catch years 1986-2007. However, beginning with catch year 1993, too few coded-wire tags were recovered in mixed-stock fisheries to perform robust cohort analyses using the mixed-stock model (e.g., @fig-recoveries-interior-frasier).
 
 ![Procedure used to generate base period data for Coho FRAM.](images/FRAMDevel.jpg){#fig-FRAMdev}
 
@@ -805,7 +806,7 @@ ggplot(dat.pdo |>
               filter(Year>=1996),
             linewidth = 1)+
   geom_point(data = dat.oni |> 
-              filter(Year>=1996),
+               filter(Year>=1996),
              size = 2)+
   scale_fill_manual(breaks = c("TRUE", "FALSE"),
                     values = c(alpha("darkred", .6), alpha("darkblue", .6)))+
@@ -1775,18 +1776,29 @@ plot_mus(ests.joint |>
 
 ```{r}
 dat.rmis = read_csv("updated-rmis-summaries.csv")
+terminal.lut = read_tsv("coho_rmis_fishery_lut.tsv") |> 
+  janitor::clean_names() |> 
+  select(fishery_id, fishery_name, term) |> 
+  distinct()
+dat.rmis = dat.rmis |> 
+  left_join(terminal.lut, by = c("fishery_name", "fishery_id"))
 
 plot_rmis_recoveries_all = function(mu.name,
-                                    dat.rmis){
-gp = ggplot(dat.rmis |> 
-              filter(mu_name == mu.name), 
-       aes(x = run_year, y = n_expanded, fill = fishery_name))+
-  geom_col()+
-  ggtitle(glue("RMIS recoveries by FRAM fishery for {mu.name} MU"))+
-  labs(x = "Run year of recovery",
-       y = "CWT Recoveries (expanded)")+
-  theme_bw(base_size = 14)
-return(ggplotly(gp))
+                                    dat.use,
+                                    subtitle = NULL){
+  gp = ggplot(dat.use |> 
+                filter(mu_name == mu.name), 
+              aes(x = run_year, y = n_expanded, fill = fishery_name))+
+    geom_col()+
+    ggtitle(glue("RMIS recoveries by FRAM fishery for {mu.name} MU"))+
+    labs(x = "Run year of recovery",
+         y = "CWT Recoveries (expanded)")+
+    theme_bw(base_size = 14)
+  if(!is.null(subtitle)){
+    gp = gp +
+      labs(subtitle = subtitle)
+  }
+  return(ggplotly(gp))
 }
 
 
@@ -1797,13 +1809,6 @@ return(ggplotly(gp))
 ### Interior Fraser River
 This {{< glossary MU >}} description was prepared by Canadian members of the PSC Coho Technical Committee.
 
-
-```{r}
-plot_rmis_recoveries_all(mu.name = "Interior Fraser",
-                         dat.rmis = dat.rmis)
-```
-
-**Note: We should add details in a caption for this and each of the others.**
 
 
 #### Biological and Geographic Description
@@ -1862,6 +1867,24 @@ Primarily, coded-wire-tagged smolt releases from Spius hatchery and Chilliwack h
 From 1997 to 2002 DIT releases occurred in the Coldwater River (Obrien, in draft) and attempts at wild marking in the Eagle River from 2000 to 2009 were unsuccessful due to low capture rates. (Appendix A).
 
 Historically, coded-wire-tagged smolts were also released into Dunn, Louis, Lemieux, and Spius creeks and the Deadman River and were used to derive smolt-to-adult survival or were used in the base period of FRAM.
+
+**add text for recoveries? Make sure to include that this could include clipped and unclipped fish**
+
+```{r}
+#| label: fig-recoveries-interior-frasier
+#| fig-cap: Total expanded coded wire tag recoveries released in this MU, by FRAM fishery recovered and year. Includes both terminal and preterminal fisheries. Only uses 3 and 4 year olds. Hover over bars for information. 
+plot_rmis_recoveries_all(mu.name = "Interior Fraser",
+                         dat.use = dat.rmis)
+```
+
+```{r}
+#| label: fig-recoveries-interior-frasier-pt
+#| fig-cap: Total expanded coded wire tag recoveries released in this MU, by FRAM fishery recovered and year. Includes ONLY preterminal fisheries. Only uses 3 and 4 year olds. Hover over bars for information. 
+plot_rmis_recoveries_all(mu.name = "Interior Fraser",
+                         dat.use = dat.rmis |> 
+                           filter(term == "P"),
+                         subtitle = "Preterminal only")
+```
 
 ###### Forecast Methods (should we rename to Methods to Determine Management Unit Status? and have Forecast Methods as a subheading if that is the method used?)
 Due to data constraints, there are currently no reliable and accurate escapement estimates that can be applied to determine an official LWFR Coho stock status. Stock recruit and forward projection simulation analysis can not currently be estimated for the entire {{< glossary MU >}} due to a lack of complete escapement data. Without wild escapement estimates, the hatchery index from the Inch creek indicator stock can not be used as a proxy to determine total {{< glossary MU >}} abundance (Fisheries and Oceans Canada 2018). An assessment project is underway to address deficiencies in the current assessment method for LWFR Coho. The study aims to leverage existing data from fisheries, processes, and infrastructure and implementation of new programs to enable sufficient data collection for escapement estimates to be calculated (Arbeider et al. 2020b). The project will estimate total escapement by expanding the stock composition ratio collected at a new assessment fishery targeting Coho, located on the main stem of the Fraser River. The assessment fishery will randomly sample Coho throughout the entire run by deploying a tangle tooth net. Additionally, escapement programs in the Chilliwack, Nicomen, and Lillooet systems will be implemented annually. The Chilliwack project will estimate the abundance of adipose fin-clipped Chilliwack River Coho through a passive mark-recapture program. Juvenile hatchery fish will be tagged with a Passive Integrated Transponder (PIT) tag that will be detected when the adults return to the natal stream through two arrays constructed on the Chilliwack River (Arbeider et al. 2020b). The Nicomen Slough project involves increasing the number of Inch Creek Hatchery releases with {{< glossary CWTs >}} into the slough. The increased sample size will allow for a higher precision of the escapement estimates in Nicomen Slough while also improving survival and {{< glossary ER >}} estimates for the {{< glossary MU >}} (Arbeider et al. 2020b). The Lillooet CU will be assessed through the deployment of a sonar system configured to collect continuous data throughout an 8-week study period (Arbeider et al. 2020b). The project's goal is to determine the run size and {{< glossary MU >}} status of LWFR Coho by incorporating the catch ratio from the assessment fishery to data collected from the expanded escapement programs and existing assessments (Arbeider et al. 2020b). As of 2021, the study is in year two of implementation. Specific information on the project is detailed in Arbeider et al. 2020b, which can be found on the PSC website. 
@@ -1981,10 +2004,6 @@ The extent of use of the lower Fraser River and its estuary by Interior Fraser C
 ### Lower Fraser 
 This {{< glossary MU >}} description was prepared by Canadian members of the PSC Coho Technical Committee.
 
-```{r}
-plot_rmis_recoveries_all(mu.name = "Lower Fraser",
-                         dat.rmis = dat.rmis)
-```
 
 #### Biological and Geographic Description
 The Fraser River is the largest watershed in the province and supports a wide diversity and great abundance of salmon stocks. The Lower Fraser (LWFR) Coho {{< glossary MU >}} includes conservation units (CUs) below Hells Gate, at the Fraser River upstream limit of the {{< glossary MU >}}. During the period of glaciation, as the ice retreated, the Fraser canyon at Hells Gate became blocked with ice, restricting the dispersal of many fish species. Consequently, Coho found in the lower Fraser River watershed, are known to have been colonized along the coast via the sea (Decker and Irvine 2014). Furthermore, in 1945 a landslide at Hells Gate (induced by railway construction in 1913) created a barrier to upstream salmon migration. Despite the construction of a fishway, Hells Gate remains a velocity barrier for many salmon species. For these reasons, Coho migrating upstream of Hells Gate are biologically and evolutionarily distinct from LWFR Coho and are referred to as Interior Fraser River (IFR) Coho. IFR Coho originate from areas considerably farther upstream of Hells Gate, many from the Thompson River system. In turn, they show morphological differences and swimming performance that are likely associated with their longer migrations (Taylor and McPhail 1985). The IFR Coho {{< glossary MU >}} includes North Thompson, South Thompson, Lower Thompson, Fraser Canyon, and Middle Fraser CUs. LWFR Coho are more typical of other nearby coastal populations in terms of morphology, genetic marker similarity, and life history (Arbeider et al 2020a). Within the LWFR, there are four CUs as designated under the Wild Salmon Policy (WSP); Lillooet, Lower Fraser A (further upstream, incorporates Chilliwack watershed), Lower Fraser B (nearer the mouth of the Fraser River), and Boundary Bay. The Boundary Bay CU is not directly connected to the Fraser River watershed and is more genetically related to the Puget Sound populations (in the U.S.). 
@@ -2028,6 +2047,24 @@ Under the Wild Salmon Policy (WSP), the Department is mandated to manage wild Pa
 Each year {{< glossary CWTs >}} are applied to a portion of the out-migrating juvenile Coho, with tag recovery occurring when returning adult fish are caught. Annual analysis uses {{< glossary CWT >}} recoveries from indicator stocks to represent the impacts to the management unit. Results are then used to define fishery management objectives such as {{< glossary ERs >}}. Very few indicator programs are implemented to assess salmon escapement due to high project costs (Grant et al. 2007). Up until 2005, the Salmon River located in Fort Langley BC and the Upper Pitt River located upstream of Pitt Lake in the lower mainland were two wild indicator stocks for the {{< glossary MU >}}. However, escapement trends in other LWFR systems revealed poor correlation between the two indicator stocks and other assessed streams. The Salmon River and the Upper Pitt River are no longer wild indicator stocks (Grant 2007). It is unclear why differing trends were observed between the Salmon and Pitt indicator stocks and other LWFR streams. Inch Creek is currently the sole hatchery indicator stock for the LWFR {{< glossary MU >}} and is located approximately 10 kilometers east of Mission BC. Between 2000-2017 brood years, Inch Creek averaged 105,500 released {{< glossary CWT >}} Coho Salmon per year (Table x). 100% of the fish released with {{< glossary CWTs >}} from this hatchery are adipose fin-clipped. Historically (1983-2000), the hatchery produced an average of 45,000 coded-wired-tagged fish. In 2014, the {{< glossary CWT >}} target was increased to 140,000-150,000 juveniles.
 
 ADD Table (from CWT summaries or "LWFR_cwts" worksheet.  Total hatchery releases and coded wire tag (CWT) releases at Inch Creek hatchery from brood years 1986-2016 with percent of releases with a CWT.
+
+**add text for recoveries? Make sure to include that this could include clipped and unclipped fish**
+
+```{r}
+#| label: fig-recoveries-lower-frasier
+#| fig-cap: Total expanded coded wire tag recoveries released in this MU, by FRAM fishery recovered and year. Includes both terminal and preterminal fisheries. Only uses 3 and 4 year olds. Hover over bars for information. 
+plot_rmis_recoveries_all(mu.name = "Lower Fraser",
+                         dat.use = dat.rmis)
+```
+
+```{r}
+#| label: fig-recoveries-lower-frasier-pt
+#| fig-cap: Total expanded coded wire tag recoveries released in this MU, by FRAM fishery recovered and year. Includes ONLY preterminal fisheries. Only uses 3 and 4 year olds. Hover over bars for information. 
+plot_rmis_recoveries_all(mu.name = "Lower Fraser",
+                         dat.use = dat.rmis |> 
+                           filter(term == "P"),
+                         subtitle = "Preterminal only")
+```
 
 ###### Forecast Methods
 Due to data deficiencies, pre-season system-wide forecasts are not calculated for the LWFR Coho {{< glossary MU >}}. However, under Annex four of the PST (PSC 2019), Canada and the United States have agreed to estimate fishery impacts on the Southern Coho {{< glossary MUs >}} using the Fisheries Regulation Assessment Model (FRAM). FRAM is a discrete, time-step, age-structured, deterministic, model that is used to predict escapement and ER (Cook-Tabor 2012). FRAM is founded in a base period of stock-specific ocean distributions from 1986 to 1992 constructed from {{< glossary CWT >}} recoveries from 198 fisheries (Fisheries and Oceans Canada 2019). The model estimates escapement and ER for the upcoming year using past Coho encounters scaled to represent present stock abundances and catch (Fisheries and Oceans Canada 2019). For the LWFR {{< glossary MU >}}, the Inch Creek indicator stock survival and run size is forecasted and incorporated into the FRAM model for pre-and post-season analysis on stock status. Survival is calculated by: 
@@ -2185,21 +2222,50 @@ Fisheries targeting Fraser Coho are limited due to highly restrictive management
 ### Strait of Georgia (PLACEHOLDER)  ----- ASK CoTC --> what do we do with the 2 MU descriptions?  Do you wish to keep seperate?????
 This {{< glossary MU >}} description was prepared by Canadian members of the PSC Coho Technical Committee.
 
-```{r}
-plot_rmis_recoveries_all(mu.name = "Strait of Georgia Vancouver Isl.",
-                         dat.rmis = dat.rmis)
-```
 
-```{r}
-plot_rmis_recoveries_all(mu.name = "Strait of Georgia Mainland",
-                         dat.rmis = dat.rmis)
-```
 
 #### Biological and Geographic Description
 #### Management  Framework
 ##### Management Objectives
 ##### Stock Assessment
 ###### Indicator Stocks
+
+**add text for recoveries? Make sure to include that this could include clipped and unclipped fish**
+
+```{r}
+#| label: fig-recoveries-strait-of-georgia-vancouver
+#| fig-cap: Total expanded coded wire tag recoveries released in this MU, by FRAM fishery recovered and year. Includes both terminal and preterminal fisheries. Only uses 3 and 4 year olds. Hover over bars for information. 
+plot_rmis_recoveries_all(mu.name = "Strait of Georgia Vancouver Isl.",
+                         dat.use = dat.rmis)
+```
+
+```{r}
+#| label: fig-recoveries-strait-of-georgia-vancouver-pt
+#| fig-cap: Total expanded coded wire tag recoveries released in this MU, by FRAM fishery recovered and year. Includes ONLY preterminal fisheries. Only uses 3 and 4 year olds. Hover over bars for information. 
+plot_rmis_recoveries_all(mu.name = "Strait of Georgia Vancouver Isl.",
+                         dat.use = dat.rmis |> 
+                           filter(term == "P"),
+                         subtitle = "Preterminal only")
+```
+
+
+```{r}
+#| label: fig-recoveries-strait-of-georgia-mainland
+#| fig-cap: Total expanded coded wire tag recoveries released in this MU, by FRAM fishery recovered and year. Includes both terminal and preterminal fisheries. Only uses 3 and 4 year olds. Hover over bars for information. 
+plot_rmis_recoveries_all(mu.name = "Strait of Georgia Mainland",
+                         dat.use = dat.rmis)
+```
+
+```{r}
+#| label: fig-recoveries-strait-of-georgia-mainland-pt
+#| fig-cap: Total expanded coded wire tag recoveries released in this MU, by FRAM fishery recovered and year. Includes ONLY preterminal fisheries. Only uses 3 and 4 year olds. Hover over bars for information. 
+plot_rmis_recoveries_all(mu.name = "Strait of Georgia Mainland",
+                         dat.use = dat.rmis |> 
+                           filter(term == "P"),
+                         subtitle = "Preterminal only")
+```
+
+
 ###### Forecast Methods
 ###### Escapement Monitoring
 ###### Fishery Monitoring
@@ -2225,11 +2291,6 @@ plot_ns_msf("Strait of Georgia")
 
 ### Skagit
 This {{< glossary MU >}} description was prepared by U.S. members of the PSC Coho Technical Committee.
-
-```{r}
-plot_rmis_recoveries_all(mu.name = "Skagit",
-                         dat.rmis = dat.rmis)
-```
 
 #### Biological and Geographic Description
 
@@ -2662,10 +2723,6 @@ plot_status("Skagit")
 ### Stillaguamish
 This {{< glossary MU >}} description was prepared by U.S. members of the PSC Coho Technical Committee.
 
-```{r}
-plot_rmis_recoveries_all(mu.name = "Stillaguamish",
-                         dat.rmis = dat.rmis)
-```
 
 #### Biological and Geographic Description
 
@@ -2700,6 +2757,25 @@ In 2009, the {{< glossary Council >}} adopted annual management objectives for P
 ###### Indicator Stocks
 
 Hatchery and wild coded-wire tagging programs have been limited within the Stillaguamish basin. A smolt trapping study conducted by the Stillaguamish Tribe on brood years 1984–87, where approximately 47,000 Coho smolts were captured, clipped and tagged, and released annually, is the only source of wild tagging data from the Stillaguamish Watershed. Highly variable numbers of coded-wire-tagged and ad-clipped fish have been released from Harvey Creek which still operates, and Jim Creek and North Fork Hatcheries that have been discontinued. On average, 57,000 coded-wire-tagged fish have been released annually from Harvey Creek when the program has been implemented.  Since 1986, this hatchery has reported releases for 20 broods, however, tagged fish have been released for only 8 of these brood years. The North Fork Hatchery released Coho smolts in 10 years during the period of 1988 to 2011; however, tagged fish were released for only BYs 2009 through 2011. Due to a lack of consistent tagging programs within the {{< glossary MU >}}, analysts have used the following two indicator stocks releases in the Snohomish {{< glossary MU >}} as surrogates in the development of the FRAM base period and subsequent {{< glossary CWT >}}-based {{< glossary ER >}} analyses: Bernie Gobin Hatchery (Tulalip Creek) and Wallace River Hatchery (Skykomish) (CoTC 2011). Wallace River fish have been double index tagged starting with brood year 1996.
+
+**add text for recoveries? Make sure to include that this could include clipped and unclipped fish**
+
+```{r}
+#| label: fig-recoveries-stillaguamish
+#| fig-cap: Total expanded coded wire tag recoveries released in this MU, by FRAM fishery recovered and year. Includes both terminal and preterminal fisheries. Only uses 3 and 4 year olds. Hover over bars for information. 
+plot_rmis_recoveries_all(mu.name = "Stillaguamish",
+                         dat.use = dat.rmis)
+```
+
+```{r}
+#| label: fig-recoveries-stillaguamish-pt
+#| fig-cap: Total expanded coded wire tag recoveries released in this MU, by FRAM fishery recovered and year. Includes ONLY preterminal fisheries. Only uses 3 and 4 year olds. Hover over bars for information. 
+plot_rmis_recoveries_all(mu.name = "Stillaguamish",
+                         dat.use = dat.rmis |> 
+                           filter(term == "P"),
+                         subtitle = "Preterminal only")
+```
+
 
 ###### Forecast Methods
 Each year, a preseason abundance forecast of age-3 ocean recruits for Stillaguamish Coho Salmon is developed jointly by the Stillaguamish and Tulalip Tribes and WDFW by February. These annual forecasts are described in the {{< glossary Council >}}’s Preseason Forecast I document each February [@PFMC_1_2012; www.pcouncil.org]. This is part of a larger WDFW-tribal effort to develop forecasts of wild Coho run size for all primary and most secondary management units in Puget Sound and the Washington coast [@Seiler_et_al_1995; @Zimmerman_2011]. These forecasts rely on estimates of wild Coho Salmon production (i.e., smolts) paired with estimates of marine survival.  Wild Coho Salmon production estimates for each of the primary and secondary management units in Puget Sound were derived from results of juvenile trapping studies conducted in the Skagit, Stillaguamish, Snohomish, Green, Nisqually, and Deschutes rivers, as well as in tributaries to Lake Washington and Hood Canal. Analysis of these long-term data sets have demonstrated that wild Coho smolt production is limited by a combination of factors including seeding levels (i.e., escapement), environmental effects (flows, marine derived nutrients), and habitat degradation [@Zimmerman_2011]. 
@@ -2790,11 +2866,6 @@ plot_status("Stillaguamish")
 ### Snohomish
 This {{< glossary MU >}} description was prepared by U.S. members of the PSC Coho Technical Committee.
 
-```{r}
-plot_rmis_recoveries_all(mu.name = "Snohomish",
-                         dat.rmis = dat.rmis)
-```
-
 
 #### Biological and Geographic Description
 
@@ -2845,6 +2916,24 @@ In more recent years, estimated smolt production has been quite consistent in th
 Like the Stillaguamish {{< glossary MU >}}, the Snohomish {{< glossary MU >}} primarily relies on the following two indicator stocks releases in the Snohomish {{< glossary MU >}}: Bernie Gobin Hatchery (Tulalip Creek) and Wallace River Hatchery (Skykomish) (CoTC 2011).  Approximately 45,000 coded wire tagged and clipped fish have been released from Wallace River Hatchery since brood year 1983. A double index tag program of 45,000 tagged and unclipped fish was implemented at this hatchery beginning with brood year 1996. Approximately 48,000 tagged fish have been released annually from Bernie Gobin Hatchery, where all broods but 1997 and 1998 were clipped and tagged. Wild stock coded-wire tagging programs have been limited within the basin. A smolt trapping study conducted by the Stillaguamish Tribe on brood years 1984–87 is the only source of wild tagging data from the Stillaguamish Watershed (Figure 4 4). 
 
 Is this still true????   --> There are no direct estimates of marine survival or exploitation for this {{< glossary MU >}} due to the limited numbers of {{< glossary CWTs >}} released from the enhancement projects, and lack of formal escapement accounting for the returning tagged Coho. Tagged hatchery and wild fish released in the Snohomish {{< glossary MU >}} are used as surrogates for the Stillaguamish {{< glossary MU >}}.
+
+**add text for recoveries? Make sure to include that this could include clipped and unclipped fish**
+
+```{r}
+#| label: fig-recoveries-snohomish
+#| fig-cap: Total expanded coded wire tag recoveries released in this MU, by FRAM fishery recovered and year. Includes both terminal and preterminal fisheries. Only uses 3 and 4 year olds. Hover over bars for information. 
+plot_rmis_recoveries_all(mu.name = "Snohomish",
+                         dat.use = dat.rmis)
+```
+
+```{r}
+#| label: fig-recoveries-snohomish-pt
+#| fig-cap: Total expanded coded wire tag recoveries released in this MU, by FRAM fishery recovered and year. Includes ONLY preterminal fisheries. Only uses 3 and 4 year olds. Hover over bars for information. 
+plot_rmis_recoveries_all(mu.name = "Snohomish",
+                         dat.use = dat.rmis |> 
+                           filter(term == "P"),
+                         subtitle = "Preterminal only")
+```
 
 
 ###### Forecast Methods
@@ -2901,12 +2990,6 @@ plot_status("Snohomish")
 
 ### Hood Canal
 This {{< glossary MU >}} description was prepared by U.S. members of the PSC Coho Technical Committee.
-
-```{r}
-plot_rmis_recoveries_all(mu.name = "Hood Canal",
-                         dat.rmis = dat.rmis)
-```
-
 
 #### Biological and Geographic Description
 
@@ -2984,6 +3067,25 @@ ToDo --> add Figure 4.4
 **Total number of Hood Canal wild Coho tagged and released, brood years 1983-2020 (data downloaded on ??; [@RMISD_1977])
 
 Exploitation rate estimates are available for the Quilcene NFH and George Adams {{< glossary CWT >}} programs. Coho broodstock are not collected at the net pen release sites, so there is no complete accounting of escapement of coded-wire-tagged Coho originating from these facilities, and {{< glossary ERs >}} cannot be directly calculated for these programs. The intensive fisheries adjacent to the Quilcene Bay and Port Gamble net pens are designed to harvest the majority of available Coho retuning to these areas, so the sum of all tag recoveries in fisheries and escapement are considered to provide reasonable relative estimates of marine survival for these programs, albeit with some negative bias.  
+
+**add text for recoveries? Make sure to include that this could include clipped and unclipped fish**
+
+```{r}
+#| label: fig-recoveries-hood-canal
+#| fig-cap: Total expanded coded wire tag recoveries released in this MU, by FRAM fishery recovered and year. Includes both terminal and preterminal fisheries. Only uses 3 and 4 year olds. Hover over bars for information. 
+plot_rmis_recoveries_all(mu.name = "Hood Canal",
+                         dat.use = dat.rmis)
+```
+
+```{r}
+#| label: fig-recoveries-hood-canal-pt
+#| fig-cap: Total expanded coded wire tag recoveries released in this MU, by FRAM fishery recovered and year. Includes ONLY preterminal fisheries. Only uses 3 and 4 year olds. Hover over bars for information. 
+plot_rmis_recoveries_all(mu.name = "Hood Canal",
+                         dat.use = dat.rmis |> 
+                           filter(term == "P"),
+                         subtitle = "Preterminal only")
+```
+
 
 ###### Forecast Methods
 
@@ -3116,11 +3218,6 @@ plot_status("Hood Canal")
 ### US Strait of Juan de Fuca (JDF)
 This {{< glossary MU >}} description was prepared by U.S. members of the PSC Coho Technical Committee.
 
-```{r}
-plot_rmis_recoveries_all(mu.name = "Strait of Juan de Fuca",
-                         dat.rmis = dat.rmis)
-```
-
 #### Biological and Geographic Description
 
 The US Strait JDF {{< glossary MU >}} is one of the US Inside {{< glossary MUs >}} and includes Coho Salmon inhabiting the numerous streams and rivers along the southern side of Strait of Juan de Fuca.  This {{< glossary MU >}} spans two evolutionarily significant units (ESUs).  Populations inhabiting the western Straits (from Salt Creek westwards) are part of the Olympic Peninsula ESU, while those inhabiting the Elwha River eastwards belong to the Puget Sound/Strait of Georgia ESU (Weitkamp et al. 1995).  The former was deemed “not warranted” for listing under the US Endangered Species Act, while the latter is a “species of concern” (NOAA Fisheries 2009).
@@ -3170,6 +3267,24 @@ Queets River natural Coho, Strait of Juan de Fuca natural Coho, and Snohomish Ri
 ###### Indicator Stocks
 Wild stock tagging within this {{< glossary MU >}} was only implemented on small numbers of Coho Salmon for broods 1984 through 1987; therfore, long-term indicators within this {{< glossary MU >}} are limited to the Dungeness and Lower Elwha hatchery stocks. Approximately 69,000 tagged and clipped fish have been released from the Dungeness Hatchery in 14 years of the years since brood 1983. Beginning in 1985, the Lower Elwha Hatchery has released 90,000 clipped and tagged Coho smolts annually. A DIT program was implemented there with brood 1995 and approximately 75,000 tagged and unclipped have been released annually in most years.
 
+**add text for recoveries? Make sure to include that this could include clipped and unclipped fish**
+
+```{r}
+#| label: fig-recoveries-jdf
+#| fig-cap: Total expanded coded wire tag recoveries released in this MU, by FRAM fishery recovered and year. Includes both terminal and preterminal fisheries. Only uses 3 and 4 year olds. Hover over bars for information. 
+plot_rmis_recoveries_all(mu.name = "Strait of Juan de Fuca",
+                         dat.use = dat.rmis)
+```
+
+```{r}
+#| label: fig-recoveries-jdf-pt
+#| fig-cap: Total expanded coded wire tag recoveries released in this MU, by FRAM fishery recovered and year. Includes ONLY preterminal fisheries. Only uses 3 and 4 year olds. Hover over bars for information. 
+plot_rmis_recoveries_all(mu.name = "Strait of Juan de Fuca",
+                         dat.use = dat.rmis |> 
+                           filter(term == "P"),
+                         subtitle = "Preterminal only")
+```
+
 ###### Forecast Methods
 
 **2023 Forecast**
@@ -3203,11 +3318,6 @@ plot_status("US Strait JDF")
 
 ### Quillayute
 This {{< glossary MU >}} description was prepared by U.S. members of the PSC Coho Technical Committee.
-
-```{r}
-plot_rmis_recoveries_all(mu.name = "Quillayute",
-                         dat.rmis = dat.rmis)
-```
 
 *Note that Quillayute and Queets values are those from the FRAM database and have not yet been extracted from the relevant TAMM cells for each year*
 
@@ -3248,6 +3358,26 @@ footnote - Limit of 59% (maximum fishery mortality threshold) under Amendment 16
 
 ##### Stock Assessment
 ###### Indicator Stocks
+
+**add text for recoveries? Make sure to include that this could include clipped and unclipped fish**
+
+```{r}
+#| label: fig-recoveries-quillayute
+#| fig-cap: Total expanded coded wire tag recoveries released in this MU, by FRAM fishery recovered and year. Includes both terminal and preterminal fisheries. Only uses 3 and 4 year olds. Hover over bars for information. 
+plot_rmis_recoveries_all(mu.name = "Quillayute",
+                         dat.use = dat.rmis)
+```
+
+```{r}
+#| label: fig-recoveries-quillayute-pt
+#| fig-cap: Total expanded coded wire tag recoveries released in this MU, by FRAM fishery recovered and year. Includes ONLY preterminal fisheries. Only uses 3 and 4 year olds. Hover over bars for information. 
+plot_rmis_recoveries_all(mu.name = "Quillayute",
+                         dat.use = dat.rmis |> 
+                           filter(term == "P"),
+                         subtitle = "Preterminal only")
+```
+
+
 ###### Forecast Methods
 
 The estimated number of total fall smolts averaged 350,000 annually from 1995 to 2022, with a high of 655,000 in 2011 and a low of 135,000 in 1999.  
@@ -3289,11 +3419,6 @@ plot_status("Quillayute")
 ### Hoh
 This {{< glossary MU >}} description was prepared by U.S. members of the PSC Coho Technical Committee.
 
-```{r}
-plot_rmis_recoveries_all(mu.name = "Hoh",
-                         dat.rmis = dat.rmis)
-```
-
 
 #### Biological and Geographic Description
 
@@ -3325,6 +3450,26 @@ The current PST total {{< glossary ER >}} ceiling for the natural Coho populatio
 
 ##### Stock Assessment
 ###### Indicator Stocks
+
+**add text for recoveries? Make sure to include that this could include clipped and unclipped fish**
+
+```{r}
+#| label: fig-recoveries-hoh
+#| fig-cap: Total expanded coded wire tag recoveries released in this MU, by FRAM fishery recovered and year. Includes both terminal and preterminal fisheries. Only uses 3 and 4 year olds. Hover over bars for information. 
+plot_rmis_recoveries_all(mu.name = "Hoh",
+                         dat.use = dat.rmis)
+```
+
+```{r}
+#| label: fig-recoveries-hoh-pt
+#| fig-cap: Total expanded coded wire tag recoveries released in this MU, by FRAM fishery recovered and year. Includes ONLY preterminal fisheries. Only uses 3 and 4 year olds. Hover over bars for information. 
+plot_rmis_recoveries_all(mu.name = "Hoh",
+                         dat.use = dat.rmis |> 
+                           filter(term == "P"),
+                         subtitle = "Preterminal only")
+```
+
+
 ###### Forecast Methods
 
 The estimated number of total smolts averaged 162,000 annually from 2000 to 2022, with a high of 286,000 in 2011 and a low of 69,000 in 2015.  
@@ -3363,11 +3508,6 @@ plot_status("Hoh")
 ### Queets
 This {{< glossary MU >}} description was prepared by U.S. members of the PSC Coho Technical Committee.
 
-```{r}
-plot_rmis_recoveries_all(mu.name = "Queets",
-                         dat.rmis = dat.rmis)
-```
-
 *Note that Quillayute and Queets values are those from the FRAM database and have not yet been extracted from the relevant TAMM cells for each year*
 
 #### Biological and Geographic Description
@@ -3401,6 +3541,25 @@ Queets River natural Coho, Strait of Juan de Fuca natural Coho, and Snohomish Ri
 
 ##### Stock Assessment
 ###### Indicator Stocks
+
+**add text for recoveries? Make sure to include that this could include clipped and unclipped fish**
+
+```{r}
+#| label: fig-recoveries-queets
+#| fig-cap: Total expanded coded wire tag recoveries released in this MU, by FRAM fishery recovered and year. Includes both terminal and preterminal fisheries. Only uses 3 and 4 year olds. Hover over bars for information. 
+plot_rmis_recoveries_all(mu.name = "Queets",
+                         dat.use = dat.rmis)
+```
+
+```{r}
+#| label: fig-recoveries-queets-pt
+#| fig-cap: Total expanded coded wire tag recoveries released in this MU, by FRAM fishery recovered and year. Includes ONLY preterminal fisheries. Only uses 3 and 4 year olds. Hover over bars for information. 
+plot_rmis_recoveries_all(mu.name = "Queets",
+                         dat.use = dat.rmis |> 
+                           filter(term == "P"),
+                         subtitle = "Preterminal only")
+```
+
 ###### Forecast Methods
 
 The estimated number of total smolts averaged 286,000 annually from 2000 to 2022, with a high of 444,000 in 2004 and a low of 136,000 in 2022.  
@@ -3442,11 +3601,6 @@ plot_status("Queets")
 ### Grays Harbor
 This {{< glossary MU >}} description was prepared by U.S. members of the PSC Coho Technical Committee.
 
-```{r}
-plot_rmis_recoveries_all(mu.name = "Grays Harbor",
-                         dat.rmis = dat.rmis)
-```
-
 #### Biological and Geographic Description
 
 This {{< glossary MU >}} consists of all tributaries to Grays Harbor, including the Chehalis and Humptulips river basins.  Coho Salmon inhabiting these basins are treated as a single population under the PST.  
@@ -3482,6 +3636,26 @@ The current PST total {{< glossary ER >}} ceiling for the Grays Harbor natural C
 
 ##### Stock Assessment
 ###### Indicator Stocks
+
+**add text for recoveries? Make sure to include that this could include clipped and unclipped fish**
+
+```{r}
+#| label: fig-recoveries-grays-harbor
+#| fig-cap: Total expanded coded wire tag recoveries released in this MU, by FRAM fishery recovered and year. Includes both terminal and preterminal fisheries. Only uses 3 and 4 year olds. Hover over bars for information. 
+plot_rmis_recoveries_all(mu.name = "Grays Harbor",
+                         dat.use = dat.rmis)
+```
+
+```{r}
+#| label: fig-recoveries-grays-harbor-pt
+#| fig-cap: Total expanded coded wire tag recoveries released in this MU, by FRAM fishery recovered and year. Includes ONLY preterminal fisheries. Only uses 3 and 4 year olds. Hover over bars for information. 
+plot_rmis_recoveries_all(mu.name = "Grays Harbor",
+                         dat.use = dat.rmis |> 
+                           filter(term == "P"),
+                         subtitle = "Preterminal only")
+```
+
+
 ###### Forecast Methods
 
 The estimated number of total smolts averaged 2.5 million annually from 2000 to 2022, with a high of 3.6 million in 2017 and a low of 203,000 in 2002.  
