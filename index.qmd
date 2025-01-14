@@ -46,6 +46,7 @@ Dev note: using quarto-glossary to add hover-over text. Details and installation
 - depiction of 'un-used' catch, either fish or ER?
 - abundance figures overlaying MUs within regions (US in, US out, BC)
 - CBE: Populate glossary hover-over tooltips, using glossary.yml and inserting based on nomenclature here: https://debruine.github.io/quarto-glossary/
+- add the rmis summary data process to our documentation for rerunning this, and to Collin's scripts (automate the SQL call)
 
 **CBE change log**
 
@@ -85,6 +86,7 @@ library("gt")
 library("glue")
 library("scales")
 library("rvest")
+library("plotly")
 theme_set(theme_light())
 
 # #can load an entire environment built ahead of time and save time on reknitting
@@ -1771,8 +1773,38 @@ plot_mus(ests.joint |>
 
 ## Management Unit Descriptions and Assessment of Performance 
 
+```{r}
+dat.rmis = read_csv("updated-rmis-summaries.csv")
+
+plot_rmis_recoveries_all = function(mu.name,
+                                    dat.rmis){
+gp = ggplot(dat.rmis |> 
+              filter(mu_name == mu.name), 
+       aes(x = run_year, y = n_expanded, fill = fishery_name))+
+  geom_col()+
+  ggtitle(glue("RMIS recoveries by FRAM fishery for {mu.name} MU"))+
+  labs(x = "Run year of recovery",
+       y = "CWT Recoveries (expanded)")+
+  theme_bw(base_size = 14)
+return(ggplotly(gp))
+}
+
+
+```
+
+
+
 ### Interior Fraser River
 This {{< glossary MU >}} description was prepared by Canadian members of the PSC Coho Technical Committee.
+
+
+```{r}
+plot_rmis_recoveries_all(mu.name = "Interior Fraser",
+                         dat.rmis = dat.rmis)
+```
+
+**Note: We should add details in a caption for this and each of the others.**
+
 
 #### Biological and Geographic Description
 The Interior Fraser River (IFR) {{< glossary MU >}} consists of Coho salmon that re-colonized the IFR and tributaries above Hells Gate in the Fraser Canyon (@fig-BCmap) at the end of the last period of glaciation, colonizing from glacial refugia in the Columbia River basin (Northcote and Larkin 1989). Hells Gate in the Fraser Canyon was identified as a natural boundary that separates Fraser River Coho populations into Interior and Lower Fraser units. The IFR Coho {{< glossary MU >}} encompasses the North, South and mainstem Thompson river drainages as well as the mainstem Fraser River beginning at Fraser Pass in Mount Robson Provincial Park and terminating at Hells Gate.
@@ -1948,6 +1980,11 @@ The extent of use of the lower Fraser River and its estuary by Interior Fraser C
 
 ### Lower Fraser 
 This {{< glossary MU >}} description was prepared by Canadian members of the PSC Coho Technical Committee.
+
+```{r}
+plot_rmis_recoveries_all(mu.name = "Lower Fraser",
+                         dat.rmis = dat.rmis)
+```
 
 #### Biological and Geographic Description
 The Fraser River is the largest watershed in the province and supports a wide diversity and great abundance of salmon stocks. The Lower Fraser (LWFR) Coho {{< glossary MU >}} includes conservation units (CUs) below Hells Gate, at the Fraser River upstream limit of the {{< glossary MU >}}. During the period of glaciation, as the ice retreated, the Fraser canyon at Hells Gate became blocked with ice, restricting the dispersal of many fish species. Consequently, Coho found in the lower Fraser River watershed, are known to have been colonized along the coast via the sea (Decker and Irvine 2014). Furthermore, in 1945 a landslide at Hells Gate (induced by railway construction in 1913) created a barrier to upstream salmon migration. Despite the construction of a fishway, Hells Gate remains a velocity barrier for many salmon species. For these reasons, Coho migrating upstream of Hells Gate are biologically and evolutionarily distinct from LWFR Coho and are referred to as Interior Fraser River (IFR) Coho. IFR Coho originate from areas considerably farther upstream of Hells Gate, many from the Thompson River system. In turn, they show morphological differences and swimming performance that are likely associated with their longer migrations (Taylor and McPhail 1985). The IFR Coho {{< glossary MU >}} includes North Thompson, South Thompson, Lower Thompson, Fraser Canyon, and Middle Fraser CUs. LWFR Coho are more typical of other nearby coastal populations in terms of morphology, genetic marker similarity, and life history (Arbeider et al 2020a). Within the LWFR, there are four CUs as designated under the Wild Salmon Policy (WSP); Lillooet, Lower Fraser A (further upstream, incorporates Chilliwack watershed), Lower Fraser B (nearer the mouth of the Fraser River), and Boundary Bay. The Boundary Bay CU is not directly connected to the Fraser River watershed and is more genetically related to the Puget Sound populations (in the U.S.). 
@@ -2148,6 +2185,16 @@ Fisheries targeting Fraser Coho are limited due to highly restrictive management
 ### Strait of Georgia (PLACEHOLDER)  ----- ASK CoTC --> what do we do with the 2 MU descriptions?  Do you wish to keep seperate?????
 This {{< glossary MU >}} description was prepared by Canadian members of the PSC Coho Technical Committee.
 
+```{r}
+plot_rmis_recoveries_all(mu.name = "Strait of Georgia Vancouver Isl.",
+                         dat.rmis = dat.rmis)
+```
+
+```{r}
+plot_rmis_recoveries_all(mu.name = "Strait of Georgia Mainland",
+                         dat.rmis = dat.rmis)
+```
+
 #### Biological and Geographic Description
 #### Management  Framework
 ##### Management Objectives
@@ -2178,6 +2225,11 @@ plot_ns_msf("Strait of Georgia")
 
 ### Skagit
 This {{< glossary MU >}} description was prepared by U.S. members of the PSC Coho Technical Committee.
+
+```{r}
+plot_rmis_recoveries_all(mu.name = "Skagit",
+                         dat.rmis = dat.rmis)
+```
 
 #### Biological and Geographic Description
 
@@ -2610,6 +2662,11 @@ plot_status("Skagit")
 ### Stillaguamish
 This {{< glossary MU >}} description was prepared by U.S. members of the PSC Coho Technical Committee.
 
+```{r}
+plot_rmis_recoveries_all(mu.name = "Stillaguamish",
+                         dat.rmis = dat.rmis)
+```
+
 #### Biological and Geographic Description
 
 The Stillaguamish {{< glossary MU >}} is one of the US Inside {{< glossary MUs >}} (refer to figure of inside MUs) and consists of the Stillaguamish River and its major tributaries, the North and South Forks (Figure x). Coho Salmon make use of all available habitat within the watershed not constrained by barriers to migration. The {{< glossary MU >}} is made up of a single stock (Stillaguamish Coho Salmon), managed for natural production and for the purpose of achieving a desired spawning escapement objective.  Stillaguamish River Coho Salmon belong to the larger Puget Sound/Strait of Georgia Coho Salmon evolutionarily significant unit [ESU; @Weitkamp_et_al_1995]. This ESU is currently a species of concern under the US Endangered Species Act [@NOAA_Fisheries_2009].
@@ -2733,6 +2790,12 @@ plot_status("Stillaguamish")
 ### Snohomish
 This {{< glossary MU >}} description was prepared by U.S. members of the PSC Coho Technical Committee.
 
+```{r}
+plot_rmis_recoveries_all(mu.name = "Snohomish",
+                         dat.rmis = dat.rmis)
+```
+
+
 #### Biological and Geographic Description
 
 The Snohomish {{< glossary MU >}} is one of the US Inside {{< glossary MUs >}} and includes all accessible waters of the Snohomish River Basin, Washington State, including its major tributaries, the Skykomish and Snoqualmie rivers.
@@ -2838,6 +2901,12 @@ plot_status("Snohomish")
 
 ### Hood Canal
 This {{< glossary MU >}} description was prepared by U.S. members of the PSC Coho Technical Committee.
+
+```{r}
+plot_rmis_recoveries_all(mu.name = "Hood Canal",
+                         dat.rmis = dat.rmis)
+```
+
 
 #### Biological and Geographic Description
 
@@ -3047,6 +3116,11 @@ plot_status("Hood Canal")
 ### US Strait of Juan de Fuca (JDF)
 This {{< glossary MU >}} description was prepared by U.S. members of the PSC Coho Technical Committee.
 
+```{r}
+plot_rmis_recoveries_all(mu.name = "Strait of Juan de Fuca",
+                         dat.rmis = dat.rmis)
+```
+
 #### Biological and Geographic Description
 
 The US Strait JDF {{< glossary MU >}} is one of the US Inside {{< glossary MUs >}} and includes Coho Salmon inhabiting the numerous streams and rivers along the southern side of Strait of Juan de Fuca.  This {{< glossary MU >}} spans two evolutionarily significant units (ESUs).  Populations inhabiting the western Straits (from Salt Creek westwards) are part of the Olympic Peninsula ESU, while those inhabiting the Elwha River eastwards belong to the Puget Sound/Strait of Georgia ESU (Weitkamp et al. 1995).  The former was deemed “not warranted” for listing under the US Endangered Species Act, while the latter is a “species of concern” (NOAA Fisheries 2009).
@@ -3130,6 +3204,11 @@ plot_status("US Strait JDF")
 ### Quillayute
 This {{< glossary MU >}} description was prepared by U.S. members of the PSC Coho Technical Committee.
 
+```{r}
+plot_rmis_recoveries_all(mu.name = "Quillayute",
+                         dat.rmis = dat.rmis)
+```
+
 *Note that Quillayute and Queets values are those from the FRAM database and have not yet been extracted from the relevant TAMM cells for each year*
 
 #### Biological and Geographic Description
@@ -3210,6 +3289,12 @@ plot_status("Quillayute")
 ### Hoh
 This {{< glossary MU >}} description was prepared by U.S. members of the PSC Coho Technical Committee.
 
+```{r}
+plot_rmis_recoveries_all(mu.name = "Hoh",
+                         dat.rmis = dat.rmis)
+```
+
+
 #### Biological and Geographic Description
 
 The Hoh {{< glossary MU >}} consists of the Hoh River basin and consists of a single population of Coho Salmon occupying the Riverbasin.  This {{< glossary MU >}} belongs to the Olympic Peninsula evolutionarily significant unit (ESU) (Weitkamp et al. 1995).  It was deemed “not warranted” for listing under the US Endangered Species Act (NOAA 2009).
@@ -3277,6 +3362,11 @@ plot_status("Hoh")
 
 ### Queets
 This {{< glossary MU >}} description was prepared by U.S. members of the PSC Coho Technical Committee.
+
+```{r}
+plot_rmis_recoveries_all(mu.name = "Queets",
+                         dat.rmis = dat.rmis)
+```
 
 *Note that Quillayute and Queets values are those from the FRAM database and have not yet been extracted from the relevant TAMM cells for each year*
 
@@ -3351,6 +3441,11 @@ plot_status("Queets")
 
 ### Grays Harbor
 This {{< glossary MU >}} description was prepared by U.S. members of the PSC Coho Technical Committee.
+
+```{r}
+plot_rmis_recoveries_all(mu.name = "Grays Harbor",
+                         dat.rmis = dat.rmis)
+```
 
 #### Biological and Geographic Description
 
