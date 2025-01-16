@@ -37,15 +37,13 @@ Dev note: using quarto-glossary to add hover-over text. Details and installation
 
 **TO DO**
 
-- get multiyear mdb; update `params$mdb` (unused in fig/tables but for knit text) (CBE note: I think this is now unnecessary?)
 - further text revisions; drop tables from StaticTable
 - figures
-- post
-- pre/post
-- make simple stacked bar of stoplight of nochange/toohigh/toolow
 - depiction of 'un-used' catch, either fish or ER?
 - abundance figures overlaying MUs within regions (US in, US out, BC)
-- CBE: Populate glossary hover-over tooltips, using glossary.yml and inserting based on nomenclature here: https://debruine.github.io/quarto-glossary/
+
+New Todos (CBE and CCT 2024+)
+- Populate glossary hover-over tooltips, using glossary.yml and inserting based on nomenclature here: https://debruine.github.io/quarto-glossary/
 - add the rmis summary data process to our documentation for rerunning this, and to Collin's scripts (automate the SQL call)
 - add the updated coho_lut operation with "TERM" column into the SQL workflow
 
@@ -954,7 +952,7 @@ Additionally, at the federal level, Coho Salmon caught in coastal waters of the 
 
 The Coho FRAM (Coho FRAM, Model Evaluation Workgroup (MEW). 2008) has been the tool used to plan US preseason fisheries and also to evaluate, postseason, {{< glossary ERs >}} by the fisheries of both Parties on the naturally spawning Coho {{< glossary MUs >}} specified by the CoABM. Canada has not been using Coho FRAM preseason, instead using a combination of a ‘domestic model’ for planning marine fisheries and a ‘decay model’ for planning Fraser River fisheries. (**Jeromy's comment - Can we describe what get’s exchanged during the preseason process to reconcile this difference here in one or two sentences?**)
 
-Each country manages the Coho harvest within its {{< glossary ER >}} cap through its own domestic fisheries management processes and annual fisheries plans. For Canada, the annual domestic planning process is documented in the salmon Integrated Fisheries Management Plan (IFMP) at the culmination of the process each June (*is June correct?*). For the US, the North of Cape Falcon ocean salmon fishing plans are reported in Preseason Report III (PFMC documents) at the culmination of the {{< glossary Council >}} process each April. For US Inside {{< glossary MUs >}}, the 2019 PST uses the {{< glossary ER >}} thresholds and stepped harvest rate goals from the Comprehensive Coho Agreement and adopted as (Fishery Management Plan) FMP conservation objectives in 2009. For US Outside {{< glossary MUs >}}, {{< glossary ER >}} constraints represent the Maximum Fishing Mortality Threshold (MFMT). For US domestic purposes, the Pacific Fishery Management {{< glossary Council >}} {{< glossary MU >}} status categories are “critical”, “low”, and “normal”, which correspond to the PSC categories of “low”, “moderate” and “abundant”, respectively [@PFMC_2022b] (*cbe: what document are we trying to reference? Can update references.bib*).   
+Each country manages the Coho harvest within its {{< glossary ER >}} cap through its own domestic fisheries management processes and annual fisheries plans. For Canada, the annual domestic planning process is documented in the salmon Integrated Fisheries Management Plan (IFMP) at the culmination of the process each June (*is June correct?*). For the US, the North of Cape Falcon ocean salmon fishing plans are reported in Preseason Report III (PFMC documents) at the culmination of the {{< glossary Council >}} process each April. For US Inside {{< glossary MUs >}}, the 2019 PST uses the {{< glossary ER >}} thresholds and stepped harvest rate goals from the Comprehensive Coho Agreement and adopted as (Fishery Management Plan) FMP conservation objectives in 2009. For US Outside {{< glossary MUs >}}, {{< glossary ER >}} constraints represent the Maximum Fishing Mortality Threshold (MFMT). For US domestic purposes, the Pacific Fishery Management {{< glossary Council >}} {{< glossary MU >}} status categories are “critical”, “low”, and “normal”, which correspond to the PSC categories of “low”, “moderate” and “abundant”, respectively [@PFMC_amended_2023].   
 
 The US FMP includes status determination criteria (SDC) for overfishing, approaching an overfished condition, overfished, not overfished/rebuilding, and rebuilt [@PFMC_1_2023]. These criteria are:
 
