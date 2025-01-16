@@ -37,15 +37,22 @@ Dev note: using quarto-glossary to add hover-over text. Details and installation
 
 **TO DO**
 
-- further text revisions; drop tables from StaticTable
-- figures
-- depiction of 'un-used' catch, either fish or ER?
+- further text revisions
+- drop unnecessary tables from StaticTable
+- Clarify + update existing figures
+- Translate "picture" figures into natively created graphics
+- Ditto tables
 - abundance figures overlaying MUs within regions (US in, US out, BC)
+- Extract Quillayute and Queets values from TAMMs (currntly based on FRAM)
 
-New Todos (CBE and CCT 2024+)
+
+*New Todos (CBE and CCT 2024+)*
+
 - Populate glossary hover-over tooltips, using glossary.yml and inserting based on nomenclature here: https://debruine.github.io/quarto-glossary/
+- add in the ER vs overages table CBE put together for 5 yr report. Use Mike's code to identify 
 - add the rmis summary data process to our documentation for rerunning this, and to Collin's scripts (automate the SQL call)
 - add the updated coho_lut operation with "TERM" column into the SQL workflow
+- add PSC MU lookup tables from Mike's package to framrosetta
 
 **CBE change log**
 
@@ -107,6 +114,9 @@ static <- list(
   lu_fishery = readxl::read_excel(params$static_tables, sheet = "fram_coho_fishery")
   ,
   glossary = readxl::read_excel(params$static_tables, sheet = "glossary") |> 
+    mutate(across(where(is.character), ~replace_na(.,"")))
+  ,
+    run_files = readxl::read_excel(params$static_tables, sheet = "RunFiles") |> 
     mutate(across(where(is.character), ~replace_na(.,"")))
   ,
   #field PSC_MU designates relevant units for report, those in PST
@@ -490,7 +500,7 @@ plot_status <- function(mu = "Skagit"){
 
 ```
 
-This report is based on postseason data in `r basename(params$mdb_pst)` and preseason data in `r basename(params$mdb_pre)`, as well as supporting [StaticTables.xlsx](https://github.com/PSC-CoTC/PeriodicReport/blob/master/StaticTables.xlsx).
+This report is based on postseason data in `r basename(params$mdb_pst)` and preseason data in `r basename(params$mdb_pre)`, as well as supporting [StaticTables.xlsx](https://github.com/PSC-CoTC/PeriodicReport/blob/main/StaticTables.xlsx).
 
 ![](images/coho_pic2.png){width=100% fig-alt="Coho Picture"}
 
@@ -990,31 +1000,39 @@ The US annual salmon fishery planning process starts in January with a Stock and
 
 Because the domestic planning processes of the Parties are not synchronous, a single pre-season command file containing expectations for both Canada and the US is not available prior to the conclusion of the {{< glossary Council >}} process (US pre-season fishery planning) in April. Therefor, in any given year the pre-season command file used by the {{< glossary Council >}} incorporates cohort abundance for both Canadian and US {{< glossary MUs >}}, but planned fishery regulations for US fisheries only. Unless other information is available, Canadian regulations are assumed to be similar to those implemented in the previous year. Subsequent to this process, additional command files are generated to represent the actual Canadian fishing plans. Command files used in pre-season planning from 2004 to 2023 are detailed in @tab-commands. These files contain specific information used at the time to model fisheries along with the pre-season forecasts of stock abundances.
 
+```{r}
+#| fig-cap: Pre- and post-season command files and base period used in FRAM to evaluate {{< glossary ERs >}} {{< glossary MUs >}} over catch years 2004 through 2023. "Post-season Original" command files are those used to generate estimates for the Annual {{< glossary ER >}} Report provided to the Southern Panel during the PSC Annual Meeting.
+#| label: tab-commands
+static$run_files |> 
+  select("Catch Year":"Base Period Used in Revised BKFRAM Run") |> 
+  gt()
+```
 
-| **Catch Year** | **Pre-season US** | **Pre-season Canada** | **Post-season Original** | **Post-season Revised** | **Base Period Used in Revised BKFRAM Run** |
-|:--------------:|:--------------------|:----------------------|:-----------------------|:------------------------|:------------------------|
-|	2004	|	0425.Cmd	|	0427.Cmd	|	04pa.Cmd	|	BK04.Cmd	|	CohoBase	|
-|	2005	|	0519.Cmd	|	P5at.Cmd	|	05p9bk.Cmd	|	BK05.Cmd	|	CohoBase87917	|
-|	2006	|	0619.Cmd	|	0631.Cmd	|	06p4.Cmd	|	BK06.Cmd	|	CohoBase-86-92-NoUF86-Jan2008	|
-|	2007	|	0714.Cmd	|	0714.Cmd	|	07JH.Cmd	|	BK07.Cmd	|	CohoBase-86-92-NoUF86-Jan2009	|
-|	2008	|	0824.Cmd	|	0828.Cmd	|	BK08.Cmd	|	BK08.Cmd	|	CohoBase-86-92-NoUF86-Feb2008	|
-|	2009	|	0920.Cmd	|	0920.Cmd	|	BK09.Cmd	|	BK09.Cmd	|	CohoBase-86-92-NoUF86-Feb2009	|
-|	2010	|	1016.Cmd	|	1016.Cmd	|	BK10 PSC Feb14	|	TBD	|	CohoBase-86-92-NoUF86-Feb2009	|
-|	2011	|	1116.Cmd	|	TBD	|	Coho2011Post_PSC 2013	|	TBD	|	TBD	|
-|	2012	|	1229.Cmd	|	TBD	|	Coho2012Post_PSC SSNPx2 Q 2014	|	TBD	|	TBD	|
-|	2013	|	bc-1323 all FRAM inputs	|	TBD	|	bk 2013 Final ver3 Feb 11 2015	|	TBD	|	TBD	|
-|	2014	|	bc-Coho1418 US and BC preseason 2014	|	TBD	|	bc-BK2014 w TAMM inputs final#2	|	TBD	|	TBD	|
-|	2015	|	bc-Coho 1523 Final	|	TBD	|	bc-bkCoho2015 Final	|	TBD	|	TBD	|
-|	2016	|	bc-Coho1637 rerun by CoTC	|	TBD	|	bc-BK2016 BPMar2013 final	|	TBD	|	TBD	|
-|	2017	|	bc-Coho1731_Final	|	TBD	|	bc-BK Coho 2017 final take2	|	TBD	|	TBD	|
-|	2018	|	bc-Coho1830	|	TBD	|	bc-BKCoho2018_A_2_a	|	TBD	|	TBD	|
-|	2019	|	bc‐Coho1925	|	TBD	|	bc‐BKCoho2019_A_2_d	|	TBD	|	TBD	|
-|	2020	|	bc‐Coho2032	|	TBD	|	bc‐BKCoho2020_A_2_c	|	TBD	|	TBD	|
-|	2021	|	bc‐Coho2140_Final	|	TBD	|	bc‐BkCoho2021_A_2	|	TBD	|	TBD	|
-|	2022	|	TBD	|	TBD	|	Not yet available	|	Not yet available	|	Not yet available	|
-|	2023	|	TBD	|	TBD	|	Not yet available	|	Not yet available	|	Not yet available	|
 
-: Pre- and post-season command files and base period used in FRAM to evaluate {{< glossary ERs >}} {{< glossary MUs >}} over catch years 2004 through 2023. "Post-season Original" command files are those used to generate estimates for the Annual {{< glossary ER >}} Report provided to the Southern Panel during the PSC Annual Meeting. {#tab-commands}
+<!-- | **Catch Year** | **Pre-season US** | **Pre-season Canada** | **Post-season Original** | **Post-season Revised** | **Base Period Used in Revised BKFRAM Run** | -->
+<!-- |:--------------:|:--------------------|:----------------------|:-----------------------|:------------------------|:------------------------| -->
+<!-- |	2004	|	0425.Cmd	|	0427.Cmd	|	04pa.Cmd	|	BK04.Cmd	|	CohoBase	| -->
+<!-- |	2005	|	0519.Cmd	|	P5at.Cmd	|	05p9bk.Cmd	|	BK05.Cmd	|	CohoBase87917	| -->
+<!-- |	2006	|	0619.Cmd	|	0631.Cmd	|	06p4.Cmd	|	BK06.Cmd	|	CohoBase-86-92-NoUF86-Jan2008	| -->
+<!-- |	2007	|	0714.Cmd	|	0714.Cmd	|	07JH.Cmd	|	BK07.Cmd	|	CohoBase-86-92-NoUF86-Jan2009	| -->
+<!-- |	2008	|	0824.Cmd	|	0828.Cmd	|	BK08.Cmd	|	BK08.Cmd	|	CohoBase-86-92-NoUF86-Feb2008	| -->
+<!-- |	2009	|	0920.Cmd	|	0920.Cmd	|	BK09.Cmd	|	BK09.Cmd	|	CohoBase-86-92-NoUF86-Feb2009	| -->
+<!-- |	2010	|	1016.Cmd	|	1016.Cmd	|	BK10 PSC Feb14	|	TBD	|	CohoBase-86-92-NoUF86-Feb2009	| -->
+<!-- |	2011	|	1116.Cmd	|	TBD	|	Coho2011Post_PSC 2013	|	TBD	|	TBD	| -->
+<!-- |	2012	|	1229.Cmd	|	TBD	|	Coho2012Post_PSC SSNPx2 Q 2014	|	TBD	|	TBD	| -->
+<!-- |	2013	|	bc-1323 all FRAM inputs	|	TBD	|	bk 2013 Final ver3 Feb 11 2015	|	TBD	|	TBD	| -->
+<!-- |	2014	|	bc-Coho1418 US and BC preseason 2014	|	TBD	|	bc-BK2014 w TAMM inputs final#2	|	TBD	|	TBD	| -->
+<!-- |	2015	|	bc-Coho 1523 Final	|	TBD	|	bc-bkCoho2015 Final	|	TBD	|	TBD	| -->
+<!-- |	2016	|	bc-Coho1637 rerun by CoTC	|	TBD	|	bc-BK2016 BPMar2013 final	|	TBD	|	TBD	| -->
+<!-- |	2017	|	bc-Coho1731_Final	|	TBD	|	bc-BK Coho 2017 final take2	|	TBD	|	TBD	| -->
+<!-- |	2018	|	bc-Coho1830	|	TBD	|	bc-BKCoho2018_A_2_a	|	TBD	|	TBD	| -->
+<!-- |	2019	|	bc‐Coho1925	|	TBD	|	bc‐BKCoho2019_A_2_d	|	TBD	|	TBD	| -->
+<!-- |	2020	|	bc‐Coho2032	|	TBD	|	bc‐BKCoho2020_A_2_c	|	TBD	|	TBD	| -->
+<!-- |	2021	|	bc‐Coho2140_Final	|	TBD	|	bc‐BkCoho2021_A_2	|	TBD	|	TBD	| -->
+<!-- |	2022	|	TBD	|	TBD	|	Not yet available	|	Not yet available	|	Not yet available	| -->
+<!-- |	2023	|	TBD	|	TBD	|	Not yet available	|	Not yet available	|	Not yet available	| -->
+
+<!-- : Pre- and post-season command files and base period used in FRAM to evaluate {{< glossary ERs >}} {{< glossary MUs >}} over catch years 2004 through 2023. "Post-season Original" command files are those used to generate estimates for the Annual {{< glossary ER >}} Report provided to the Southern Panel during the PSC Annual Meeting. {#tab-commands} -->
 
 ### US Preseason Abundance Forecasts
 
