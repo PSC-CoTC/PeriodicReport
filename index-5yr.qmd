@@ -1,0 +1,989 @@
+---  
+title: "Joint Coho Technical Committee Periodic Report"
+author: "PSC Joint Coho Technical Committee"
+date: "`r Sys.Date()`"
+bibliography: references.bib
+csl: american-fisheries-society.csl
+params:
+  static_tables: StaticTables.xlsx
+  mdb_pre: C:/Repos/PeriodicReportData/PSC_CoTC_Preseason_CohoFRAMDB_thru2024_06182024.mdb
+  mdb_pst: C:/Repos/PeriodicReportData/PSC_CoTC_PostSeason_CohoFRAMDB_thru2022_03042024.mdb
+  clean_run: false
+editor_options:
+  chunk_output_type: console
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    toc-expand: 1
+    number-sections: true
+    number-depth: 4
+    crossref:
+      chapters: true
+    linkcolor: blue
+    self-contained: true
+  docx:
+    reference-doc: /Users/auerbdaa/O/code/quarto_template.docx
+embed-resource: true
+---
+
+<header style="color: #ff4000; font-weight: bold; font-size: 40px; text-align:center">
+
+<p>
+
+!! SPLIT FROM DRAFT DOCUMENT UNDER DEVELOPMENT !!
+
+</header>
+</p>
+
+This is split off of the periodic report (on 12/3/2024), and presents key summaries for a specific year range.
+Any caveats associated with taht version of the periodic report also apply here.
+
+
+
+```{r internal_parms, include = FALSE}
+## Semi-hardcoded params:
+year.min = 1998 ## minimum year to include from our fram databases. Code uses all years since then.
+year.initial = 2019
+year.final = 2022
+```
+
+**Using data ONLY from `r year.initial` to `r year.final`**
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+if(interactive()){ ## recreate parameters if being run interactively.
+  params = list(static_tables = "StaticTables.xlsx",
+                mdb_pre = "C:/Repos/PeriodicReportData/PSC_CoTC_Preseason_CohoFRAMDB_thru2024_06182024.mdb",
+                mdb_pst = "C:/Repos/PeriodicReportData/PSC_CoTC_PostSeason_CohoFRAMDB_thru2022_03042024.mdb",
+                clean_run = TRUE
+  )
+}
+
+
+# #biblio CSL (following AFS) from:
+# https://github.com/citation-style-language/styles/blob/master/american-fisheries-society.csl
+# dropped 'text-case="capitalize-first"' on L164
+
+library("tidyverse", quietly = T)
+library("here")
+library("readxl")
+library("kableExtra", quietly = T)
+library("patchwork")
+library("gt")
+library("glue")
+theme_set(theme_light())
+
+# #can load an entire environment built ahead of time and save time on reknitting
+# load("PeriodicReport_envi.RData")
+
+static <- list(
+  members = readxl::read_excel(params$static_tables, sheet = "members") |> 
+    mutate(across(where(is.character), ~replace_na(.,"")))
+  ,
+  acronyms = readxl::read_excel(params$static_tables, sheet = "acronyms") |> 
+    mutate(across(where(is.character), ~replace_na(.,"")))
+  ,
+  #modified from: https://github.com/dappdrd/CohoPSC/blob/bb61dd39715a29a739259c3791cdd26bd8f42a2f/server.R#L65
+  #another place with LU info is the "year_template" sheet of the annual escapement compilation 
+  lu_stock = readxl::read_excel(params$static_tables, sheet = "lu_stock") |> 
+    mutate(across(where(is.character), ~replace_na(.,"")))
+  ,
+  #exported from postseason db 'Fishery' table
+  lu_fishery = readxl::read_excel(params$static_tables, sheet = "fram_coho_fishery")
+  ,
+  glossary = readxl::read_excel(params$static_tables, sheet = "glossary") |> 
+    mutate(across(where(is.character), ~replace_na(.,"")))
+  ,
+  #field PSC_MU designates relevant units for report, those in PST
+  #field Indicator defines evaluated CWT release groups (as "Y")
+  releases = readxl::read_excel(
+    params$static_tables, sheet = "Releases",
+    col_types = c(rep('text',9), 'numeric', 'text', rep('numeric',7))
+  ) |> 
+    mutate(across(where(is.character), ~replace_na(.,"")))
+  ,
+  #these data derive from CCT review of annual wild coho forecasts from WDFW
+  #originally compiled/prepared by Volkhardt, Seiler, Zimmerman, Litz
+  #needs review and possible updating
+  smolts = readxl::read_excel(params$static_tables, sheet = "Smolts") |> 
+    select(out_year = `Out-migration Year`, everything(), -Reference) |> 
+    pivot_longer(cols = -out_year, names_to = "mu_name", values_to = "n") |> 
+    drop_na(n)
+  ,
+  status = readxl::read_excel(params$static_tables, sheet = "Status")  
+)
+
+levels <- list(
+  mu_name = c("Interior Fraser", "Lower Fraser",
+              "Strait of Georgia", #created inline by combining Mainland and Van.Isl.
+              "Skagit","Stillaguamish","Snohomish","Hood Canal","US Strait JDF",
+              "Quillayute","Hoh","Queets","Grays Harbor"
+  ))
+
+pal_rel_tag_mark <- c("CWT_Unclipped"= "#4D5370", 
+                      "CWT_Unclipped_DIT" = alpha("#263C19", 0.6),
+                      "CWT_Clipped" = "#A6B7C6",
+                      "Clipped_only"= "#E4C22B", "Unclipped" = "#965127")
+```
+
+
+```{r rebuild_psc_pst_csv, include=FALSE}
+#postseason mdb from params arg above, sourced locally, ultimately from CoTC Sharepoint
+#moved to .csv on load to allow more portability/generality
+
+fram_mdb_reader <- function(
+    mdb_file_path,
+    fram_table,
+    osx = grepl("apple", sessionInfo()$platform)
+) {
+  if(osx){
+    t_out <- readr::read_csv(I(
+      system2(
+        "mdb-export",
+        args = paste(str_replace_all(mdb_file_path, " ", "\\\\ "),
+                     fram_table),
+        stdout = T) 
+    ))
+  } else {
+    db_con <- DBI::dbConnect(
+      drv = odbc::odbc(),
+      .connection_string = paste0(
+        "Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=", mdb_file_path, ";")
+    )
+    
+    t_out <- DBI::dbReadTable(db_con, fram_table)
+    
+    DBI::dbDisconnect(db_con)
+  }
+  return(t_out)
+}
+
+if(params$clean_run){
+  fram <- list()
+  
+  fram$stockIDs <- static$lu_stock$StockID
+  
+  #Note the original negative escapement in A12A Wild in 2005 is due to an error in the FRAM database
+  #Mortality is summed across timesteps (and Ages, but only 3s anyway)
+  #maintaining FRAM stocks and fisheries
+  fram$fishery <- fram_mdb_reader(mdb_file_path = params$mdb_pst, fram_table = "Fishery") |> 
+    filter(Species == "COHO") |> select(FisheryID, FisheryName)
+  fram$stock <- fram_mdb_reader(mdb_file_path = params$mdb_pst, fram_table = "Stock") |> 
+    filter(Species == "COHO", StockID %in% fram$stockIDs) |> select(StockID, StockLongName)
+  fram$runid <- fram_mdb_reader(mdb_file_path = params$mdb_pst, fram_table = "RunID") |> 
+    filter(RunYear >= year.min) |> 
+    select(RunID, RunYear)
+  ## snagging starting cohort size
+  fram$ocean_abund = fram_mdb_reader(mdb_file_path = params$mdb_pst, fram_table = "Cohort") |> 
+    filter(StockID %in% fram$stockIDs, RunID %in% fram$runid$RunID) |> 
+    filter(TimeStep == 1) |> 
+    select(RunID, StockID, ocean_abund = StartCohort)
+  fram$escp <- fram_mdb_reader(mdb_file_path = params$mdb_pst, fram_table = "Escapement") |> 
+    filter(StockID %in% fram$stockIDs, RunID %in% fram$runid$RunID) |> 
+    select(RunID, StockID, escp = Escapement) |> 
+    mutate(escp = if_else(escp < 0, 0, escp))
+  fram$mort <- fram_mdb_reader(mdb_file_path = params$mdb_pst, fram_table = "Mortality") |> 
+    filter(StockID %in% fram$stockIDs, RunID %in% fram$runid$RunID) |> 
+    mutate(
+      mort_ns = LandedCatch + NonRetention + Shaker + DropOff,
+      mort_msf = MSFLandedCatch + MSFNonRetention + MSFShaker + MSFDropOff,
+      mort = mort_ns + mort_msf
+    ) |> 
+    group_by(RunID, StockID, FisheryID) |> 
+    summarise(across(LandedCatch:mort, ~sum(., na.rm=T)), .groups = "drop")
+  
+  
+  # #build out the yearly totals and ER info for PSC stock (and fishery?) aggregations
+  # #SUS fisheries are FRAM FisheryID 1:166
+  # #Canadian are FRAM FisheryID 167:193
+  # #AK are 193:max?
+  
+  # join PSC metadata and re-aggregate, 
+  # also adding columns of total mortality per year per re-aggregated PSC stock 
+  # these are summed over fisheries and repeating per individual fishery
+  # same idea for escapement...
+  
+  psc_pst <- left_join(
+    fram$mort |> 
+      left_join(fram$runid, by = "RunID") |> 
+      left_join(fram$fishery, by = "FisheryID") |> 
+      left_join(
+        static$lu_stock |> 
+          select(StockID, PSC_StockID, PSC_StockName),
+        by = "StockID") |> 
+      group_by(RunYear, PSC_StockID, PSC_StockName, FisheryID, FisheryName) |> 
+      summarise(across(starts_with("mort"), sum), 
+                .groups = "drop") |>
+      group_by(RunYear, PSC_StockID, PSC_StockName) |> 
+      mutate(across(starts_with("mort"), list(sum = sum), .names = "{.col}_{.fn}")) |> 
+      ungroup() |> 
+      left_join(
+        ## ocean abundances need to be summed to PSC before joining in
+        left_join(static$lu_stock |> select(StockID, PSC_StockID, PSC_StockName),
+                  fram$ocean_abund |> rename(ocean_abund_sum = ocean_abund), by = c("StockID")) |> 
+          left_join(fram$runid, by = "RunID") |> 
+          group_by(RunYear, PSC_StockName) |> 
+          summarize(ocean_abund_sum = sum(ocean_abund_sum)) |> 
+          ungroup(),
+        by = c("RunYear", "PSC_StockName")
+      )
+    ,
+    fram$escp |> 
+      left_join(fram$runid, by = "RunID") |> 
+      left_join(
+        static$lu_stock |> 
+          select(StockID, PSC_StockID, PSC_StockName),
+        by = "StockID") |> 
+      group_by(RunYear, PSC_StockID, PSC_StockName) |> 
+      summarise(across(escp, sum), .groups = "drop") 
+    ,
+    by = c("RunYear", "PSC_StockID", "PSC_StockName")
+  ) |>
+    mutate(
+      abund = mort_sum + escp,
+      across(c(mort, mort_sum), list(er = ~.x/abund))
+    ) |> 
+    left_join(
+      static$lu_stock |> 
+        distinct(PSC_StockID, PSC_Region, cap_method,
+                 low_mod_abund, mod_abd_abund,
+                 low_er_cap, mod_er_cap, abd_er_cap,
+                 low_escp_goal, upr_escp_goal)
+      , by = "PSC_StockID"
+    )
+  
+  write_csv(psc_pst, here("../PeriodicReportData/psc_postfram_1998_2022_temp.csv"))
+  
+  ##Quillayute and Queets post-season values are drawn from TAMM
+  #https://github.com/PSC-CoTC/AnnualReport/blob/master/csv/TammFisheryQueetsRef.csv
+  #need to swap out some fishery values (and escp for Quil?)
+  #sheet 2, r48, col26 Quil escp (2021: 9916)
+  #sheet 2, r38, col26 Quil TR net, fid 71 (2021: 1083)
+  #sheet 2, r39, col26 Quil spt, fid 70 (2021: 174)
+  #plus 0 fid72 for sid131, 70:72 for sid132
+  
+  #sheet 2, r48, col31 Queets escp (2021: 4530)
+  #sheet 2, r38, col31 Queets TR net, fid 68 (2021: 164)
+  #sheet 2, r39, col31 Queets spt, fid 65 (2021: 56)
+  #plus 0 out 66,67,69 for sid 139 and 65:69 for sid140 (prob already 0)
+}
+```
+
+```{r rebuild_psc_pre_csv, include=FALSE}
+
+if(params$clean_run){
+  #using fram_mdb_reader from postseason rebuild chunk
+  #overwrites (temporary) `fram` object
+  #identical to postseason other than mdb_file_path argument
+  
+  fram <- list()
+  fram$stockIDs <- static$lu_stock$StockID
+  
+  fram$fishery <- fram_mdb_reader(mdb_file_path = params$mdb_pre, fram_table = "Fishery") |> 
+    filter(Species == "COHO") |> select(FisheryID, FisheryName)
+  fram$stock <- fram_mdb_reader(mdb_file_path = params$mdb_pre, fram_table = "Stock") |> 
+    filter(Species == "COHO", StockID %in% fram$stockIDs) |> select(StockID, StockLongName)
+  fram$runid <- fram_mdb_reader(mdb_file_path = params$mdb_pre, fram_table = "RunID") |> 
+    filter(RunYear >= year.min) |> 
+    select(RunID, RunYear) |> arrange(RunYear)
+  ## snagging starting cohort size
+  fram$ocean_abund = fram_mdb_reader(mdb_file_path = params$mdb_pst, fram_table = "Cohort") |> 
+    filter(StockID %in% fram$stockIDs, RunID %in% fram$runid$RunID) |> 
+    filter(TimeStep == 1) |> 
+    select(RunID, StockID, ocean_abund = StartCohort)
+  fram$escp <- fram_mdb_reader(mdb_file_path = params$mdb_pre, fram_table = "Escapement") |> 
+    filter(StockID %in% fram$stockIDs, RunID %in% fram$runid$RunID) |> 
+    select(RunID, StockID, escp = Escapement) |> 
+    mutate(escp = if_else(escp < 0, 0, escp))
+  fram$mort <- fram_mdb_reader(mdb_file_path = params$mdb_pre, fram_table = "Mortality") |> 
+    filter(StockID %in% fram$stockIDs, RunID %in% fram$runid$RunID) |> 
+    mutate(
+      mort_ns = LandedCatch + NonRetention + Shaker + DropOff,
+      mort_msf = MSFLandedCatch + MSFNonRetention + MSFShaker + MSFDropOff,
+      mort = mort_ns + mort_msf
+    ) |> 
+    group_by(RunID, StockID, FisheryID) |> 
+    summarise(across(LandedCatch:mort, ~sum(., na.rm=T)), .groups = "drop")
+  
+  
+  psc_pre <- left_join(
+    fram$mort |> 
+      left_join(fram$runid, by = "RunID") |> 
+      left_join(fram$fishery, by = "FisheryID") |> 
+      left_join(
+        static$lu_stock |> 
+          select(StockID, PSC_StockID, PSC_StockName),
+        by = "StockID") |> 
+      group_by(RunYear, PSC_StockID, PSC_StockName, FisheryID, FisheryName) |> 
+      summarise(across(starts_with("mort"), sum), .groups = "drop") |> 
+      group_by(RunYear, PSC_StockID, PSC_StockName) |> 
+      mutate(across(starts_with("mort"), list(sum = sum), .names = "{.col}_{.fn}")) |> 
+      ungroup() |> 
+      left_join(
+        ## ocean abundances need to be summed to PSC before joining in
+        left_join(static$lu_stock |> select(StockID, PSC_StockID, PSC_StockName),
+                  fram$ocean_abund |> rename(ocean_abund_sum = ocean_abund), by = c("StockID")) |> 
+          left_join(fram$runid, by = "RunID") |> 
+          group_by(RunYear, PSC_StockName) |> 
+          summarize(ocean_abund_sum = sum(ocean_abund_sum)) |> 
+          ungroup(),
+        by = c("RunYear", "PSC_StockName")
+      )
+    ,
+    fram$escp |> 
+      left_join(fram$runid, by = "RunID") |> 
+      left_join(
+        static$lu_stock |> 
+          select(StockID, PSC_StockID, PSC_StockName),
+        by = "StockID") |> 
+      group_by(RunYear, PSC_StockID, PSC_StockName) |> 
+      summarise(across(escp, sum), .groups = "drop") 
+    ,
+    by = c("RunYear", "PSC_StockID", "PSC_StockName")
+  ) |>
+    mutate(
+      abund = mort_sum + escp,
+      across(c(mort, mort_sum), list(er = ~.x/abund))
+    ) |> 
+    left_join(
+      static$lu_stock |> 
+        distinct(PSC_StockID, PSC_Region, cap_method,
+                 low_mod_abund, mod_abd_abund,
+                 low_er_cap, mod_er_cap, abd_er_cap,
+                 low_escp_goal, upr_escp_goal)
+      , by = "PSC_StockID"
+    )
+  
+  # full_join(
+  #   psc_pst |> count(RunYear),
+  #   psc_pre |> count(RunYear),
+  #   by = "RunYear"  
+  # ) |> print(n=100)
+  
+  write_csv(psc_pre, here("../PeriodicReportData/psc_prefram_2004_2023.csv"))
+}
+```
+
+```{r loading_in, include=FALSE}
+#but to deal with WA Coast stocks from TAMM spreadsheets, among other reasons
+psc_pst_full <- readr::read_csv(here("../PeriodicReportData/psc_postfram_1998_2022_temp.csv")) |> 
+  rename(`Catch Year` = RunYear)
+
+psc_pst <- psc_pst_full |> 
+  filter(`Catch Year` >= year.initial) |> 
+  filter(`Catch Year` <= year.final)
+
+psc_pre_full <- readr::read_csv(here("../PeriodicReportData/psc_prefram_2004_2023.csv")) |> 
+  rename(`Catch Year` = RunYear)
+
+psc_pre <- psc_pre_full |> 
+  filter(`Catch Year` >= year.initial) |> 
+  filter(`Catch Year` <= year.final)
+
+```
+
+
+
+*Note that Quillayute and Queets values are those from the FRAM database and have not yet been extracted from the relevant TAMM cells for each year*
+
+```{r func_plot_abund_bar}
+# #export these data for CCT to have for text summaries
+# psc_pst |> 
+#   filter(RunYear > 2003) |> 
+#   split(~PSC_StockName) |> 
+#   writexl::write_xlsx("psc_mort_escp_abund_data.xlsx")
+
+plot_abund_bar <- function(stknm = "Skagit"){
+  psc_pst |> 
+    filter(PSC_StockName==stknm, `Catch Year` > 2003) |>
+    distinct(`Catch Year`, PSC_StockName, 
+             Harvest = mort_sum, Escapement = escp, Abundance = abund, 
+             low_mod_abund, mod_abd_abund) |> 
+    pivot_longer(names_to = "var", values_to = "val",
+                 -c(`Catch Year`, PSC_StockName, low_mod_abund, mod_abd_abund)) |> 
+    mutate(across(ends_with("_abund"), ~if_else(var == "Abundance", ., NA_real_))) |> 
+    ggplot(aes(`Catch Year`, val, fill = var, color = var)) + 
+    geom_col(width = 0.7) + 
+    geom_hline(aes(yintercept = low_mod_abund), color = "orange", linetype = 5, linewidth = 1.2) +
+    geom_hline(aes(yintercept = mod_abd_abund), color = "orange", linetype = 5) +
+    geom_vline(xintercept = 2010, linetype = 3, alpha = 0.5) +
+    #geom_smooth(formula = y ~ x, method = "lm", se = F, linewidth = 0.5, linetype = 2) +
+    scale_fill_grey("", start = 0.3, end = 0.7, aesthetics = c("fill", "color")) +
+    scale_x_continuous(breaks = seq(1998, 2040, by = 3), guide = guide_axis(n.dodge = 2)) +
+    scale_y_continuous("", labels = scales::comma) +
+    facet_wrap(~var, nrow = 1) +
+    theme(legend.position = "none") +
+    labs(subtitle = stknm)
+}
+
+#plot_abund_bar()
+```
+
+```{r func_plot_ns_msf}
+plot_ns_msf <- function(stknm = "Skagit"){
+  psc_pst |> 
+    filter(PSC_StockName==stknm) |> 
+    distinct(`Catch Year`, PSC_StockName, NS = mort_ns_sum, MSF = mort_msf_sum) |> 
+    pivot_longer(names_to = "var", values_to = "val", -c(`Catch Year`, PSC_StockName)) |> 
+    ggplot(aes(`Catch Year`, val, fill = var)) +
+    geom_col(width = 0.7, show.legend = T) +
+    scale_fill_grey() +
+    scale_x_continuous(breaks = seq(1998, 2040, by = 3), guide = guide_axis(n.dodge = 2)) +
+    scale_y_continuous("Mortality", labels = scales::comma) +
+    #facet_wrap(~var, nrow = 1) +
+    theme(legend.title = element_blank(), legend.position = "top") +
+    labs(subtitle = stknm)
+}
+
+```
+
+```{r func_plot_smolt_out_migration_est}
+plot_smolts <- function(stknm = "Skagit"){
+  static$smolts |> 
+    filter(mu_name == stknm) |> 
+    ggplot(aes(out_year, n)) +
+    geom_col() +
+    #geom_smooth() +
+    #geom_line() + geom_point() +
+    scale_x_continuous("Outmigration year") +
+    scale_y_continuous("Smolts", labels = scales::comma) +
+    labs(
+      title = paste(stknm, "estimated naturally produced smolt outmigrants")
+    )
+}
+
+#plot_smolts()
+```
+
+```{r func_plot_status}
+plot_status <- function(mu = "Skagit"){
+  
+  static$status |>
+    filter(MU == mu) |>
+    mutate(
+      across(c(`Pre-season`,`Post-Season`),
+             ~factor(., levels = c("Low","Moderate","Abundant"))
+      ),
+      pre_to_post = case_when(
+        as.integer(`Pre-season`) == as.integer(`Post-Season`) ~ "no change",
+        as.integer(`Pre-season`) >  as.integer(`Post-Season`) ~ "decrease",
+        as.integer(`Pre-season`) < as.integer(`Post-Season`) ~ "increase"
+      ) |> 
+        factor(levels = c("decrease","no change","increase"))
+    ) |> 
+    ggplot() +
+    geom_line(aes(`Catch Year`, `Post-Season`, group = MU), linetype = 2, linewidth = 0.3) +
+    geom_point(aes(`Catch Year`, `Post-Season`, shape = pre_to_post, color = pre_to_post, fill = pre_to_post), size = 3) +
+    scale_x_continuous(breaks = seq(2004, 2021, by=2)) +
+    scale_y_discrete("", breaks = c("Low","Moderate","Abundant")) +
+    scale_shape_manual(values = c(25,21,24)) +
+    scale_fill_manual(values = c("orange","darkgreen","green"), aesthetics = c("fill","color")) +
+    labs(subtitle = paste(mu, "post-season status, relative to preseason"))
+  
+}
+#plot_status()
+
+```
+
+This report is based on postseason data in `r basename(params$mdb_pst)` and preseason data in `r basename(params$mdb_pre)`, as well as supporting [StaticTables.xlsx](https://github.com/PSC-CoTC/PeriodicReport/blob/master/StaticTables.xlsx).
+
+![](images/coho_pic2.png){width=100% fig-alt="Coho Picture"}
+
+# Introduction
+
+In response to a decline in natural Coho Salmon (*Onchorynchus kisutch*) abundance, the Pacific Salmon Commission established a Southern Coho abundance-based management regime (CoABM) in 1999 [@PSC_1999]. This Southern Coho Management Plan (SCMP, also referred to as ABM, or 'abundance based management') aimed to conserve Coho Salmon Management Units (MUs of naturally-spawning Coho Salmon in southern British Columbia and Washington/Oregon) based on abundance status and escapement goals. The SCMP set out to constrain exploitation rates (ERs; defined as total fishing mortality divided by total fishing mortality plus escapement) below maximum levels (caps) on selected management units in order to achieve long-term Maximum Sustainable Harvests (MSH). These constraints are implemented by specifying ER caps for the individual MUs dependent on annual abundance status. During their respective preseason planning processes, the Parties use management reference points to classify the status of each MU as low, moderate, or abundant. The parties then exchange these status determinations as a key input in the development of pre-season plans.
+
+When a new Coho Management Plan was reached in 2008 (implemented 2009 through 2018; [@PSC_2009]) and the latest agreement finalized (applies to the period from catch years 2019 through 2028; [@PSC_2022]), modifications were made to the list of specified MUs and to the manner in which exploitation rate caps are established. This periodic report presents information for the MUs identified in the most current Pacific Salmon Treaty’s (PST) Southern Coho Management Plan (Chapter 5 of Annex IV in the current PST). In the 2008 SCMP abundance-based management regimes were established to constrain exploitation rates (ERs) on the 13 Management Units (MUs) of naturally-spawning Coho Salmon originating in rivers along the Washington/British Columbia (BC) border. Within the most recent Management Plan [@PSC_2022], two of the Canadian MUs, the Georgia Strait Vancouver Island and the Georgia Strait Mainland Management Units, are now combined into the Strait of Georgia Management Unit. The 12 MUs in the current PST are listed below.
+
+```{r old_mu_table}
+tibble(
+  `Southern BC` = c("Interior Fraser", "Lower Fraser", "Georgia Strait Vancouver Island", "Georgia Strait Mainland", ""),
+  `US Inside` = c("Skagit", "Stillaguamish", "Snohomish", "Hood Canal", "US Strait JDF"),
+  `US Outside` = c("Quillayute", "Hoh", "Queets", "Grays Harbor", "")
+) |> 
+  gt() |> 
+  tab_options(table.width = px(400)) |> 
+  tab_style(locations = cells_column_labels(), style = cell_text(align = "center", weight = "bold")) |> 
+  tab_style(locations = cells_body(), style = cell_text(align = "left")) |> 
+  tab_header(title = "Management Units within the current Pacific Salmon Treaty Southern Coho Management Plan.")
+
+```
+
+The objective of the SCMP, as described in the Treaty, is to manage the fisheries impact on Southern Coho stocks by limiting the total fishery exploitation and allow the different MUs to produce long-term Maximum Sustainable Harvest (MSH), while maintaining the genetic and ecological diversity of the individual populations. In addition, the plan is designed to improve the prospect of sustaining healthy fisheries for both parties over the long-term. The plan is intended to be cost-effective and flexible to available technical capacity and information, while providing a predictable framework for planning fisheries impacts and allowing for objective monitoring, evaluation and modification.
+
+Under the Agreement, the Parties are required to establish escapement goals or ERs that achieve MSH, determine MSH ERs for each MU, and establish ERs for each MU and status category (low, moderate, and abundant). Until such time as the Parties provide MU-specific ER targets, the SCMP identified default ER ceilings for the following MU status categories:
+
+| **Status** | **Total Exploitation Rate** |
+|:----------:|:---------------------------:|
+|    Low     |          Up to 20%          |
+|  Moderate  |          21% - 40%          |
+|  Abundant  |          41% - 65%          |
+
+Annual ER caps are established for each of the MUs based on the level of abundance and health of the natural stocks. These caps are then apportioned between the Parties. Constraints for Canadian fisheries on US MUs are determined by formulas that specify sharing of allowable ERs as well as a composite rule, which together adjust caps according to the number of US MUs that fall within a given category. The composite rule adjusts constraints for Canadian fishery exploitation rates based on the number of US management units which fall in a given category. For example, if only one Washington coastal or Puget Sound Coho management unit is in low status, Canadian fisheries are constrained to a total exploitation rate on that unit of 12%; if two or more Washington coastal management units are in low status, the constraint becomes 10%. The most restrictive exploitation rate limit for Canadian fishery impacts on US Coho management units is 10%.
+
+Constraints for US fisheries on Canadian MUs depend on the status of the Interior Fraser MU until the biological statuses of the other Canadian MUs have been determined. The status determination methodology developed and applied by Canada to the Interior Fraser Coho MU (REFERENCE Korman and Sawada) consists of two criteria:  smolt-to-adult survival, and escapement, which must be met for three consecutive years in order increase the status from low to moderate or moderate to high.  Canada is currently working to develop the information (smolt to adult survival rates, escapements) needed to apply this status determination methodology to the Lower Fraser and Strait of Georgia MUs. Details as to how exploitation rate constraints are established based on the status of MUs under the SCMP are contained in Annex IV Chapter 5 Section 9.b-c (Canadian exploitation rate caps on inside and outside US MUs) and Section 9.d (US exploitation rate caps on Canadian MUs).
+
+## Management Unit Overview
+
+The Canadian MUs are comprised of geographical aggregates of naturally spawning Coho conservation units (CUs) within the Interior Fraser River, Lower Fraser River, and Strait of Georgia. A CU consists of one or more spawning populations which are genetically distinct from other conspecific spawning populations. The 2019 renewal of the PST combined the Georgia Basin – East and Georgia Basin – West MUs into a single Strait of Georgia MU, reducing the number of Canadian MUs in the bilateral management regime to three.  The CoTC chose to combine model outputs for these MUs in carrying out its pre-season and post-season responsibilities beginning in 2019 and forward rather than reconfigure the FRAM framework.
+
+The US Inside MUs consist of naturally spawning populations originating in the Skagit, Stillaguamish, Snohomish, Hood Canal, and the Strait of Juan de Fuca. Coho populations in the US Inside MUs belong to the larger Puget Sound/Strait of Georgia Coho Salmon evolutionarily significant unit (ESU; [@Weitkamp_et_al_1995]). Only the eastern portion of the Strait of Juan de Fuca MU is in this ESU. An ESU is a Pacific salmon population or group of populations that is substantially reproductively isolated from other conspecific populations and represents an important component of the evolutionary legacy of the species. The ESU policy (56 FR 58612) for Pacific salmon defines the criteria for identifying a Pacific salmon population as a distinct population segment, which can be listed under the US Endangered Species Act of 1973.
+
+The US Outside MUs consist of naturally-spawning populations from the Quillayute, Hoh, Queets, and Grays Harbor basins. All US Outside MUs, except the Grays Harbor MU, are part of the Olympic Peninsula ESU. Populations from the western portion of the Strait of Juan de Fuca MU are also in this ESU. The Grays Harbor MU is part of the Southwest Washington ESU.
+
+```{r mu_table}
+# psc_pst |> 
+#   distinct(Region = PSC_Region, `Management Units` =  PSC_StockName) |> 
+#   arrange(Region) |>  
+#   mutate(Region = str_replace(Region, "Canada", "Southern BC")) |> 
+#   gt(groupname_col = "Region") |> 
+#   tab_options(table.width = px(300)) |> 
+#   tab_style(locations = cells_column_labels(), style = cell_text(align = "center")) |> 
+#   tab_style(locations = cells_row_groups(), style = cell_text(align = "left", weight = "bold")) |> 
+#   tab_style(locations = cells_body(), style = cell_text(align = "right"))
+
+tibble(
+  `Southern BC` = c("Interior Fraser", "Lower Fraser", "Strait of Georgia", "", ""),
+  `US Inside` = c("Skagit", "Stillaguamish", "Snohomish", "Hood Canal", "US Strait JDF"),
+  `US Outside` = c("Quillayute", "Hoh", "Queets", "Grays Harbor", "")
+) |> 
+  gt() |> 
+  tab_options(table.width = px(400)) |> 
+  tab_style(locations = cells_column_labels(), style = cell_text(align = "center", weight = "bold")) |> 
+  tab_style(locations = cells_body(), style = cell_text(align = "left")) |> 
+  tab_header(title = "Management Units within the current Pacific Salmon Treaty Southern Coho Management Plan")
+
+```
+
+# Performance of Abundance Based Management Regime 
+
+In an attempt to evaluate the implementation of Abundance Based Management of Coho Salmon stocks of concern under the PST, summaries on abundance categories, exploitation, and forecast performance are provided below. Catch years summarized include 2004 through 2021 and abundance category and forecast performance summaries are limited to US and Interior Fraser River MUs. A single year of post-season estimates of MU abundances, fishery exploitation, and escapement is first completed two years following each catch year. For example, an assessment of catch year 2022 will be completed in February of 2024. This report has been referred to as the Annual ER Report. This assessment is presented to the Southern Panel at the PSC's Annual Meeting and the reports are posted on the CoTC's and Southern Panel's Sharepoint sites. These annual reports can also be found *here*. The best available data and the most current FRAM base period and Terminal Area Management Modules (TAMMs) are used to evaluate the catch year; however, data and the FRAM base period is updated or corrected on occasion. These corrections and additions are carried forward and are included in the post-season evaluations of MUs below, sometimes resulting in changes from the annual reports in estimates of exploitation rates, escapement numbers, and Ocean Age-3 abundances.  
+
+## Management Unit Post-season Abundances and Categories
+
+Currently all of the MUs except the Lower Fraser River and Georgia Strait MUs have abundance break point criteria and associated exploitation rates for each abundance category. A summary of MU abundances and associated categories are provided in the following table and figure.  
+
+** Post-season estimates of Ocean Age-3 total abundances and their associated status categories [A = abundant, M = moderate, L= low] by MU for catch years 2004 through 2021.  Management Units in the Abundant category have green highlighted cells, Moderate ones are not highlighted, and those in Low status are highlighted orange.**  (note - need to make table fit unto a single page in Word)
+
+```{r gt_annual_abund}
+psc_pst |> 
+  distinct(`Catch Year`, PSC_Region, PSC_StockName, abund, low_mod_abund, mod_abd_abund) |> 
+  mutate(
+    PSC_Region = factor(PSC_Region, levels = c("Canada","US Inside","US Outside")),
+    abd = case_when(
+      abund < low_mod_abund ~ "L",
+      abund >= low_mod_abund & abund <= mod_abd_abund ~ "M",
+      abund > mod_abd_abund ~ "A",
+      is.na(low_mod_abund) ~ ""
+    ),
+    abd = if_else(
+      abd == "",
+      format(round(abund), big.mark=",", trim=TRUE),
+      paste0(format(round(abund), big.mark=",", trim=TRUE), " [",abd,"]")
+    ),
+    abund = NULL
+  ) |> 
+  pivot_wider(names_from = `Catch Year`, values_from = abd) |> 
+  arrange(PSC_Region) |> 
+  gt(
+    groupname_col = "PSC_Region", 
+    caption = "Annual FRAM-estimated abundance (escapement + harvest)"
+  ) |> 
+  tab_options(
+    table.width = 1500
+  ) |> 
+  cols_width(
+    PSC_StockName ~ px(150),
+    starts_with("2") ~ px(120)
+  ) |> 
+  cols_align(align = "right", columns = starts_with("2")) |> 
+  tab_style(
+    style = cell_text(align = "right"),
+    locations = cells_column_labels(columns = PSC_StockName)
+  ) |>
+  tab_style(
+    style = cell_text(size = 0),
+    locations = cells_column_labels(columns = PSC_StockName)
+  ) |>
+  tab_style(
+    style = list(cell_fill("grey70"), cell_text(weight = "bold")),
+    locations = cells_column_labels()
+  ) |>
+  tab_style_body(
+    style = cell_fill("#F5E298"),
+    pattern =  "\\[L]"
+  ) |> 
+  tab_style_body(
+    style = cell_fill("#C6F5BA"),
+    pattern =  "\\[A]"
+  )
+
+```
+
+```{r fig_unit_status_stackedcol}
+# #this is what's behind CCT temp figure
+# #based on manual review of as-produced postseason reports
+# #differs from versions derived from current postseason database
+# #at least for Quill and Queets
+# #at least recent postseason reports seem to be missing terminal catches in total abundance
+# #confirmed by comparing 2021 postseason TAMM and mdb numbers against what's written
+# #for 2021, Quill shows total abund of 10354 which is sum of spwnescp 9916 + 438 preterm catch, missing ~1200 term net+sport
+# static$status |> 
+#   drop_na(`Post-Season`) |>
+#   #filter(`Catch Year`==2004) |> 
+#   count(`Catch Year`,`Post-Season`)
+
+psc_pst |> 
+  distinct(`Catch Year`, PSC_Region, PSC_StockName, abund, low_mod_abund, mod_abd_abund) |> 
+  mutate(
+    PSC_Region = factor(PSC_Region, levels = c("Canada","US Inside","US Outside")),
+    abd = case_when(
+      abund < low_mod_abund ~ "L",
+      abund >= low_mod_abund & abund <= mod_abd_abund ~ "M",
+      abund > mod_abd_abund ~ "A",
+      PSC_StockName == "Interior Fraser" ~ "L",
+      is.na(low_mod_abund) ~ ""
+    ) |> 
+      factor(levels = c("A","M","L"))
+  ) |> 
+  drop_na(abd) |> #filter(abd != "") |> 
+  count(`Catch Year`, abd) |> 
+  ggplot() +
+  geom_col(aes(`Catch Year`, n, fill = abd), color = "grey") +
+  scale_fill_manual(name = "Status", values = c("#C6F5BA","white","#F5E298"), aesthetics = c("color","fill")) +
+  scale_y_continuous("Num. Mgmt. Units", breaks = 1:11, labels = 1:11)
+
+
+
+```
+
+
+Estimated post-season ocean age-3 cohort abundances for the MUs are depicted below. Abundances for BC and US Inside MUs tend to be synchronous, with above- or below-average abundances occurring in the same years (e.g., high in 2001, low in 2006). Outside MUs are less synchronous and years with high abundances for Grays Harbor don't necessarily correspond to high abundances for other MUs.
+
+
+```{r}
+plot_abund = function(dat, region, label){
+  dat |> 
+    distinct(`Catch Year`, PSC_Region, PSC_StockName, ocean_abund_sum) |> 
+    filter(PSC_Region == region) |> 
+    ggplot(aes(x = `Catch Year`, y = ocean_abund_sum, col = PSC_StockName))+
+    geom_path(linewidth = 1)+
+    theme_bw(base_size = 16)+
+    scale_y_continuous(labels = \(x) format(x, big.mark = ",", scientific = FALSE))+
+    scale_x_continuous(breaks = min(dat$`Catch Year`):max(dat$`Catch Year`))+
+    labs(y = "Ocean Age-3 Abundance",
+         title = label,
+         col = "")+
+    theme(legend.position = "top",
+          axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+}
+
+plot_abund(psc_pst_full |> filter(`Catch Year` >= 2004), "Canada", "BC Management Units")
+
+# psc_pst |> 
+#   distinct(`Catch Year`, PSC_Region, PSC_StockName, ocean_abund_sum) |> 
+#   filter(PSC_Region == "Canada") |> 
+#   ggplot(aes(x = `Catch Year`, y = ocean_abund_sum, col = PSC_StockName))+
+#   geom_path()+
+#   theme_bw(base_size = 16)+
+#   labs(y = "Ocean Age-3 Abundance",
+#        title = "BC Management Units",
+#        col = "")+
+#   theme(legend.position = "top")
+```
+
+
+
+**Estimated Post-season Ocean Age-3 Abundances of BC Coho Salmon Management Units**
+
+<!-- ![](images/BC_Abund_by_yr.png){width=100% fig-alt="BC MU Ocean Age-3 Abundances by Year"} -->
+
+**Estimated Post-season Ocean Age-3 Abundances of US Inside Coho Salmon Management Units**
+
+```{r}
+plot_abund(psc_pst_full |> filter(`Catch Year` >= 2004), "US Inside", "US Inside Management Units")
+```
+
+
+<!-- ![](images/US_Inside_Abund_by_yr.png){width=100% fig-alt="US Inside MU Ocean Age-3 Abundances by Year"} -->
+
+**Estimated Post-season Ocean Age-3 Abundances of US Outside Coho Salmon Management Units**
+
+```{r}
+plot_abund(psc_pst_full |> filter(`Catch Year` >= 2004), "US Outside", "US Outside Management Units")
+```
+
+<!-- ![](images/US_Outside_Abund_by_yr.png){width=100% fig-alt="US Outside MU Ocean Age-3 Abundances by Year"} -->
+
+
+**Summary of the number of MUs in each abundance category, based on post-season assessments.**
+
+
+```{r}
+psc_pst_full |> 
+  distinct(`Catch Year`, PSC_Region, PSC_StockName, abund, low_mod_abund, mod_abd_abund) |> 
+  mutate(
+    PSC_Region = factor(PSC_Region, levels = c("Canada","US Inside","US Outside")),
+    abd = case_when(
+      abund < low_mod_abund ~ "Low",
+      abund >= low_mod_abund & abund <= mod_abd_abund ~ "Moderate",
+      abund > mod_abd_abund ~ "Abundant",
+      is.na(low_mod_abund) ~ ""
+    )) |> 
+  count(`Catch Year`, abd) |> 
+  filter(abd != "") |> 
+  mutate(abd = factor(abd, c("Abundant", "Moderate", "Low"))) |> 
+  ggplot(aes(x = `Catch Year`, y = n, fill = abd)) +
+  scale_fill_manual(limits = c("Low", "Moderate", "Abundant"),
+                    values = c("coral", "cornflowerblue", "lightgreen"))+
+  geom_col(width = 0.5, alpha = 0.8)+
+  theme_bw(base_size = 15)+
+  scale_x_continuous(breaks = min(psc_pst_full$`Catch Year`):max(psc_pst_full$`Catch Year`))+
+  labs(y = "# of Management Units", fill = "")+
+  theme(legend.position = "top",
+        axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
+
+
+<!-- ![](images/MU_Status_by_yr.png){width=100% fig-alt="MU Abundance Status by Year"} -->
+
+### Fishery Exploitaion Rate Overview 
+
+**Total exploitation rates by MU.** (note - need to move Canadian MUs to top of table)
+
+```{r gt_annual_ER}
+psc_pst |> 
+  distinct(`Catch Year`, PSC_Region, PSC_StockName, mort_sum_er) |> 
+  pivot_wider(names_from = `Catch Year`, values_from = mort_sum_er) |> 
+  gt(
+    groupname_col = "PSC_Region",
+    caption = "Annual FRAM-estimated Exploitation Rates as harvest / abundance"
+  ) |> 
+  fmt_percent(columns = -PSC_StockName, decimals = 1)
+
+```
+
+
+
+```{r fishery_er_quantiles, fig.height=30, fig.width=10, eval=T}
+
+obj.plots = psc_pst |> 
+  select(`Catch Year`:FisheryName, mort_er) |> 
+  filter(`Catch Year` > 2009) |> 
+  left_join(static$lu_fishery |> select(FisheryID, FisheryTitle), by = "FisheryID") |> 
+  mutate(PSC_StockName = factor(PSC_StockName, levels = levels$mu_name)) |> 
+  group_by(PSC_StockName, FisheryTitle) |>
+  summarise(
+    across(mort_er, list(
+      min = ~min(.),
+      q25 = ~quantile(., 0.25),
+      median = ~median(.), 
+      mean = ~mean(.), 
+      q75 = ~quantile(., 0.75),
+      max = ~max(.)
+    )),
+    .groups = "drop") |> 
+  filter(mort_er_median > 0.005) |> 
+  split(~PSC_StockName)
+obj.plots |> 
+  map(
+    ~.x |> 
+      mutate(FisheryTitle = factor(FisheryTitle) |> reorder(mort_er_median)) |> 
+      ggplot() + 
+      geom_linerange(aes(y = FisheryTitle, x = mort_er_median,
+                         xmin = mort_er_min, xmax = mort_er_max), linewidth = 0.8) +
+      geom_pointrange(aes(y = FisheryTitle, x = mort_er_median,
+                          xmin = mort_er_q25, xmax = mort_er_q75), linewidth = 1.3, fatten = 4) +
+      scale_x_continuous(labels = scales::percent) +
+      # facet_wrap(~PSC_StockName, scales = "free", ncol = 2) +
+      labs(x="",y="",subtitle = .x$PSC_StockName[1])
+  ) |> 
+  wrap_plots(ncol = 1, guides = "collect",
+             heights = purrr::map_dbl(obj.plots, nrow)) +
+  plot_annotation(
+    title = glue("Characteristic fishery ERs from {year.initial} to {year.final}"),
+    subtitle = "Showing ER median, IQR, and range for fisheries with mean ER > 0.5%"
+  ) &
+  theme_bw(base_size = 18)
+
+```
+
+### Forecast Performance
+
+Forecasts are integral to Coho Salmon management in the Pacific Northwest. These forecasts, as described earlier, are used in pre-season assessments to determine allowable fishing mortality on stocks of concern. In the absence of in-season management controls, forecasts that are too high may yield higher than agreed to exploitation of management units of concern. Forecasts that are too low may yield losses in fishing opportunities. The following plots summarize how well preseason forecasts matched the abundance category (Low, Moderate, Abundance) identified in post-season runs.
+
+
+```{r}
+ests.post = psc_pst_full |> 
+  distinct(`Catch Year`, PSC_Region, PSC_StockName, abund, low_mod_abund, mod_abd_abund) |> 
+  mutate(
+    PSC_Region = factor(PSC_Region, levels = c("Canada","US Inside","US Outside")),
+    abd = case_when(
+      abund < low_mod_abund ~ 1,
+      abund >= low_mod_abund & abund <= mod_abd_abund ~ 2,
+      abund > mod_abd_abund ~ 3,
+      is.na(low_mod_abund) ~ NA
+    )) |> 
+  filter(!is.na(abd))  |> 
+  select("Catch Year", PSC_Region, PSC_StockName, abd)
+
+ests.pre = psc_pre_full |> 
+  distinct(`Catch Year`, PSC_Region, PSC_StockName, abund, low_mod_abund, mod_abd_abund) |> 
+  mutate(
+    PSC_Region = factor(PSC_Region, levels = c("Canada","US Inside","US Outside")),
+    abd = case_when(
+      abund < low_mod_abund ~ 1,
+      abund >= low_mod_abund & abund <= mod_abd_abund ~ 2,
+      abund > mod_abd_abund ~ 3,
+      is.na(low_mod_abund) ~ NA
+    )) |> 
+  filter(!is.na(abd))  |> 
+  select("Catch Year", PSC_Region, PSC_StockName, abd)
+
+
+ests.joint = inner_join(ests.post, ests.pre, by = c("Catch Year", "PSC_Region", "PSC_StockName"),
+                        suffix = c("_post", "_pre")) |> 
+  mutate(prediction = case_when(
+    abd_post == abd_pre ~ "No Change",
+    abd_post < abd_pre ~ "Too High",
+    abd_post > abd_pre ~ "Too Low"
+  )) |> 
+  count(`Catch Year`, PSC_Region, prediction) |> 
+  mutate(prediction = factor(prediction, c("Too High", "No Change", "Too Low")))
+
+
+plot_mus = function(dat, label){
+  ggplot(data = dat,
+         aes(x = `Catch Year`, y = n, fill = prediction)) +
+    scale_fill_manual(limits = c("Too Low", "Too High", "No Change"),
+                      values = c("goldenrod", "coral", "lightgreen"))+
+    geom_col(width = 0.5)+
+    theme_bw(base_size = 15)+
+    scale_x_continuous(breaks = min(dat$`Catch Year`):max(dat$`Catch Year`))+
+    labs(y = "# of Management Units", fill = "",
+         title = label)+
+    theme(legend.position = "top",
+          axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+}
+plot_mus(ests.joint, label = "All")
+```
+
+
+The following figures provide similar summaries for individual PSC region.
+
+
+```{r}
+plot_mus(ests.joint |> 
+           filter(PSC_Region == "US Inside"), label = "US Inside")
+```
+
+
+```{r}
+plot_mus(ests.joint |> 
+           filter(PSC_Region == "US Outside"), label = "US Outside")
+```
+
+# Was ER under the limits?
+
+Outside limits need to be calculated by hand. For now, just doing inside management units.
+
+`Postseason Unused Using Preseason Cap` compares how well Postseason ER would have met the Preseason cap. This removes the effects of shifts in the abundance category between pre and post-season (if the abundance category remained the same, `Postseason Unused Using Preseason Cap` will be the same as `Postseason Cap`).
+
+```{r}
+er.limits = inner_join(ests.post, ests.pre, by = c("Catch Year", "PSC_Region", "PSC_StockName"),
+                       suffix = c("_post", "_pre")) |> 
+  filter(`Catch Year` >= year.initial) |> 
+  filter(`Catch Year` <= year.final) |> 
+  left_join(psc_pst |> select(low_er_cap, mod_er_cap, abd_er_cap, "Catch Year", PSC_StockName) |> distinct()) |> 
+  filter(PSC_Region == "US Inside") |> 
+  mutate(limit_post = case_when(
+    abd_post == 1 ~ low_er_cap,
+    abd_post == 2 ~ mod_er_cap,
+    abd_post == 3 ~ abd_er_cap)
+  ) |> 
+  mutate(limit_pre = case_when(
+    abd_pre == 1 ~ low_er_cap,
+    abd_pre == 2 ~ mod_er_cap,
+    abd_pre == 3 ~ abd_er_cap)
+  ) |> 
+  select(-low_er_cap, -mod_er_cap, -abd_er_cap)
+
+er.vals = psc_pre |> 
+  select("Catch Year", PSC_StockName, er_pre =mort_sum_er) |> 
+  distinct() |> 
+  inner_join(
+    psc_pst |> 
+      select("Catch Year", PSC_StockName, er_post =mort_sum_er) |> 
+      distinct(),
+    by = c("Catch Year", "PSC_StockName")
+  )
+
+er.comparison = er.limits |> 
+  left_join(er.vals,
+            by = c("Catch Year", "PSC_StockName")) |> 
+  mutate(preseason.residual = limit_pre - er_pre,
+         postseason.residual = limit_post - er_post, 
+         postseason.vs.target = limit_pre - er_post) |> 
+  select(-abd_post, -abd_pre) |> 
+  mutate(across(limit_post:postseason.vs.target, \(x) x*100))
+
+er.comparison |> 
+  select("Catch Year", PSC_StockName, limit_pre, er_pre, preseason.residual,
+         limit_post, er_post, postseason.residual, postseason.vs.target) |> 
+  gt() |> 
+  fmt_number(columns = -"Catch Year", decimals = 1) |> 
+  cols_label(limit_pre = "Preseason Cap",
+             er_pre = "Preseason Model ER",
+             preseason.residual = "Preseason Unused",
+             limit_post = "Postseason Cap",
+             er_post = "Postseason Model ER",
+             postseason.residual = "Postseason Unused",
+             postseason.vs.target = "Postseason Unused Using Preseason Cap")
+```
+
+
+
+
+# Acronyms
+
+```{r}
+gt(static$acronyms) |> 
+  fmt(
+    columns = "URL", 
+    fns = \(x){ paste('<a href="',x,'">',x,'</a>') }
+  )
+```
+
+
+# Glossary
+
+```{r}
+gt(static$glossary)
+```
+
+# References
+
+::: {#refs}
+:::
+
+# Ref_older {#sec-refs}
+
+*internal inline links direct here, individual refs themselves will have external links as '(pdf)[urls_of_raw.pdf]' for reader to click*
+
+
+# Appendix: Annual CoTC reports of Estimates of Exploitation Rates
+
+[General archive of public CoTC reports](https://www.psc.org/publications/technical-reports/technical-committee-reports/coho/)
+
+The following provides annual report info without making the individual files themselves publicly available where they would lack the context of the Periodic Report.
+
+```{r}
+
+# cd ~/O/code/PeriodicReport/annual_reports
+# gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=ann_rep_merged.pdf *.pdf
+
+```
+

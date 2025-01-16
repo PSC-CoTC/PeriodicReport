@@ -1,0 +1,29 @@
+## Temperature data can be found here:
+## https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/regional/time-series/108/tavg/12/9/1895-2024?base_prd=true&begbaseyear=1901&endbaseyear=2000
+## Use the following settings:
+## 
+## Parameter: annual temperature, 
+## Time Scale: 12-Month, 
+## Month: September
+## Start Year: 1895
+## End Year: [current year]
+## Region: Northwest
+## 
+## Download as CSV, save as "NOAA-temperature.csv" into the data folder
+## 
+## Precipitation data can be found here: 
+## https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/regional/time-series/108/pcp/12/9/1895-2024?base_prd=true&begbaseyear=1901&endbaseyear=2000
+## ## Use the following settings:
+## 
+## Parameter: Precipitation, 
+## Time Scale: 12-Month, 
+## Month: September
+## Start Year: 1895
+## End Year: [current year]
+## Region: Northwest
+## 
+## Download as CSV, save as "NOAA-precipitation.csv" into the data folder
+
+
+Indicators data came from 
+https://www.fisheries.noaa.gov/west-coast/science-data/ocean-conditions-indicators-trends

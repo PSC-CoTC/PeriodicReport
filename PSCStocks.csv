@@ -1,0 +1,14 @@
+psc.stock.id,psc.stock.name,psc.stock.order,lower.abundance.cohort,upper.abundance.cohort,cap.method,low.abundance.cap,moderate.abundance.cap,abundant.abundance.cap,lower.escapement.goal,upper.escapement.goal
+1,Skagit,5,22857,62500,imu,0.2,0.35,0.6,,
+2,Stillaguamish,6,9385,20000,imu,0.2,0.35,0.5,,
+3,Snohomish,7,51667,125000,imu,0.2,0.4,0.6,,
+4,Hood Canal,8,19545,41000,imu,0.2,0.45,0.65,,
+5,US Strait JDF,9,11679,27445,imu,0.2,0.4,0.6,,
+6,Quillayute,10,7875,10500,omu,0.2,,,6300,15800
+7,Hoh,11,2500,3333,omu,0.2,,,2000,5000
+8,Queets,12,7250,9667,omu,0.2,,,5800,14500
+9,Grays Harbor,13,44250,59000,omu,0.2,,,35400,35400
+10,Lower Fraser,1,,,,,,,,
+11,Interior Fraser,2,,,fixed,0.2,,,,
+12,Georgia Strait ML,3,,,,,,,,
+13,Georgia Strait VI,4,,,,,,,,
