@@ -1,0 +1,327 @@
+---
+title: "Overages fisheries"
+author: "Collin Edwards"
+format: 
+  html:
+   self-contained: true
+   embed-resources: true
+editor: visual
+code-fold: true
+---
+
+## setup
+
+```{r}
+
+library(tidyverse)
+library(here)
+library(gt)
+library(framrsquared)
+## map fram stock and psc mus
+
+psc.stocks = read_csv("PSCStocks.csv") |> 
+  janitor::clean_names() |> 
+  select(psc_stock_id, psc_stock_name)
+
+psc.stocks.map = read_csv("PSCStockMap.csv")|> 
+  janitor::clean_names() |> 
+  left_join(psc.stocks)
+
+file.pre = "C:/Repos/PeriodicReportData/PSC_CoTC_Preseason_CohoFRAMDB_thru2024_06182024.mdb"
+file.post = "C:/Repos/PeriodicReportData/PSC_CoTC_PostSeason_CohoFRAMDB_thru2022_03042024.mdb"
+
+
+con.pre = connect_fram_db(file.pre)
+con.post = connect_fram_db(file.post)
+
+# year.cur = 2019
+# cur.stock = "Skagit"
+
+create_mort_comparison = function(year, stock){
+  year.cur = year
+  cur.stock = stock
+  
+  ## identify run
+  id.pre = fetch_table(con.pre, "RunID") |> 
+    filter(run_year == year.cur) |> 
+    pull(run_id)
+  
+  id.post = fetch_table(con.post, "RunID") |> 
+    filter(run_year == year.cur) |> 
+    pull(run_id)
+  
+  # msf_mortalities(con.pre, run_id = id.pre) |> View()
+  
+  ## Skagit investigation:
+  stock_id_list = psc.stocks.map |> 
+    filter(psc_stock_name == cur.stock) |> 
+    pull(fram_stock_id)
+  
+  morts.pre = fetch_table(con.pre, table_name = "Mortality") |> 
+    filter(run_id == id.pre) |> 
+    # filter(stock_id %in% stock_id_list) |> 
+    mutate(focal_stock = as.character(stock_id %in% stock_id_list)) |> 
+    mutate(total_mort = landed_catch + non_retention + shaker + drop_off+
+             msf_landed_catch + msf_non_retention + msf_shaker + msf_drop_off) |> 
+    group_by(fishery_id, focal_stock) |> 
+    summarize(total_mort_pre = sum(total_mort)) |> 
+    ungroup() |> 
+    pivot_wider(values_from = total_mort_pre,
+                names_from = focal_stock) |> 
+    rename(preseason_mort_focal = "TRUE",
+           preseason_mort_other = "FALSE") |> 
+    mutate(preseason_mort_focal = if_else(is.na(preseason_mort_focal),
+                                          0,
+                                          preseason_mort_focal)) |> 
+    mutate(preseason_mort_other = if_else(is.na(preseason_mort_other),
+                                          0,
+                                          preseason_mort_other))
+  
+  morts.post = fetch_table(con.post, table_name = "Mortality") |> 
+    filter(run_id == id.post) |> 
+    # filter(stock_id %in% stock_id_list) |> 
+    mutate(focal_stock = as.character(stock_id %in% stock_id_list)) |> 
+    mutate(total_mort = landed_catch + non_retention + shaker + drop_off+
+             msf_landed_catch + msf_non_retention + msf_shaker + msf_drop_off) |> 
+    group_by(fishery_id, focal_stock) |> 
+    summarize(total_mort_post = sum(total_mort)) |> 
+    ungroup() |> 
+    pivot_wider(values_from = total_mort_post,
+                names_from = focal_stock) |> 
+    rename(postseason_mort_focal = "TRUE",
+           postseason_mort_other = "FALSE") |> 
+    mutate(postseason_mort_focal = if_else(is.na(postseason_mort_focal),
+                                           0,
+                                           postseason_mort_focal)) |> 
+    mutate(postseason_mort_other = if_else(is.na(postseason_mort_other),
+                                           0,
+                                           postseason_mort_other))
+  
+  
+  mort_compare = morts.pre |> 
+    left_join(morts.post, by = c("fishery_id")) |> 
+    relocate(preseason_mort_other, .before = postseason_mort_other) |> 
+    relocate(postseason_mort_focal, .after = preseason_mort_focal) |> 
+    filter(postseason_mort_focal > 0.1)
+  
+  mort_compare |> 
+    filter(postseason_mort_focal > (preseason_mort_focal+1)) |> 
+    left_join(framrosetta::fishery_coho_fram |> 
+                select(fishery_id, fishery_title), by = "fishery_id") |> 
+    arrange(desc(postseason_mort_focal)) |> 
+    mutate(overage = postseason_mort_focal-preseason_mort_focal, .before = fishery_title) |> 
+    select(-fishery_id) |> 
+    gt() |> 
+    fmt_number(decimals = 0) |> 
+    cols_label(
+      preseason_mort_focal ~ "Pre-season mortalities\n(focal stock)",
+      postseason_mort_focal ~ "Post-season mortalities\n(focal stock)",
+      preseason_mort_other ~ "Pre-season mortalities\n(other stock)",
+      postseason_mort_other ~ "Post-season mortalities\n(other stock)",
+      fishery_title ~ "FRAM fishery"
+    )
+}
+
+
+```
+
+## Context / Disclaimers
+
+The following is based on pulling mortalities directly from the final pre- and post-season FRAM runs as posted on the PSC Sharepoint. In many cases overages may be driven by substantial mismatches between forecasts and observed ocean abundances; the numbers here will not make that apparent.
+
+This code also does not filter to fisheries from individual countries or states; it is possible that fisheries in the table are not relevant for individual questions.
+
+:::{.panel-tabset}
+
+## 2019 Skagit 
+
+```{r}
+create_mort_comparison(year = 2019, stock = "Skagit")
+```
+
+## 2019 Interior Fraser 
+
+```{r}
+create_mort_comparison(year = 2019, stock = "Interior Fraser") 
+```
+
+## 2019 Hood Canal 
+
+```{r}
+create_mort_comparison(year = 2019, stock = "Hood Canal")
+```
+
+## 2019 Queets 
+
+```{r}
+create_mort_comparison(year = 2019, stock = "Queets")
+```
+
+## 2019 Grays Harbor 
+
+```{r}
+create_mort_comparison(year = 2019, stock = "Grays Harbor")
+```
+
+## Grays Harbor 2019
+
+```{r}
+create_mort_comparison(year = 2019, stock = "Grays Harbor")
+```
+
+## 2020 Skagit
+
+```{r}
+create_mort_comparison(year = 2020, stock = "Skagit")
+```
+
+## 2020 Queets
+
+```{r}
+create_mort_comparison(year = 2020, stock = "Queets")
+```
+
+## 2020 Grays Harbor
+
+```{r}
+create_mort_comparison(year = 2020, stock = "Grays Harbor")
+```
+
+## 2022 Hood Canal
+
+```{r}
+create_mort_comparison(year = 2022, stock = "Hood Canal")
+```
+
+:::
+
+# Columbia forecasting error
+
+An additional potential source of error for a stock of interest is mistaken forecasts for stock that are prevalent in key fisheries. As a simple example, if we have a fishery that we think is 90% Columbia river stock and 10% Interior Fraser stock, anglers in that fishery might have a larger-than-expected catch of Interior Fraser if our columbia stocks are substantially under expectation.
+
+```{r}
+stock_id_list <-  framrosetta::stock_search("Columbia", "COHO") |>
+  pull(stock_id)
+
+res.all = NULL
+
+for(year.cur in 2019:2022){
+  ## identify run
+  id.pre = fetch_table(con.pre, "RunID") |> 
+    filter(run_year == year.cur) |> 
+    pull(run_id)
+  
+  id.post = fetch_table(con.post, "RunID") |> 
+    filter(run_year == year.cur) |> 
+    pull(run_id)
+  
+  recruits.pre = fetch_table(con.pre, table_name = "Cohort") |> 
+    filter(run_id == id.pre) |> 
+    filter(time_step == 1) |> 
+    filter(stock_id %in% stock_id_list) |> 
+    select(stock_id, preseason_ocean_est = start_cohort) |> 
+    mutate(year = year.cur) |> 
+    left_join(framrosetta::stock_coho_fram |> 
+                select(stock_id, stock_long_name)) |> 
+    mutate(stock_long_name = 
+             gsub(" Marked", "", stock_long_name),
+           stock_long_name = 
+             gsub(" UnMarked", "", stock_long_name)) |> 
+    filter(stock_long_name == "Columbia River Late Hatchery") |> 
+    group_by(stock_long_name, year) |> 
+    summarize(preseason_ocean_est = sum(preseason_ocean_est)) |> 
+    ungroup()
+  
+  
+  recruits.post = fetch_table(con.post, table_name = "Cohort") |> 
+    filter(run_id == id.post) |> 
+    filter(time_step == 1) |> 
+    filter(stock_id %in% stock_id_list) |> 
+    select(stock_id, postseason_ocean_est = start_cohort) |> 
+    mutate(year = year.cur) |> 
+    left_join(framrosetta::stock_coho_fram |> 
+                select(stock_id,  stock_long_name)) |> 
+    mutate(stock_long_name = 
+             gsub(" Marked", "", stock_long_name),
+           stock_long_name = 
+             gsub(" UnMarked", "", stock_long_name)) |> 
+    filter(stock_long_name == "Columbia River Late Hatchery") |> 
+    group_by(stock_long_name, year) |> 
+    summarize(postseason_ocean_est = sum(postseason_ocean_est))
+  
+  res = inner_join(recruits.pre, recruits.post) |> 
+    relocate(postseason_ocean_est, .after = preseason_ocean_est)
+  res.all = rbind(res.all, res)
+}
+
+res.all |> 
+  gt() |> 
+  fmt_number(decimals = 0)
+```
+
+# Select fishery composition
+
+These are the predicted stock composition in the specified year for the fishery of interest based on the final preseason FRAM run. Cutting off any stock that contributed less than 1%.
+
+```{r}
+fishery_composition = function(cur.fishery, cur.year){
+  
+  fishery.id.cur = framrosetta::fishery_coho_fram |> 
+    filter(fishery_title == cur.fishery) |> 
+    pull(fishery_id)
+  
+  id.pre = fetch_table(con.pre, "RunID") |> 
+    filter(run_year == year.cur) |> 
+    pull(run_id)
+  
+  id.post = fetch_table(con.post, "RunID") |> 
+    filter(run_year == year.cur) |> 
+    pull(run_id)
+  
+  morts.pre = fetch_table(con.pre, table_name = "Mortality") |> 
+    filter(run_id == id.pre) |> 
+    filter(fishery_id %in% fishery.id.cur) |> 
+    mutate(total_mort = landed_catch + non_retention + shaker + drop_off+
+             msf_landed_catch + msf_non_retention + msf_shaker + msf_drop_off) |> 
+    group_by(stock_id) |> 
+    summarize(total_mort_pre = sum(total_mort)) |> 
+    ungroup() |> 
+    left_join(framrosetta::stock_coho_fram |> 
+                select(stock_id, stock_long_name)) |> 
+    mutate(proportion = total_mort_pre/sum(total_mort_pre)) |> 
+    arrange(desc(proportion)) |> 
+    select(stock_long_name, proportion) |> 
+    filter(proportion > 0.01)
+  
+  morts.pre |> 
+    gt() |> 
+    fmt_percent(columns = "proportion", decimals = 1)
+}
+```
+
+:::{.panel-tabset}
+
+## 2019 WA Area 4/4B Treaty Troll 
+
+```{r}
+fishery_composition("WA Area 4/4B Treaty Troll", 2019)
+```
+
+## 2019 West Coast Vanc Is Sport
+
+```{r}
+fishery_composition("West Coast Vanc Is Sport", 2019)
+```
+
+## 2019 WA Area 7 Sport (San Juan Islands)
+
+```{r}
+fishery_composition("WA Area 7 Sport (San Juan Islands)", 2019)
+```
+
+## 2019 BC Central Sport
+
+```{r}
+fishery_composition("BC Central Sport", 2019)
+```
+:::
