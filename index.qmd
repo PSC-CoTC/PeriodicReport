@@ -2395,7 +2395,7 @@ static$releases |>
   )
 
 ```
-*question for Collin - move these tables to "static table" and pull?*  Reviewers want this in an Appendix (I moved a copy into the static table file and called it Skagit_DIT
+*question for Collin - move these tables to "static table" and pull?*  Reviewers want this in an Appendix (There is a tab in excel file that contains DIT info for all MUs called "DIT_Codes"  I just added BY 2022 releases to it.
 **Double-index tag codes released within the Skagit MU, brood years 1994 through 2021. **
 
 |** Brood Year **|** Hatchery **|** DIT Group ID **|** Tag Code **|** Mark **|** No. Released **| 
