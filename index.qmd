@@ -2492,8 +2492,8 @@ ToDo: create this image from the excel file:
 
 **Estimated marine survival rates for Baker River Coho Salmon, (data provided by M. Litz, WDFW).**
 
-**Most recent Forecast and Methods**
-This information is available in the {{< glossary Council >}}'s 2024 Preseason Report 1 [@PFMC_1_2024]. 
+**Most Recent Abundance Forecast and Methods**
+This information is available in the {{< glossary Council >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
 
 The 2024 Skagit MU {{< glossary OA3 >}} abundance forecast is 63,430, resulting in a classification of the stock abundance as "Abundant" under the 2019 {{< glossary PST >}} {{< glossary SCMP >}} and “Normal” under the {{< glossary FMP >}}. This results in an allowable total exploitation rate of no more than 60%. 
 
@@ -2785,8 +2785,12 @@ Marine survival rates of wild Coho stocks have been measured using wild {{< glos
 
 ToDo: add table or figure of outmigrating smolts
 
-**2023 Forecast**
+**Most Recent Abundance Forecast and Methods**
+This information is available in the {{< glossary Council >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
 
+The 2024 Stillaguamish MU {{< glossary OA3 >}} abundance forecast is 30,809, resulting in a classification of the stock abundance as "Abundant" under the 2019 {{< glossary PST >}} {{< glossary SCMP >}} and “Normal” under the {{< glossary FMP >}}. This results in an allowable total {{< glosaary ER >}} of no more than 50%. 
+
+Regressing annual Coho Salmon smolt trap catch per unit of effort (CPUE; total fish/total hours fished) against terminal run size one year later generates a relationship that could be used to predict Stillaguamish adult returns. However, due to the high variability in marine survival, Coho Salmon smolt numbers at the trap are not a very precise predictor of adult returns one year later. Therefore, the SF Skykomish River marine survival estimate for each brood was used to correct the Stillaguamish smolt trap data, which tightened the regression relationship with the terminal run. The natural Coho marine survival rate from smolt to adult is estimated at 5.7 percent, based on recent 5-year SF Skykomish River marine survival estimates. 
 
 ###### Escapement Monitoring
 
@@ -2941,6 +2945,12 @@ Between 1978 and 1983, average production was 276,000 smolts (range = 212,000 to
 
 Estimated smolt production has averaged approximately 1.27 million smolts annually during 1995–2022 (Table or figure?).  Smolt production has varied from a low of 720,000 in 2008 to a high of 2,200,000 in 2014, exceeding 1 million smolts in 21 of the last 28 years. 
 
+**Most Recent Abundance Forecast and Methods**
+This information is available in the {{< glossary Council >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
+
+The 2024 Snohomish MU {{< glossary OA3 >}} abundance forecast is 71,600, resulting in a classification of the stock abundance as "Moderate" under the 2019 {{< glossary PST >}} {{< glossary SCMP >}} and “Low” under the {{< glossary FMP >}}. This results in an allowable total {{< glossary ER >}} of no more than 40%. 
+
+The Snohomish MU forecast is based on 2023 out-migrant smolts estimated from a mark-recapture estimate of smolt abundance from two smolt traps, one operated on the Skykomish River (river mile 26.5) and the second on the Snoqualmie River (river mile 12.2). Smolt trap estimates for the Skykomish and Snoqualmie rivers are summed and further expanded for rearing downstream of the trap locations in the Snohomish River. A marine survival rate of 4.6% was applied to the total smolt production estimate for the Snohomish watershed of 1,557,000 smolts [@Litz_2024]. The resulting forecast was rounded to the nearest hundred to account for co-manager agreed-to precision.
 
 ###### Escapement Monitoring
 
@@ -3126,6 +3136,13 @@ Marine survival for the indicator stock for the Hood Canal {{< glossary MU >}}, 
 
 *ToDo* Figure 4.1 --> Marine survival of Big Beef Creek Coho Salmon and the average marine survival of Puget Sound indicator stocks by year [data from @Zimmerman_2012; M. Zimmerman, WDFW, unpublished data]. 
 
+**Most Recent Abundance Forecast and Methods**
+This information is available in the {{< glossary Council >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
+
+The 2024 Hood Canal MU {{< glossary OA3 >}} abundance forecast is 36,541, resulting in a classification of the stock abundance as "Moderate" under the 2019 {{< glossary PST >}} {{< glossary SCMP >}} and “Low” under the {{< glossary FMP >}}. This results in an allowable total {{< glossary ER >}} of no more than 45%. 
+
+This forecast is based on a linear regression model that related the return of tagged natural jack Coho Salmon at Big Beef Creek to Hood Canal December age-2 recruits in the subsequent run year, using brood years 1983–1998 and 2002–2019. This forecast was then converted to {{< glossary OA3 >}} abundance. The 1999–2001 broods were excluded because of the unusually high recruit-per-tagged jack ratio, which is not expected to occur this year. For 2024, as was done since 2016, the co-managers agreed to apply a conservative bias correction for forecasting natural Coho Salmon in Hood Canal.
+
 ###### Escapement Monitoring
 
 The method used for estimating natural Coho escapements in this {{< glossary MU >}} is the Base-Year Index approach [@Haymes_2008]. This approach is used to estimate annual Coho escapements to most of the major river basins and geographically associated aggregations of smaller independent tributaries in the Puget Sound region, exclusive of the Strait of Juan de Fuca. The Base-Year Index approach was adopted for estimating Coho escapements in this region because the distribution of Coho spawners is geographically broad in each river basin and an approach is required that is not dependent on the direct census of a large portion of the total spawning habitat, and that can use serial live and/or dead fish observations instead of spawning redd enumeration because the multiple species overlap and/or high spawning densities often make Coho redd enumeration impractical.	
@@ -3268,6 +3285,15 @@ plot_rmis_recoveries_all(mu.name = "Strait of Juan de Fuca",
 ```
 
 ###### Forecast Methods
+
+**Most Recent Abundance Forecast and Methods**
+This information is available in the {{< glossary Council >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
+
+The 2024 Strait of Juan de Fuca MU {{< glossary OA3 >}} abundance forecast is 19,690, resulting in a classification of the stock abundance as "Moderate" under the 2019 {{< glossary PST >}} {{< glossary SCMP >}} and “Low” under the {{< glossary FMP >}}. This results in an allowable total {{< glossary ER >}} of no more than 40%. 
+
+This forecast includes both Eastern and Western Strait of Juan de Fuca drainages. {{< glossary JA3 >}} ocean recruits were predicted as the product of the estimated 2023 coho smolt outmigration from all independent
+tributaries of the Strait of Juan de Fuca, and a predicted marine survival rate  of 7.15 percent. The marine survival rate was predicted by an r-square-weighted average of two linear regression models using the southern
+copepod biomass anomaly and the Pacific decadal oscillation index (PDO) from May through September, both during the year of smolt outmigration. The linear relationships that these models solved for have r-square values of 0.34 and 0.33, respectively.
 
 ###### Escapement Monitoring
 ###### Fishery Monitoring
