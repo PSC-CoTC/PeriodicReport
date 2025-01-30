@@ -3390,12 +3390,22 @@ plot_rmis_recoveries_all(mu.name = "Quillayute",
 
 The estimated number of total fall smolts averaged 350,000 annually from 1995 to 2022, with a high of 655,000 in 2011 and a low of 135,000 in 1999.  
 
-**2023 Forecast**
-The natural Coho forecast is based on Coho smolt data measured in the Quillayute watershed in 2022 by West Fork Environmental and the Quileute Nation [@PFMC_1_2023]. A total of 339,000 Coho smolts are estimated to have emigrated from the Quillayute River system in 2022. Smolt abundance from the Dickey River was estimated to be 80,568 wild Coho smolts (746 smolts/mi2). Smolt abundance from the Bogachiel, Calawah, and Sol Duc rivers was estimated to be 258,416 wild Coho smolts (496 smolts/mi2). 
+**Most Recent Abundance Forecast and Methods**
+This information is available in the {{< glossary Council >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
 
-Total smolts were separated into summer and fall natural Coho smolts by the relative number of natural brood year 2020 spawners, 10.84% and 89.16%, respectively. Results from this separation yield estimates of 37,000 natural summer Coho smolts and 302,000 natural fall Coho smolts. The January Age 3 (JA3) natural marine survival estimate is 5.49% (4.46% Ocean Age 3 (OA3)) for the Quillayute system natural Coho. This is the past 10-year JA3 mean marine survival for Quillayute System wild stocks (JA3 recruits survival = 1.232 * OA3 recruits survival, this calculation of JA3 ocean survival was used beginning for 2016 Coho forecast instead of the previous year’s estimate methodology using OA3 recruitment to the fishery). This compares with a Quillayute marine survival of 6.6% OA3 (8.13% JA3) predicted by WDFW [@Litz_2023].
+The 2024 Quillayute MU {{< glossary OA3 >}} abundance forecast consists of summer (393 adults) and fall (10,246 adults) run components, totalling 10,639 {{< glossary OA3 >}}.  This results in a classification of the stock abundance as "Moderate" under the 2019 {{< glossary PST >}} {{< glossary SCMP >}}. 
 
-The summer natural Coho forecast is based on the estimated total summer Coho smolt production (36,754) and a JA3 projected marine survival rate of 5.491%. The forecast for the natural component of the fall run was based on the estimated total fall Coho smolt production (302,230) multiplied by an expected marine survival rate of 5.491%, the same survival rate used to forecast summer natural returns. The 2023 Quillayute River summer natural forecast is 1,638 OA3 recruits, which is higher than the 2022 forecast of 912. The 2023 Quillayute River fall natural forecast is 13,475 OA3 recruits, which is higher than the 2022 forecast of 12,479. The ocean abundance forecast for Quillayute fall natural Coho classifies the stock abundance as "Abundant" under the 2019 {{< glossary PST >}} {{< glossary SCMP >}}. 
+This forecast is based on coho smolt data measured in the Quillayute watershed in 2023 by West Fork Environmental and the Quileute Nation. A total of 252,000 coho smolts are estimated to have emigrated from the Quillayute River system in 2023. Smolt abundance from the Dickey River was estimated to be 27,431 wild coho smolts (245 smolts per square mile). Smolt abundance from the Bogachiel, Calawah, and Sol Duc rivers combined was estimated to be 164,701 wild Coho smolts (316 smolts per square meter). Total smolts were separated into summer and fall natural coho smolts by the relative number of natural brood year 2021 spawners, 3.69 percent and 96.31 percent, respectively. Results from this separation yield estimates of 9,300 natural summer coho smolts and 242,700 natural fall coho smolts.
+
+Summer Coho
+The summer natural coho forecast is based on the estimated total summer coho smolt production (9,300)
+and a JA3 projected marine survival rate of 5.20 percent.
+The summer hatchery production forecast was based on a marine survival estimate of 2.63 percent
+multiplied by a release of 106,466 smolts from the Sol Duc Hatchery.
+Fall Coho
+The forecast for the natural component was based on the estimated total fall coho smolt production
+(242,700) multiplied by an expected marine survival rate of 5.20 percent, the same survival rate used to
+forecast summer natural returns. 
 
 ###### Escapement Monitoring
 ###### Fishery Monitoring
