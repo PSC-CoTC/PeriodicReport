@@ -398,8 +398,6 @@ psc_pre <- readr::read_csv(here("../PeriodicReportData/psc_postfram_1998_2022_te
   rename(`Catch Year` = RunYear)
 ```
 
-
-
 *Note that Quillayute and Queets values are those from the FRAM database and have not yet been extracted from the relevant TAMM cells for each year*
 
 ```{r func_plot_abund_bar}
@@ -538,7 +536,7 @@ Under the Agreement, the United States and Canada (the "Parties") are required t
 |  Moderate  |          21% - 40%          |
 |  Abundant  |          41% - 65%          |
 
-: Status categories for MSH {#tab-msh}
+: Status categories for MSH {#tbl-msh}
 
 Annual {{< glossary ER >}} caps are established for each of the {{< glossary MUs >}} based on the level of abundance and health of the natural stocks. These caps are then apportioned between the Parties. Constraints for Canadian fisheries on US {{< glossary MUs >}} are determined by formulas that specify sharing of allowable {{< glossary ERs >}} as well as a composite rule, which together adjust caps according to the number of US MUs that fall within a given category. The composite rule adjusts constraints for Canadian fishery {{< glossary ERs >}} based on the number of US {{< glossary MUs >}} which fall in a given category. For example, if only one Washington coastal or Puget Sound Coho {{< glossary MU >}} is in low status, Canadian fisheries are constrained to a total {{< glossary ER >}} on that unit of 12%; if two or more Washington coastal {{< glossary MUs >}} are in low status, the constraint becomes 10%. The most restrictive {{< glossary ER >}} limit for Canadian fishery impacts on US Coho {{< glossary MUs >}} is 10%.
 
@@ -1201,73 +1199,75 @@ At present, the utility of the {{< glossary DIT >}} programs and the {{< glossar
 
 Most {{< glossary MUs >}} in the US have {{< glossary CWT >}} indicator stocks and {{< glossary DIT >}} programs. However, some of the programs have been eliminated in recent years due to budgetary constraints. Canada has discontinued all of their Coho Salmon {{< glossary DIT >}} programs. The current Coho Salmon {{< glossary CWT >}} indicator stocks for each {{< glossary MU >}} and the brood years with {{< glossary DIT >}} groups are listed below. The tag codes used in the Mixed-Stock-Model to develop the FRAM base period for catch years 1986-1997 are also listed below. All {{< glossary DIT >}} groups released within US {{< glossary MUs >}} to date are also listed below.
 
-*question for Collin - do we wish to place the data from this table into the "static table excel file and pull it from there?  If so, can we also include the footnotes?*
+::: {#}
 
-**Coded-wire-tag indicator stocks and brood years with single index tag (SIT) and {{< glossary DIT >}} groups for each Coho {{< glossary MU >}}, beginning with brood year 1983. Indicator stocks are hatchery-produced Coho unless specified as "Wild" (Release data downloaded from RMIS 1-10-2023). SIT groups may be either marked or unmarked releases of {{< glossary CWT >}} Coho. {{< glossary DIT >}} groups are marked (adipose-fin clipped) and unmarked pairs of {{< glossary CWT >}} Coho.**
 
-| **Management Unit**               | **Indicator Stock**                   | **Brood Yr SIT**                | **Brood Yr {{< glossary DIT >}}**       |
-|:-----------------------------------|:--------------------------------------|:-------------------------------:|:----------------------:|
-| **Southern BC MUs**             |                                       |                                 |                        |
-| Lower Fraser                      | Inch Creek Hatchery                   | 83-95,14-19                     | 96-13                  |
-|                                   | Salmon River (Wild)[^1]               | 84-99,01,03,05-07               | NA                     |
-|                                   | Chilliwack R. H. (Chilliwack R.)      | 83-95                           | 96-02                  |
-|                                   | Chehalis R. H. (Chehalis R.)          | 83-97                           | --                     |
-| Interior Fraser                   | Spius Cr. H. (Coldwater R.)[^2]       | 84-94,96-98,03-19               | 99-02                  |
-|                                   | Spius Cr. H. (Salmon R./TOMF)[^3]     | 95-96,99,01-02,04-05,07,14,17-19| --                     |
-|                                   | Spius Cr. H. (Spius Cr.)[^4]          | 94-96,99-00                     | 97-98                  |
-|                                   | Spius Cr. H. (Eagle R.)               | 10-13,15-19                     | --                     |
-|                                   | Chilliwack R. H. (Coldwater R.)[^5]   | 16-19                           | --                     |
-|                                   | Eagle R. H. (Salmon R.)[^6]           | 83-93                           | --                     |
-|                                   | Eagle R. H. (Eagle R.)[^7]            | 83-93                           | --                     |
-|                                   | Eagle R. H. (Perry R.)[^8]            | 84-86                           | --                     |
-|                                   | Dunn Cr. H. (Dunn Cr.)[^9]            | 86-87,89-90,92,95,98-07         | --                     |
-|                                   | Dunn Cr. H. (Dunn Lake)[^10]          | 84-91,94,97                     | --                     |
-|                                   | Dunn Cr. H. (Lemieux Cr.)[^11]        | 83-86,88,92-93,97-99,03,06-09   | --                     |
-|                                   | Dunn Cr. H. (Louis Cr.)[^12]          | 88-94,97-07                     | --                     |
-|                                   | Dunn Cr. H. (Ianson Ch.)[^13]         | 88-91,94-95,00-02,04-05         | --                     |
-|                                   | Eagle River (Wild)[^14]               | 00-03                           | NA                     |
-|                                   | Lemieux Creek (Wild)                  | 92-93                           | NA                     |
-| Strait of Georgia Mainland        | Capilano R. H.                        | 83-97,00                        | --                     |
-|                                   | Lang Creek H. (Lang Cr.)[^15]         | 87-91,95-96,08-09               | --                     |
-| Strait of Georgia Vancouver Island| Quinsam R. H.                         | 83-85,18-19                     | 96-17                  |
-|                                   | Big Qualicum R. H.                    | 83-85,87-95,03-15,17-19         | 96-02                  |
-|                                   | Goldstream R. H.                      | 91-94,03-11                     | 96-02                  |
-|                                   | Puntledge R. H.[^16]                  | 83-97,99-02,09-10,19            | --                     |
-|                                   | Black Creek (Wild)[^17]               | 83-17                           | NA                     |
-| **US Inside MUs**               |                                       |                                 |                        |
-| Skagit                            | Marblemount H. (Skagit R.)            | 83-93                           | 94-21                  |
-|                                   | Baker River (Wild)[^18]               | 83-97,00-22                     | NA                     |
-| Stillaguamish[^19]                | Wallace R. H. (Skykomish R.)          | 83-95                           | 96-21                  |
-|                                   | Harvey Creek H.                       | 91,07,14,16-20                  | --                     |
-|                                   | Stillaguamish R. (Wild)               | 84-87                           | NA                     |
-| Snohomish                         | Wallace R. H. (Skykomish R.)          | 83-95                           | 96-21                  |
-|                                   | Bernie Gobin H. (Tulalip Cr.)[^20]    | 83-21                           | --                     |
-| Hood Canal                        | Quilcene NFH                          | 87-95                           | 96-21                  |
-|                                   | Quilcene Bay Sea Pens                 | 88,90,93,95,02-11,13-14         | 96-01                  |
-|                                   | Port Gamble Bay Pens                  | 83-95,04-21                     | 96-03                  |
-|                                   | George Adams H. (Skokomish R.)        | 83-94,96                        | 95,97-21               |
-|                                   | Big Beef Creek (Wild)[^21]            | 83-21                           | NA                     |
-| Strait of Juan de Fuca            | Lower Elwha H.[^22]                   | 85-94,12,15,18                  | 95-11,13-14,16-17,09-20|
-|                                   | Dungeness H.                          | 83,86,89,91-94,05-08,18-20      | --                     |
-|                                   | Hoko Falls H.                         | 18-20                           | --                     |
-|                                   | Hoko and Salmon Creek (Wild)          | 84-87,08                        | NA                     |
-| **US Outside MUs**              |                                       |                                 |                        |
-| Quillayute                        | Sol Duc H.                            | 83-88,90-95                     | 96-21                  |
-|                                   | Various Tributaries (Wild)[^23]       | 83-86,88-92                     |                        |
-| Hoh                               | Chalaat Creek H.                      | 84,86-89                        | --                     |
-|                                   | Canyon Springs Pond                   | 86-87                           | --                     |
-|                                   | Sol Duc H.                            | 85,87                           | --                     |
-|                                   | Hoh River (Wild)[^24]                 | 83-87,03,05-12                  | NA                     |
-| Queets                            | Quinault Lake H.                      | 83-84,90-92                     | --                     |
-|                                   | Salmon R. Fish Culture                | 83,85-94                        | 95-21                  |
-|                                   | Queets/Clearwater wild[^25]           | 83-11,13-20                     | NA                     |
-| Grays Harbor                      | Bingham Creek H.                      | 83-94                           | 95-21                  |
-|                                   | Aberdeen Net Pens                     | 88-90,92-94                     | --                     |
-|                                   | Humptulips H. (Stevens Cr.)           | 83-94,06,10-12,19-20            | 95-96                  |
-|                                   | Bingham Creek (Wild)[^26]             | 83-20                           | NA                     |
-|                                   | Stevens & Scatter Creek (Wild)        | 83-90,92-93                     | NA                     |
-|                                   | Chehalis Upriver (Wild)[^27]          | 83-97,00-20                     | NA                     |
-|                                   | Skookumchuck H.                       | 83,89,98,06-07,09, 11-12        | 98                     |
+| **Management Unit**               | **Indicator Stock**                   | **Brood Yr SIT**                | **Brood Yr {{< glossary DIT >}}** |
+|:----------------------------------|:--------------------------------------|:-------------------------------:|:---------------------------------:|
+| **Southern BC MUs**               |                                       |                                 |                                   |
+| Lower Fraser                      | Inch Creek Hatchery                   | 83-95,14-19                     | 96-13                             |
+|                                   | Salmon River (Wild)[^1]               | 84-99,01,03,05-07               | NA                                |
+|                                   | Chilliwack R. H. (Chilliwack R.)      | 83-95                           | 96-02                             |
+|                                   | Chehalis R. H. (Chehalis R.)          | 83-97                           | --                                |
+| Interior Fraser                   | Spius Cr. H. (Coldwater R.)[^2]       | 84-94,96-98,03-19               | 99-02                             |
+|                                   | Spius Cr. H. (Salmon R./TOMF)[^3]     | 95-96,99,01-02,04-05,07,14,17-19| --                                |
+|                                   | Spius Cr. H. (Spius Cr.)[^4]          | 94-96,99-00                     | 97-98                             |
+|                                   | Spius Cr. H. (Eagle R.)               | 10-13,15-19                     | --                                |
+|                                   | Chilliwack R. H. (Coldwater R.)[^5]   | 16-19                           | --                                |
+|                                   | Eagle R. H. (Salmon R.)[^6]           | 83-93                           | --                                |
+|                                   | Eagle R. H. (Eagle R.)[^7]            | 83-93                           | --                                |
+|                                   | Eagle R. H. (Perry R.)[^8]            | 84-86                           | --                                |
+|                                   | Dunn Cr. H. (Dunn Cr.)[^9]            | 86-87,89-90,92,95,98-07         | --                                |
+|                                   | Dunn Cr. H. (Dunn Lake)[^10]          | 84-91,94,97                     | --                                |
+|                                   | Dunn Cr. H. (Lemieux Cr.)[^11]        | 83-86,88,92-93,97-99,03,06-09   | --                                |
+|                                   | Dunn Cr. H. (Louis Cr.)[^12]          | 88-94,97-07                     | --                                |
+|                                   | Dunn Cr. H. (Ianson Ch.)[^13]         | 88-91,94-95,00-02,04-05         | --                                |
+|                                   | Eagle River (Wild)[^14]               | 00-03                           | NA                                |
+|                                   | Lemieux Creek (Wild)                  | 92-93                           | NA                                |
+| Strait of Georgia Mainland        | Capilano R. H.                        | 83-97,00                        | --                                |
+|                                   | Lang Creek H. (Lang Cr.)[^15]         | 87-91,95-96,08-09               | --                                |
+| Strait of Georgia Vancouver Island| Quinsam R. H.                         | 83-85,18-19                     | 96-17                             |
+|                                   | Big Qualicum R. H.                    | 83-85,87-95,03-15,17-19         | 96-02                             |
+|                                   | Goldstream R. H.                      | 91-94,03-11                     | 96-02                             |
+|                                   | Puntledge R. H.[^16]                  | 83-97,99-02,09-10,19            | --                                |
+|                                   | Black Creek (Wild)[^17]               | 83-17                           | NA                                |
+| **US Inside MUs**                 |                                       |                                 |                                   |
+| Skagit                            | Marblemount H. (Skagit R.)            | 83-93                           | 94-21                             |
+|                                   | Baker River (Wild)[^18]               | 83-97,00-22                     | NA                                |
+| Stillaguamish[^19]                | Wallace R. H. (Skykomish R.)          | 83-95                           | 96-21                             |
+|                                   | Harvey Creek H.                       | 91,07,14,16-20                  | --                                |
+|                                   | Stillaguamish R. (Wild)               | 84-87                           | NA                                |
+| Snohomish                         | Wallace R. H. (Skykomish R.)          | 83-95                           | 96-21                             |
+|                                   | Bernie Gobin H. (Tulalip Cr.)[^20]    | 83-21                           | --                                |
+| Hood Canal                        | Quilcene NFH                          | 87-95                           | 96-21                             |
+|                                   | Quilcene Bay Sea Pens                 | 88,90,93,95,02-11,13-14         | 96-01                             |
+|                                   | Port Gamble Bay Pens                  | 83-95,04-21                     | 96-03                             |
+|                                   | George Adams H. (Skokomish R.)        | 83-94,96                        | 95,97-21                          |
+|                                   | Big Beef Creek (Wild)[^21]            | 83-21                           | NA                                |
+| Strait of Juan de Fuca            | Lower Elwha H.[^22]                   | 85-94,12,15,18                  | 95-11,13-14,16-17,09-20           |
+|                                   | Dungeness H.                          | 83,86,89,91-94,05-08,18-20      | --                                |
+|                                   | Hoko Falls H.                         | 18-20                           | --                                |
+|                                   | Hoko and Salmon Creek (Wild)          | 84-87,08                        | NA                                |
+| **US Outside MUs**                |                                       |                                 |                                   |
+| Quillayute                        | Sol Duc H.                            | 83-88,90-95                     | 96-21                             |
+|                                   | Various Tributaries (Wild)[^23]       | 83-86,88-92                     |                                   |
+| Hoh                               | Chalaat Creek H.                      | 84,86-89                        | --                                |
+|                                   | Canyon Springs Pond                   | 86-87                           | --                                |
+|                                   | Sol Duc H.                            | 85,87                           | --                                |
+|                                   | Hoh River (Wild)[^24]                 | 83-87,03,05-12                  | NA                                |
+| Queets                            | Quinault Lake H.                      | 83-84,90-92                     | --                                |
+|                                   | Salmon R. Fish Culture                | 83,85-94                        | 95-21                             |
+|                                   | Queets/Clearwater wild[^25]           | 83-11,13-20                     | NA                                |
+| Grays Harbor                      | Bingham Creek H.                      | 83-94                           | 95-21                             |
+|                                   | Aberdeen Net Pens                     | 88-90,92-94                     | --                                |
+|                                   | Humptulips H. (Stevens Cr.)           | 83-94,06,10-12,19-20            | 95-96                             |
+|                                   | Bingham Creek (Wild)[^26]             | 83-20                           | NA                                |
+|                                   | Stevens & Scatter Creek (Wild)        | 83-90,92-93                     | NA                                |
+|                                   | Chehalis Upriver (Wild)[^27]          | 83-97,00-20                     | NA                                |
+|                                   | Skookumchuck H.                       | 83,89,98,06-07,09, 11-12        | 98                                |
+
+:Table title\
+Coded-wire-tag indicator stocks and brood years with single index tag (SIT) and {{< glossary DIT >}} groups for each Coho {{< glossary MU >}}, beginning with brood year 1983. Indicator stocks are hatchery-produced Coho unless specified as "Wild" (Release data downloaded from RMIS 1-10-2023). SIT groups may be either marked or unmarked releases of {{< glossary CWT >}} Coho. {{< glossary DIT >}} groups are marked (adipose-fin clipped) and unmarked pairs of {{< glossary CWT >}} Coho. {#tbl-cwt-releases-by-broood-years}
 
 [^1]: Beginning BY 1996, all tagged releases were unmarked.
 [^2]: BYs 1997 and 1998, all tagged releases were unmarked; fry released BYs 84-90 and 93.
@@ -1376,9 +1376,11 @@ static$releases |>
 
 Hatchery stock tagging has consistently occurred in every {{< glossary MU >}}, with the exception of the Stillaguamish and the Hoh {{< glossary MUs >}} where very few hatchery fish are released. Double-index-tagging programs were implemented in all {{< glossary MUs >}} but the Stillaguamish and the Hoh {{< glossary MU >}}; however, {{< glossary DIT >}} programs currently exist only in the US {{< glossary MUs >}}.
 
-**Total number of tagged hatchery Coho Salmon smolts released by clip status for each {{< glossary MU >}} over brood years 1983 through 2020 (data downloaded from RMIS 9-6-2023). "CWT_Unclipped_DIT" refer to tagged fish that are released with an intact adipose fin and are associated with a clipped release group. "CWT_Unclipped" are tagged fish that are unclipped but not associated with another tagged release group.  These fish are often associated with new hatchery programs. **
+****
 
 ```{r fig_hatch_stock_releases_mu_cwt_only, fig.height=9, fig.width=8}
+#| fig-cap: Total number of tagged hatchery Coho Salmon smolts released by clip status for each {{< glossary MU >}} over brood years 1983 through 2020 (data downloaded from RMIS 9-6-2023). "CWT_Unclipped_DIT" refer to tagged fish that are released with an intact adipose fin and are associated with a clipped release group. "CWT_Unclipped" are tagged fish that are unclipped but not associated with another tagged release group.  These fish are often associated with new hatchery programs. 
+#| label: fig-hatchery-smolts-clip-status
 static$releases |> 
   filter(
     rearing_type == "H",
@@ -2399,7 +2401,7 @@ static$releases |>
 
 ```
 *question for Collin - move these tables to "static table" and pull?*  Reviewers want this in an Appendix (There is a tab in excel file that contains DIT info for all MUs called "DIT_Codes"  I just added BY 2022 releases to it.
-**Double-index tag codes released within the Skagit MU, brood years 1994 through 2021. **
+
 
 |** Brood Year **|** Hatchery **|** DIT Group ID **|** Tag Code **|** Mark **|** No. Released **| 
 |:--------:|:--------:|:--------:|:--------:|:--------|--------:|
@@ -2477,6 +2479,8 @@ static$releases |>
 |	2020	|	MARBLEMOUNT HATCHERY	|	04202200001130	|	638002	|	Unclipped	|	 40,547 	|
 |	2021	|	MARBLEMOUNT HATCHERY	|	04202300001147	|	638230	|	Clipped	|	 45,944 	|
 |	2021	|	MARBLEMOUNT HATCHERY	|	04202300001147	|	638229	|	Unclipped	|	 45,747 	|
+
+:Double-index tag codes released within the Skagit MU, brood years 1994 through 2021. {#tbl-dit-for-appendix}
 
 ###### Forecast Methods
 
@@ -2792,7 +2796,7 @@ ToDo: add table or figure of outmigrating smolts
 **Most Recent Abundance Forecast and Methods**
 This information is available in the {{< glossary Council >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
 
-The 2024 Stillaguamish {{< glossary MU >}} {{< glossary OA3 >}} abundance forecast is 30,809, resulting in a classification of the stock abundance as "Abundant" under the 2019 {{< glossary PST >}} {{< glossary SCMP >}} and “Normal” under the {{< glossary FMP >}}. This results in an allowable total {{< glosaary ER >}} of no more than 50%. 
+The 2024 Stillaguamish {{< glossary MU >}} {{< glossary OA3 >}} abundance forecast is 30,809, resulting in a classification of the stock abundance as "Abundant" under the 2019 {{< glossary PST >}} {{< glossary SCMP >}} and “Normal” under the {{< glossary FMP >}}. This results in an allowable total {{< glossary ER >}} of no more than 50%. 
 
 Regressing annual Coho Salmon smolt trap catch per unit of effort (CPUE; total fish/total hours fished) against terminal run size one year later generates a relationship that could be used to predict Stillaguamish adult returns. However, due to the high variability in marine survival, Coho Salmon smolt numbers at the trap are not a very precise predictor of adult returns one year later. Therefore, the SF Skykomish River marine survival estimate for each brood was used to correct the Stillaguamish smolt trap data, which tightened the regression relationship with the terminal run. The natural Coho marine survival rate from smolt to adult is estimated at 5.7 percent, based on recent 5-year SF Skykomish River marine survival estimates. 
 
