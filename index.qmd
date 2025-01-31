@@ -3676,25 +3676,10 @@ This information is available in the {{< glossary Council >}}'s 2024 Preseason R
 
 The 2024 Grays Harbor {{< glossary MU >}} {{< glossary OA3 >}} abundance forecast is 74,851, resulting in a classification of the stock abundance as "Abundant" under the 2019 {{< glossary PST >}} {{< glossary SCMP >}}. This results in an allowable total {{< glossary ER >}} of no more than 57% under the {{< glossary PST >}} {{< glossary SCMP >}}. 
 
-The natural forecast is the sum of the Chehalis River natural, Humptulips River natural, and South Bay
-tributary natural forecasts. An OA3 coho marine survival prediction was developed by dividing the
-Quinault Department of Fisheries prediction of Queets coho JA3 marine survival by the natural mortality
-rate of 1.23169. The Chehalis wild coho smolt production estimate was developed by scaling the 2023
-Queets River natural coho smolt production to the Chehalis River production based on the relationship
-between the Backward FRAM (BKFRAM) OA3 ocean abundances of Queets and Chehalis natural coho
-abundances during the past 15 years. The Humptulips and South Bay tributary forecasts are based on recruit
-densities scaled from Clearwater and Chehalis basins, respectively. 
+This forecast is the sum of the Chehalis River natural, Humptulips River natural, and South Bay tributary natural forecasts. An {{< glossary OA3 >}} Coho marine survival prediction was developed by dividing the
+Quinault Department of Fisheries prediction of Queets Coho {{< glossary JA3 >}} marine survival by the natural mortality rate of 1.23169%. The Chehalis wild Coho smolt production estimate was developed by scaling the 2023 Queets River natural Coho smolt production to the Chehalis River production based on the relationship between the Backward {{< glossary FRAM >}} {{< glossary OA3 >}} ocean abundances of Queets and Chehalis natural Coho abundances during the past 15 years. The Humptulips and South Bay tributary forecasts are based on recruit densities scaled from Clearwater and Chehalis basins, respectively. 
 
-OFL
-The OFL is defined in terms of spawner escapement (SOFL). Potential Grays Harbor coho natural area
-spawner abundance was derived by adding the current forecast of natural origin coho OA3 abundance,
-74,851, to the predicted abundance of OA3 hatchery origin coho spawning in natural areas. The forecast
-of OA3 naturally spawning hatchery origin coho is 7,025 and was calculated by multiplying the OA3
-hatchery coho abundance forecast, 68,200, by the most recent 5-year average stray rate (2018-2022 average
-= 0.103). Annual stray rates were estimated by dividing the number of hatchery origin spawners in natural
-areas by the total hatchery origin escapement. For Grays Harbor natural coho MFMT = 0.65 and the OFL
-is SOFL = 81,876 × (1-0.65) = 28,657. The preseason SOFL will also be recalculated with postseason
-abundance estimates (when available) to assess OFL compliance.
+The Grays Harbor {{< glossary MU >}} is managed differently than other U.S. {{< glossary MUs >}}, in that the overfishing limit (OFL) is defined in terms of spawner escapement that includes hatchery origin fish that are projected to spawn in natural areas. Potential Grays Harbor Coho natural area spawner abundance was derived by adding the current forecast of natural origin Coho {{< glossary OA3 >}} abundance of 74,851, to the predicted abundance of {{< glossary OA3 >}} hatchery origin Coho spawning in natural areas. The forecast of {{< glossary OA3 >}} naturally spawning hatchery origin Coho is 7,025 and was calculated by multiplying the {{< glossary OA3 >}} hatchery Coho abundance forecast of 68,200, by the most recent 5-year average stray rate (2018-2022 average = 0.103). Annual stray rates were estimated by dividing the number of hatchery origin spawners in natural areas by the total hatchery origin escapement. 
 
 ###### Escapement Monitoring
 ###### Fishery Monitoring
