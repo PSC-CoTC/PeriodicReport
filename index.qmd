@@ -53,6 +53,7 @@ Dev note: using quarto-glossary to add hover-over text. Details and installation
 - add the rmis summary data process to our documentation for rerunning this, and to Collin's scripts (automate the SQL call)
 - add the updated coho_lut operation with "TERM" column into the SQL workflow
 - add PSC MU lookup tables from Mike's package to framrosetta
+- update 5-yr report doc to account for coastal fisheries and to use the ER caps calculated via mike's function.
 
 **CBE change log**
 
