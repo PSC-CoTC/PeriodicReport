@@ -1184,7 +1184,7 @@ Backwards Coho FRAM requires estimated mortalities by fishery strata (uses the B
 
 The Backwards Coho FRAM derives total cohort abundance of Coho FRAM stocks through an iterative process of estimating the set of stock abundance scalars that best explain observed escapements and reported catches. FRAM calculation of stock abundance scalars is the preferred method and occurs when escapement data are available (almost all US stocks). When escapement estimates are not available (almost all Canadian stocks), the stock abundance scalars are calculated externally and entered into FRAM; an estimate of “observed” marine survival has been used as a surrogate to recalculate Canadian stock abundances per the preseason method previously described. Consequently, FRAM’s iterative process of estimating a full set of stock abundance scalars is not possible and this has implications for backwards FRAM estimates of abundance for all stocks. Ideally total cohort abundance for each {{< glossary MU >}} is derived by summing model estimated stock specific: pre-terminal catch, terminal catch, and escapement.
 
-The Backwards Coho FRAM provides two estimates of cohort abundance, termed “Ocean age-3” and “January age-3”. Ocean age-3 abundance includes escapement and fishery impacts. January age-3 includes escapement, fishery impacts, and natural mortality. Ocean age-3 is the basis for {{< glossary PST >}} stock status and is therefore the measure provided in the tables and figures in this report, and in the annual postseason evaluations.
+The Backwards Coho FRAM provides two estimates of cohort abundance, termed “Ocean age-3” (OA3) and “January age-3” (JA3). Ocean age-3 abundance includes escapement and fishery impacts. {{< glossary JA3 >}} includes escapement, fishery impacts, and natural mortality. {{< glossary OA3 >}} is the basis for {{< glossary PST >}} stock status and is therefore the measure provided in the tables and figures in this report, and in the annual postseason evaluations.
 
 These estimates of cohort abundance, catches and escapements are used to generate estimates of {{< glossary ERs >}} and determine {{< glossary MU >}} status for post season reporting to the Southern Panel.
 
@@ -2498,7 +2498,7 @@ ToDo: create this image from the excel file:
 **Most Recent Abundance Forecast and Methods**
 This information is available in the {{< glossary Council >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
 
-The 2024 Skagit MU {{< glossary OA3 >}} abundance forecast is 63,430, resulting in a classification of the stock abundance as "Abundant" under the 2019 {{< glossary PST >}} {{< glossary SCMP >}} and “Normal” under the {{< glossary FMP >}}. This results in an allowable total {{< glossary ER >}} of no more than 60%. 
+The 2024 Skagit {{< glossary MU >}} {{< glossary OA3 >}} abundance forecast is 63,430, resulting in a classification of the stock abundance as "Abundant" under the 2019 {{< glossary PST >}} {{< glossary SCMP >}} and “Normal” under the {{< glossary FMP >}}. This results in an allowable total {{< glossary ER >}} of no more than 60%. 
 
 This forecast was based on a prediction of total (Baker wild + Skagit wild) smolt to ocean age-3 survival. Note that this forecast is not based on the Baker River wild {{< glossary CWT >}} indicator survival. Instead, the total survival was calculated assuming that the ratio of total wild terminal run size to Baker River wild indicator run size is equal to the ratio of total pre-terminal wild catch to Baker River pre-terminal wild catch. Using that ratio, total wild {{< glossary OA3 >}} run size was calculated utilizing pieces of the Skagit co-manager run reconstruction, {{< glossary RMIS >}}, and {{< glossary RRTERM >}}. Due to the large uncertainty surrounding how ocean conditions would influence the survival of 2023 outmigrants, {{< glossary WDFW >}}’s alternative Coho Salmon forecast for Baker River wild indicator survival in the {{< glossary WDFW >}} report ‘2024 Wild Coho Forecasts for Puget Sound, Washington Coast, and Lower Columbia’ relying on generalized additive model methodology was also incorporated into the final agreed upon forecast [@Litz_2024]. 
 
@@ -2791,7 +2791,7 @@ ToDo: add table or figure of outmigrating smolts
 **Most Recent Abundance Forecast and Methods**
 This information is available in the {{< glossary Council >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
 
-The 2024 Stillaguamish MU {{< glossary OA3 >}} abundance forecast is 30,809, resulting in a classification of the stock abundance as "Abundant" under the 2019 {{< glossary PST >}} {{< glossary SCMP >}} and “Normal” under the {{< glossary FMP >}}. This results in an allowable total {{< glosaary ER >}} of no more than 50%. 
+The 2024 Stillaguamish {{< glossary MU >}} {{< glossary OA3 >}} abundance forecast is 30,809, resulting in a classification of the stock abundance as "Abundant" under the 2019 {{< glossary PST >}} {{< glossary SCMP >}} and “Normal” under the {{< glossary FMP >}}. This results in an allowable total {{< glosaary ER >}} of no more than 50%. 
 
 Regressing annual Coho Salmon smolt trap catch per unit of effort (CPUE; total fish/total hours fished) against terminal run size one year later generates a relationship that could be used to predict Stillaguamish adult returns. However, due to the high variability in marine survival, Coho Salmon smolt numbers at the trap are not a very precise predictor of adult returns one year later. Therefore, the SF Skykomish River marine survival estimate for each brood was used to correct the Stillaguamish smolt trap data, which tightened the regression relationship with the terminal run. The natural Coho marine survival rate from smolt to adult is estimated at 5.7 percent, based on recent 5-year SF Skykomish River marine survival estimates. 
 
@@ -2951,7 +2951,7 @@ Estimated smolt production has averaged approximately 1.27 million smolts annual
 **Most Recent Abundance Forecast and Methods**
 This information is available in the {{< glossary Council >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
 
-The 2024 Snohomish MU {{< glossary OA3 >}} abundance forecast is 71,600, resulting in a classification of the stock abundance as "Moderate" under the 2019 {{< glossary PST >}} {{< glossary SCMP >}} and “Low” under the {{< glossary FMP >}}. This results in an allowable total {{< glossary ER >}} of no more than 40%. 
+The 2024 Snohomish {{< glossary MU >}} {{< glossary OA3 >}} abundance forecast is 71,600, resulting in a classification of the stock abundance as "Moderate" under the 2019 {{< glossary PST >}} {{< glossary SCMP >}} and “Low” under the {{< glossary FMP >}}. This results in an allowable total {{< glossary ER >}} of no more than 40%. 
 
 The Snohomish MU forecast is based on 2023 out-migrant smolts estimated from a mark-recapture estimate of smolt abundance from two smolt traps, one operated on the Skykomish River (river mile 26.5) and the second on the Snoqualmie River (river mile 12.2). Smolt trap estimates for the Skykomish and Snoqualmie rivers are summed and further expanded for rearing downstream of the trap locations in the Snohomish River. A marine survival rate of 4.6% was applied to the total smolt production estimate for the Snohomish watershed of 1,557,000 smolts [@Litz_2024]. The resulting forecast was rounded to the nearest hundred to account for co-manager agreed-to precision.
 
@@ -3142,7 +3142,7 @@ Marine survival for the indicator stock for the Hood Canal {{< glossary MU >}}, 
 **Most Recent Abundance Forecast and Methods**
 This information is available in the {{< glossary Council >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
 
-The 2024 Hood Canal MU {{< glossary OA3 >}} abundance forecast is 36,541, resulting in a classification of the stock abundance as "Moderate" under the 2019 {{< glossary PST >}} {{< glossary SCMP >}} and “Low” under the {{< glossary FMP >}}. This results in an allowable total {{< glossary ER >}} of no more than 45%. 
+The 2024 Hood Canal {{< glossary MU >}} {{< glossary OA3 >}} abundance forecast is 36,541, resulting in a classification of the stock abundance as "Moderate" under the 2019 {{< glossary PST >}} {{< glossary SCMP >}} and “Low” under the {{< glossary FMP >}}. This results in an allowable total {{< glossary ER >}} of no more than 45%. 
 
 This forecast is based on a linear regression model that related the return of tagged natural jack Coho Salmon at Big Beef Creek to Hood Canal December age-2 recruits in the subsequent run year, using brood years 1983–1998 and 2002–2019. This forecast was then converted to {{< glossary OA3 >}} abundance. The 1999–2001 broods were excluded because of the unusually high recruit-per-tagged jack ratio, which is not expected to occur this year. For 2024, as was done since 2016, the co-managers agreed to apply a conservative bias correction for forecasting natural Coho Salmon in Hood Canal.
 
@@ -3292,7 +3292,7 @@ plot_rmis_recoveries_all(mu.name = "Strait of Juan de Fuca",
 **Most Recent Abundance Forecast and Methods**
 This information is available in the {{< glossary Council >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
 
-The 2024 Strait of Juan de Fuca MU {{< glossary OA3 >}} abundance forecast is 19,690, resulting in a classification of the stock abundance as "Moderate" under the 2019 {{< glossary PST >}} {{< glossary SCMP >}} and “Low” under the {{< glossary FMP >}}. This results in an allowable total {{< glossary ER >}} of no more than 40%. 
+The 2024 Strait of Juan de Fuca {{< glossary MU >}} {{< glossary OA3 >}} abundance forecast is 19,690, resulting in a classification of the stock abundance as "Moderate" under the 2019 {{< glossary PST >}} {{< glossary SCMP >}} and “Low” under the {{< glossary FMP >}}. This results in an allowable total {{< glossary ER >}} of no more than 40%. 
 
 This forecast includes both Eastern and Western Strait of Juan de Fuca drainages. {{< glossary JA3 >}} ocean recruits were predicted as the product of the estimated 2023 coho smolt outmigration from all independent
 tributaries of the Strait of Juan de Fuca, and a predicted marine survival rate  of 7.15 percent. The marine survival rate was predicted by an r-square-weighted average of two linear regression models using the southern
@@ -3343,7 +3343,7 @@ The Olympic National Park owns the largest percentage of the coastal lands and t
 
 #### Management Framework
 ##### Management Objectives
-The Quillayute {{< glossary MU >}} is managed together with other Washington coastal populations, which include all natural and hatchery stocks originating in Washington coastal streams north of the Columbia River to the western Strait of Juan de Fuca(west of the Sekiu River) (PFMC 2013a).  Management goals for Washington coastal Coho stocks include achieving natural spawning escapement objectives and treaty Indian allocation requirements (PFMC 2013a).  
+The Quillayute {{< glossary MU >}} is managed together with other Washington coastal populations, which include all natural and hatchery stocks originating in Washington coastal streams north of the Columbia River to the western Strait of Juan de Fuca (west of the Sekiu River) (PFMC 2013a). Management goals for Washington coastal Coho stocks include achieving natural spawning escapement objectives and treaty Indian allocation requirements (PFMC 2013a).  
 
 {{< glossary Council >}}’s conservation objectives for stocks managed for natural production were based on maximum sustainable yield (MSY) spawner escapements established pursuant to the US District Court order in Hoh versus Baldrige (No. 81-742 [R] C).  When the {{< glossary Council >}} adopted Amendment 16 to the Salmon FMP in 2011 (76 FR 81852, December 29, 2011), it brought the Salmon Fishery Management Plan (FMP) into compliance with the Magnuson-Stevens Fishery Conservation and Management Act (MSA) as amended in 2007, and the corresponding revised National Standard 1 Guidelines' (NS1Gs) mandate to end and prevent overfishing. In doing so, the {{< glossary Council >}} adopted new status determination criteria (SDC) for overfishing, approaching an overfished condition, overfished, not overfished/rebuilding, and rebuilt under FMP Amendment 16.  The PFMC also adopted corresponding maximum fishing mortality thresholds, which are based on the maximum sustainable yield {{< glossary ER >}}.  Status determinations for overfishing, overfished, not overfished/rebuilding, and rebuilt were reported in the annual SAFE document, Review of 2012 Ocean Salmon Fisheries (PFMC 2013b). Amendment 16 also added to the FMP “de minimis” fishing provisions that allow for low levels of fishing impacts on specified stocks that are at low levels of abundance.  
 
@@ -3393,19 +3393,9 @@ The estimated number of total fall smolts averaged 350,000 annually from 1995 to
 **Most Recent Abundance Forecast and Methods**
 This information is available in the {{< glossary Council >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
 
-The 2024 Quillayute MU {{< glossary OA3 >}} abundance forecast consists of summer (393 adults) and fall (10,246 adults) run components, totalling 10,639 {{< glossary OA3 >}}.  This results in a classification of the stock abundance as "Moderate" under the 2019 {{< glossary PST >}} {{< glossary SCMP >}}. 
+The 2024 Quillayute {{< glossary MU >}} {{< glossary OA3 >}} abundance forecast consists of summer (393 adults) and fall (10,246 adults) run components, totalling 10,639 {{< glossary OA3 >}}. This forecast results in a classification of the stock abundance as "Moderate", with a total allowable ER of 39%, under the 2019 {{< glossary PST >}} {{< glossary SCMP >}}. 
 
-This forecast is based on coho smolt data measured in the Quillayute watershed in 2023 by West Fork Environmental and the Quileute Nation. A total of 252,000 coho smolts are estimated to have emigrated from the Quillayute River system in 2023. Smolt abundance from the Dickey River was estimated to be 27,431 wild coho smolts (245 smolts per square mile). Smolt abundance from the Bogachiel, Calawah, and Sol Duc rivers combined was estimated to be 164,701 wild Coho smolts (316 smolts per square meter). Total smolts were separated into summer and fall natural coho smolts by the relative number of natural brood year 2021 spawners, 3.69 percent and 96.31 percent, respectively. Results from this separation yield estimates of 9,300 natural summer coho smolts and 242,700 natural fall coho smolts.
-
-Summer Coho
-The summer natural coho forecast is based on the estimated total summer coho smolt production (9,300)
-and a JA3 projected marine survival rate of 5.20 percent.
-The summer hatchery production forecast was based on a marine survival estimate of 2.63 percent
-multiplied by a release of 106,466 smolts from the Sol Duc Hatchery.
-Fall Coho
-The forecast for the natural component was based on the estimated total fall coho smolt production
-(242,700) multiplied by an expected marine survival rate of 5.20 percent, the same survival rate used to
-forecast summer natural returns. 
+This forecast is based on Coho smolt data measured in the Quillayute watershed in 2023 by West Fork Environmental and the Quileute Nation. A total of 252,000 Coho smolts are estimated to have emigrated from the Quillayute River system in 2023. Smolt abundance from the Dickey River was estimated to be 27,431 wild Coho smolts (245 smolts per square mile). Smolt abundance from the Bogachiel, Calawah, and Sol Duc rivers combined was estimated to be 164,701 wild Coho smolts (316 smolts per square mile). Total smolts were separated into summer and fall natural Coho smolts by the relative number of natural brood year 2021 spawners, 3.69% and 96.31%, respectively. Results from this separation yield estimates of 9,300 natural summer coho smolts and 242,700 natural fall Coho smolts. The natural Coho forecast is based on the estimated total natural summer and fall Coho smolt production (252,000) and a {{< glossary JA3 >}} projected marine survival rate of 5.2%.
 
 ###### Escapement Monitoring
 ###### Fishery Monitoring
@@ -3492,18 +3482,23 @@ plot_rmis_recoveries_all(mu.name = "Hoh",
 
 The estimated number of total smolts averaged 162,000 annually from 2000 to 2022, with a high of 286,000 in 2011 and a low of 69,000 in 2015.  
 
+**Most Recent Abundance Forecast and Methods**
+This information is available in the {{< glossary Council >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
 
-**2023 Forecast**
-The natural Coho forecast is based on estimated average smolt production per square mile of watershed from the Clearwater tributary which lies between the Queets River mainstem and the Hoh River [@PFMC_1_2023]. The Quinault Fisheries Department has a long-standing trapping program on the Clearwater River to estimate smolt production; it is assumed the two rivers produce smolts at a comparable rate per square mile of watershed. In 2022, the Clearwater produced 38,019 smolts at the rate of 272 smolts/mi2. Applying that rate to the Hoh watershed of 299 mi2 yields 81,328 natural Coho smolts emigrating from the Hoh River in 2022 [@Litz_2023].
+The 2024 Hoh {{< glossary MU >}} {{< glossary OA3 >}} abundance forecast is 4,870, resulting in a classification of the stock status as "Abundant", with a total allowable ER of 59%, under the 2019 {{< glossary PST >}} {{< glossary SCMP >}}. 
 
-A marine survival estimate to January Age 3 (JA3) of 9.89% was applied to the total natural smolt production estimate to predict the 2023 return of Hoh River wild Coho. This rate is the mean of two marine survival estimates of wild stocks that are to the north and south of the Hoh River: the Queets wild Coho to the south with a marine survival estimate of 10.29% JA3 (Jurasin, QDFi) and Strait of Juan de Fuca wild Coho to the north with a marine survival estimate of 9.48% JA3. The average marine survival rate of 9.89% JA3 (8.03% OA3) is within 2% of the OA3 survival of 6.6% predicted in the 2023 Wild Coho Forecasts for other Washington Coast Coho stocks.
+This forecast is based on estimated average natural smolt production per square mile of watershed from the Clearwater River tributary which lies between the Queets River mainstem and the Hoh River. The Quinault Fisheries Department has a long-standing trapping program on the Clearwater River to estimate smolt production; it is assumed the two rivers produce smolts at a comparable rate per square mile of watershed. In 2023, the Clearwater produced 51,620 smolts at the rate of 369 smolts per mile. Applying that rate to the Hoh watershed of 299 square miles yields 110,331 natural Coho smolts emigrating from the Hoh River in 2023.
 
-The 2023 Hoh River natural Coho forecast is 6,531 Ocean Age 3 (OA3) recruits, an increase compared to the 2022 forecast of 4,679. This abundance classifies this stock’s status as “Abundant” under the 2019 {{< glossary PST >}} {{< glossary SCMP >}}. 
+A marine survival estimate to {{< glossary JA3 >}} of 5.44% was applied to the total natural smolt production estimate to predict the 2024 return of Hoh River natural Coho. This rate is the mean of two marine survival estimates of wild stocks that are to the north and south of the Hoh River: the Queets wild Coho to the south with a marine survival estimate of 7.69% {{< glossary JA3 >}} and Washington Coast wild Coho stocks with
+a marine survival estimate of 3.20% {{< glossary JA3 >}}. The average marine survival rate of 5.44% {{<glossary JA3}} (4.41% {{< glossary OA3>}}) is within 2% of the {{< glossary OA3} survival of 3.2% predicted in 2024
+for other Washington Coast Coho stocks [@Litz_2024].
 
 ###### Escapement Monitoring
 ###### Fishery Monitoring
 ##### Enhancement
+
 There is currently no hatchery Coho production present in the {{< glossary MU >}}. The Chalaat Creek Hatchery is run by the Hoh Indian Tribe and formerly produced Coho Salmon.  There have been periodic releases of hatchery Coho Salmon from other coastal basins.
+
 #### Management Performance 
 
 ##### Forecast Evaluation
@@ -3582,14 +3577,12 @@ plot_rmis_recoveries_all(mu.name = "Queets",
 
 The estimated number of total smolts averaged 286,000 annually from 2000 to 2022, with a high of 444,000 in 2004 and a low of 136,000 in 2022.  
 
-**2023 Forecast**
-The natural forecast was developed by multiplying the 2022 smolt outmigration of 135,678 by the predicted marine survival rate of 10.291%, which results in an abundance prediction of 13,963 January Age 3 (JA3) [@PFMC_1_2023]. The model uses run reconstructions developed by the Quinault Department of Fisheries (QDFi) as a response, which includes FRAM natural and incidental mortality, but does not include estimates of mark-selective fishery
-mortality. Expansion for mark-selective fishery mortality is estimated as mean (post season FRAM / QDFi run reconstruction for run years 2010 to 2020) * abundance prediction for 2023 = 1.095037 * 13,963 =
-15,290.
+**Most Recent Abundance Forecast and Methods**
+This information is available in the {{< glossary Council >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
 
-Marine survival is typically predicted using a general additive logistic regression model (logit (recruits/smolts) ~ spline (explanatory variable(s)). The explanatory variables are the Pacific Decadal Oscillation index (PDO) maximum May-August and Biologically Effective Upwelling Transport Index (BEUTI) median April-August.
+The 2024 Queets {{< glossary MU >}} {{< glossary OA3 >}} abundance forecast is 12,824, resulting in a classification of the stock abundance as "Abundant" under the 2019 {{< glossary PST >}} {{< glossary SCMP >}}. This results in an allowable total {{< glossary ER >}} of no more than 55% under the {{< glossary PST >}} {{< glossary SCMP >}}. 
 
-The 2023 Queets natural Coho forecast is 12,414 Ocean Age 3 (OA3) recruits, which is a decrease from the 2022 forecast of 18,160. This abundance classifies this stock’s status as “Abundant” under the 2019 {{< glossary PST >}} {{< glossary SCMP >}}.
+The natural forecast was developed by multiplying the 2023 smolt outmigration estimate of 205,963 by the predicted marine survival rate of 7.669%, which results in an abundance prediction of 15,795 {{< glossary JA3 >}}. The model uses run reconstructions developed by the Quinault Department of Fisheries (QDFi) as a response, which includes {{< glossary FRAM >}} natural and incidental mortality, but does not include estimates of mark-selective fishery mortality. Expansion for mark-selective fishery mortality for the 2024 run abundance prediction was not available at the time of this report but was estimated as mean (post season FRAM / QDFi run reconstruction for run years 2010 to 2020) * abundance prediction for 2023 = 1.095037 * 13,963 = 15,290. Marine survival is typically predicted using a general additive logistic regression model (logit (recruits/smolts) ~ spline (explanatory variable(s)). The explanatory variables are the Pacific Decadal Oscillation index maximum May-August and Biologically Effective Upwelling Transport Index median April-August.
 
 ###### Escapement Monitoring
 ###### Fishery Monitoring
@@ -3678,15 +3671,30 @@ plot_rmis_recoveries_all(mu.name = "Grays Harbor",
 
 The estimated number of total smolts averaged 2.5 million annually from 2000 to 2022, with a high of 3.6 million in 2017 and a low of 203,000 in 2002.  
 
-**2023 Forecast**
-Preseason abundance forecasts are made for natural fish throughout the system and for hatchery fish returning to three freshwater rearing complexes and three saltwater net-pen sites [@PFMC_1_2023]. The forecasts include fish
-originating from numerous volunteer production projects.
+**Most Recent Abundance Forecast and Methods**
+This information is available in the {{< glossary Council >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
 
-The natural forecast is the sum of the Chehalis River natural, Humptulips River natural, and South Bay tributary natural forecasts. An Ocean Age 3 (OA3) Coho marine survival prediction was developed by dividing the Quinault Department of Fisheries prediction of Queets Coho JA3 marine survival by the natural mortality rate of 1.23169. The Chehalis wild Coho smolt production estimate was developed by scaling the 2022 Queets River natural Coho smolt production to the Chehalis River production based on the relationship between the Backward FRAM OA3 ocean abundances of Queets and Chehalis natural Coho abundances during the past 15 years. The Humptulips and South Bay tributary forecasts are based on recruit densities scaled from Clearwater and Chehalis basins, respectively. 
+The 2024 Grays Harbor {{< glossary MU >}} {{< glossary OA3 >}} abundance forecast is 74,851, resulting in a classification of the stock abundance as "Abundant" under the 2019 {{< glossary PST >}} {{< glossary SCMP >}}. This results in an allowable total {{< glossary ER >}} of no more than 57% under the {{< glossary PST >}} {{< glossary SCMP >}}. 
 
-The 2023 Grays Harbor natural OA3 abundance forecast is 102,841, compared to a 2022 preseason forecast of 120,381. This abundance classifies this stock's status as “Abundant” under the 2019 {{< glossary PST >}} {{< glossary SCMP >}}. 
+The natural forecast is the sum of the Chehalis River natural, Humptulips River natural, and South Bay
+tributary natural forecasts. An OA3 coho marine survival prediction was developed by dividing the
+Quinault Department of Fisheries prediction of Queets coho JA3 marine survival by the natural mortality
+rate of 1.23169. The Chehalis wild coho smolt production estimate was developed by scaling the 2023
+Queets River natural coho smolt production to the Chehalis River production based on the relationship
+between the Backward FRAM (BKFRAM) OA3 ocean abundances of Queets and Chehalis natural coho
+abundances during the past 15 years. The Humptulips and South Bay tributary forecasts are based on recruit
+densities scaled from Clearwater and Chehalis basins, respectively. 
 
-The {{< glossary ER >}} associated with the overfishing limit (OFL) is defined in terms of spawner escapement (SOFL). Potential Grays Harbor Coho natural area spawner abundance was derived by adding the current forecast of natural origin Coho OA3 abundance, 102,841, to the predicted abundance of OA3 hatchery origin Coho spawning in natural areas. The forecast of OA3 naturally spawning hatchery origin Coho is 10,586 and was calculated by multiplying the OA3 hatchery Coho abundance forecast, 111,430, by the most recent 5-year average stray rate (2017-2021 average = 0.095). Annual stray rates were estimated by dividing the number of hatchery origin spawners in natural areas by the total hatchery origin escapement. For Grays Harbor natural Coho MFMT = 0.65 and the OFL is SOFL = 113,427 × (1-0.65) = 39,699. The preseason SOFL will also be recalculated with postseason abundance estimates (when available) to assess OFL compliance.
+OFL
+The OFL is defined in terms of spawner escapement (SOFL). Potential Grays Harbor coho natural area
+spawner abundance was derived by adding the current forecast of natural origin coho OA3 abundance,
+74,851, to the predicted abundance of OA3 hatchery origin coho spawning in natural areas. The forecast
+of OA3 naturally spawning hatchery origin coho is 7,025 and was calculated by multiplying the OA3
+hatchery coho abundance forecast, 68,200, by the most recent 5-year average stray rate (2018-2022 average
+= 0.103). Annual stray rates were estimated by dividing the number of hatchery origin spawners in natural
+areas by the total hatchery origin escapement. For Grays Harbor natural coho MFMT = 0.65 and the OFL
+is SOFL = 81,876 × (1-0.65) = 28,657. The preseason SOFL will also be recalculated with postseason
+abundance estimates (when available) to assess OFL compliance.
 
 ###### Escapement Monitoring
 ###### Fishery Monitoring
