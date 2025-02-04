@@ -3516,7 +3516,7 @@ The 2024 Hoh {{< glossary MU >}} {{< glossary OA3 >}} abundance forecast is 4,87
 This forecast is based on estimated average natural smolt production per square mile of watershed from the Clearwater River tributary which lies between the Queets River mainstem and the Hoh River. The Quinault Fisheries Department has a long-standing trapping program on the Clearwater River to estimate smolt production; it is assumed the two rivers produce smolts at a comparable rate per square mile of watershed. In 2023, the Clearwater produced 51,620 smolts at the rate of 369 smolts per mile. Applying that rate to the Hoh watershed of 299 square miles yields 110,331 natural Coho smolts emigrating from the Hoh River in 2023.
 
 A marine survival estimate to {{< glossary JA3 >}} of 5.44% was applied to the total natural smolt production estimate to predict the 2024 return of Hoh River natural Coho. This rate is the mean of two marine survival estimates of wild stocks that are to the north and south of the Hoh River: the Queets wild Coho to the south with a marine survival estimate of 7.69% {{< glossary JA3 >}} and Washington Coast wild Coho stocks with
-a marine survival estimate of 3.20% {{< glossary JA3 >}}. The average marine survival rate of 5.44% {{<glossary JA3}} (4.41% {{< glossary OA3>}}) is within 2% of the {{< glossary OA3} survival of 3.2% predicted in 2024
+a marine survival estimate of 3.20% {{< glossary JA3 >}}. The average marine survival rate of 5.44% {{<glossary JA3}} (4.41% {{< glossary OA3>}}) is within 2% of the {{< glossary OA3 >}} survival of 3.2% predicted in 2024
 for other Washington Coast Coho stocks [@Litz_2024].
 
 ###### Escapement Monitoring
