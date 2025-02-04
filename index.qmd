@@ -29,7 +29,10 @@ format:
     embed-resources: true
   docx:
     reference-doc: /Users/auerbdaa/O/code/quarto_template.docx
+devversion: false
 ---
+
+<!-- ::: {.content-hidden unless-meta="devversion"} -->
 
 Dev note: using quarto-glossary to add hover-over text. Details and installation guide here: https://debruine.github.io/quarto-glossary/
 
@@ -61,8 +64,9 @@ Dev note: using quarto-glossary to add hover-over text. Details and installation
 - Previously used hard-coded RunID numbers when generating intermediate data csv. This was sensitive to changes in numbering scheme;
 updated to instead specify minimum year (1998, to match comments from original) and include all years of FRAM data after that.
 
+<!-- ::: -->
 
-```{r internal_parms}
+```{r internal_parms, include = FALSE}
 ## Semi-hardcoded params:
 year.min = 1998 ## minimum year to include from our fram databases. Code uses all years since then.
 ```
@@ -117,7 +121,7 @@ static <- list(
   glossary = readxl::read_excel(params$static_tables, sheet = "glossary") |> 
     mutate(across(where(is.character), ~replace_na(.,"")))
   ,
-    run_files = readxl::read_excel(params$static_tables, sheet = "RunFiles") |> 
+  run_files = readxl::read_excel(params$static_tables, sheet = "RunFiles") |> 
     mutate(across(where(is.character), ~replace_na(.,"")))
   ,
   #field PSC_MU designates relevant units for report, those in PST
@@ -398,7 +402,10 @@ psc_pre <- readr::read_csv(here("../PeriodicReportData/psc_postfram_1998_2022_te
   rename(`Catch Year` = RunYear)
 ```
 
+<!-- ::: {.content-hidden unless-meta="devversion"} -->
 *Note that Quillayute and Queets values are those from the FRAM database and have not yet been extracted from the relevant TAMM cells for each year*
+
+<!-- ::: -->
 
 ```{r func_plot_abund_bar}
 # #export these data for CCT to have for text summaries
@@ -499,7 +506,9 @@ plot_status <- function(mu = "Skagit"){
 
 ```
 
+<!-- ::: {.content-hidden unless-meta="devversion"} -->
 This report is based on postseason data in `r basename(params$mdb_pst)` and preseason data in `r basename(params$mdb_pre)`, as well as supporting [StaticTables.xlsx](https://github.com/PSC-CoTC/PeriodicReport/blob/main/StaticTables.xlsx).
+<!-- ::: -->
 
 ![](images/coho_pic2.png){width=100% fig-alt="Coho Picture"}
 
@@ -633,14 +642,14 @@ ggplot(dat.rmis |>
          filter(term == "P") |> 
          mutate(mu_name = gsub("Georgia ","Georgia\n" , mu_name),
                 mu_name = gsub("of Juan","of\nJuan" , mu_name)), 
-              aes(x = run_year, y = n_expanded))+
-    geom_col()+
-    ggtitle("Total recoveries by year")+
-    labs(x = "Run year of recovery",
-         y = "CWT Recoveries (expanded)")+
+       aes(x = run_year, y = n_expanded))+
+  geom_col()+
+  ggtitle("Total recoveries by year")+
+  labs(x = "Run year of recovery",
+       y = "CWT Recoveries (expanded)")+
   scale_y_continuous(labels = function(x){format(x, big.mark = ",")})+
   facet_wrap(.~ mu_name)+
-    theme_bw(base_size = 12)
+  theme_bw(base_size = 12)
 
 ```
 
@@ -701,6 +710,8 @@ Annual average temperatures and precipitation by water year (Oct–Sep) provide 
 ## Download as CSV, save as "NOAA-precipitation.csv" into the data folder
 ## 
 ## Note: dates are stored in funny format! First 4 digits are year, last two digits are month.
+
+
 dat.temp = read_csv(here("data/NOAA-temperature.csv"), skip = 4) |> 
   janitor::clean_names() |> 
   mutate(value = if_else(value == -99, NA, value)) |> 
@@ -803,10 +814,14 @@ Surface temperatures in the northeastern Pacific Ocean vary on decadal time scal
 # ONI data is pulled directly from here: 
 # https://origin.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ONI_v5.php
 
-raw.pdo = read_table("https://www.ncei.noaa.gov/pub/data/cmb/ersst/v5/index/ersst.v5.pdo.dat",
-                     skip = 1) |> 
-  janitor::clean_names()
-
+if(params$clean_run){
+  raw.pdo = read_table("https://www.ncei.noaa.gov/pub/data/cmb/ersst/v5/index/ersst.v5.pdo.dat",
+                       skip = 1) |> 
+    janitor::clean_names()
+  write_csv(raw.pdo, here("data/NOAA-pdo.csv"))
+}else{
+  raw.pdo = read_csv(here("data/NOAA-pdo.csv"))
+}
 dat.pdo = raw.pdo |> 
   pivot_longer(cols = jan:dec,
                names_to = "month") |> 
@@ -828,15 +843,18 @@ dat.pdo = raw.pdo |>
   )) |> 
   mutate(date = as_date(glue("{year}-{month.num}-15")))
 
+if(params$clean_run){
 raw.oni <- "https://origin.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ONI_v5.php" %>% 
   read_html() %>% 
   html_nodes("table") %>% 
   html_table(fill = T)
 mat.oni = raw.oni[[9]]
-
-
 dat.oni = data.frame(mat.oni[-which(mat.oni$X1=="Year"),])
 names(dat.oni) = mat.oni[1,]
+  write_csv(dat.oni, here("data/NOAA-oni.csv"))
+}else{
+  dat.oni = read_csv(here("data/NOAA-oni.csv"))
+}
 dat.oni = dat.oni |> 
   pivot_longer(DJF:NDJ) |> 
   ## each of the names is the initials of 3 months; we want the central month in numeric form
@@ -1198,9 +1216,6 @@ To obtain unbiased estimates of fishery-specific impacts on individual stocks, a
 At present, the utility of the {{< glossary DIT >}} programs and the {{< glossary CWT >}} programs in general for Coho is reduced due to low tagging rates, insufficient {{< glossary MU >}} representation (*list which ones lack DITs - look at Table below*), low recovery rates, and incomplete coastwide coverage of electronic sampling programs [@PSCCWTW_2008]. In addition, the {{< glossary CWT >}} programs: (1) currently provide overall differences in ocean {{< glossary ERs >}} -- can't discriminate individual fisheries; (2) have sample sizes that are generally small, so confidence limits are wide and estimates of differential impacts are imprecise; (3) are expensive and agencies are reluctant to fund tagging programs; and (4) unmarked {{< glossary DIT >}} fish are unavailable for harvest in MSFs.
 
 Most {{< glossary MUs >}} in the US have {{< glossary CWT >}} indicator stocks and {{< glossary DIT >}} programs. However, some of the programs have been eliminated in recent years due to budgetary constraints. Canada has discontinued all of their Coho Salmon {{< glossary DIT >}} programs. The current Coho Salmon {{< glossary CWT >}} indicator stocks for each {{< glossary MU >}} and the brood years with {{< glossary DIT >}} groups are listed below. The tag codes used in the Mixed-Stock-Model to develop the FRAM base period for catch years 1986-1997 are also listed below. All {{< glossary DIT >}} groups released within US {{< glossary MUs >}} to date are also listed below.
-
-::: {#}
-
 
 | **Management Unit**               | **Indicator Stock**                   | **Brood Yr SIT**                | **Brood Yr {{< glossary DIT >}}** |
 |:----------------------------------|:--------------------------------------|:-------------------------------:|:---------------------------------:|
@@ -1801,6 +1816,8 @@ plot_mus(ests.joint |>
 
 ## Management Unit Descriptions and Assessment of Performance 
 
+<!-- ::: {.content-hidden unless-meta="devversion"} -->
+
 This section of the report focuses on descriptions of the individual {{< glossary MUs >}} within the current {{< glossary SCMP >}}. 
 
 ### Interior Fraser River
@@ -2287,6 +2304,8 @@ plot_ns_msf("Strait of Georgia")
 
 ##### Historical Overview of Status of Management Unit
 
+<!-- ::: -->
+
 ### Skagit
 This {{< glossary MU >}} description was prepared by U.S. members of the {{< glossary PSC >}} Coho Technical Committee.
 
@@ -2724,6 +2743,8 @@ Estimated total abundance and escapement in the Skagit {{< glossary MU >}} has b
 ```{r f_plot_status_skagit, fig.height=3}
 plot_status("Skagit")
 ```
+
+<!-- :::: {.content-hidden unless-meta="devversion"} -->
 
 ### Stillaguamish
 This {{< glossary MU >}} description was prepared by U.S. members of the {{< glossary PSC >}} Coho Technical Committee.
@@ -3708,11 +3729,14 @@ plot_abund_bar("Grays Harbor")
 plot_ns_msf("Grays Harbor")
 ```
 
+
 ##### Historical Overview of Status of Management Unit
 
 ```{r f_plot_status_gh, fig.height=3}
 plot_status("Grays Harbor")
 ```
+
+<!-- :::: -->
 
 # Members
 
@@ -3738,8 +3762,8 @@ gt(static$glossary)
 
 # References
 
-::: {#refs}
-:::
+<!-- ::: {#refs} -->
+<!-- ::: -->
 
 # Ref_older {#sec-refs}
 
