@@ -79,7 +79,7 @@ if(interactive()){ ## recreate parameters if being run interactively.
   params = list(static_tables = "StaticTables.xlsx",
                 mdb_pre = "C:/Repos/PeriodicReportData/PSC_CoTC_Preseason_CohoFRAMDB_thru2024_06182024.mdb",
                 mdb_pst = "C:/Repos/PeriodicReportData/PSC_CoTC_PostSeason_CohoFRAMDB_thru2022_03042024.mdb",
-                clean_run = FALSE
+                clean_run = TRUE
   )
 }
 
@@ -188,7 +188,7 @@ fram_mdb_reader <- function(
   return(t_out)
 }
 
-if(params$clean_run){
+if(params$clean_run == TRUE){
   fram <- list()
   
   fram$stockIDs <- static$lu_stock$StockID
@@ -282,7 +282,7 @@ if(params$clean_run){
       , by = "PSC_StockID"
     )
   
-  write_csv(psc_pst, here("../PeriodicReportData/psc_postfram_1998_2022_temp.csv"))
+  write_csv(psc_pst, here("../PeriodicReportData/psc_postfram_2004_2023.csv"))
   
   ##Quillayute and Queets post-season values are drawn from TAMM
   #https://github.com/PSC-CoTC/AnnualReport/blob/master/csv/TammFisheryQueetsRef.csv
@@ -301,7 +301,7 @@ if(params$clean_run){
 
 ```{r rebuild_psc_pre_csv, include=FALSE}
 
-if(params$clean_run){
+if(params$clean_run == TRUE){
   #using fram_mdb_reader from postseason rebuild chunk
   #overwrites (temporary) `fram` object
   #identical to postseason other than mdb_file_path argument
@@ -317,7 +317,7 @@ if(params$clean_run){
     filter(RunYear >= year.min) |> 
     select(RunID, RunYear) |> arrange(RunYear)
   ## snagging starting cohort size
-  fram$ocean_abund = fram_mdb_reader(mdb_file_path = params$mdb_pst, fram_table = "Cohort") |> 
+  fram$ocean_abund = fram_mdb_reader(mdb_file_path = params$mdb_pre, fram_table = "Cohort") |> 
     filter(StockID %in% fram$stockIDs, RunID %in% fram$runid$RunID) |> 
     filter(TimeStep == 1) |> 
     select(RunID, StockID, ocean_abund = StartCohort)
@@ -396,9 +396,9 @@ if(params$clean_run){
 
 ```{r loading_in, include=FALSE}
 #but to deal with WA Coast stocks from TAMM spreadsheets, among other reasons
-psc_pst <- readr::read_csv(here("../PeriodicReportData/psc_postfram_1998_2022_temp.csv")) |> 
+psc_pst <- readr::read_csv(here("../PeriodicReportData/psc_postfram_2004_2023_temp.csv")) |> 
   rename(`Catch Year` = RunYear)
-psc_pre <- readr::read_csv(here("../PeriodicReportData/psc_postfram_1998_2022_temp.csv")) |> 
+psc_pre <- readr::read_csv(here("../PeriodicReportData/psc_prefram_2004_2023.csv")) |> 
   rename(`Catch Year` = RunYear)
 ```
 
@@ -591,7 +591,7 @@ Since 2000, fisheries impacting naturally-spawning Coho Salmon from southern BC,
 
 ### US Fisheries
 
-Current US fisheries are constrained by domestic and {{< glossary PST >}} conservation objectives. For the Puget Sound {{< glossary MUs >}}, the current {{< glossary PST >}} {{< glossary SCMP >}} of CoABM uses the thresholds and stepped harvest rate goals from the Comprehensive Coho Agreement [@CCW_1998], developed by Washington State and the Puget Sound tribes, and adopted by the {{< glossary Council >}} as Fishery Management Plan conservation objectives in November 2009. Actual {{< glossary ER >}} constraints for Canadian fisheries on US Coho Salmon {{< glossary MUs >}} are determined by formulas that specify sharing of allowable total {{< glossary ERs >}} and a “composite rule”. The composite rule adjusts constraints for Canadian fishery {{< glossary ERs >}} based on the number of US {{< glossary MUs >}} that fall in a given category. For example, if only one Washington coastal Coho Salmon {{< glossary MU >}} is in low status, Canadian fisheries are constrained to a total {{< glossary ER >}} on that unit of 12%; if two or more Washington coastal {{< glossary MUs >}} are in low status, the constraint becomes 10%. The most restrictive {{< glossary ER >}} limit for Canadian fishery impacts on US Coho Salmon {{< glossary MUs >}} is 10%.
+Current US fisheries are constrained by domestic and {{< glossary PST >}} conservation objectives. For the Puget Sound {{< glossary MUs >}}, the current {{< glossary PST >}} {{< glossary SCMP >}} of CoABM uses the thresholds and stepped harvest rate goals from the Comprehensive Coho Agreement [@CCW_1998], developed by Washington State and the Puget Sound tribes, and adopted by the {{< glossary Council display = "Pacific Fisheries Management Council (PFMC)" >}} as Fishery Management Plan conservation objectives in November 2009. Actual {{< glossary ER >}} constraints for Canadian fisheries on US Coho Salmon {{< glossary MUs >}} are determined by formulas that specify sharing of allowable total {{< glossary ERs >}} and a “composite rule”. The composite rule adjusts constraints for Canadian fishery {{< glossary ERs >}} based on the number of US {{< glossary MUs >}} that fall in a given category. For example, if only one Washington coastal Coho Salmon {{< glossary MU >}} is in low status, Canadian fisheries are constrained to a total {{< glossary ER >}} on that unit of 12%; if two or more Washington coastal {{< glossary MUs >}} are in low status, the constraint becomes 10%. The most restrictive {{< glossary ER >}} limit for Canadian fishery impacts on US Coho Salmon {{< glossary MUs >}} is 10%.
 
 Fisheries between Cape Falcon, Oregon and the US/Canada Border are constrained by four factors: (1) management objectives and treaty Indian obligations for individual stock US MUs; (2) treaty Indian/non-Indian and ocean/in-river sharing agreements; (3) stocks listed under the ESA; and (4) requirements of the {{< glossary PST >}}. The starting point for implementing these constraints is the forecasted January age-3 (JA3) abundance and the modeled ocean distribution of each Coho Salmon stock.
 
@@ -975,13 +975,13 @@ Coho Salmon were the first Pacific salmon species for which coast-wide evolution
 
 At the federal level, species of concern do not have formal protection under the ESA. The primary purpose of identifying species of concern is to prevent the need to list them as threatened or endangered under the ESA. This purpose can be achieved by the following actions: (1) identifying species potentially at risk; (2) increasing public awareness about those species; (3) identifying data deficiencies and uncertainties in species' status and threats; (4) stimulating cooperative research efforts to obtain the information necessary to evaluate species' status and threats; and, (5) fostering voluntary efforts to conserve the species before listing becomes warranted.
 
-Additionally, at the federal level, Coho Salmon caught in coastal waters of the U.S. (e.g., greater than 3 but within 200 nautical miles offshore) are managed under the Magnuson-Stevens Fishery Conservation and Management Act (MSA), which is the legislation providing for the management of marine fisheries in U.S. waters. In 2018, the National Marine Fisheries Service (NMFS) notified the {{< glossary Council >}} that the Strait of Juan de Fuca, Queets, and Snohomish natural Coho Salmon stocks managed under the {{< glossary Council >}}’s Pacific Coast Salmon Fishery Management Plan (FMP) met the overfished criteria of the FMP and the MSA. NMFS determined that these stocks were overfished under the MSA, due to spawning escapement falling below the required level for the 3-year period 2014-2016. The MSA requires overfished stocks to be rebuilt in as short a time as possible, not to exceed 10 years. The overfished determinations were announced in the Federal Register on August 6, 2018 (83 FR 38292). In response to the overfished determination, the {{< glossary Council >}} developed rebuilding plans for these stocks and provided them to NMFS in 2019. In 2021, NMFS issued a final rule under the authority of the MSA to approve and implement rebuilding plans recommended by the {{< glossary Council >}} for the three stocks ([86 FR 9301](https://www.federalregister.gov/documents/2021/02/12/2021-02834/fisheries-off-west-coast-states-west-coast-salmon-fisheries-rebuilding-Coho-salmon-stocks)). This final rule adopts the existing harvest control rules, which use an annual abundance-based stepped harvest rate control rule with stock-specific abundance levels governing the total {{< glossary ERs >}} applied to forecast stock abundance levels. For Snohomish natural Coho Salmon, this final rule amends the existing harvest control rule by adding a 10% buffer to the existing escapement goal and adjusting the abundance steps during the rebuilding period. For all three Coho Salmon stocks, the {{< glossary Council >}}'s Salmon Technical Team's analysis determined that freshwater and marine habitat conditions were the primary cause of these stocks meeting the FMP's criteria for being overfished rather than fishing. Recently, it was determined that the Queets and Strait of Juan de Fuca {{< glossary MUs >}} have met the criteria for rebuilt status based on the most recent three-year geometric mean of escapement estimates (2020-2022) [@PFMC_3_2024]. 
+Additionally, at the federal level, Coho Salmon caught in coastal waters of the U.S. (e.g., greater than 3 but within 200 nautical miles offshore) are managed under the Magnuson-Stevens Fishery Conservation and Management Act (MSA), which is the legislation providing for the management of marine fisheries in U.S. waters. In 2018, the National Marine Fisheries Service (NMFS) notified the {{< glossary Council display = PFCM >}} that the Strait of Juan de Fuca, Queets, and Snohomish natural Coho Salmon stocks managed under the {{< glossary Council display = PFCM>}}’s Pacific Coast Salmon Fishery Management Plan (FMP) met the overfished criteria of the FMP and the MSA. NMFS determined that these stocks were overfished under the MSA, due to spawning escapement falling below the required level for the 3-year period 2014-2016. The MSA requires overfished stocks to be rebuilt in as short a time as possible, not to exceed 10 years. The overfished determinations were announced in the Federal Register on August 6, 2018 (83 FR 38292). In response to the overfished determination, the {{< glossary Council display = PFCM >}} developed rebuilding plans for these stocks and provided them to NMFS in 2019. In 2021, NMFS issued a final rule under the authority of the MSA to approve and implement rebuilding plans recommended by the {{< glossary Council display = PFCM >}} for the three stocks ([86 FR 9301](https://www.federalregister.gov/documents/2021/02/12/2021-02834/fisheries-off-west-coast-states-west-coast-salmon-fisheries-rebuilding-Coho-salmon-stocks)). This final rule adopts the existing harvest control rules, which use an annual abundance-based stepped harvest rate control rule with stock-specific abundance levels governing the total {{< glossary ERs >}} applied to forecast stock abundance levels. For Snohomish natural Coho Salmon, this final rule amends the existing harvest control rule by adding a 10% buffer to the existing escapement goal and adjusting the abundance steps during the rebuilding period. For all three Coho Salmon stocks, the {{< glossary Council display = PFCM >}}'s Salmon Technical Team's analysis determined that freshwater and marine habitat conditions were the primary cause of these stocks meeting the FMP's criteria for being overfished rather than fishing. Recently, it was determined that the Queets and Strait of Juan de Fuca {{< glossary MUs >}} have met the criteria for rebuilt status based on the most recent three-year geometric mean of escapement estimates (2020-2022) [@PFMC_3_2024]. 
 
 # Annual Implementation of the Southern Coho Management Plan
 
 The Coho FRAM (Coho FRAM, Model Evaluation Workgroup (MEW). 2008) has been the tool used to plan US preseason fisheries, and also to evaluate postseason {{< glossary ERs >}} by the fisheries of both Parties on the naturally spawning Coho Salmon {{< glossary MUs >}} specified by the CoABM. Canada has not been using Coho FRAM preseason, instead using a combination of a ‘domestic model’ for planning marine fisheries and a ‘decay model’ for planning Fraser River fisheries. (**Jeromy's comment - Can we describe what get’s exchanged during the preseason process to reconcile this difference here in one or two sentences?**)
 
-Each country manages the Coho Salmon harvest within its {{< glossary ER >}} cap through its own domestic fisheries management processes and annual fisheries plans. For Canada, the annual domestic planning process is documented in the salmon Integrated Fisheries Management Plan (IFMP) at the culmination of the process each June (*is June correct?*). For the US, the North of Cape Falcon ocean salmon fishing plans are reported in Preseason Report III (PFMC documents) at the culmination of the {{< glossary Council >}} process each April. For US Inside {{< glossary MUs >}}, the 2019 {{< glossary PST >}} uses the {{< glossary ER >}} thresholds and stepped harvest rate goals from the Comprehensive Coho Agreement and adopted as (Fishery Management Plan) FMP conservation objectives in 2009. For US Outside {{< glossary MUs >}}, {{< glossary ER >}} constraints represent the Maximum Fishing Mortality Threshold (MFMT). For US domestic purposes, the Pacific Fishery Management {{< glossary Council >}} {{< glossary MU >}} status categories are “critical”, “low”, and “normal”, which correspond to the {{< glossary PSC >}} categories of “low”, “moderate” and “abundant”, respectively [@PFMC_amended_2023].   
+Each country manages the Coho Salmon harvest within its {{< glossary ER >}} cap through its own domestic fisheries management processes and annual fisheries plans. For Canada, the annual domestic planning process is documented in the salmon Integrated Fisheries Management Plan (IFMP) at the culmination of the process each June (*is June correct?*). For the US, the North of Cape Falcon ocean salmon fishing plans are reported in Preseason Report III (PFMC documents) at the culmination of the {{< glossary Council display = PFCM >}} process each April. For US Inside {{< glossary MUs >}}, the 2019 {{< glossary PST >}} uses the {{< glossary ER >}} thresholds and stepped harvest rate goals from the Comprehensive Coho Agreement and adopted as (Fishery Management Plan) FMP conservation objectives in 2009. For US Outside {{< glossary MUs >}}, {{< glossary ER >}} constraints represent the Maximum Fishing Mortality Threshold (MFMT). For US domestic purposes, the  {{< glossary display = "Pacific Fishery Management Council" >}} {{< glossary MU >}} status categories are “critical”, “low”, and “normal”, which correspond to the {{< glossary PSC >}} categories of “low”, “moderate” and “abundant”, respectively [@PFMC_amended_2023].   
 
 The US FMP includes status determination criteria (SDC) for overfishing, approaching an overfished condition, overfished, not overfished/rebuilding, and rebuilt [@PFMC_1_2023]. These criteria are:
 
@@ -995,7 +995,7 @@ The US FMP includes status determination criteria (SDC) for overfishing, approac
 
 - A stock is rebuilt when the most recent 3-year geometric mean spawning escapement exceeds SMSY.
 
-Queets natural Coho Salmon, Strait of Juan de Fuca natural Coho Salmon, and Snohomish natural Coho Salmon stocks were classified as overfished in 2018, and the {{< glossary Council >}} adopted rebuilding plans for these stocks in 2019 [@PFMC_3_2023]. In 2020, Snohomish natural Coho Salmon was reported to have met the criteria for not overfished/rebuilding. In 2023, Snohomish natural Coho was reported to have met the criteria for rebuilt and Strait of Juan de Fuca natural Coho Salmon was reported to have met the criteria for not overfished/rebuilding. Queets natural Coho Salmon continue to meet the criteria for overfished. Coho Salmon fisheries, particularly north of Cape Falcon, were shaped to minimize impacts on these stocks and meet the objectives of the rebuilding plans. Objectives of the rebuilding plans for Queets natural Coho Salmon and Strait of Juan de Fuca natural Coho Salmon are to manage the stock under status quo Smsy. 
+Queets natural Coho Salmon, Strait of Juan de Fuca natural Coho Salmon, and Snohomish natural Coho Salmon stocks were classified as overfished in 2018, and the {{< glossary Council display = PFMC >}} adopted rebuilding plans for these stocks in 2019 [@PFMC_3_2023]. In 2020, Snohomish natural Coho Salmon was reported to have met the criteria for not overfished/rebuilding. In 2023, Snohomish natural Coho was reported to have met the criteria for rebuilt and Strait of Juan de Fuca natural Coho Salmon was reported to have met the criteria for not overfished/rebuilding. Queets natural Coho Salmon continue to meet the criteria for overfished. Coho Salmon fisheries, particularly north of Cape Falcon, were shaped to minimize impacts on these stocks and meet the objectives of the rebuilding plans. Objectives of the rebuilding plans for Queets natural Coho Salmon and Strait of Juan de Fuca natural Coho Salmon are to manage the stock under status quo Smsy **[What is this?]**. 
 
 ## Annual Determinations of Allowable Exploitation Rates for Management Units
 
@@ -1017,11 +1017,11 @@ The US annual salmon fishery planning process starts in January with a Stock and
 - Stocks’ observed escapement
 - Fisheries’ observed catch and non-retention mortality by FRAM time period
 
-Because the domestic planning processes of the Parties are not synchronous, a single pre-season command file containing expectations for both Canada and the US is not available prior to the conclusion of the {{< glossary Council >}} process (US pre-season fishery planning) in April. Therefor, in any given year the pre-season command file used by the {{< glossary Council >}} incorporates cohort abundance for both Canadian and US {{< glossary MUs >}}, but planned fishery regulations for US fisheries only. Unless other information is available, Canadian regulations are assumed to be similar to those implemented in the previous year. Subsequent to this process, additional command files are generated to represent the actual Canadian fishing plans. Command files used in pre-season planning from 2004 to 2023 are detailed in @tab-commands. These files contain specific information used at the time to model fisheries along with the pre-season forecasts of stock abundances.
+Because the domestic planning processes of the Parties are not synchronous, a single pre-season command file containing expectations for both Canada and the US is not available prior to the conclusion of the {{< glossary Council display = PFMC >}} process (US pre-season fishery planning) in April. Therefor, in any given year the pre-season command file used by the {{< glossary Council display = PFMC >}} incorporates cohort abundance for both Canadian and US {{< glossary MUs >}}, but planned fishery regulations for US fisheries only. Unless other information is available, Canadian regulations are assumed to be similar to those implemented in the previous year. Subsequent to this process, additional command files are generated to represent the actual Canadian fishing plans. Command files used in pre-season planning from 2004 to 2023 are detailed in @tbl-commands. These files contain specific information used at the time to model fisheries along with the pre-season forecasts of stock abundances.
 
 ```{r}
-#| fig-cap: Pre- and post-season command files and base period used in FRAM to evaluate {{< glossary ERs >}} {{< glossary MUs >}} over catch years 2004 through 2023. "Post-season Original" command files are those used to generate estimates for the Annual {{< glossary ER >}} Report provided to the Southern Panel during the {{< glossary PSC >}} Annual Meeting.
-#| label: tab-commands
+#| tbl-cap: Pre- and post-season command files and base period used in FRAM to evaluate {{< glossary ERs >}} {{< glossary MUs >}} over catch years 2004 through 2023. "Post-season Original" command files are those used to generate estimates for the Annual {{< glossary ER >}} Report provided to the Southern Panel during the {{< glossary PSC >}} Annual Meeting.
+#| label: tbl-commands
 static$run_files |> 
   select("Catch Year":"Base Period Used in Revised BKFRAM Run") |> 
   gt()
@@ -1055,32 +1055,32 @@ static$run_files |>
 
 ### US Preseason Abundance Forecasts
 
-US forecast development commences in January of every year. US Forecasts for both Coho and Chinook Salmon stocks are finalized in late February and published in the annual {{< glossary Council >}}’s Pre I Report (https://www.pcouncil.org/salmon-management-documents/#access-salmon-safe-and-management-documents-toc-7e081b15-e1b0-409d-a12e-1a77c0b34e2b). In mid-March, the Parties share general expectations for stock abundance and fisheries though a manager-to-manager information exchange (see Development of Canadian Preseason Coho FRAM Inputs). These forecasts are then used throughout the {{< glossary Council >}}/NOF (North of Falcon) salmon fishery planning meetings which conclude at the April {{< glossary Council >}} meeting.
+US forecast development commences in January of every year. US Forecasts for both Coho and Chinook Salmon stocks are finalized in late February and published in the annual {{< glossary Council display = PFMC >}}’s Pre I Report (https://www.pcouncil.org/salmon-management-documents/#access-salmon-safe-and-management-documents-toc-7e081b15-e1b0-409d-a12e-1a77c0b34e2b). In mid-March, the Parties share general expectations for stock abundance and fisheries though a manager-to-manager information exchange (see Development of Canadian Preseason Coho FRAM Inputs). These forecasts are then used throughout the {{< glossary Council display = PFMC >}}/NOF (North of Falcon) salmon fishery planning meetings which conclude at the April {{< glossary Council display = PFMC >}} meeting.
 
 The forecast methodologies for many US stocks’ are generally based upon the products of two estimates specific to each production source: 1) number of smolts leaving freshwaters; and, 2) expected regional marine survival rates. Numbers of naturally produced smolts are estimated in a variety of ways but are based upon a large and widely distributed system of smolt traps. The number of smolts released from hatcheries are known. Marine survival is defined as, and calculated from, catch plus escapement from {{< glossary CWT >}} data. Sibling relationships, between jack returns and subsequent return to the mature cohort, have also been used as an index to predict marine survival. Environmental conditions have been increasingly relied upon as predictors of anticipated survival from smolt to adults entering the fisheries.
 
 In recent years, a variety of preseason abundance estimators have been employed for Puget Sound and Washington coastal Coho Salmon stocks, primarily based on smolt production and survival [@PFMC_1_2023]. These estimators are used to forecast preseason abundance of adult Ocean Age 3 recruits. Forecasts for natural Puget Sound Coho Salmon stocks were generally derived by measured or predicted smolt production from each major watershed or region, multiplied by stock-specific marine survival rate predictions based on a jack return model from the WDFW Big Beef Creek Research Station in Hood Canal, natural Coho Salmon {{< glossary CWT >}} tagging programs at Baker Lake (Skagit River basin) and South Fork Skykomish River, adult recruits/smolt data generated from the WDFW Deschutes River Research Station, or other information.
 
 ### Development of US Preseason FRAM Inputs
-US fishery planning relies upon both the Coho and Chinook FRAM models. The process starts at the early March {{< glossary Council >}} meeting, proceeds through March at a variety of regional meetings (including the NOF meetings), and concludes in early/mid April at the next {{< glossary Council >}} meeting.
+US fishery planning relies upon both the Coho and Chinook FRAM models. The process starts at the early March {{< glossary Council display = PFMC >}} meeting, proceeds through March at a variety of regional meetings (including the NOF meetings), and concludes in early/mid April at the next {{< glossary Council display = PFMC >}} meeting.
 
 **US Coho FRAM Stock Abundance Inputs:**
 Abundance forecasts are incorporated into two models, Coho FRAM and Chinook FRAM, both of which rely on similar algorithms and common computer code. Mass marked and unmarked naturally and hatchery produced stocks (components of {{< glossary MUs >}}) are represented in US Coho FRAM (e.g., Queets naturally produced unmarked, Queets naturally produced marked, Queets hatchery unmarked, Queets hatchery marked). For the {{< glossary MUs >}} specified by the CoABM, appropriate unmarked naturally produced stocks are combined. Numeric forecasts for southern US Coho Salmon stocks are provided from regional managers which utilize a variety of methodologies. The annual forecasts of Coho FRAM stocks are entered as Abundance Scalars, applied within the model to Base Period Stock Abundance.
 
-Prior to the March {{< glossary Council >}} meeting, an initial Coho FRAM model run with last year’s planned fisheries and the current year’s US forecasts serves to inform, in a general sense, how the fishery plan from the previous year needs to change to accommodate the current year’s stocks’ abundances. The results from this model run are included in the {{< glossary Council >}}’s Pre I Report (for these reports see: https://www.pcouncil.org/salmon-management-documents/#access-salmon-safe-and-management-documents-toc-7e081b15-e1b0-409d-a12e-1a77c0b34e2b).
+Prior to the March {{< glossary Council display = PFMC >}} meeting, an initial Coho FRAM model run with last year’s planned fisheries and the current year’s US forecasts serves to inform, in a general sense, how the fishery plan from the previous year needs to change to accommodate the current year’s stocks’ abundances. The results from this model run are included in the {{< glossary Council display = PFMC >}}’s Pre I Report (for these reports see: https://www.pcouncil.org/salmon-management-documents/#access-salmon-safe-and-management-documents-toc-7e081b15-e1b0-409d-a12e-1a77c0b34e2b).
 
-Starting with this initial model run, the US domestic salmon planning process is affected by the timing and quality of forecasts for Canadian Coho Salmon stocks. Coho FRAM performs best when data for all stocks are incorporated. The US domestic process is, in theory, at the half way point before Canadian forecasts are provided and combined with US forecasts for FRAM modeling at the NOF 2 meeting in late March. Thus, at the March {{< glossary Council >}} meeting and the NOF 1 meeting there is hesitation to fully use the FRAM results for planning domestic fisheries as those results will likely change when Canadian forecasts are incorporated.
+Starting with this initial model run, the US domestic salmon planning process is affected by the timing and quality of forecasts for Canadian Coho Salmon stocks. Coho FRAM performs best when data for all stocks are incorporated. The US domestic process is, in theory, at the half way point before Canadian forecasts are provided and combined with US forecasts for FRAM modeling at the NOF 2 meeting in late March. Thus, at the March {{< glossary Council display = PFMC >}} meeting and the NOF 1 meeting there is hesitation to fully use the FRAM results for planning domestic fisheries as those results will likely change when Canadian forecasts are incorporated.
 
 **US FRAM Fishery Inputs:**
-Expected fishery catch and/or mortality is the other major category of preseason inputs to Coho FRAM. At the March {{< glossary Council >}} meeting three options (e.g., catch levels, retention restrictions, harvest rate scalars, seasons) are developed (low, moderate, high) for the US ocean fisheries (California, Oregon, and Washington coasts). The FRAM results for both Coho and Chinook Salmon from these March options are published in the annual PFMC Pre II Report.
+Expected fishery catch and/or mortality is the other major category of preseason inputs to Coho FRAM. At the March {{< glossary Council display = PFMC >}} meeting three options (e.g., catch levels, retention restrictions, harvest rate scalars, seasons) are developed (low, moderate, high) for the US ocean fisheries (California, Oregon, and Washington coasts). The FRAM results for both Coho and Chinook Salmon from these March options are published in the annual PFMC Pre II Report.
 
-During the course of March and early April US meetings, the NOF domestic planning refines fishery inputs to insure compliance with various agreements. These include the {{< glossary Council >}} Salmon FMP, domestic and international treaties; and the US ESA which collectively establish constraints on fishery impacts upon US Coho and Chinook Salmon stocks.
+During the course of March and early April US meetings, the NOF domestic planning refines fishery inputs to insure compliance with various agreements. These include the {{< glossary Council display = PFMC >}} Salmon FMP, domestic and international treaties; and the US ESA which collectively establish constraints on fishery impacts upon US Coho and Chinook Salmon stocks.
 
-For the {{< glossary Council >}} ocean fisheries the model inputs are Catch Quotas and regulations such as mark-selective fisheries, with the expectation that subsequent inseason monitoring will close fisheries without exceeding quotas. The model inputs for most sport and commercial US Puget Sound marine and terminal area fisheries are expected catch or expected harvest rates, generally based upon recent year averages and anticipated fisheries for Fraser Sockeye, Pink and Chum Salmon, and regulations such as mark selective fishing. In some cases the Catch Quota management approach is also used within Puget Sound with planned fishery closure as inseason observations indicate FRAM total fishery mortality estimates are being approached. The mortality associated with Coho Salmon non-retention is another class of fishery inputs.
+For the {{< glossary Council display = PFMC >}} ocean fisheries the model inputs are Catch Quotas and regulations such as mark-selective fisheries, with the expectation that subsequent inseason monitoring will close fisheries without exceeding quotas. The model inputs for most sport and commercial US Puget Sound marine and terminal area fisheries are expected catch or expected harvest rates, generally based upon recent year averages and anticipated fisheries for Fraser Sockeye, Pink and Chum Salmon, and regulations such as mark selective fishing. In some cases the Catch Quota management approach is also used within Puget Sound with planned fishery closure as inseason observations indicate FRAM total fishery mortality estimates are being approached. The mortality associated with Coho Salmon non-retention is another class of fishery inputs.
 
-Through the month of March the NOF meetings shape inside fisheries (Washington Coastal terminal, Puget Sound marine and freshwater) for both Coho and Chinook Salmon for compliance with domestic and international requirements. The NOF planning informs the April {{< glossary Council >}} meeting toward the development of the final set of ocean, inside, and terminal fisheries. The FRAM modeling results of the final adopted regulations for ocean fisheries are published in the {{< glossary Council >}} Pre III Report, and submitted to the US Department of Commerce for approval under the MSA and confirmation of compliance with the US ESA and other domestic obligations. Inside fisheries are formalized by regional agreements by state and tribal managers. There is no ability to modify the regulations and agreements after they are adopted.
+Through the month of March the NOF meetings shape inside fisheries (Washington Coastal terminal, Puget Sound marine and freshwater) for both Coho and Chinook Salmon for compliance with domestic and international requirements. The NOF planning informs the April {{< glossary Council display = PFMC >}} meeting toward the development of the final set of ocean, inside, and terminal fisheries. The FRAM modeling results of the final adopted regulations for ocean fisheries are published in the {{< glossary Council display = PFMC >}} Pre III Report, and submitted to the US Department of Commerce for approval under the MSA and confirmation of compliance with the US ESA and other domestic obligations. Inside fisheries are formalized by regional agreements by state and tribal managers. There is no ability to modify the regulations and agreements after they are adopted.
 
-Throughout this process, the January post season, Pre I-III reports are provided to Canada as information. The Final April {{< glossary Council >}} Coho FRAM run is also provided to Canada. It is the April {{< glossary Council >}} model run that until recently has provided the information for post season assessment of {{< glossary ERs >}} (see Canadian section of “Timing of Domestic Planning” for potential exception).
+Throughout this process, the January post season, Pre I-III reports are provided to Canada as information. The Final April {{< glossary Council display = PFMC >}} Coho FRAM run is also provided to Canada. It is the April {{< glossary Council display = PFMC >}} model run that until recently has provided the information for post season assessment of {{< glossary ERs >}} (see Canadian section of “Timing of Domestic Planning” for potential exception).
 
 ### US Inseason Management
 
@@ -1090,8 +1090,6 @@ Inseason changes to planned U.S fisheries are limited, but have been implemented
 ### US Management Units 2023 Exploitation Rate Constraints
 
 For 2023, Puget Sound and Washington coast Coho Salmon constraints are as follows [@PFMC_3_2023]:
-
-**Fishery Management Plan (FMP)**
 
 |**FMP Stock** | **Total Exploitation Rate Constraint** | **Categorical Status** |
 |:-------------|:--------------------------------------:|:----------------------:| 
@@ -1105,7 +1103,9 @@ For 2023, Puget Sound and Washington coast Coho Salmon constraints are as follow
 | Queets | 65% | | 
 | Grays Harbor | 65% | | 
 
-**PST Southern Coho Management Plan**
+: Fishery Management Plan (FMP) {#tbl-fmp}
+
+
 
 |**US Management Unit**|**Total Exploitation Rate Constraint**|**Categorical Status**|
 |:-----------------------|:------------------------------------:|:--------------------:| 
@@ -1119,9 +1119,12 @@ For 2023, Puget Sound and Washington coast Coho Salmon constraints are as follow
 | Queets |  53% | Abundant |  
 | Grays Harbor | 69% | Abundant | 
 
-FMP total {{< glossary ER >}} constraint is preliminary. For Puget Sound stocks, the {{< glossary ER >}} constraints and categorical status (Normal, Low, Critical) reflect application of Comprehensive Coho Agreement rules, as adopted in the FMP. For Washington Coast stocks, {{< glossary ER >}} constraints represent MFMT. Note that under US v. Washington and Hoh v. Baldrige case law, the management objectives can differ from FMP objectives provided there is an annual agreement among the state and tribal comanagers; therefore, the {{< glossary ERs >}} used to report categorical status do not necessarily represent maximum allowable rates for these stocks.
+: PST Southern Coho Management Plan {#tbl-pst-scmp}
 
-{{< glossary PST >}} {{< glossary SCMP >}} constraint is Preliminary. For Puget Sound and Washington Coast management units, the {{< glossary ER >}} constraints reflect application of the 2019 {{< glossary PST >}} {{< glossary SCMP >}}.
+
+FMP total {{< glossary ER >}} constraint (@tbl-fmp) is preliminary. For Puget Sound stocks, the {{< glossary ER >}} constraints and categorical status (Normal, Low, Critical) reflect application of Comprehensive Coho Agreement rules, as adopted in the FMP. For Washington Coast stocks, {{< glossary ER >}} constraints represent MFMT. Note that under US v. Washington and Hoh v. Baldrige case law, the management objectives can differ from FMP objectives provided there is an annual agreement among the state and tribal comanagers; therefore, the {{< glossary ERs >}} used to report categorical status do not necessarily represent maximum allowable rates for these stocks.
+
+{{< glossary PST >}} {{< glossary SCMP >}} (@tbl-pst-scmp) constraint is Preliminary. For Puget Sound and Washington Coast management units, the {{< glossary ER >}} constraints reflect application of the 2019 {{< glossary PST >}} {{< glossary SCMP >}}.
 
 Under the {{< glossary PST >}} {{< glossary SCMP >}}, categories (Abundant, Moderate, Low) correspond to the general {{< glossary ER >}} ranges depicted in paragraph 8(b)(iii) of the 2019 {{< glossary PST >}} {{< glossary SCMP >}}. For Washington Coast stocks, categorical status is determined by the {{< glossary ER >}} associated with meeting the escapement goal (or the lower end of the escapement goal range). As Washington Coast stocks are managed to achieve agreed escapement goals, this {{< glossary ER >}} also becomes an approximation of the maximum allowable rate unless the stock is in the "Low" status. In that case, an {{< glossary ER >}} of up to 20% is allowed.
 
@@ -1175,9 +1178,9 @@ To obtain these values Canadian forecast methodology uses the following informat
 
 Estimates of freshwater production (smolt out-migrants) for hatchery produced Coho Salmon, by FRAM production region, are scaled to Base Period production. Next the annual expected regional marine survival (MS) is scaled to Base Period marine survival. Both ratios are applied to a stock’s Base Period Abundance to produce the annual adult abundance forecasts. To illustrate (*by stock*):
 
-Adult H Abundance = (*Annual H Smolts*) / (*Base H Smolts*) X (*Expected MS*) / (*Base MS*) X (*Base Adult Abundance)
+$$\text{Adult H Abundance} = \text{(Base Adult Abundance)}\frac{\text{(Annual H Smolts)}}{\text{(Base H Smolts)}} \frac{\text{(Expected MS)}}{\text{(Base MS)}}$$
 
-Hatchery smolt data are obtained from the Canadian Salmon Enhancement Program. Where naturally produced smolt out-migrant estimates exists (2 of 14 Canadian production regions), the values are used. For the production regions where naturally produced smolt data are not available (the remaining 12 of 14 Canadian production regions), the default production starting values has been the same as the annual hatchery output for the same FRAM production region, which assumes similar smolt abundance trends between naturally produced and hatchery smolts occurs across time. (*Jeromy comment - "Correct? If so, can we say in a sentence or two how reliable, or potentially unreliable this practice is going forward?"*) As hatchery production has been reduced over time it has become necessary to find other means to obtain the surrogates for naturally produced smolt production.
+Hatchery smolt data are obtained from the Canadian Salmon Enhancement Program. Where naturally produced smolt out-migrant estimates exists (2 of 14 Canadian production regions), the values are used. For the production regions where naturally produced smolt data are not available (the remaining 12 of 14 Canadian production regions), the default production starting values has been the same as the annual hatchery output for the same FRAM production region, which assumes similar smolt abundance trends between naturally produced and hatchery smolts occurs across time. (**Jeromy comment - "Correct? If so, can we say in a sentence or two how reliable, or potentially unreliable this practice is going forward?"**) As hatchery production has been reduced over time it has become necessary to find other means to obtain the surrogates for naturally produced smolt production.
 
 Marine survival expectations have been based upon hatchery and wild indicator {{< glossary CWT >}} returns. As the number of Coho Salmon indicators has been reduced over time it has become necessary to use adjacent {{< glossary MU >}} indicators to estimate marine survival for some {{< glossary MUs >}} and use hatchery indicators to estimate survival of naturally spawning Coho Salmon.
 
@@ -1283,8 +1286,7 @@ Most {{< glossary MUs >}} in the US have {{< glossary CWT >}} indicator stocks a
 |                                   | Chehalis Upriver (Wild)[^27]          | 83-97,00-20                     | NA                                |
 |                                   | Skookumchuck H.                       | 83,89,98,06-07,09, 11-12        | 98                                |
 
-:Table title\
-Coded-wire-tag indicator stocks and brood years with single index tag (SIT) and {{< glossary DIT >}} groups for each Coho Salmon {{< glossary MU >}}, beginning with brood year 1983. Indicator stocks are hatchery-produced Coho Salmon unless specified as "Wild" (Release data downloaded from RMIS 1-10-2023). SIT groups may be either marked or unmarked releases of {{< glossary CWT >}} Coho Salmon. {{< glossary DIT >}} groups are marked (adipose-fin clipped) and unmarked pairs of {{< glossary CWT >}} Coho Salmon. {#tbl-cwt-releases-by-broood-years}
+:Coded-wire-tag indicator stocks and brood years with single index tag (SIT) and {{< glossary DIT >}} groups for each Coho Salmon {{< glossary MU >}}, beginning with brood year 1983. Indicator stocks are hatchery-produced Coho Salmon unless specified as "Wild" (Release data downloaded from RMIS 1-10-2023). SIT groups may be either marked or unmarked releases of {{< glossary CWT >}} Coho Salmon. {{< glossary DIT >}} groups are marked (adipose-fin clipped) and unmarked pairs of {{< glossary CWT >}} Coho Salmon. {#tbl-cwt-releases-by-broood-years}
 
 [^1]: Beginning BY 1996, all tagged releases were unmarked.
 [^2]: BYs 1997 and 1998, all tagged releases were unmarked; fry released BYs 84-90 and 93.
@@ -1324,9 +1326,10 @@ REPLACE with LINK to file
 
 When developing the FRAM base period, the CoTC used wild indicator stocks to represent a {{< glossary MU >}} when the data was available. The figures below summarize data currently reported in {{< glossary RMIS >}} on coded-wire-tagged wild Coho Salmon smolts released within the {{< glossary MUs >}}. Most of the reported wild stock tagging has occurred in the Grays Harbor, and Queets {{< glossary MUs >}}; followed by Strait of Georgia, Hood Canal, Skagit, and Lower Fraser {{< glossary MUs >}}.  However, no wild stock tagging has been reported in the Lower Fraser since brood year 2007.  Very little wild stock tagging has taken place in the remaining {{< glossary MUs >}}. Not all of the data depicted was used in the MSM and subsequent cohort reconstructions.
 
-**Total number of wild Coho Salmon smolts caught, tagged, and released by clip status for each Management Unit over brood years 1983 through 2020 (data downloaded from RMIS 9-6-2023).**  
 
 ```{r fig_wild_stock_tagging, fig.height=9, fig.width=8}
+#| fig-caption: Total number of wild Coho Salmon smolts caught, tagged, and released by clip status for each Management Unit over brood years 1983 through 2020 (data downloaded from RMIS 9-6-2023).
+#| label: fig-wild-stock-tagging
 static$releases |> 
   filter(
     rearing_type != "H",
@@ -1362,9 +1365,10 @@ static$releases |>
 
 When wild stock tagging was insufficient to represent a {{< glossary MU >}}, the CoTC used hatchery indicator stocks to represent the {{< glossary MU >}}. The figures below summarize all coded-wire-tagged hatchery Coho Salmon smolts released within the {{< glossary MUs >}} that are currently reported in {{< glossary RMIS >}}. The total number of hatchery coded-wire-tagged fish released annually within the {{< glossary MUs >}} has varied over the years, with a low of approximately 1.4 million for brood year 2003 and a high of over 3 million for brood year 2020. With the advent of mass-marking in the 1990s, hatcheries began to release unmarked tag groups as early as brood year 1993. Most of these unmarked and tagged fish are part of a {{< glossary DIT >}} program. 
 
-**Total number of hatchery Coho Salmon smolts released by clip status for all Management Units combined over brood years 1983 through 2020 (data downloaded from RMIS 9-6-2023). "CWT_Unclipped_DIT" refer to tagged fish that are released with an intact adipose fin and are associated with a clipped release group. "CWT_Unclipped" are tagged fish that are unclipped but not associated with another tagged release group.  These fish are often associated with new hatchery programs **
 
 ```{r fig_hatch_stock_releases_all_cwt_only}
+#| fig-caption: Total number of hatchery Coho Salmon smolts released by clip status for all Management Units combined over brood years 1983 through 2020 (data downloaded from RMIS 9-6-2023). "CWT_Unclipped_DIT" refer to tagged fish that are released with an intact adipose fin and are associated with a clipped release group. "CWT_Unclipped" are tagged fish that are unclipped but not associated with another tagged release group.  These fish are often associated with new hatchery programs.
+#| label: fig-hatch-stock-releases
 static$releases |> 
   filter(
     rearing_type == "H",
@@ -1392,8 +1396,6 @@ static$releases |>
 ```
 
 Hatchery stock tagging has consistently occurred in every {{< glossary MU >}}, with the exception of the Stillaguamish and the Hoh {{< glossary MUs >}} where very few hatchery fish are released. Double-index-tagging programs were implemented in all {{< glossary MUs >}} but the Stillaguamish and the Hoh {{< glossary MU >}}; however, {{< glossary DIT >}} programs currently exist only in the US {{< glossary MUs >}}.
-
-****
 
 ```{r fig_hatch_stock_releases_mu_cwt_only, fig.height=9, fig.width=8}
 #| fig-cap: Total number of tagged hatchery Coho Salmon smolts released by clip status for each {{< glossary MU >}} over brood years 1983 through 2020 (data downloaded from RMIS 9-6-2023). "CWT_Unclipped_DIT" refer to tagged fish that are released with an intact adipose fin and are associated with a clipped release group. "CWT_Unclipped" are tagged fish that are unclipped but not associated with another tagged release group.  These fish are often associated with new hatchery programs. 
@@ -1438,9 +1440,10 @@ REPLACE with LINK to file
 
 Reported hatchery production across the {{< glossary MUs >}} varies widely, from approximately 33,000 on average annually in the Stillaguamish MU {{< glossary MUs >}}, to an average of 5.4 million smolts released into the Strait of Georgia annually (data summarized over brood years 1983-2020). Prior to the advent of mass marking, some hatchery fish were released coded-wire-tagged with their adipose-fin clipped to identify it as a tagged fish, while the remaining fish were released unclipped and untagged. Beginning in 1995, {{< glossary DIT >}} programs began and their associated releases were mass-marked. Now, almost all of the hatchery production released into the {{< glossary MUs >}} in the US are mass-marked.
 
-**Total number of hatchery Coho Salmon smolts released by tag and clip status for each {{< glossary MU >}} over brood years 1983 through 2020 (data downloaded from RMIS 9-6-2023). "CWT_Unclipped_DIT" refer to tagged fish that are released with an intact adipose fin and are associated with a clipped release group. "CWT_Unclipped" are tagged fish that are unclipped but not associated with another tagged release group. These fish are often associated with new hatchery programs. **
-
 ```{r fig_hatch_stock_releases_mu, fig.height=9, fig.width=8}
+#| fig-cap: Total number of hatchery Coho Salmon smolts released by tag and clip status for each {{< glossary MU >}} over brood years 1983 through 2020 (data downloaded from RMIS 9-6-2023). "CWT_Unclipped_DIT" refer to tagged fish that are released with an intact adipose fin and are associated with a clipped release group. "CWT_Unclipped" are tagged fish that are unclipped but not associated with another tagged release group. These fish are often associated with new hatchery programs.
+#| label: fig-hatchery-smolts-clip-and-tag-status
+
 static$releases |> 
   filter(
     rearing_type == "H",
@@ -1477,9 +1480,10 @@ In an attempt to evaluate the implementation of Abundance Based Management of Co
 
 Currently all of the {{< glossary MUs >}} except the Lower Fraser River and Georgia Strait {{< glossary MUs >}} have abundance break point criteria and associated {{< glossary ERs >}} for each abundance category. During catch years 2004 through 2021, {{< glossary MUs >}} were considered Abundant 43% of the time, Moderate 24% of the time, and the remaining 32% were in Low status. Interior Fraser {{< glossary MU >}} was assigned Low status throughout the entire period assessed. US Inside {{< glossary MUs >}} were assigned an Abundant status less often (39% of the time) than US Outside {{< glossary MUs >}} (60%), while they were both assigned Low status nearly at equal rates (26 vs 24%). Over this 18 year period, it appears that Low status was more often assigned post-season beginning with catch year 2015, when 80% were in Low status. During catch years 2015 to present, 50% of the {{< glossary MU >}} assignments were Low status. The US Strait of Juan de Fuca, Queets, and Grays Harbor {{< glossary MUs >}} were assigned Low status in three or more consecutive catch years beginning with catch year 2015. A summary of {{< glossary MU >}} abundances and associated categories are provided in the following table and figure.  
 
-** Post-season estimates of Ocean Age-3 total abundances and their associated status categories [A = abundanct, M = moderate, L= low] by {{< glossary MU >}} for catch years 2004 through 2021.  Management Units in the Abundant category have green highlighted cells, Moderate ones are not highlighted, and those in Low status are highlighted orange.**  (note - need to make table fit unto a single page in Word)
-
 ```{r gt_annual_abund}
+#| tbl-cap: Post-season estimates of Ocean Age-3 total abundances and their associated status categories [A = abundant, M = moderate, L= low] by {{< glossary MU >}} for catch years 2004 through 2021.  Management Units in the Abundant category have green highlighted cells, Moderate ones are not highlighted, and those in Low status are highlighted orange.
+#| label: tbl-fram-annual-abund
+
 psc_pst |> 
   distinct(`Catch Year`, PSC_Region, PSC_StockName, abund, low_mod_abund, mod_abd_abund) |> 
   mutate(
@@ -1501,7 +1505,7 @@ psc_pst |>
   arrange(PSC_Region) |> 
   gt(
     groupname_col = "PSC_Region", 
-    caption = "Annual FRAM-estimated abundance (escapement + harvest)"
+    caption = ""
   ) |> 
   tab_options(
     table.width = 1500
@@ -1534,45 +1538,6 @@ psc_pst |>
   )
 
 ```
-
-```{r fig_unit_status_stackedcol}
-# #this is what's behind CCT temp figure
-# #based on manual review of as-produced postseason reports
-# #differs from versions derived from current postseason database
-# #at least for Quill and Queets
-# #at least recent postseason reports seem to be missing terminal catches in total abundance
-# #confirmed by comparing 2021 postseason TAMM and mdb numbers against what's written
-# #for 2021, Quill shows total abund of 10354 which is sum of spwnescp 9916 + 438 preterm catch, missing ~1200 term net+sport
-# static$status |> 
-#   drop_na(`Post-Season`) |>
-#   #filter(`Catch Year`==2004) |> 
-#   count(`Catch Year`,`Post-Season`)
-
-psc_pst |> 
-  filter(`Catch Year` >= 2004) |> 
-  distinct(`Catch Year`, PSC_Region, PSC_StockName, abund, low_mod_abund, mod_abd_abund) |> 
-  mutate(
-    PSC_Region = factor(PSC_Region, levels = c("Canada","US Inside","US Outside")),
-    abd = case_when(
-      abund < low_mod_abund ~ "L",
-      abund >= low_mod_abund & abund <= mod_abd_abund ~ "M",
-      abund > mod_abd_abund ~ "A",
-      PSC_StockName == "Interior Fraser" ~ "L",
-      is.na(low_mod_abund) ~ ""
-    ) |> 
-      factor(levels = c("A","M","L"))
-  ) |> 
-  drop_na(abd) |> #filter(abd != "") |> 
-  count(`Catch Year`, abd) |> 
-  ggplot() +
-  geom_col(aes(`Catch Year`, n, fill = abd), color = "grey") +
-  scale_fill_manual(name = "Status", values = c("#C6F5BA","white","#F5E298"), aesthetics = c("color","fill")) +
-  scale_y_continuous("Num. Mgmt. Units", breaks = 1:11, labels = 1:11)
-
-
-
-```
-
 
 Estimated post-season ocean age-3 cohort abundances for the {{< glossary MUs >}} are depicted below. Abundances for BC and US Inside {{< glossary MUs >}} tend to be synchronous, with above- or below-average abundances occurring in the same years (e.g., high in 2001, low in 2006). Outside {{< glossary MUs >}} are less synchronous and years with high abundances for Grays Harbor don't necessarily correspond to high abundances for other {{< glossary MUs >}}.
 
@@ -1631,9 +1596,11 @@ plot_abund(psc_pst |> filter(`Catch Year` >= 2004), "US Outside", "US Outside Ma
 <!-- ![](images/US_Outside_Abund_by_yr.png){width=100% fig-alt="US Outside MU Ocean Age-3 Abundances by Year"} -->
 
 
-**Summary of the number of {{< glossary MUs >}} in each abundance category, based on post-season assessments.**
+
 
 ```{r}
+#| fig-cap: Summary of the number of {{< glossary MUs >}} in each abundance category each year, based on post-season assessments of Ocean Age-3 Abundances.
+#| label: fig-unit-status
 psc_pst |> 
   distinct(`Catch Year`, PSC_Region, PSC_StockName, abund, low_mod_abund, mod_abd_abund) |> 
   mutate(
@@ -1665,18 +1632,21 @@ psc_pst |>
 Recent catch years with the highest estimated average {{< glossary ERs >}} over all {{< glossary MUs >}} include catch years 2014 (42%) and 2015 (43%), while the {{< glossary MUs >}} experienced the lowest {{< glossary ERs >}}, on average, in catch years 2016 (16%) and 2021 (14%). Estimates of post-season total {{< glossary ERs >}} by {{< glossary MU >}} for catch years 2011 through 2021 are listed in the table below, while average {{< glossary ERs >}} by {{< glossary MU >}} and FRAM fishery are depicted in the figures below. 
 
 **Canadian {{< glossary MUs >}}**
+
 Over catch years 2011 through 2021, the Canadian {{< glossary MUs >}} experienced varying {{< glossary ERs >}} from a low of 6.5% by the Strait of Georgia {{< glossary MU >}} in 2021 to a high of 56.8% by the Lower Fraser {{< glossary MU >}} in 2014. The {{< glossary ER >}} averaged 21.5% over all years for the Lower Fraser River {{< glossary MU >}}, followed by the Interior Fraser {{< glossary MU >}} at 16.9%, and Strait of Georgia at 16.8%.
 
 **US Inside {{< glossary MUs >}}**
+
 US Inside {{< glossary MU >}} {{< glossary ERs >}} were the lowest for the US Strait of Juan de Fuca at 3.0% in 2016 and were the highest at 68.3% for the Hood Canal {{< glossary MU >}} in 2014. The {{< glossary ER >}} averaged 48.5% over all years for the Hood Canal {{< glossary MU >}}, followed by the Skagit {{< glossary MU >}} at 39.6%, Snohomish {{< glossary MU >}} at 23.8%, Stillaguamish at 21.3%, and US Strait of Juan de Fuca at 10.2%.
 
 **US Outside {{< glossary MUs >}}**
+
 Over catch years 2011 through 2021, the US Outdside {{< glossary MU >}} also experienced a large range of {{< glossary ERs >}}, from a low of 3.8% by the Quillayute {{< glossary MU >}} in 2021 to a high of 69.0% by the Hoh {{< glossary MU >}} in 2013. The {{< glossary ER >}} averaged 41.7% over all years for the Hoh {{< glossary MU >}}, followed by the Quillayute {{< glossary MU >}} at 36.6%, the Queets {{< glossary MU >}} at 34.8%, the Grays Harbor {{< glossary MU >}} at 34.6%, and Strait of Georgia {{< glossary MU >}} at 16.8%.
 
-**Total exploitation rates by {{< glossary MU >}}, catch years 2011 through 2021.** 
 (ToDo - need to move Canadian MUs to top of table and bold the values when the ERs exceeded the caps)
 
 ```{r gt_annual_ER}
+#| tbl-cap: Total exploitation rates by {{< glossary MU >}}, catch years 2011 through 2021.
 psc_pst |> 
   distinct(`Catch Year`, PSC_Region, PSC_StockName, mort_sum_er) |> 
   pivot_wider(names_from = `Catch Year`, values_from = mort_sum_er) |> 
@@ -1770,18 +1740,18 @@ ests.pre = psc_pre |>
 ests.joint = inner_join(ests.post, ests.pre, by = c("Catch Year", "PSC_Region", "PSC_StockName"),
                         suffix = c("_post", "_pre")) |> 
   mutate(prediction = case_when(
-    abd_post == abd_pre ~ "No Change",
-    abd_post < abd_pre ~ "Too High",
-    abd_post > abd_pre ~ "Too Low"
+    abd_post == abd_pre ~ "Predicted Correct Category",
+    abd_post < abd_pre ~ "Prediction Too High",
+    abd_post > abd_pre ~ "Prediction Too Low"
   )) |> 
   count(`Catch Year`, PSC_Region, prediction) |> 
-  mutate(prediction = factor(prediction, c("Too High", "No Change", "Too Low")))
+  mutate(prediction = factor(prediction, c("Prediction Too High", "Predicted Correct Category", "Prediction Too Low")))
 
 
 plot_mus = function(dat, label){
   ggplot(data = dat,
          aes(x = `Catch Year`, y = n, fill = prediction)) +
-    scale_fill_manual(limits = c("Too Low", "Too High", "No Change"),
+    scale_fill_manual(limits = c("Prediction Too Low", "Prediction Too High", "Predicted Correct Category"),
                       values = c("goldenrod", "coral", "lightgreen"))+
     geom_col(width = 0.5)+
     theme_bw(base_size = 15)+
@@ -1791,7 +1761,12 @@ plot_mus = function(dat, label){
     theme(legend.position = "top",
           axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 }
-plot_mus(ests.joint, label = "All")
+```
+
+```{r}
+#| fig-cap: Comparison of pre-season abundance to post-season abundance based on whether the abundance category was correctly predicted, for all MUs. 
+#| label: fig-prediction-cat-all
+plot_mus(ests.joint, label = "")
 ```
 
 <!-- ![](images/MU_forecast_perf.png){width=100% fig-alt="MU Forecast Performance"} -->
@@ -1799,8 +1774,10 @@ plot_mus(ests.joint, label = "All")
 Pre-season forecasts for the five US Inside {{< glossary MUs >}} over catch years 2004 through 2021 were within the abundance based categories assigned post-season 54% of the time, too high 28% of the time, and too low 18% of the time. Forecasting was poor for catch years 2006 and 2010, where only 1 {{< glossary MU >}} was forecasted within the abundance category assigned post-season. In addition, only two of the five forecasted {{< glossary MUs >}} were within the abundance category assigned post-season in each of eight additional catch years. Forecasts were more often correct (72% of the years) for the Hood Canal {{< glossary MU >}}, followed by the US Strait of Juan de Fuca {{< glossary MU >}} (56%), Skagit and Stillaguamish {{< glossary MUs >}} (50%), and least correct for the Snohomish {{< glossary MU >}} (44% of the years).  
 
 ```{r}
+#| fig-cap: Comparison of pre-season abundance to post-season abundance based on whether the abundance category was correctly predicted, for US Inside MUs. 
+#| label: fig-prediction-cat-us-inside
 plot_mus(ests.joint |> 
-           filter(PSC_Region == "US Inside"), label = "US Inside")
+           filter(PSC_Region == "US Inside"), label = "")
 ```
 
 <!-- ![](images/US_Inside_forecast_perf.png){width=100% fig-alt="US Inside MU Forecast Performance"} -->
@@ -1808,8 +1785,10 @@ plot_mus(ests.joint |>
 Forecasts for the US Outside {{< glossary MUs >}} performed better, on average, than the US Inside forecasts of abundance categories. Pre-season forecasts for the four US Outside {{< glossary MUs >}} over catch years 2004 through 2021 were within the abundance based categories assigned post-season 64% of the time, too high 25% of the time, and too low 11% of the time. The forecasts for catch years 2005, 2009-2011, and 2014 were very good, resulting in no change in abundance categories from pre- to post-season estimates of abundance. Forecasting performance was poor for catch years 2006, 2015, and 2021. Forecasts were more often correct (72% of the years) for the Hoh and Quillayute {{< glossary MUs >}}, followed by the Queets {{< glossary MU >}} (61%), and least correct for the Grays Harbor {{< glossary MU >}} (50% of the years).
 
 ```{r}
+#| fig-cap: Comparison of pre-season abundance to post-season abundance based on whether the abundance category was correctly predicted, for US Outside MUs. 
+#| label: fig-prediction-cat-us-outside
 plot_mus(ests.joint |> 
-           filter(PSC_Region == "US Outside"), label = "US Outside")
+           filter(PSC_Region == "US Outside"), label = "")
 ```
 
 <!-- ![](images/US_Outside_forecast_perf.png){width=100% fig-alt="US Outside MU Forecast Performance"} -->
@@ -2364,22 +2343,21 @@ Under the Comprehensive Coho Management Plan, Skagit River wild Coho Salmon is t
 
 *ToDo - update the next citation with the most recent document (if applicable)*
 
-Skagit Coho Salmon are also a primary {{< glossary MU >}} for Puget Sound under the {{< glossary Council >}} FMP [@PFMC_1_2013]. Other primary {{< glossary MUs >}} in this region are Strait of Juan de Fuca, Hood Canal, Snohomish, Stillaguamish, and South Puget Sound (hatchery) Coho Salmon [@PFMC_1_2013]. The {{< glossary Council >}}’s conservation objectives for these {{< glossary MUs >}} are based on the Puget Sound Salmon Management Plan, which includes management objectives and long-term goals for these stocks as developed by representatives from federal, state, and tribal agencies. 
+Skagit Coho Salmon are also a primary {{< glossary MU >}} for Puget Sound under the {{< glossary Council display = PFMC >}} FMP [@PFMC_1_2013]. Other primary {{< glossary MUs >}} in this region are Strait of Juan de Fuca, Hood Canal, Snohomish, Stillaguamish, and South Puget Sound (hatchery) Coho Salmon [@PFMC_1_2013]. The {{< glossary Council display = PFMC >}}’s conservation objectives for these {{< glossary MUs >}} are based on the Puget Sound Salmon Management Plan, which includes management objectives and long-term goals for these stocks as developed by representatives from federal, state, and tribal agencies. 
 
-In Puget Sound, conservation objectives for specific stocks are based on either maximum sustainable production for stocks managed primarily for natural production or on hatchery escapement needs for stocks managed for artificial production. The original conservation objectives were developed by a State/Tribal Management Plan Development Team following the Boldt Decision (384 F. Supp. 312 [W.D. Wash. 1974]) with the goal for natural spawning stocks defined as "the adult spawning population that will, on the average, maximize biomass of juvenile outmigrants subsequent to incubation and freshwater rearing under average environmental conditions”. The method used to develop the objectives was based on assessment of the quantity and quality of rearing habitat and the number of adult spawners required to fully seed the habitat. Some objectives have subsequently been modified by the US District Court Fisheries Advisory Board and later determinations of the WDFW/Tribal Technical Committee. However, annual natural management objectives may be adopted by the {{< glossary Council >}} and authorized by NMFS which vary from the fisheries management plan (FMP) conservation objectives if agreed to by WDFW and the treaty Indian tribes under the provisions of US versus Washington (384 F. Supp. 312 [W.D. Wash. 1974]) and subsequent US District Court orders. 
+In Puget Sound, conservation objectives for specific stocks are based on either maximum sustainable production for stocks managed primarily for natural production or on hatchery escapement needs for stocks managed for artificial production. The original conservation objectives were developed by a State/Tribal Management Plan Development Team following the Boldt Decision (384 F. Supp. 312 [W.D. Wash. 1974]) with the goal for natural spawning stocks defined as "the adult spawning population that will, on the average, maximize biomass of juvenile outmigrants subsequent to incubation and freshwater rearing under average environmental conditions”. The method used to develop the objectives was based on assessment of the quantity and quality of rearing habitat and the number of adult spawners required to fully seed the habitat. Some objectives have subsequently been modified by the US District Court Fisheries Advisory Board and later determinations of the WDFW/Tribal Technical Committee. However, annual natural management objectives may be adopted by the {{< glossary Council display = PFMC >}} and authorized by NMFS which vary from the fisheries management plan (FMP) conservation objectives if agreed to by WDFW and the treaty Indian tribes under the provisions of US versus Washington (384 F. Supp. 312 [W.D. Wash. 1974]) and subsequent US District Court orders. 
 
-In 2009, the {{< glossary Council >}} adopted annual management objectives for Puget Sound Coho Salmon as recommended by WDFW and tribal co-managers under provisions of US versus Washington. The annual objectives were based on the {{< glossary PSC >}} categorical status and associated maximum {{< glossary ER >}} limits. The {{< glossary Council >}} formally adopted {{< glossary ER >}} management objectives for Puget Sound Coho Salmon in November 2009, which were consistent with {{< glossary PSC >}} objectives, and in 2010 these new objectives replaced the longstanding FMP spawning escapement objectives.
+In 2009, the {{< glossary Council display = PFMC >}} adopted annual management objectives for Puget Sound Coho Salmon as recommended by WDFW and tribal co-managers under provisions of US versus Washington. The annual objectives were based on the {{< glossary PSC >}} categorical status and associated maximum {{< glossary ER >}} limits. The {{< glossary Council display = PFMC >}} formally adopted {{< glossary ER >}} management objectives for Puget Sound Coho Salmon in November 2009, which were consistent with {{< glossary PSC >}} objectives, and in 2010 these new objectives replaced the longstanding FMP spawning escapement objectives.
 
-The current {{< glossary PST >}}/{{< glossary Council >}} {{< glossary ER >}} ceilings for the Skagit {{< glossary MU >}} natural Coho Salmon population are provided in the table below.  The current corresponding ocean abundance reference points are 62,500 and 22,857 adult Coho Salmon [@PFMC_1_2013].  Prior to adoption of {{< glossary ER >}}-based management for this {{< glossary MU >}} in domestic and international management processes, natural Skagit River origin Coho Salmon were managed for a fixed escapement goal of 30,000.  This goal was derived from a freshwater juvenile carrying capacity model [@Zillges_1977].
+The current {{< glossary PST >}}/{{< glossary Council display = PFMC >}} {{< glossary ER >}} ceilings for the Skagit {{< glossary MU >}} natural Coho Salmon population are provided in the table below.  The current corresponding ocean abundance reference points are 62,500 and 22,857 adult Coho Salmon [@PFMC_1_2013].  Prior to adoption of {{< glossary ER >}}-based management for this {{< glossary MU >}} in domestic and international management processes, natural Skagit River origin Coho Salmon were managed for a fixed escapement goal of 30,000.  This goal was derived from a freshwater juvenile carrying capacity model [@Zillges_1977].
 
-**Current Skagit {{< glossary MU >}} ocean abundance reference breakpoints and maximum total {{< glossary ERs >}} by {{< glossary PSC >}} and {{< glossary Council >}} status categories.**
-
-| **Status(PSC/{{< glossary Council >}})**  | **Ocean Abundance** </br> **Reference Breakpoint**  |**Total Exploitation Rate** |
+| **Status(PSC/{{< glossary Council display = PFMC >}})**  | **Ocean Abundance** </br> **Reference Breakpoint**  |**Total Exploitation Rate** |
 |:--------------------------|:--------------------------------------:|:-----------------------:|
 | Low/Critical	           |	< 22,858	|	Up to 20% |
 | Moderate/Low	           |	22,858 – 62,500	|	21% – 35% |
 | Abundant/Normal   	   |	> 62,500	|	36% – 60% |
 
+: Current Skagit {{< glossary MU >}} ocean abundance reference breakpoints and maximum total {{< glossary ERs >}} by {{< glossary PSC >}} and {{< glossary Council display = PFMC >}} status categories. {#tbl-skagit-abund-breakpoints}
 
 ##### Stock Assessment
 
@@ -2524,7 +2502,7 @@ static$releases |>
 
 ###### Forecast Methods
 
-Since 1996, WDFW and tribal biologists have developed forecasts of wild Coho Salmon run size for all primary and most secondary {{< glossary MUs >}} in Puget Sound and the Washington coast [@Zimmerman_2013]. These annual forecasts are described in the {{< glossary Council >}}’s Preseason Forecast I document available each February [e.g., @PFMC_1_2013; www.pcouncil.org]. These forecasts rely on estimates of wild Coho Salmon production (i.e., smolts) paired with estimates of marine survival. Wild Coho Salmon production estimates for each of the primary and secondary {{< glossary MUs >}} in Puget Sound were derived from results of juvenile trapping studies conducted in the Skagit, Stillaguamish, Snohomish, Green, Nisqually, and Deschutes rivers as well as in tributaries to Lake Washington and Hood Canal.  Analyses of these long-term data sets have demonstrated that wild Coho Salmon smolt production is limited by a combination of factors including seeding levels (i.e., escapement), environmental effects (flows, marine derived nutrients), and habitat degradation [@Zimmerman_2012]. 
+Since 1996, WDFW and tribal biologists have developed forecasts of wild Coho Salmon run size for all primary and most secondary {{< glossary MUs >}} in Puget Sound and the Washington coast [@Zimmerman_2013]. These annual forecasts are described in the {{< glossary CounCouncil display = PFMCcil >}}’s Preseason Forecast I document available each February [e.g., @PFMC_1_2013; www.pcouncil.org]. These forecasts rely on estimates of wild Coho Salmon production (i.e., smolts) paired with estimates of marine survival. Wild Coho Salmon production estimates for each of the primary and secondary {{< glossary MUs >}} in Puget Sound were derived from results of juvenile trapping studies conducted in the Skagit, Stillaguamish, Snohomish, Green, Nisqually, and Deschutes rivers as well as in tributaries to Lake Washington and Hood Canal.  Analyses of these long-term data sets have demonstrated that wild Coho Salmon smolt production is limited by a combination of factors including seeding levels (i.e., escapement), environmental effects (flows, marine derived nutrients), and habitat degradation [@Zimmerman_2012]. 
 
 Estimates of wild Coho Salmon production in the Skagit Basin are based on catch of wild Coho Salmon smolts in a juvenile trapping program on the lower mainstem Skagit River [@Litz_2023]. WDFW operates a scoop-and-screw trap combination in the lower Skagit River mainstem, located at RM 17 from the river mouth. Trapping began in 1990 and the juvenile trap is calibrated using recaptures of wild yearling Coho marked and released from an upstream tributary (Mannser Creek, RM 35). Coho Salmon abundance is calculated using a Petersen estimator with Chapman modification [@Seber_1973; @Volkhardt_et_al_2007]. Estimated smolt production has been quite consistent in the Skagit {{< glossary MU >}}, averaging 1.1 million smolts annually from 1990 to 2022 (@fig_smolts_skagit). Smolt production has varied from a low of 426,963 in 2008 to a high of 1,885,000 in 2002 and has exceeded 1,000,000 smolts in 20 of the last 33 years. Freshwater productivity (smolts/female) during this period was a function of Coho spawner abundance. The smolt-spawner function derived based on Skagit Coho Salmon estimates is comparable to systems with census counts, lending further credibility to the Skagit juvenile and adult estimates. 
 
@@ -2541,7 +2519,7 @@ ToDo: create this image from the excel file:
 **Estimated marine survival rates for Baker River Coho Salmon, (data provided by M. Litz, WDFW).**
 
 **Most Recent Abundance Forecast and Methods**
-This information is available in the {{< glossary Council >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
+This information is available in the {{< glossary Council display = PFMC >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
 
 The 2024 Skagit {{< glossary MU >}} {{< glossary OA3 >}} abundance forecast is 63,430, resulting in a classification of the stock abundance as "Abundant" under the 2019 {{< glossary PST >}} {{< glossary SCMP >}} and “Normal” under the {{< glossary FMP >}}. This results in an allowable total {{< glossary ER >}} of no more than 60%. 
 
@@ -2786,14 +2764,14 @@ There are no major dams or other large man-made fish passage impediments located
 
 Under the Comprehensive Coho Management Plan [@CCW_1998], Stillaguamish River wild Coho Salmon is the primary (key) {{< glossary MU >}}, and off-station production is a secondary {{< glossary MU >}}.  Under this plan, primary {{< glossary MUs >}} are controlling units in the sense that predefined management actions will be undertaken under specified abundance conditions, auxiliary {{< glossary MUs >}} are those managed to meet or exceed a minimum escapement, and secondary units are passively managed in mixed stock fisheries.
 
-The Stillaguamish {{< glossary MU >}} consists of just one stock, managed for natural production and for the purpose of achieving a desired spawning escapement objective [@PFMC_2011]. Stillaguamish Coho Salmon are a primary {{< glossary MU >}} for Puget Sound under the {{< glossary Council >}}. Other primary {{< glossary MUs >}} in this region are eastern Juan de Fuca, Hood Canal, Skagit, Snohomish, and South Puget Sound (hatchery) Coho Salmon [@PFMC_2011]. The {{< glossary Council >}}’s conservation objectives for these {{< glossary MUs >}} are based on the Puget Sound Salmon Management Plan, which defines management objectives and long-term goals for these stocks as developed by representatives from Federal, state, and tribal agencies.  Conservation objectives for specific stocks are based on either maximum sustainable production for stocks managed primarily for natural production or on hatchery escapement needs for stocks managed for artificial production.  The original conservation objectives were developed by a State/Tribal Management Plan Development Team following the Boldt Decision (384 F. Supp. 312 [W.D. Wash. 1974]) with the goal for natural spawning stocks defined as "the adult spawning population that will, on the average, maximize biomass of juvenile outmigrants subsequent to incubation and freshwater rearing under average environmental conditions."  Assessments of the quantity and quality of rearing habitat and the number of adult spawners required to fully seed the habitat were used to develop the management objectives.  Some objectives have subsequently been modified by the US District Court Fisheries Advisory Board and the WDFW/Tribal Technical Committee.  However, annual natural management objectives may vary from the Fishery Management Plan (FMP) conservation objectives if agreed to by WDFW and the treaty Indian tribes under the provisions of US versus Washington (384 F. Supp. 312 [W.D. Wash. 1974]) and subsequent US District Court orders. 
+The Stillaguamish {{< glossary MU >}} consists of just one stock, managed for natural production and for the purpose of achieving a desired spawning escapement objective [@PFMC_2011]. Stillaguamish Coho Salmon are a primary {{< glossary MU >}} for Puget Sound under the {{< glossary Council display = PFMC >}}. Other primary {{< glossary MUs >}} in this region are eastern Juan de Fuca, Hood Canal, Skagit, Snohomish, and South Puget Sound (hatchery) Coho Salmon [@PFMC_2011]. The {{< glossary Council display = PFMC >}}’s conservation objectives for these {{< glossary MUs >}} are based on the Puget Sound Salmon Management Plan, which defines management objectives and long-term goals for these stocks as developed by representatives from Federal, state, and tribal agencies.  Conservation objectives for specific stocks are based on either maximum sustainable production for stocks managed primarily for natural production or on hatchery escapement needs for stocks managed for artificial production.  The original conservation objectives were developed by a State/Tribal Management Plan Development Team following the Boldt Decision (384 F. Supp. 312 [W.D. Wash. 1974]) with the goal for natural spawning stocks defined as "the adult spawning population that will, on the average, maximize biomass of juvenile outmigrants subsequent to incubation and freshwater rearing under average environmental conditions."  Assessments of the quantity and quality of rearing habitat and the number of adult spawners required to fully seed the habitat were used to develop the management objectives.  Some objectives have subsequently been modified by the US District Court Fisheries Advisory Board and the WDFW/Tribal Technical Committee.  However, annual natural management objectives may vary from the Fishery Management Plan (FMP) conservation objectives if agreed to by WDFW and the treaty Indian tribes under the provisions of US versus Washington (384 F. Supp. 312 [W.D. Wash. 1974]) and subsequent US District Court orders. 
 
-In 2009, the {{< glossary Council >}} adopted annual management objectives for Puget Sound Coho Salmon as recommended by WDFW and tribal co-managers under provisions of US versus Washington. The annual objectives were based on the {{< glossary PSC >}} categorical status and associated maximum {{< glossary ER >}} limits. The {{< glossary Council >}} formally adopted {{< glossary ER >}} management objectives for Puget Sound Coho Salmon which were consistent with {{< glossary PSC >}} objectives in November 2009. The current {{< glossary PST >}}/{{< glossary Council >}} {{< glossary ER >}} ceilings for the Stillaguamish {{< glossary MU >}} natural Coho Salmon population are provided in the table below. The current corresponding ocean abundance breakpoints are 20,000 and 9,385 [@PFMC_1_2012]. Prior to adoption of {{< glossary ER >}}-based management for this {{< glossary MU >}} in domestic and international management processes, natural Stillaguamish River origin Coho Salmon were managed for a fixed escapement goal of 17,000. This goal was derived from a freshwater juvenile carrying capacity model [@Zillges_1977].
+In 2009, the {{< glossary Council display = PFMC >}} adopted annual management objectives for Puget Sound Coho Salmon as recommended by WDFW and tribal co-managers under provisions of US versus Washington. The annual objectives were based on the {{< glossary PSC >}} categorical status and associated maximum {{< glossary ER >}} limits. The {{< glossary Council display = PFMC >}} formally adopted {{< glossary ER >}} management objectives for Puget Sound Coho Salmon which were consistent with {{< glossary PSC >}} objectives in November 2009. The current {{< glossary PST >}}/{{< glossary Council display = PFMC >}} {{< glossary ER >}} ceilings for the Stillaguamish {{< glossary MU >}} natural Coho Salmon population are provided in the table below. The current corresponding ocean abundance breakpoints are 20,000 and 9,385 [@PFMC_1_2012]. Prior to adoption of {{< glossary ER >}}-based management for this {{< glossary MU >}} in domestic and international management processes, natural Stillaguamish River origin Coho Salmon were managed for a fixed escapement goal of 17,000. This goal was derived from a freshwater juvenile carrying capacity model [@Zillges_1977].
 
-**Current Stillaguamish {{< glossary MU >}} ocean abundance reference breakpoints and maximum total {{< glossary ERs >}} by {{< glossary PSC >}} and {{< glossary Council >}} status categories.**
+**Current Stillaguamish {{< glossary MU >}} ocean abundance reference breakpoints and maximum total {{< glossary ERs >}} by {{< glossary PSC >}} and {{< glossary Council display = PFMC >}} status categories.**
 
 
-| **Status(PSC/{{< glossary Council >}})**  | **Ocean Abundance** </br> **Reference Breakpoint**  |**Total Exploitation Rate** |
+| **Status(PSC/{{< glossary Council display = PFMC >}})**  | **Ocean Abundance** </br> **Reference Breakpoint**  |**Total Exploitation Rate** |
 |:--------------------------|:--------------------------------------:|:-----------------------:|
 | Low/Critical	           |	< 9,386        |	Up to 20% |
 | Moderate/Low	           |	9,386 – 20,000	|	21% – 35% |
@@ -2825,7 +2803,7 @@ plot_rmis_recoveries_all(mu.name = "Stillaguamish",
 
 
 ###### Forecast Methods
-Each year, a preseason abundance forecast of age-3 ocean recruits for Stillaguamish Coho Salmon is developed jointly by the Stillaguamish and Tulalip Tribes and WDFW by February. These annual forecasts are described in the {{< glossary Council >}}’s Preseason Forecast I document each February [@PFMC_1_2012; www.pcouncil.org]. This is part of a larger WDFW-tribal effort to develop forecasts of wild Coho Salmon run size for all primary and most secondary {{< glossary MUs >}} in Puget Sound and the Washington coast [@Seiler_et_al_1995; @Zimmerman_2011]. These forecasts rely on estimates of wild Coho Salmon production (i.e., smolts) paired with estimates of marine survival.  Wild Coho Salmon production estimates for each of the primary and secondary {{< glossary MUs >}} in Puget Sound were derived from results of juvenile trapping studies conducted in the Skagit, Stillaguamish, Snohomish, Green, Nisqually, and Deschutes rivers, as well as in tributaries to Lake Washington and Hood Canal. Analysis of these long-term data sets have demonstrated that wild Coho Salmon smolt production is limited by a combination of factors including seeding levels (i.e., escapement), environmental effects (flows, marine derived nutrients), and habitat degradation [@Zimmerman_2011]. 
+Each year, a preseason abundance forecast of age-3 ocean recruits for Stillaguamish Coho Salmon is developed jointly by the Stillaguamish and Tulalip Tribes and WDFW by February. These annual forecasts are described in the {{< glossary Council display = PFMC >}}’s Preseason Forecast I document each February [@PFMC_1_2012; www.pcouncil.org]. This is part of a larger WDFW-tribal effort to develop forecasts of wild Coho Salmon run size for all primary and most secondary {{< glossary MUs >}} in Puget Sound and the Washington coast [@Seiler_et_al_1995; @Zimmerman_2011]. These forecasts rely on estimates of wild Coho Salmon production (i.e., smolts) paired with estimates of marine survival.  Wild Coho Salmon production estimates for each of the primary and secondary {{< glossary MUs >}} in Puget Sound were derived from results of juvenile trapping studies conducted in the Skagit, Stillaguamish, Snohomish, Green, Nisqually, and Deschutes rivers, as well as in tributaries to Lake Washington and Hood Canal. Analysis of these long-term data sets have demonstrated that wild Coho Salmon smolt production is limited by a combination of factors including seeding levels (i.e., escapement), environmental effects (flows, marine derived nutrients), and habitat degradation [@Zimmerman_2011]. 
 
 WDFW’s Wild Salmon Production Evaluation (WSPE) Unit measured Coho Salmon production of brood years 1979 through 1981 in the Stillaguamish River. During these years, the watershed was considered to be adequately seeded. A juvenile trap was operated upstream of river mile 16 between 1981 and 1983. Basin-wide production was the sum of estimated production above the trap and expanded production below the trap. The average production estimate above the trap was 284,000 smolts [@Seiler_et_al_1984], 42.9% of the predicted production potential for this portion of the watershed [@Zillges_1977]. Expanded production below the trap (86,000 smolts) was calculated by applying the ratio of measured to potential production above the trap (42.9%) to the potential production below the trap (201,520 smolts). 
 
@@ -2836,7 +2814,7 @@ Marine survival rates of wild Coho Salmon stocks have been measured using wild {
 ToDo: add table or figure of outmigrating smolts
 
 **Most Recent Abundance Forecast and Methods**
-This information is available in the {{< glossary Council >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
+This information is available in the {{< glossary Council display = PFMC >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
 
 The 2024 Stillaguamish {{< glossary MU >}} {{< glossary OA3 >}} abundance forecast is 30,809, resulting in a classification of the stock abundance as "Abundant" under the 2019 {{< glossary PST >}} {{< glossary SCMP >}} and “Normal” under the {{< glossary FMP >}}. This results in an allowable total {{< glossary ER >}} of no more than 50%. 
 
@@ -2933,18 +2911,18 @@ All wild Coho Salmon that originate from the Snohomish basin constitute a single
 ##### Management Objectives
 Under the Comprehensive Coho Salmon Management Plan (CCW 1998), Snohomish River wild Coho Salmon is the primary (key) {{< glossary MU >}} and hatchery production is an auxiliary {{< glossary MU >}} (CCW 1998).  Under this plan, primary {{< glossary MUs >}} are controlling units in the sense that predefined management actions that will be undertaken under specified abundance conditions, auxiliary {{< glossary MUs >}} are those managed to meet or exceed a minimum escapement, and secondary units are passively managed in mixed stock fisheries.  Therefore, Snohomish River Coho Salmon are managed for natural (wild) production.  
 
-Snohomish Coho Salmon are a primary {{< glossary MU >}} for Puget Sound under the {{< glossary Council >}} (PFMC 2011).  Other primary {{< glossary MUs >}} in this region are eastern Strait of Juan de Fuca, Hood Canal, Skagit, Stillaguamish, and South Puget Sound (hatchery) Coho Salmon (PFMC 2011).  The {{< glossary Council >}}’s conservation objectives for these {{< glossary MUs >}} are based on the Puget Sound Salmon Management Plan, which includes management objectives and long-term goals for these stocks as developed by representatives from federal, state, and tribal agencies. 
+Snohomish Coho Salmon are a primary {{< glossary MU >}} for Puget Sound under the {{< glossary Council display = PFMC >}} (PFMC 2011).  Other primary {{< glossary MUs >}} in this region are eastern Strait of Juan de Fuca, Hood Canal, Skagit, Stillaguamish, and South Puget Sound (hatchery) Coho Salmon (PFMC 2011).  The {{< glossary Council display = PFMC >}}’s conservation objectives for these {{< glossary MUs >}} are based on the Puget Sound Salmon Management Plan, which includes management objectives and long-term goals for these stocks as developed by representatives from federal, state, and tribal agencies. 
 
 In Puget Sound, conservation objectives for specific stocks are based on either maximum sustainable production for stocks managed primarily for natural production or on hatchery escapement needs for stocks managed for artificial production.  The original conservation objectives were developed by a State/Tribal Management Plan Development Team following the Boldt Decision (384 F. Supp. 312 [W.D. Wash. 1974]) with the goal for natural spawning stocks defined as "the adult spawning population that will, on the average, maximize biomass of juvenile outmigrants subsequent to incubation and freshwater rearing under average environmental conditions”.  The method used to develop the objectives was based on assessment of the quantity and quality of rearing habitat and the number of adult spawners required to fully seed the habitat.  Some objectives have subsequently been modified by the US District Court Fisheries Advisory Board and later determinations of the WDFW/Tribal Technical Committee.  However, annual natural management objectives may vary from the fisheries management plan (FMP) conservation objectives if agreed to by WDFW and the treaty Indian tribes under the provisions of US versus Washington (384 F. Supp. 312 [W.D. Wash. 1974]) and subsequent US District Court orders. 
 
-In 2009, the {{< glossary Council >}} adopted annual management objectives for Puget Sound Coho Salmon as recommended by WDFW and tribal co-managers under provisions of US versus Washington.  The annual objectives were based on the {{< glossary PSC >}} categorical status and associated maximum {{< glossary ER >}} limits. The {{< glossary Council >}} formally adopted {{< glossary ER >}} management objectives for Puget Sound Coho Salmon in November 2009, which were consistent with {{< glossary PSC >}} objectives, and will replace the longstanding FMP spawning escapement objectives in 2010.
+In 2009, the {{< glossary Council display = PFMC >}} adopted annual management objectives for Puget Sound Coho Salmon as recommended by WDFW and tribal co-managers under provisions of US versus Washington.  The annual objectives were based on the {{< glossary PSC >}} categorical status and associated maximum {{< glossary ER >}} limits. The {{< glossary Council display = PFMC >}} formally adopted {{< glossary ER >}} management objectives for Puget Sound Coho Salmon in November 2009, which were consistent with {{< glossary PSC >}} objectives, and will replace the longstanding FMP spawning escapement objectives in 2010.
 
-The current {{< glossary PST >}}/{{< glossary Council >}} {{< glossary ER >}} ceilings for the Snohomish {{< glossary MU >}} natural Coho Salmon population are provided here:
+The current {{< glossary PST >}}/{{< glossary Council display = PFMC >}} {{< glossary ER >}} ceilings for the Snohomish {{< glossary MU >}} natural Coho Salmon population are provided here:
 
-**Current Snohomish {{< glossary MU >}} ocean abundance reference breakpoints and maximum total {{< glossary ERs >}} by {{< glossary PSC >}} and {{< glossary Council >}} status categories.**
+**Current Snohomish {{< glossary MU >}} ocean abundance reference breakpoints and maximum total {{< glossary ERs >}} by {{< glossary PSC >}} and {{< glossary Council display = PFMC >}} status categories.**
 
 
-| **Status(PSC/{{< glossary Council >}})**  | **Ocean Abundance** </br> **Reference Breakpoint**  |**Total Exploitation Rate** |
+| **Status(PSC/{{< glossary Council display = PFMC >}})**  | **Ocean Abundance** </br> **Reference Breakpoint**  |**Total Exploitation Rate** |
 |:--------------------------|:--------------------------------------:|:-----------------------:|
 | Low/Critical	           |	< 51,668	|	Up to 20% |
 | Moderate/Low	           | 51,668 – 125,000	|	21% – 40% |
@@ -2954,7 +2932,7 @@ The current {{< glossary PST >}}/{{< glossary Council >}} {{< glossary ER >}} ce
 Queets River natural Coho Salmon, Strait of Juan de Fuca natural Coho Salmon, and Snohomish River natural Coho Salmon were found to meet the criteria for being classified as overfished in the PFMC Review of 2017 Ocean Salmon Fisheries, released in February 2018. Snohomish natural Coho Salmon now meet the criteria for rebuilt status based on the most recent three-year geometric mean of escapement estimates (2019-2021) [@PFMC_3_2023].
 
 ##### Stock Assessment
-Since 1996, WDFW and tribal biologists have developed forecasts of wild Coho Salmon run size for all primary and most secondary {{< glossary MUs >}} in Puget Sound and the Washington coast (Seiler 1996, Zimmerman 2011).  These annual forecasts are described in the {{< glossary Council >}}’s Preseason Forecast I document each February (PFMC 2012; www.pcouncil.org).  These forecasts rely on estimates of wild Coho Salmon production (i.e., smolts) paired with estimates of marine survival.  Wild Coho Salmon production estimates for each of the primary and secondary {{< glossary MUs >}} in Puget Sound were derived from results of juvenile trapping studies conducted in the Skagit, Stillaguamish, Snohomish, Green, Nisqually, and Deschutes rivers as well as in tributaries to Lake Washington and Hood Canal.  Analysis of these long-term data sets have demonstrated that wild Coho Salmon smolt production is limited by a combination of factors including seeding levels (i.e., escapement), environmental effects (flows, marine derived nutrients), and habitat degradation (Zimmerman 2012). 
+Since 1996, WDFW and tribal biologists have developed forecasts of wild Coho Salmon run size for all primary and most secondary {{< glossary MUs >}} in Puget Sound and the Washington coast (Seiler 1996, Zimmerman 2011).  These annual forecasts are described in the {{< glossary Council display = PFMC >}}’s Preseason Forecast I document each February (PFMC 2012; www.pcouncil.org).  These forecasts rely on estimates of wild Coho Salmon production (i.e., smolts) paired with estimates of marine survival.  Wild Coho Salmon production estimates for each of the primary and secondary {{< glossary MUs >}} in Puget Sound were derived from results of juvenile trapping studies conducted in the Skagit, Stillaguamish, Snohomish, Green, Nisqually, and Deschutes rivers as well as in tributaries to Lake Washington and Hood Canal.  Analysis of these long-term data sets have demonstrated that wild Coho Salmon smolt production is limited by a combination of factors including seeding levels (i.e., escapement), environmental effects (flows, marine derived nutrients), and habitat degradation (Zimmerman 2012). 
 
 Estimates of wild Coho Salmon production in the Snohomish Basin are based on catch of wild Coho Salmon in a juvenile trapping program on the Skykomish River.  Between 1978 and 1986, WDFW operated a juvenile trap below Sunset Falls on the South Fork Skykomish River (Zimmerman 2011).  Coho Salmon production estimates were generated with a back-calculation method (Petersen-Chapman estimator).  For a given brood year, the back-calculation applied the incidence of coded-wire tag returns to the Sunset Falls adult trap to the number of tagged Coho Salmon smolts released from the juvenile trap.  The back-calculation method accounts for South Fork Skykomish Coho Salmon production above and below the trap.  
 Between 1978 and 1983, average production was 276,000 smolts (range = 212,000 to 354,000 smolts) and inter annual variation in smolt production was not correlated with spawner abundance.  Between 1982 and 1984 (corresponding to the 1984 to 1986 outmigration), escapement was experimentally reduced in order to determine whether smolt production could be limited by lower escapements.  For these three years, limited escapement (1,000 to 3,000 females) reduced Coho Salmon production to an average of 198,000 smolts.  A basin-wide estimate for these years was derived by expanding average Coho Salmon production in the South Fork Skykomish by 20.7%, the portion of the Snohomish system’s drainage area represented by the South Fork Skykomish sub-basin.  With this method, average Coho Salmon production for the Snohomish Basin is 1,333,000 smolts (Seiler 1996).  This estimate was subsequently reduced to 1,000,000 smolts to account for the portions of the watershed that are not accessible to anadromous fish (i.e., 450 mi2 or 26%; Seiler 1999).  
@@ -2988,7 +2966,7 @@ plot_rmis_recoveries_all(mu.name = "Snohomish",
 
 ###### Forecast Methods
 
-Since 1996, WDFW and tribal biologists have developed forecasts of wild Coho Salmon run size for all primary and most secondary {{< glossary MUs >}} in Puget Sound and the Washington coast (Seiler 1996, Zimmerman 2011).  These annual forecasts are described in the {{< glossary Council >}}’s Preseason Forecast I document each February (PFMC 2012; www.pcouncil.org).  These forecasts rely on estimates of wild Coho Salmon production (i.e., smolts) paired with estimates of marine survival.  Wild Coho Salmon production estimates for each of the primary and secondary {{< glossary MUs >}} in Puget Sound were derived from results of juvenile trapping studies conducted in the Skagit, Stillaguamish, Snohomish, Green, Nisqually, and Deschutes rivers as well as in tributaries to Lake Washington and Hood Canal.  Analysis of these long-term data sets have demonstrated that wild Coho Salmon smolt production is limited by a combination of factors including seeding levels (i.e., escapement), environmental effects (flows, marine derived nutrients), and habitat degradation (Zimmerman 2012). 
+Since 1996, WDFW and tribal biologists have developed forecasts of wild Coho Salmon run size for all primary and most secondary {{< glossary MUs >}} in Puget Sound and the Washington coast (Seiler 1996, Zimmerman 2011).  These annual forecasts are described in the {{< glossary Council display = PFMC >}}’s Preseason Forecast I document each February (PFMC 2012; www.pcouncil.org).  These forecasts rely on estimates of wild Coho Salmon production (i.e., smolts) paired with estimates of marine survival.  Wild Coho Salmon production estimates for each of the primary and secondary {{< glossary MUs >}} in Puget Sound were derived from results of juvenile trapping studies conducted in the Skagit, Stillaguamish, Snohomish, Green, Nisqually, and Deschutes rivers as well as in tributaries to Lake Washington and Hood Canal.  Analysis of these long-term data sets have demonstrated that wild Coho Salmon smolt production is limited by a combination of factors including seeding levels (i.e., escapement), environmental effects (flows, marine derived nutrients), and habitat degradation (Zimmerman 2012). 
 
 Estimates of wild Coho Salmon production in the Snohomish Basin are based on catch of wild Coho Salmon in a juvenile trapping program on the Skykomish River.  Between 1978 and 1986, WDFW operated a juvenile trap below Sunset Falls on the South Fork Skykomish River (Zimmerman 2011).  Coho Salmon production estimates were generated with a back-calculation method (Petersen-Chapman estimator).  For a given brood year, the back-calculation applied the incidence of coded-wire tag returns to the Sunset Falls adult trap to the number of tagged Coho Salmon smolts released from the juvenile trap.  The back-calculation method accounts for South Fork Skykomish Coho Salmon production above and below the trap.  
 
@@ -2997,7 +2975,7 @@ Between 1978 and 1983, average production was 276,000 smolts (range = 212,000 to
 Estimated smolt production has averaged approximately 1.27 million smolts annually during 1995–2022 (Table or figure?).  Smolt production has varied from a low of 720,000 in 2008 to a high of 2,200,000 in 2014, exceeding 1 million smolts in 21 of the last 28 years. 
 
 **Most Recent Abundance Forecast and Methods**
-This information is available in the {{< glossary Council >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
+This information is available in the {{< glossary Council display = PFMC >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
 
 The 2024 Snohomish {{< glossary MU >}} {{< glossary OA3 >}} abundance forecast is 71,600, resulting in a classification of the stock abundance as "Moderate" under the 2019 {{< glossary PST >}} {{< glossary SCMP >}} and “Low” under the {{< glossary FMP >}}. This results in an allowable total {{< glossary ER >}} of no more than 40%. 
 
@@ -3082,23 +3060,23 @@ Both of these programs are operated through a partnership between the Skokomish 
 
 Under the Comprehensive Coho Management Plan [@CCW_1998], mainstem Hood Canal wild Coho Salmon is the primary (key) {{< glossary MU >}} and other aggregate (Area 9A [Port Gamble Net Pens and Area 9A wild], Area 12A [Area 12A wild, Quilcene NFH, Quilcene Bay net pens], and George Adams Hatchery) production are auxiliary {{< glossary MUs >}} [@CCW_1998]. Under this plan, primary {{< glossary MUs >}} are controlling units in the sense that predefined management actions will be undertaken under specified abundance conditions, auxiliary {{< glossary MUs >}} are those managed to meet or exceed a minimum escapement, and secondary units are passively managed in mixed stock fisheries. Therefore, Hood Canal CCoho Salmonoho are managed for natural production. 
 
-Hood Canal Coho Salmon are also a primary {{< glossary MU >}} for Puget Sound under the {{< glossary Council >}} [@PFMC_1_2013]. Other primary {{< glossary MUs >}} in this region are eastern Juan de Fuca, Stillaguamish, Skagit, Snohomish, and South Puget Sound (hatchery) Coho Salmon. The {{< glossary Council >}}’s conservation objectives for these {{< glossary MUs >}} were based on the Puget Sound Salmon Management Plan, which defined management objectives and long-term goals for these stocks as developed by representatives from Federal, state, and tribal agencies. Conservation objectives for specific stocks were based on either maximum sustainable production for stocks managed primarily for natural production or on hatchery escapement needs for stocks managed for artificial production. The original conservation objectives were developed by a State/Tribal Management Plan Development Team following the Boldt Decision (384 F. Supp. 312 [W.D. Wash. 1974 ) with the goal for natural spawning stocks defined as "the adult spawning population that will, on the average, maximize biomass of juvenile outmigrants subsequent to incubation and freshwater rearing under average environmental conditions."  The method used to develop the objectives was based on assessment of the quantity and quality of rearing habitat and the number of adult spawners required to fully seed the habitat. Some objectives have subsequently been modified by the US District Court Fisheries Advisory Board and later determinations of the WDFW/Tribal Technical Committee. However, annual natural management objectives may vary from the FMP conservation objectives if agreed to by WDFW and the treaty Indian tribes under the provisions of US versus Washington (384 F. Supp. 312 [W.D. Wash. 1974 ) and subsequent US District Court orders. 
+Hood Canal Coho Salmon are also a primary {{< glossary MU >}} for Puget Sound under the {{< glossary Council display = PFMC >}} [@PFMC_1_2013]. Other primary {{< glossary MUs >}} in this region are eastern Juan de Fuca, Stillaguamish, Skagit, Snohomish, and South Puget Sound (hatchery) Coho Salmon. The {{< glossary Council display = PFMC >}}’s conservation objectives for these {{< glossary MUs >}} were based on the Puget Sound Salmon Management Plan, which defined management objectives and long-term goals for these stocks as developed by representatives from Federal, state, and tribal agencies. Conservation objectives for specific stocks were based on either maximum sustainable production for stocks managed primarily for natural production or on hatchery escapement needs for stocks managed for artificial production. The original conservation objectives were developed by a State/Tribal Management Plan Development Team following the Boldt Decision (384 F. Supp. 312 [W.D. Wash. 1974 ) with the goal for natural spawning stocks defined as "the adult spawning population that will, on the average, maximize biomass of juvenile outmigrants subsequent to incubation and freshwater rearing under average environmental conditions."  The method used to develop the objectives was based on assessment of the quantity and quality of rearing habitat and the number of adult spawners required to fully seed the habitat. Some objectives have subsequently been modified by the US District Court Fisheries Advisory Board and later determinations of the WDFW/Tribal Technical Committee. However, annual natural management objectives may vary from the FMP conservation objectives if agreed to by WDFW and the treaty Indian tribes under the provisions of US versus Washington (384 F. Supp. 312 [W.D. Wash. 1974 ) and subsequent US District Court orders. 
 
-In 2009, the {{< glossary Council >}} adopted annual management objectives for Puget Sound Coho Salmon as recommended by WDFW and tribal co-managers under provisions of US versus Washington. The annual objectives were based on the {{< glossary PSC >}} categorical status and associated maximum {{< glossary ER >}} limits. The {{< glossary Council >}} formally adopted ER management objectives for Puget Sound Coho Salmon in November 2009, which were consistent with {{< glossary PSC >}} objectives, and in 2010 it replaced the longstanding FMP spawning escapement objectives.
+In 2009, the {{< glossary Council display = PFMC >}} adopted annual management objectives for Puget Sound Coho Salmon as recommended by WDFW and tribal co-managers under provisions of US versus Washington. The annual objectives were based on the {{< glossary PSC >}} categorical status and associated maximum {{< glossary ER >}} limits. The {{< glossary Council display = PFMC >}} formally adopted ER management objectives for Puget Sound Coho Salmon in November 2009, which were consistent with {{< glossary PSC >}} objectives, and in 2010 it replaced the longstanding FMP spawning escapement objectives.
 
-The current {{< glossary PST >}}/{{< glossary Council >}} {{< glossary ER >}} ceilings for the Hood Canal {{< glossary MU >}} natural Coho Salmon population are provided in the table below. The current corresponding ocean abundance breakpoints are 19,545 and 41,000 adult Coho Salmon [@PFMC_1_2013].  Prior to adoption of {{< glossary ER >}}-based management in domestic and international management processes, natural origin Hood Canal Coho Salmon were managed for a fixed escapement goal of 21,500, which was derived by use of a maximum freshwater juvenile carrying capacity model [@Zillges_1977].
+The current {{< glossary PST >}}/{{< glossary Council display = PFMC >}} {{< glossary ER >}} ceilings for the Hood Canal {{< glossary MU >}} natural Coho Salmon population are provided in the table below. The current corresponding ocean abundance breakpoints are 19,545 and 41,000 adult Coho Salmon [@PFMC_1_2013].  Prior to adoption of {{< glossary ER >}}-based management in domestic and international management processes, natural origin Hood Canal Coho Salmon were managed for a fixed escapement goal of 21,500, which was derived by use of a maximum freshwater juvenile carrying capacity model [@Zillges_1977].
 
-**Current Hood Canal {{< glossary MU >}} ocean abundance reference breakpoints and maximum total {{< glossary ERs >}} by {{< glossary PSC >}} and {{< glossary Council >}} status categories.**
+**Current Hood Canal {{< glossary MU >}} ocean abundance reference breakpoints and maximum total {{< glossary ERs >}} by {{< glossary PSC >}} and {{< glossary Council display = PFMC >}} status categories.**
 
 
-| **Status(PSC/{{< glossary Council >}})**  | **Ocean Abundance** </br> **Reference Breakpoint**  |**Total Exploitation Rate** |
+| **Status(PSC/{{< glossary Council display = PFMC >}})**  | **Ocean Abundance** </br> **Reference Breakpoint**  |**Total Exploitation Rate** |
 |:--------------------------|:--------------------------------------:|:-----------------------:|
 | Low/Critical	           |	< 19,546	|	Up to 20% |
 | Moderate/Low	           |	19,546 – 41,000	|	21% – 45% |
 | Abundant/Normal	   |	> 41,000	|	46% – 65% |
 
 
-Once a preseason forecast of ocean age-3 adult Coho Salmon has been made, the forecast abundance is assessed relative to the prescribe abundance breakpoints; from these breakpoints, the status is assigned. For the Hood Canal {{< glossary MU >}}, forecast abundances at or below 19,545 have “low” ({{< glossary PSC >}}) or “critical" ({{< glossary Council >}}) status, those between 19,545 and 41,000 are “moderate” ({{< glossary PSC >}}) or “low” ({{< glossary Council >}}) status, and those above 41,000 are “abundant” ({{< glossary PSC >}}) or “normal” ({{< glossary Council >}}) status [@PFMC_1_2013].
+Once a preseason forecast of ocean age-3 adult Coho Salmon has been made, the forecast abundance is assessed relative to the prescribe abundance breakpoints; from these breakpoints, the status is assigned. For the Hood Canal {{< glossary MU >}}, forecast abundances at or below 19,545 have “low” ({{< glossary PSC >}}) or “critical" ({{< glossary Council display = PFMC >}}) status, those between 19,545 and 41,000 are “moderate” ({{< glossary PSC >}}) or “low” ({{< glossary Council display = PFMC >}}) status, and those above 41,000 are “abundant” ({{< glossary PSC >}}) or “normal” ({{< glossary Council display = PFMC >}}) status [@PFMC_1_2013].
 
 ##### Stock Assessment
 
@@ -3137,7 +3115,7 @@ plot_rmis_recoveries_all(mu.name = "Hood Canal",
 
 ###### Forecast Methods
 
-Since 1996, WDFW and tribal biologists have developed forecasts of wild Coho Salmon run size for all primary and most secondary {{< glossary MUs >}} in Puget Sound and the Washington coast [@Zimmerman_2013]. These annual forecasts are described in the {{< glossary Council >}}’s Preseason Forecast I document available each February [@PFMC_1_2013; www.pcouncil.org].  These forecasts rely on estimates of wild Coho Salmon production (i.e., smolts) paired with estimates of marine survival. Wild Coho Salmon production estimates for each of the primary and secondary {{< glossary MUs >}} in Puget Sound were derived from results of juvenile trapping studies conducted in the Skagit, Stillaguamish, Snohomish, Green, Nisqually, East Kitsap, and Deschutes rivers as well as in tributaries to Lake Washington and Hood Canal. Analyses of these long-term data sets have demonstrated that wild Coho Salmon smolt production is limited by a combination of factors including seeding levels (i.e., escapement), environmental effects (flows, marine derived nutrients), and habitat degradation [@Zimmerman_2013].
+Since 1996, WDFW and tribal biologists have developed forecasts of wild Coho Salmon run size for all primary and most secondary {{< glossary MUs >}} in Puget Sound and the Washington coast [@Zimmerman_2013]. These annual forecasts are described in the {{< glossary Council display = PFMC >}}’s Preseason Forecast I document available each February [@PFMC_1_2013; www.pcouncil.org].  These forecasts rely on estimates of wild Coho Salmon production (i.e., smolts) paired with estimates of marine survival. Wild Coho Salmon production estimates for each of the primary and secondary {{< glossary MUs >}} in Puget Sound were derived from results of juvenile trapping studies conducted in the Skagit, Stillaguamish, Snohomish, Green, Nisqually, East Kitsap, and Deschutes rivers as well as in tributaries to Lake Washington and Hood Canal. Analyses of these long-term data sets have demonstrated that wild Coho Salmon smolt production is limited by a combination of factors including seeding levels (i.e., escapement), environmental effects (flows, marine derived nutrients), and habitat degradation [@Zimmerman_2013].
 
 For Hood Canal {{< glossary MU >}}, natural smolt production and adult escapements are intensively monitored by WDFW at the Big Beef Creek Research Station and three nearby tributaries that enter Hood Canal on the Kitsap Peninsula northeast of Bremerton. A permanent WDFW upstream/downstream migrant weir is located on Big Beef Creek just upstream of the estuary, and juvenile fence traps are installed annually on Little Anderson, Seabeck, and Stavis creeks, which are smaller adjacent tributaries (WRIAs 15.0377, 15.0400, and 15.0404). 
 
@@ -3188,7 +3166,7 @@ Marine survival for the indicator stock for the Hood Canal {{< glossary MU >}}, 
 *ToDo* Figure 4.1 --> Marine survival of Big Beef Creek Coho Salmon and the average marine survival of Puget Sound indicator stocks by year [data from @Zimmerman_2012; M. Zimmerman, WDFW, unpublished data]. 
 
 **Most Recent Abundance Forecast and Methods**
-This information is available in the {{< glossary Council >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
+This information is available in the {{< glossary Council display = PFMC >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
 
 The 2024 Hood Canal {{< glossary MU >}} {{< glossary OA3 >}} abundance forecast is 36,541, resulting in a classification of the stock abundance as "Moderate" under the 2019 {{< glossary PST >}} {{< glossary SCMP >}} and “Low” under the {{< glossary FMP >}}. This results in an allowable total {{< glossary ER >}} of no more than 45%. 
 
@@ -3297,14 +3275,14 @@ The western portion of the Strait of Juan de Fuca (west of the Sekiu River) is m
 
 Management goals for Washington coastal Coho Salmon stocks (including western Strait of Juan de Fuca) include achieving natural spawning escapement objectives and treaty Indian allocation requirements (PFMC 2011).  The {{< glossary Council >}}’s conservation objectives for stocks managed for natural production were based on maximum sustainable yield (MSY) spawner escapements established pursuant to the US District Court order in Hoh versus Baldrige (No. 81-742 [R] C).  The conservation objectives for the Queets, Hoh, and Quillayute rivers were developed as ranges intended to bracket estimates of MSY escapement.  The range reflects the degree of uncertainty inherent by using the high estimate of recruits-per-spawner and the low estimate of carrying capacity for the lower bound, and the low estimate of recruits-per-spawner and the high estimate of smolt carrying capacity for the upper end of the range.  The ranges were further adjusted upward by 26-184% for risk aversion and habitat considerations.  However, annual natural spawning escapement targets may vary from the Fishery Management Plan (FMP) conservation objectives if agreed to by WDFW and the treaty Indian tribes under the provisions of Hoh versus Baldrige and subsequent US District Court orders.  After an annual agreement is reached, ocean fishery escapement objectives are established for each river, or region of origin.  The agreement includes provisions for treaty Indian allocation requirements and inside non-Indian fishery needs.
 
-For the eastern portion of the Strait of Juan de Fuca {{< glossary MU >}}, the {{< glossary Council >}}’s conservation objectives are based on the Puget Sound Salmon Management Plan, which define management objectives and long-term goals for these stocks as developed by representatives from Federal, state, and tribal agencies (PFMC 2011).  Conservation objectives for specific stocks are based on either maximum sustainable production for stocks managed primarily for natural production or on hatchery escapement needs for stocks managed for artificial production.  The original conservation objectives were developed by a State/Tribal Management Plan Development Team following the Boldt Decision with the goal for natural spawning stocks defined as "the adult spawning population that will, on the average, maximize biomass of juvenile outmigrants subsequent to incubation and freshwater rearing under average environmental conditions".  The method used to develop the objectives was based on assessment of the quantity and quality of rearing habitat and the number of adult spawners required to fully seed the habitat.  Some objectives have subsequently been modified by the US District Court Fisheries Advisory Board and later determinations of the WDFW/Tribal Technical Committee.  However, annual natural management objectives may vary from the FMP conservation objectives if agreed to by WDFW and the treaty Indian tribes under the provisions of US versus Washington (384 F. Supp. 312 [W.D. Wash. 1974]) and subsequent US District Court orders. 
+For the eastern portion of the Strait of Juan de Fuca {{< glossary MU >}}, the {{< glossary Council display = PFMC >}}’s conservation objectives are based on the Puget Sound Salmon Management Plan, which define management objectives and long-term goals for these stocks as developed by representatives from Federal, state, and tribal agencies (PFMC 2011).  Conservation objectives for specific stocks are based on either maximum sustainable production for stocks managed primarily for natural production or on hatchery escapement needs for stocks managed for artificial production.  The original conservation objectives were developed by a State/Tribal Management Plan Development Team following the Boldt Decision with the goal for natural spawning stocks defined as "the adult spawning population that will, on the average, maximize biomass of juvenile outmigrants subsequent to incubation and freshwater rearing under average environmental conditions".  The method used to develop the objectives was based on assessment of the quantity and quality of rearing habitat and the number of adult spawners required to fully seed the habitat.  Some objectives have subsequently been modified by the US District Court Fisheries Advisory Board and later determinations of the WDFW/Tribal Technical Committee.  However, annual natural management objectives may vary from the FMP conservation objectives if agreed to by WDFW and the treaty Indian tribes under the provisions of US versus Washington (384 F. Supp. 312 [W.D. Wash. 1974]) and subsequent US District Court orders. 
 
-In 2009, the {{< glossary Council >}} adopted annual management objectives for Puget Sound Coho Salmon as recommended by WDFW and tribal co-managers under provisions of US versus Washington.  The annual objectives were based on the {{< glossary PSC >}} categorical status and associated maximum {{< glossary ER >}} limits.  The {{< glossary Council >}} formally adopted {{< glossary ER >}} management objectives for Puget Sound Coho Salmon in November 2009, which were consistent with {{< glossary PSC >}} objectives, and in 2010 it replaced the longstanding FMP spawning escapement objectives. The current {{< glossary PST >}}/{{< glossary Council >}} {{< glossary ER >}} reference points for the Strait of Juan de Fuca {{< glossary MU >}} natural Coho Salmon population are provided below.
+In 2009, the {{< glossary Council display = PFMC >}} adopted annual management objectives for Puget Sound Coho Salmon as recommended by WDFW and tribal co-managers under provisions of US versus Washington.  The annual objectives were based on the {{< glossary PSC >}} categorical status and associated maximum {{< glossary ER >}} limits.  The {{< glossary Council display = PFMC >}} formally adopted {{< glossary ER >}} management objectives for Puget Sound Coho Salmon in November 2009, which were consistent with {{< glossary PSC >}} objectives, and in 2010 it replaced the longstanding FMP spawning escapement objectives. The current {{< glossary PST >}}/{{< glossary Council display = PFMC >}} {{< glossary ER >}} reference points for the Strait of Juan de Fuca {{< glossary MU >}} natural Coho Salmon population are provided below.
 
-**Current US Strait JDF {{< glossary MU >}} ocean abundance reference breakpoints and maximum total {{< glossary ER >}} by {{< glossary PSC >}} and {{< glossary Council >}} status categories.**
+**Current US Strait JDF {{< glossary MU >}} ocean abundance reference breakpoints and maximum total {{< glossary ER >}} by {{< glossary PSC >}} and {{< glossary Council display = PFMC >}} status categories.**
 
 
-| **Status(PSC/{{< glossary Council >}})**  | **Ocean Abundance** </br> **Breakpoint**  |**Total Exploitation Rate** |
+| **Status(PSC/{{< glossary Council display = PFMC >}})**  | **Ocean Abundance** </br> **Breakpoint**  |**Total Exploitation Rate** |
 |:--------------------------|:--------------------------------------:|:-----------------------:|
 | Low/Critical	           |	< 11,680 	        |	Up to 20% |
 | Moderate/Low	           |	11,680 – 27,445	        |	21% – 40% |
@@ -3338,7 +3316,7 @@ plot_rmis_recoveries_all(mu.name = "Strait of Juan de Fuca",
 ###### Forecast Methods
 
 **Most Recent Abundance Forecast and Methods**
-This information is available in the {{< glossary Council >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
+This information is available in the {{< glossary Council display = PFMC >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
 
 The 2024 Strait of Juan de Fuca {{< glossary MU >}} {{< glossary OA3 >}} abundance forecast is 19,690, resulting in a classification of the stock abundance as "Moderate" under the 2019 {{< glossary PST >}} {{< glossary SCMP >}} and “Low” under the {{< glossary FMP >}}. This results in an allowable total {{< glossary ER >}} of no more than 40%. 
 
@@ -3391,18 +3369,18 @@ The Olympic National Park owns the largest percentage of the coastal lands and t
 ##### Management Objectives
 The Quillayute {{< glossary MU >}} is managed together with other Washington coastal populations, which include all natural and hatchery stocks originating in Washington coastal streams north of the Columbia River to the western Strait of Juan de Fuca (west of the Sekiu River) (PFMC 2013a). Management goals for Washington coastal Coho Salmon stocks include achieving natural spawning escapement objectives and treaty Indian allocation requirements (PFMC 2013a).  
 
-{{< glossary Council >}}’s conservation objectives for stocks managed for natural production were based on maximum sustainable yield (MSY) spawner escapements established pursuant to the US District Court order in Hoh versus Baldrige (No. 81-742 [R] C).  When the {{< glossary Council >}} adopted Amendment 16 to the Salmon FMP in 2011 (76 FR 81852, December 29, 2011), it brought the Salmon Fishery Management Plan (FMP) into compliance with the Magnuson-Stevens Fishery Conservation and Management Act (MSA) as amended in 2007, and the corresponding revised National Standard 1 Guidelines' (NS1Gs) mandate to end and prevent overfishing. In doing so, the {{< glossary Council >}} adopted new status determination criteria (SDC) for overfishing, approaching an overfished condition, overfished, not overfished/rebuilding, and rebuilt under FMP Amendment 16.  The PFMC also adopted corresponding maximum fishing mortality thresholds, which are based on the maximum sustainable yield {{< glossary ER >}}.  Status determinations for overfishing, overfished, not overfished/rebuilding, and rebuilt were reported in the annual SAFE document, Review of 2012 Ocean Salmon Fisheries (PFMC 2013b). Amendment 16 also added to the FMP “de minimis” fishing provisions that allow for low levels of fishing impacts on specified stocks that are at low levels of abundance.  
+{{< glossary Council display = PFMC >}}’s conservation objectives for stocks managed for natural production were based on maximum sustainable yield (MSY) spawner escapements established pursuant to the US District Court order in Hoh versus Baldrige (No. 81-742 [R] C).  When the {{< glossary Council display = PFMC >}} adopted Amendment 16 to the Salmon FMP in 2011 (76 FR 81852, December 29, 2011), it brought the Salmon Fishery Management Plan (FMP) into compliance with the Magnuson-Stevens Fishery Conservation and Management Act (MSA) as amended in 2007, and the corresponding revised National Standard 1 Guidelines' (NS1Gs) mandate to end and prevent overfishing. In doing so, the {{< glossary Council display = PFMC >}} adopted new status determination criteria (SDC) for overfishing, approaching an overfished condition, overfished, not overfished/rebuilding, and rebuilt under FMP Amendment 16.  The PFMC also adopted corresponding maximum fishing mortality thresholds, which are based on the maximum sustainable yield {{< glossary ER >}}.  Status determinations for overfishing, overfished, not overfished/rebuilding, and rebuilt were reported in the annual SAFE document, Review of 2012 Ocean Salmon Fisheries (PFMC 2013b). Amendment 16 also added to the FMP “de minimis” fishing provisions that allow for low levels of fishing impacts on specified stocks that are at low levels of abundance.  
 
 The conservation objectives for the Queets, Hoh, and Quillayute rivers were developed as ranges intended to bracket estimates of MSY escapement. For The Quillayute {{< glossary MU >}}, management objectives are expressed as a range of spawning escapements expected to produce MSY. Allowable {{< glossary ERs >}} are calculated from the forecast abundance and the lower end of the escapement range and used to classify the categorical status of the {{< glossary MUs >}}. This rate is the maximum allowed under the {{< glossary PST >}} when the {{< glossary MU >}} is in the moderate or abundant status, but {{< glossary ERs >}} up to 20 percent are allowed if the {{< glossary MU >}} is in the low abundance status. The range reflects inherent uncertainty by using the high estimate of recruits-per-spawner and the low estimate of carrying capacity for the lower bound, and the low estimate of recruits-per-spawner and the high estimate of smolt carrying capacity for the upper end of the range.  The ranges were further adjusted upward by 26-184% for risk aversion and habitat considerations. However, annual natural spawning escapement targets may vary from the FMP conservation objectives if agreed to by WDFW and the treaty Indian tribes under the provisions of Hoh versus Baldrige and subsequent US District Court orders. After an annual agreement is reached, ocean fishery escapement objectives are established for each river, or region of origin. The agreement includes provisions for treaty Indian allocation requirements and inside non-Indian fishery needs.  Agreements on annual spawning targets for Washington coastal Coho Salmon other than those in the FMP are not made every year (PFMC 2013b).
 
-For US “outside” {{< glossary MUs >}}, {{< glossary PST >}} total {{< glossary ER >}} ceiling for the natural fall Coho Salmon population is defined as the maximum rate that will meet the minimum escapement goal of 6,300, when applied to the preseason ocean abundance forecast (Haymes 2008).  For the 2009 return, for example, Quillayute fall Coho Salmon Salmon ocean abundance of age-3 fish was forecast as 19,261 fish or in the “abundant” category.  Therefore, ocean abundance (19,261) minus the minimum escapement goal (6,300) is 12,961 fish available to harvest, or 67.3% of the preseason forecast (12,961÷19,261 = 0.673). The current PST/{{< glossary Council >}} {{< glossary ER >}} ceilings for the Quillayute {{< glossary MU >}} Coho Salmon population are provided below.
+For US “outside” {{< glossary MUs >}}, {{< glossary PST >}} total {{< glossary ER >}} ceiling for the natural fall Coho Salmon population is defined as the maximum rate that will meet the minimum escapement goal of 6,300, when applied to the preseason ocean abundance forecast (Haymes 2008).  For the 2009 return, for example, Quillayute fall Coho Salmon Salmon ocean abundance of age-3 fish was forecast as 19,261 fish or in the “abundant” category.  Therefore, ocean abundance (19,261) minus the minimum escapement goal (6,300) is 12,961 fish available to harvest, or 67.3% of the preseason forecast (12,961÷19,261 = 0.673). The current PST/{{< glossary Council display = PFMC >}} {{< glossary ER >}} ceilings for the Quillayute {{< glossary MU >}} Coho Salmon population are provided below.
 
 There is no {{< glossary PST >}} management objective for the summer Coho Salmon run.  The Quillayute {{< glossary MU >}} is currently managed in US fisheries for a natural fall Coho Salmon escapement goal range of 6,300 to 15,800 adult spawners, and annual egg-take objectives for summer and fall Coho Salmon at Sol Duc Hatchery.  
 
-**Current Quillayute {{< glossary MU >}} ocean abundance reference breakpoints and maximum total {{< glossary ERs >}} by {{< glossary PSC >}} and {{< glossary Council >}} status categories.**
+**Current Quillayute {{< glossary MU >}} ocean abundance reference breakpoints and maximum total {{< glossary ERs >}} by {{< glossary PSC >}} and {{< glossary Council display = PFMC >}} status categories.**
 
 
-| **Status(PSC/{{< glossary Council >}})**  | **Ocean Abundance** </br> **Reference Breakpoint**  |**Total Exploitation Rate** |
+| **Status(PSC/{{< glossary Council display = PFMC >}})**  | **Ocean Abundance** </br> **Reference Breakpoint**  |**Total Exploitation Rate** |
 |:--------------------------|:--------------------------------------:|:-----------------------:|
 | Low/Critical	           |	< 7,875 	        |	Up to 20% |
 | Moderate/Low	           |	7,875 – 10,500	        |	21% – 40% |
@@ -3437,7 +3415,7 @@ plot_rmis_recoveries_all(mu.name = "Quillayute",
 The estimated number of total fall smolts averaged 350,000 annually from 1995 to 2022, with a high of 655,000 in 2011 and a low of 135,000 in 1999.  
 
 **Most Recent Abundance Forecast and Methods**
-This information is available in the {{< glossary Council >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
+This information is available in the {{< glossary Council display = PFMC >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
 
 The 2024 Quillayute {{< glossary MU >}} {{< glossary OA3 >}} abundance forecast consists of summer (393 adults) and fall (10,246 adults) run components, totalling 10,639 {{< glossary OA3 >}}. This forecast results in a classification of the stock abundance as "Moderate", with a total allowable ER of 39%, under the 2019 {{< glossary PST >}} {{< glossary SCMP >}}. 
 
@@ -3488,14 +3466,14 @@ The upper basin is located within Olympic National Park.  Land use outside of Ol
 ##### Management Objectives
 The Hoh {{< glossary MU >}} is managed with together with other Washington coastal populations, which include all natural and hatchery stocks originating in Washington coastal streams north of the Columbia River to the western Strait of Juan de Fuca (PFMC 2011).  Management goals for Washington coastal Coho Salmon stocks include achieving natural spawning escapement objectives and treaty Indian allocation requirements (PFMC 2011). 
 
-Management goals for Washington coastal Coho Salmon stocks include achieving natural spawning escapement objectives and treaty Indian allocation requirements (PFMC 2011).  The {{< glossary Council >}}’s conservation objectives for stocks managed for natural production were based on maximum sustainable yield (MSY) spawner escapements established pursuant to the US District Court order in Hoh versus Baldrige.  The conservation objectives for the Queets, Hoh, and Quillayute Rivers were developed as ranges intended to bracket estimates of MSY escapement.  The range reflects inherent uncertainty by using the high estimate of recruits-per-spawner and the low estimate of carrying capacity for the lower bound, and the low estimate of recruits-per-spawner and the high estimate of smolt carrying capacity for the upper end of the range.  The ranges were further adjusted upward by 26-184% for risk aversion and habitat considerations.  However, annual natural spawning escapement targets may vary from the Fishery Management Plan (FMP) conservation objectives if agreed to by WDFW and the treaty Indian tribes under the provisions of Hoh versus Baldrige and subsequent US District Court orders.  After an annual agreement is reached, ocean fishery escapement objectives are established for each river, or region of origin.  The agreement includes provisions for treaty Indian allocation requirements and inside non-Indian fishery needs.  Agreements on annual spawning targets for Washington coastal Coho Salmon other than those in the FMP are not made every year (PFMC 2011).
+Management goals for Washington coastal Coho Salmon stocks include achieving natural spawning escapement objectives and treaty Indian allocation requirements (PFMC 2011).  The {{< glossary Council display = PFMC >}}’s conservation objectives for stocks managed for natural production were based on maximum sustainable yield (MSY) spawner escapements established pursuant to the US District Court order in Hoh versus Baldrige.  The conservation objectives for the Queets, Hoh, and Quillayute Rivers were developed as ranges intended to bracket estimates of MSY escapement.  The range reflects inherent uncertainty by using the high estimate of recruits-per-spawner and the low estimate of carrying capacity for the lower bound, and the low estimate of recruits-per-spawner and the high estimate of smolt carrying capacity for the upper end of the range.  The ranges were further adjusted upward by 26-184% for risk aversion and habitat considerations.  However, annual natural spawning escapement targets may vary from the Fishery Management Plan (FMP) conservation objectives if agreed to by WDFW and the treaty Indian tribes under the provisions of Hoh versus Baldrige and subsequent US District Court orders.  After an annual agreement is reached, ocean fishery escapement objectives are established for each river, or region of origin.  The agreement includes provisions for treaty Indian allocation requirements and inside non-Indian fishery needs.  Agreements on annual spawning targets for Washington coastal Coho Salmon other than those in the FMP are not made every year (PFMC 2011).
 
 The current {{< glossary PST >}} total {{< glossary ER >}} ceiling for the natural Coho Salmon population is defined as the maximum rate that will meet the minimum escapement goal of 2,000 when applied to the pre-season ocean abundance forecast (Haymes 2008).  The basin is currently managed in US fisheries for a natural fall Coho Salmon escapement goal range of 2,000 to 5,000.  The current {{< glossary PST >}} {{< glossary ER >}} ceilings for the Hoh {{< glossary MU >}} Coho Salmon population are listed below.
 
-**Current Hoh {{< glossary MU >}} ocean abundance reference breakpoints and maximum total {{< glossary ERs >}} by {{< glossary PSC >}} and {{< glossary Council >}} status categories.**
+**Current Hoh {{< glossary MU >}} ocean abundance reference breakpoints and maximum total {{< glossary ERs >}} by {{< glossary PSC >}} and {{< glossary Council display = PFMC >}} status categories.**
 
 
-| **Status(PSC/{{< glossary Council >}})**  | **Ocean Abundance** </br> **Reference Breakpoint**  |**Total Exploitation Rate** |
+| **Status(PSC/{{< glossary Council display = PFMC >}})**  | **Ocean Abundance** </br> **Reference Breakpoint**  |**Total Exploitation Rate** |
 |:--------------------------|:--------------------------------------:|:-----------------------:|
 | Low/Critical	           |	< 2,500 	        |	Up to 20% |
 | Moderate/Low	           |	2,500 – 3,333	        |	21% – 35% |
@@ -3529,7 +3507,7 @@ plot_rmis_recoveries_all(mu.name = "Hoh",
 The estimated number of total smolts averaged 162,000 annually from 2000 to 2022, with a high of 286,000 in 2011 and a low of 69,000 in 2015.  
 
 **Most Recent Abundance Forecast and Methods**
-This information is available in the {{< glossary Council >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
+This information is available in the {{< glossary Council display = PFMC >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
 
 The 2024 Hoh {{< glossary MU >}} {{< glossary OA3 >}} abundance forecast is 4,870, resulting in a classification of the stock status as "Abundant", with a total allowable ER of 59%, under the 2019 {{< glossary PST >}} {{< glossary SCMP >}}. 
 
@@ -3581,15 +3559,15 @@ Much of the land base in the {{< glossary MU >}} is managed for commercial timbe
 ##### Management Objectives
 The Queets {{< glossary MU >}} is managed together with other Washington coastal populations, which include all natural and hatchery stocks originating in Washington coastal streams north of the Columbia River to the western Strait of Juan de Fuca (PFMC 2011).  Management goals for Washington coastal Coho Salmon stocks include achieving natural spawning escapement objectives and treaty Indian allocation requirements (PFMC 2011). 
 
-Management goals for Washington coastal Coho Salmon stocks include achieving natural spawning escapement objectives and treaty Indian allocation requirements (PFMC 2011).  The {{< glossary Council >}}’s conservation objectives for stocks managed for natural production were based on maximum sustainable yield (MSY) spawner escapements established pursuant to the US District Court order in Hoh versus Baldrige.  The conservation objectives for the Queets, Hoh, and Quillayute rivers were developed as ranges intended to bracket estimates of MSY escapement.  The range reflects inherent uncertainty by using the high estimate of recruits-per-spawner and the low estimate of carrying capacity for the lower bound, and the low estimate of recruits-per-spawner and the high estimate of smolt carrying capacity for the upper end of the range.  The ranges were further adjusted upward by 26-184 percent for risk aversion and habitat considerations.  However, annual natural spawning escapement targets may vary from the Fishery Management Plan (FMP) conservation objectives if agreed to by WDFW and the treaty Indian tribes under the provisions of Hoh versus Baldrige and subsequent US District Court orders.  After an annual agreement is reached, ocean fishery escapement objectives are established for each river, or region of origin.  The agreement includes provisions for treaty Indian allocation requirements and inside non-Indian fishery needs.  Agreements on annual spawning targets for Washington coastal Coho Salmon other than those in the FMP are not made every year (PFMC 2011).
+Management goals for Washington coastal Coho Salmon stocks include achieving natural spawning escapement objectives and treaty Indian allocation requirements (PFMC 2011).  The {{< glossary Council display = PFMC >}}’s conservation objectives for stocks managed for natural production were based on maximum sustainable yield (MSY) spawner escapements established pursuant to the US District Court order in Hoh versus Baldrige.  The conservation objectives for the Queets, Hoh, and Quillayute rivers were developed as ranges intended to bracket estimates of MSY escapement.  The range reflects inherent uncertainty by using the high estimate of recruits-per-spawner and the low estimate of carrying capacity for the lower bound, and the low estimate of recruits-per-spawner and the high estimate of smolt carrying capacity for the upper end of the range.  The ranges were further adjusted upward by 26-184 percent for risk aversion and habitat considerations.  However, annual natural spawning escapement targets may vary from the Fishery Management Plan (FMP) conservation objectives if agreed to by WDFW and the treaty Indian tribes under the provisions of Hoh versus Baldrige and subsequent US District Court orders.  After an annual agreement is reached, ocean fishery escapement objectives are established for each river, or region of origin.  The agreement includes provisions for treaty Indian allocation requirements and inside non-Indian fishery needs.  Agreements on annual spawning targets for Washington coastal Coho Salmon other than those in the FMP are not made every year (PFMC 2011).
 
 The current {{< glossary PST >}} total {{< glossary ER >}} ceiling for the natural Coho Salmon population is defined as the maximum rate that will meet the minimum escapement goal of 5,800 when applied to the pre-season ocean abundance forecast (Haymes 2008). The basin is currently managed in US fisheries for a natural fall Coho Salmon escapement goal range of 5,800 to 14,500, and annual egg take objectives at the Salmon River Hatchery. The current {{< glossary PST >}} {{< glossary ER >}} ceilings for the Queets {{< glossary MU >}} Coho Salmon population are listed below.
 
 Queets River natural Coho Salmon, Strait of Juan de Fuca natural Coho Salmon, and Snohomish River natural Coho Salmon were found to meet the criteria for being classified as overfished in the PFMC Review of 2017 Ocean Salmon Fisheries, released in February 2018. Queets River natural Coho Salmon continue to meet the criteria for overfished status [@PFMC_3_2023]. The harvest control rule during the rebuilding period for Queets Coho Salmon is the abundance-based stepped harvest rate of: 
 
-**Queets {{< glossary MU >}} ocean abundance reference breakpoints and maximum total {{< glossary ERs >}} by {{< glossary PSC >}} and {{< glossary Council >}} status categories.**
+**Queets {{< glossary MU >}} ocean abundance reference breakpoints and maximum total {{< glossary ERs >}} by {{< glossary PSC >}} and {{< glossary Council display = PFMC >}} status categories.**
 
-| **Status(PSC/{{< glossary Council >}})**  | **Ocean Abundance** </br> **Reference Breakpoint**  |**Total Allowable Exploitation Rate** |
+| **Status(PSC/{{< glossary Council display = PFMC >}})**  | **Ocean Abundance** </br> **Reference Breakpoint**  |**Total Allowable Exploitation Rate** |
 |:--------------------------|:--------------------------------------:|:-----------------------:|
 | Low/Critical	           |	< 7,250 	        |	Up to 20% |
 | Moderate/Low	           |	7,250 – 9,667	        |	21% – 35% |
@@ -3622,7 +3600,7 @@ plot_rmis_recoveries_all(mu.name = "Queets",
 The estimated number of total smolts averaged 286,000 annually from 2000 to 2022, with a high of 444,000 in 2004 and a low of 136,000 in 2022.  
 
 **Most Recent Abundance Forecast and Methods**
-This information is available in the {{< glossary Council >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
+This information is available in the {{< glossary Council display = PFMC >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
 
 The 2024 Queets {{< glossary MU >}} {{< glossary OA3 >}} abundance forecast is 12,824, resulting in a classification of the stock abundance as "Abundant" under the 2019 {{< glossary PST >}} {{< glossary SCMP >}}. This results in an allowable total {{< glossary ER >}} of no more than 55% under the {{< glossary PST >}} {{< glossary SCMP >}}. 
 
@@ -3674,14 +3652,14 @@ Grays Harbor provides extensive estuarine habitat.  However, water quality probl
 ##### Management Objectives
 The Grays Harbor {{< glossary MU >}} is managed with together with other Washington coastal populations, which include all natural and hatchery stocks originating in Washington coastal streams north of the Columbia River to the western Strait of Juan de Fuca (PFMC 2011).  Management goals for Washington coastal Coho Salmon stocks include achieving natural spawning escapement objectives and treaty Indian allocation requirements (PFMC 2011). 
 
-Management goals for Washington coastal Coho Salmon stocks include achieving natural spawning escapement objectives and treaty Indian allocation requirements (PFMC 2011).  The {{< glossary Council >}}’s conservation objectives for stocks managed for natural production were based on maximum sustainable yield (MSY) spawner escapements established pursuant to the US District Court order in Hoh versus Baldrige.  The conservation objectives for the Queets, Hoh, and Quillayute Rivers were developed as ranges intended to bracket estimates of MSY escapement.  The range reflects inherent uncertainty by using the high estimate of recruits-per-spawner and the low estimate of carrying capacity for the lower bound, and the low estimate of recruits-per-spawner and the high estimate of smolt carrying capacity for the upper end of the range.  The ranges were further adjusted upward by 26-184% for risk aversion and habitat considerations.  However, annual natural spawning escapement targets may vary from the Fishery Management Plan (FMP) conservation objectives if agreed to by WDFW and the treaty Indian tribes under the provisions of Hoh versus Baldrige and subsequent US District Court orders.  After an annual agreement is reached, ocean fishery escapement objectives are established for each river, or region of origin.  The agreement includes provisions for treaty Indian allocation requirements and inside non-Indian fishery needs.  Agreements on annual spawning targets for Washington coastal Coho Salmon other than those in the FMP are not made every year (PFMC 2011).
+Management goals for Washington coastal Coho Salmon stocks include achieving natural spawning escapement objectives and treaty Indian allocation requirements (PFMC 2011).  The {{< glossary Council display = PFMC >}}’s conservation objectives for stocks managed for natural production were based on maximum sustainable yield (MSY) spawner escapements established pursuant to the US District Court order in Hoh versus Baldrige.  The conservation objectives for the Queets, Hoh, and Quillayute Rivers were developed as ranges intended to bracket estimates of MSY escapement.  The range reflects inherent uncertainty by using the high estimate of recruits-per-spawner and the low estimate of carrying capacity for the lower bound, and the low estimate of recruits-per-spawner and the high estimate of smolt carrying capacity for the upper end of the range.  The ranges were further adjusted upward by 26-184% for risk aversion and habitat considerations.  However, annual natural spawning escapement targets may vary from the Fishery Management Plan (FMP) conservation objectives if agreed to by WDFW and the treaty Indian tribes under the provisions of Hoh versus Baldrige and subsequent US District Court orders.  After an annual agreement is reached, ocean fishery escapement objectives are established for each river, or region of origin.  The agreement includes provisions for treaty Indian allocation requirements and inside non-Indian fishery needs.  Agreements on annual spawning targets for Washington coastal Coho Salmon other than those in the FMP are not made every year (PFMC 2011).
 
 The current {{< glossary PST >}} total {{< glossary ER >}} ceiling for the Grays Harbor natural Coho Salmon population is defined as the maximum rate that will meet a 35,400 escapement goal when applied to the pre-season ocean abundance forecast (Haymes 2008).  The basin is currently managed in US fisheries for an escapement goal of 35,400. The current {{< glossary PST >}} {{< glossary ER >}} ceilings for the Grays Harbor {{< glossary MU >}} Coho Salmon population are listed below.
 
-**Current Grays Harbor {{< glossary MU >}} ocean abundance reference breakpoints and maximum total {{< glossary ERs >}} by {{< glossary PSC >}} and {{< glossary Council >}} status categories.**
+**Current Grays Harbor {{< glossary MU >}} ocean abundance reference breakpoints and maximum total {{< glossary ERs >}} by {{< glossary PSC >}} and {{< glossary Council display = PFMC >}} status categories.**
 
 
-| **Status(PSC/{{< glossary Council >}})**  | **Ocean Abundance** </br> **Reference Breakpoint**  |**Total Exploitation Rate** |
+| **Status(PSC/{{< glossary Council display = PFMC >}})**  | **Ocean Abundance** </br> **Reference Breakpoint**  |**Total Exploitation Rate** |
 |:--------------------------|:--------------------------------------:|:-----------------------:|
 | Low/Critical	           |	< 44,250 	        |	Up to 20% |
 | Moderate/Low	           |	44,250 – 58,000	        |	21% – 35% |
@@ -3716,7 +3694,7 @@ plot_rmis_recoveries_all(mu.name = "Grays Harbor",
 The estimated number of total smolts averaged 2.5 million annually from 2000 to 2022, with a high of 3.6 million in 2017 and a low of 203,000 in 2002.  
 
 **Most Recent Abundance Forecast and Methods**
-This information is available in the {{< glossary Council >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
+This information is available in the {{< glossary Council display = PFMC >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
 
 The 2024 Grays Harbor {{< glossary MU >}} {{< glossary OA3 >}} abundance forecast is 74,851, resulting in a classification of the stock abundance as "Abundant" under the 2019 {{< glossary PST >}} {{< glossary SCMP >}}. This results in an allowable total {{< glossary ER >}} of no more than 57% under the {{< glossary PST >}} {{< glossary SCMP >}}. 
 
