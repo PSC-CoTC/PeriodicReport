@@ -1006,6 +1006,8 @@ The US FMP includes status determination criteria (SDC) for overfishing, approac
 
 - A stock is rebuilt when the most recent 3-year geometric mean spawning escapement exceeds SMSY.
 
+**should we delete this?  Include it under the MUs? or, leave here and update the status?**
+
 Queets natural Coho Salmon, Strait of Juan de Fuca natural Coho Salmon, and Snohomish natural Coho Salmon stocks were classified as overfished in 2018, and the {{< glossary Council display = PFMC >}} adopted rebuilding plans for these stocks in 2019 [@PFMC_3_2023]. In 2020, Snohomish natural Coho Salmon was reported to have met the criteria for not overfished/rebuilding. In 2023, Snohomish natural Coho was reported to have met the criteria for rebuilt and Strait of Juan de Fuca natural Coho Salmon was reported to have met the criteria for not overfished/rebuilding. Queets natural Coho Salmon continue to meet the criteria for overfished. Coho Salmon fisheries, particularly north of Cape Falcon, were shaped to minimize impacts on these stocks and meet the objectives of the rebuilding plans. Objectives of the rebuilding plans for Queets natural Coho Salmon and Strait of Juan de Fuca natural Coho Salmon are to manage the stock under status quo SMSY. 
 
 ## Annual Determinations of Allowable Exploitation Rates for Management Units
@@ -1095,65 +1097,43 @@ Throughout this process, the January post season, Pre I-III reports are provided
 
 ### US Inseason Management
 
-Inseason changes to planned U.S fisheries are limited, but have been implemented under some specific conditions. When ocean area/fishery specific quotas are not being caught in an ocean area then part of the quota may be transferred to another ocean area/fishery, based upon FRAM estimates of neutral impacts to the limiting stock(s); this may include adjustments to bag limits, seasons, and/or MSF regulations. The preseason planned prosecution of some fisheries is dependent upon the results of test fisheries, i.e. the Fraser Panel Sockeye directed commercial fisheries. Emergency closures due to attaining or exceeding planned catch quotas or in response to indications of reduced abundance.
+Inseason changes to planned U.S fisheries are limited, but have been implemented under some specific conditions. When ocean area/fishery specific quotas are not being caught in an ocean area then part of the quota may be transferred to another ocean area/fishery, based upon FRAM estimates of neutral impacts to the limiting stock(s); this may include adjustments to bag limits, seasons, and/or MSF regulations. The preseason planned prosecution of some fisheries is dependent upon the results of test fisheries, i.e., the Fraser Panel Sockeye directed commercial fisheries. Emergency closures due to attaining or exceeding planned catch quotas or in response to indications of reduced abundance.
 
-(*this would be updated with the most current year of information**
-### US Management Units 2023 Exploitation Rate Constraints
+### US Management Units 2024 Exploitation Rate Constraints
 
-For 2023, Puget Sound and Washington coast Coho Salmon constraints are as follows [@PFMC_3_2023]:
+For 2024, Puget Sound and Washington coast Coho Salmon preliminary constraints are as follows [@PFMC_3_2024]:
 
-|**FMP Stock** | **Total Exploitation Rate Constraint** | **Categorical Status** |
-|:-------------|:--------------------------------------:|:----------------------:| 
-| Skagit | 35% | Low |
-| Stillaguamish | 50% | Normal | 
-| Snohomish | 40% | Low | 
-| Hood Canal | 45% | Low | 
-| Strait of Juan de Fuca | 40% | Low | 
-| Quillayute Fall | 59% | | 
-| Hoh | 65% | | 
-| Queets | 65% | | 
-| Grays Harbor | 65% | | 
-
-: Fishery Management Plan (FMP) {#tbl-fmp}
-
-
-
-|**US Management Unit**|**Total Exploitation Rate Constraint**|**Categorical Status**|
-|:-----------------------|:------------------------------------:|:--------------------:| 
-| Skagit | 35% | Moderate | 
-| Stillaguamish | 50% | Abundant | 
-| Snohomish | 40% | Moderate | 
-| Hood Canal | 45% | Moderate | 
-| Strait of Juan de Fuca | 40% | Moderate | 
-| Quillayute Fall |  53% | Abundant | 
-| Hoh | 69% | Abundant | 
-| Queets |  53% | Abundant |  
-| Grays Harbor | 69% | Abundant | 
+|**PST MU**              | **Total Exploitation Rate Constraint** | **Categorical Status** |
+|:-------------          |:--------------------------------------:|:----------------------:| 
+| Skagit                 | 60%                                    | Abundant               |
+| Stillaguamish          | 50%                                    | Abundant               | 
+| Snohomish              | 40%                                    | Moderate               | 
+| Hood Canal             | 45%                                    | Moderate               | 
+| Strait of Juan de Fuca | 40%                                    | Moderate               | 
+| Quillayute Fall        | 39%                                    | Moderate               | 
+| Hoh                    | 59%                                    | Abundant               | 
+| Queets                 | 55%                                    | Abundant               | 
+| Grays Harbor           | 57%                                    | Abundant               | 
 
 : PST Southern Coho Management Plan {#tbl-pst-scmp}
 
-
-FMP total {{< glossary ER >}} constraint (@tbl-fmp) is preliminary. For Puget Sound stocks, the {{< glossary ER >}} constraints and categorical status (Normal, Low, Critical) reflect application of Comprehensive Coho Agreement rules, as adopted in the FMP. For Washington Coast stocks, {{< glossary ER >}} constraints represent MFMT. Note that under US v. Washington and Hoh v. Baldrige case law, the management objectives can differ from FMP objectives provided there is an annual agreement among the state and tribal comanagers; therefore, the {{< glossary ERs >}} used to report categorical status do not necessarily represent maximum allowable rates for these stocks.
-
-{{< glossary PST >}} {{< glossary SCMP >}} (@tbl-pst-scmp) constraint is Preliminary. For Puget Sound and Washington Coast management units, the {{< glossary ER >}} constraints reflect application of the 2019 {{< glossary PST >}} {{< glossary SCMP >}}.
-
-Under the {{< glossary PST >}} {{< glossary SCMP >}}, categories (Abundant, Moderate, Low) correspond to the general {{< glossary ER >}} ranges depicted in paragraph 8(b)(iii) of the 2019 {{< glossary PST >}} {{< glossary SCMP >}}. For Washington Coast stocks, categorical status is determined by the {{< glossary ER >}} associated with meeting the escapement goal (or the lower end of the escapement goal range). As Washington Coast stocks are managed to achieve agreed escapement goals, this {{< glossary ER >}} also becomes an approximation of the maximum allowable rate unless the stock is in the "Low" status. In that case, an {{< glossary ER >}} of up to 20% is allowed.
+{{< glossary PST >}} {{< glossary SCMP >}} (@tbl-pst-scmp) constraint is Preliminary. For Puget Sound and Washington Coast management units, the {{< glossary ER >}} constraints reflect application of the 2019 {{< glossary PST >}} {{< glossary SCMP >}}. Under the {{< glossary PST >}} {{< glossary SCMP >}}, categories (Abundant, Moderate, Low) correspond to the general {{< glossary ER >}} ranges depicted in paragraph 8(b)(iii) of the 2019 {{< glossary PST >}} {{< glossary SCMP >}}. For Washington Coast stocks, categorical status is determined by the {{< glossary ER >}} associated with meeting the escapement goal (or the lower end of the escapement goal range). As Washington Coast stocks are managed to achieve agreed escapement goals, this {{< glossary ER >}} also becomes an approximation of the maximum allowable rate unless the stock is in the "Low" status. In that case, an {{< glossary ER >}} of up to 20% is allowed.
 
 Grays Harbor constraints are based on projected natural area spawners (wild plus hatchery strays) and MSP escapement goal of 35,400. Exploitation rate constraint subject to change should comanagers agree to a modified escapement goal under US v. Washington and Hoh v. Baldrige case law.
 
-Key considerations for Canadian fishery management for Coho Salmon in 2023 are expected to include:
-
-1) meeting domestic conservation obligations for Interior Fraser (including Thompson River) Coho Salmon; 
-2) Coho Salmon harvests by First Nations fisheries; 
-3) incidental impacts during commercial and First Nations fisheries directed at Chinook, chum, and especially Fraser Sockeye salmon which will see a dominant late run return in 2023 [@PFMC_3_2023].
-
-The Canadian fishery regimes affecting Coho Salmon are expected to be driven by Canadian domestic allowable impacts on the Thompson River component of the Interior Fraser {{< glossary MU >}}, Fraser Chinook Salmon concerns and Fraser Sockeye Salmon stocks of concern co-migrating with the late run. In years prior to 2014, Canadian fisheries were managed so as not to exceed a three percent maximum ER. In May 2014, Canada decided to permit up to a 16% ER on upper Fraser Coho Salmon in Canadian fisheries to allow for impacts in fisheries directed at a record Fraser Sockeye Salmon forecast. Since 2015, upper Fraser Coho Salmon in Canadian fisheries have been managed per low status limitations. The projected status of Canadian Coho Salmon management units in 2023 indicates continuing concerns for the condition of Interior Fraser Coho Salmon The Interior Fraser Coho Salmon {{< glossary MU >}} is anticipated to remain in low abundance status, resulting in a requirement to constrain the total mortality fishery {{< glossary ER >}} for 2023 Southern US fisheries to a maximum of 10.0%.
 
 ## Canadian Fishery Planning Process
 
 Annual Canadian fisheries are planned using a combination of two domestic models (marine fisheries and freshwater decay models) and tools focused upon Interior Fraser River (IFR) Coho Salmon The planning process starts early in the year. A draft IFMP is available for stakeholder comment in April, but the IFMP is not finalized until formally approved by the Fisheries Minister in June.
 
 In the domestic process, initial planning scenarios are developed based on discussions with Fishery Managers, preliminary salmon outlook for stock status (prepared in November of previous year), effort expectation (targeted or incidental impact on IFR Coho Salmon) given {{< glossary ER >}} constraints, and domestic allocation policy. Once stock abundance forecasts are available in March and timing and diversion forecasts for Fraser Sockeye are available in June, the final Salmon IFMP is submitted to the Minister for approval. The Canadian domestic model does not use Coho Salmon abundance forecasts directly, relying instead upon past relationships between fisheries’ effort and IFR {{< glossary ER >}}, to estimate preseason projected {{< glossary ER >}} for IFR. Depending on what species or fishery specific objectives are in place for the upcoming season, the domestic model is populated with anticipated effort based on trends in recent years and scaled to base period (1986–1997) effort. Multiple scenarios are run based on adjusting preliminary fishing plans (species, effort, month, gear, regulations) and results are reviewed by Fisheries Managers and evaluated for multiple objectives, in particular, meeting the preseason {{< glossary ER >}} objectives for IFR CCoho Salmonoho.
+
+Key considerations for Canadian fishery management for Coho Salmon in 2024 are expected to include:
+(1) meeting domestic conservation obligations for Interior Fraser (including Thompson River) Coho Salmon; 
+(2) Coho Salmon harvests by First Nations fisheries; 
+(3) incidental impacts during commercial and First Nations fisheries directed at Chinook, Chum, and especially Fraser Sockeye Salmon which will see a dominant late run return in 2024. The Canadian fishery regimes affecting Coho Salmon are expected to be driven by Canadian domestic allowable impacts on the Thompson River component of the IFR management unit, Fraser Chinook concerns and Fraser Sockeye stocks of concern co-migrating with the late run.
+
+In years prior to 2014, Canadian fisheries were managed so as not to exceed a 3% maximum {{< glosarry ER >}}. In May 2014, Canada decided to permit up to a 16% {{< glosarry ER >}} on upper Fraser Coho Salmon in Canadian fisheries to allow for impacts in fisheries directed at a record Fraser Sockeye forecast. Since 2015, upper Fraser Coho Salmon in Canadian fisheries have been managed per low status limitations. The projected status of Canadian coho {{< glosarry MUs >}} in 2024 indicates continuing concerns for the condition of Interior Fraser Coho Salmon. The Interior Fraser Coho Salmon {{< glosarry MU >}} is anticipated to remain in low abundance status, resulting in a requirement to constrain the total mortality fishery {{< glosarry ER >}} for 2024 Southern U.S. fisheries to a maximum of 10.0%.
 
 ### Development of Canadian Preseason Coho FRAM Inputs
 
