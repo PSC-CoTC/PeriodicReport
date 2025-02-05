@@ -57,6 +57,8 @@ Dev note: using quarto-glossary to add hover-over text. Details and installation
 - add the updated coho_lut operation with "TERM" column into the SQL workflow
 - add PSC MU lookup tables from Mike's package to framrosetta
 - update 5-yr report doc to account for coastal fisheries and to use the ER caps calculated via mike's function.
+- Add somewhere that the Ocean Age 3 Abundance is the `abund` column in FRAM.
+- Check on the database we're pulling the numbers from. 
 
 **CBE change log**
 
@@ -119,11 +121,13 @@ static <- list(
   lu_fishery = readxl::read_excel(params$static_tables, sheet = "fram_coho_fishery")
   ,
   glossary = readxl::read_excel(params$static_tables, sheet = "glossary") |> 
-    mutate(across(where(is.character), ~replace_na(.,"")))
-  ,
+    mutate(across(where(is.character), ~replace_na(.,""))),
+  dit_codes = readxl::read_excel(params$static_tables, sheet = "DIT_Codes") |>
+    mutate(across(where(is.character), ~replace_na(.,""))),
   run_files = readxl::read_excel(params$static_tables, sheet = "RunFiles") |> 
-    mutate(across(where(is.character), ~replace_na(.,"")))
-  ,
+    mutate(across(where(is.character), ~replace_na(.,""))),
+  marine_survival_data = readxl::read_excel(params$static_tables, sheet = "Marine Survival Data") |> 
+    mutate(across(where(is.character), ~replace_na(.,""))),
   #field PSC_MU designates relevant units for report, those in PST
   #field Indicator defines evaluated CWT release groups (as "Y")
   releases = readxl::read_excel(
@@ -571,7 +575,9 @@ Under the CoABM regime, each Party is required to regulate its fisheries so as n
 
 ![Oregon Ocean Salmon Management Areas and Major Port Locations.](images/OR_SMA.jpg){#fig-odfwmap}
 
-### Canadian Fisheries (CoTC note - this needs updating)
+### Canadian Fisheries 
+
+**Request for input**
 
 Southern BC Coho Salmon are caught in First Nations, recreational, and commercial troll and net fisheries. Since Coho Salmon rear in areas near the coast they are readily caught in directed fisheries and as bycatch in fisheries targeting other species. As a result, Coho Salmon are harvested in mixed-stock fisheries, creating many challenges for the assessment and management of the species.
 
@@ -668,8 +674,9 @@ FRAM is a deterministic model that reports point estimates of cohort abundances 
 -	Complex regulations, such as fine-scale spatial/temporal and mixed retention limits for natural and hatchery Coho Salmon within a fishery, are difficult to represent and assess within FRAM and as a result, FRAM may not accurately represent stock-specific impacts within fisheries with these regulations.
 -	Spatial and temporal gaps in catch monitoring of some Canadian fisheries result in underestimation of catch.
 -	Uncertainty in mortality estimates arises from several sources, including creel census and catch estimation.
--	Within time steps in FRAM, natural mortality is constant; additionally, natural mortality does not reflect inter-annual variability in survival during adult ocean residence (January Age-3 through FRAM’s final time step). [**Jeromy comment: Can we describe the year or years it was built in, and that it has not been updated since.**  *note from 1/7/25: ever since this was a spreadsheet model, these have been built in. Unclear if they've changed during that time*.]
+-	Within time steps in FRAM, natural mortality is constant; additionally, natural mortality does not reflect inter-annual variability in survival during adult ocean residence (January Age-3 through FRAM’s final time step).
 
+For more details, see the [FRAM documentation](https://framverse.github.io/fram_doc/).
 
 ## Environmental Trends Contextualizing Management
 
@@ -846,13 +853,13 @@ dat.pdo = raw.pdo |>
   mutate(date = as_date(glue("{year}-{month.num}-15")))
 
 if(params$clean_run){
-raw.oni <- "https://origin.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ONI_v5.php" %>% 
-  read_html() %>% 
-  html_nodes("table") %>% 
-  html_table(fill = T)
-mat.oni = raw.oni[[9]]
-dat.oni = data.frame(mat.oni[-which(mat.oni$X1=="Year"),])
-names(dat.oni) = mat.oni[1,]
+  raw.oni <- "https://origin.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ONI_v5.php" %>% 
+    read_html() %>% 
+    html_nodes("table") %>% 
+    html_table(fill = T)
+  mat.oni = raw.oni[[9]]
+  dat.oni = data.frame(mat.oni[-which(mat.oni$X1=="Year"),])
+  names(dat.oni) = mat.oni[1,]
   write_csv(dat.oni, here("data/NOAA-oni.csv"))
 }else{
   dat.oni = read_csv(here("data/NOAA-oni.csv"))
@@ -941,14 +948,16 @@ Since 2002, in the absence of benchmarks, the {{< glossary CDFO >}} Stock Assess
 
 Canadian Coho Salmon abundance has declined, particularly in southern BC. Interior Fraser River Coho Salmon was assessed as endangered by the Committee on the Status of Endangered Wildlife in Canada (COSEWIC) in2002 and then reassessed as threatened in 2016. Interior Fraser River Coho Salmon have not been listed on Schedule 1 of the Species at Risk Act, which would afford additional protections to the stock.  However, the Canadian Minister of Fisheries and Oceans has established a domestic {{< glossary ER >}} cap of 3-5% for Canadian fishery impacts on Interior Fraser Coho Salmon. The Interior Fraser {{< glossary MU >}} is comprised of five {{< glossary CUs >}} (North Thompson, South Thompson, Lower Thompson, Fraser Canyon, and Upper Fraser). The Interior Fraser River Coho Salmon recovery planning process has determined the critical benchmark needed to maintain population viability. Even with the reduction in fisheries exploitation, all Southern BC {{< glossary MUs >}} have followed a similar dramatic declining trend in both marine survival and total abundance from the high levels observed in the 1980s and early 1990s. Spawning escapements have responded to the decreased exploitation and are within the range observed during the 1970s and 1980s. However, the sustained low marine survival has resulted in a decreased total abundance.
 
-Because of the absence of programs to estimate total abundance and escapement for the Strait of Georgia and Lower Fraser River Canadian {{< glossary MUs >}}, the bilaterally-developed tool, Backwards Coho FRAM, is relied upon to generate estimates of ocean age-3 cohort abundance and {{< glossary ERs >}} using post-season data scalars. Cohort abundances (catch and escapement) of Canadian {{< glossary MUs >}}, estimated by Backwards Coho FRAM based on modelled scalars, are depicted in Figure @fig-postseason-abund-bc. Reduced abundances apparent since 1996 were a major consideration that led to the development of ABM regimes for management of southern Coho Salmon.
+Because of the absence of programs to estimate total abundance and escapement for the Strait of Georgia and Lower Fraser River Canadian {{< glossary MUs >}}, the bilaterally-developed tool, Backwards Coho FRAM, is relied upon to generate estimates of ocean age-3 cohort abundance and {{< glossary ERs >}} using post-season data scalars. Cohort abundances (catch and escapement) of Canadian {{< glossary MUs >}}, estimated by Backwards Coho FRAM based on modeled scalars, are depicted in Figure @fig-postseason-abund-bc. Reduced abundances apparent since 1996 were a major consideration that led to the development of ABM regimes for management of southern Coho Salmon.
+
+::: {.content-hidden unless-meta="devversion"}
 
 ### IFR {{< glossary MU >}} (*this needs to be moved!)
-Prior to the establishment of {{< glossary PST >}} Management Reference Points, IFR have been assessed by COSEWIC and {{< glossary CDFO >}}. 
+Prior to the establishment of {{< glossary PST >}} Management Reference Points, IFR have been assessed by COSEWIC and {{< glossary CDFO >}}.
 
 A COSEWIC assessment in 2002 (Irvine 2002) identified IFR status as endangered while the COSEWIC re-assessment in 2016 (COSEWIC 2016) identified their status as threatened. Between 1990-2000, IFR experienced declines in recruitment in excess of 60% due to changes in freshwater and marine habitats and lagged reductions in harvest, resulting in a status of endangered in 2002. Since 2000, the population has persisted at relatively low abundance and low smolt-to-adult survival rates and was therefore re-assessed as threatened in 2016.
 
-In a review done in 2014, estimated abundance of IFR was below the Interior Fraser Recovery Team (IFCRT) lower benchmark of 23,000 spawners in five out of 10 years, and was below the upper rebuilding benchmark of 35,000 spawners in all 10 years (Decker et al. 2014).  For two decades (1992-2011), abundance was also below the lower and upper benchmarks in 50% and 100% of the years respectively. Based on the criteria proposed by the IFCRT (2006), this would indicate that recent abundances of Interior Fraser Coho Salmon may be insufficient to conserve genetic diversity and to provide a reasonable expectation of growth and recovery for some of the local populations within the {{< glossary MU >}}.  For returns prior to 1992, abundance exceeded the upper benchmark every year going back to 1975.  
+In a review done in 2014, estimated abundance of IFR was below the Interior Fraser Recovery Team (IFCRT) lower benchmark of 23,000 spawners in five out of 10 years, and was below the upper rebuilding benchmark of 35,000 spawners in all 10 years (Decker et al. 2014).  For two decades (1992-2011), abundance was also below the lower and upper benchmarks in 50% and 100% of the years respectively. Based on the criteria proposed by the IFCRT (2006), this would indicate that recent abundances of Interior Fraser Coho Salmon may be insufficient to conserve genetic diversity and to provide a reasonable expectation of growth and recovery for some of the local populations within the {{< glossary MU >}}.  For returns prior to 1992, abundance exceeded the upper benchmark every year going back to 1975.
 
 A Wild Salmon Policy (WSP) assessment in 2013 of the five CUs comprising IFR was undertaken by Parken et al. (in draft). Through this exercise it was determined that two of the CUs, the North Thompson and Lower Thompson, were amber/green and the remaining three CUs were amber. WSP designation is determined to provide guidance to managers on the status of populations and their likelihood of a COSEWIC assessment. It is an expert judgment on the past and current state of escapements and does not speak to productivity of a stock.  In the case of IFR WSP determinations, the escapements under review were achieved under a low exploitation regime and productivity of the five populations within the IFR {{< glossary MU >}} have recently been determined to be low (Decker et al. 2014).
 
@@ -958,9 +967,11 @@ Though the WSP Status review determined that two of the five CUs comprising IFR 
 
 Since 2018, and retrospectively, the survival index and abundances have been compared directly to the {{< glossary PST >}} Management Reference Points. The {{< glossary MU >}} survival index has never exceeded 3% since 1999, so the {{< glossary MU >}} has persisted in a low status.
 
+:::
+
 ## US Inside Management Units
 
-The status for US Inside {{< glossary MUs >}} is assigned based on ocean abundance (forecasted or re-constructed). Pre-season estimates of ocean abundance are typically forecasted from measured or modeled smolt production for each {{< glossary MU >}} and multiplied by a marine survival rate predicted for each {{< glossary MU >}}. Marine survival is predicted with a variety of methods including average return rates, correlations between jack and adult return rates, and correlations between environmental variables and historical return rates [**Jeromy comment: Are these static to each MU?  If so then a table for what type of method applies to each MU would be very useful, particularly if we are trying to determine what environmental conditions are useful for not for tracking long term, but if not then disregard this comment.**]. Post-season estimates of ocean abundance are estimated using escapement and catch data and the Backwards Coho FRAM (@fig-postseason-abund-inside). The status of each {{< glossary MU >}} is defined by a series of ocean abundance breakpoints. Domestic management of Puget Sound naturally-spawning Coho Salmon stocks also uses abundance-based, tiered {{< glossary ER >}} objectives defined in the Comprehensive Coho Plan [@CCW_1998], that are similar to but not exactly consistent with the {{< glossary PSC >}} guidelines. The identified break points between Low, Moderate, and Abundant status are based on population-specific productivity analyses conducted by the state and tribal co-managers in each river basin.
+The status for US Inside {{< glossary MUs >}} is assigned based on ocean abundance (forecasted or re-constructed). Pre-season estimates of ocean abundance are typically forecasted from measured or modeled smolt production for each {{< glossary MU >}} and multiplied by a marine survival rate predicted for each {{< glossary MU >}}. Marine survival is predicted with a variety of methods including average return rates, correlations between jack and adult return rates, and correlations between environmental variables and historical return rates. Post-season estimates of ocean abundance are estimated using escapement and catch data and the Backwards Coho FRAM (@fig-postseason-abund-inside). The status of each {{< glossary MU >}} is defined by a series of ocean abundance breakpoints. Domestic management of Puget Sound naturally-spawning Coho Salmon stocks also uses abundance-based, tiered {{< glossary ER >}} objectives defined in the Comprehensive Coho Plan [@CCW_1998], that are similar to but not exactly consistent with the {{< glossary PSC >}} guidelines. The identified break points between Low, Moderate, and Abundant status are based on population-specific productivity analyses conducted by the state and tribal co-managers in each river basin.
 
 ## US Outside Management Units
 
@@ -971,17 +982,17 @@ Pre- and post-season ocean abundances are estimated with the same approach descr
 
 ## US Management Units Federal Status 
 
-Coho Salmon were the first Pacific salmon species for which coast-wide evolutionarily significant units (ESUs) were delineated [@Ford_2011]. Based on genetic and life history information, the US {{< glossary MUs >}} subject to the {{< glossary PST >}} belong to three different Coho Salmon ESUs, the Puget Sound/Strait of Georgia, the Olympic Peninsula, and the Southwest Washington ESUs. The Puget Sound/Strait of Georgia Coho Salmon ESU is currently a species of concern under the US Endangered Species Act [ESA; @Ford_2011; Species of Concern 4/15/04, 69FR19975]. The Olympic Peninsula ESU was evaluated for listing under the ESA and was determined to be not warranted (**ADD link to: 60 FR 38011; July 25, 1995** *CBE does not know what this means*). The Southwest Washington ESU is currently categorized as "undetermined".  Puget Sound/Strait of Georgia Coho Salmon are not currently candidates for listing in Washington as State Endangered, Threatened, or Sensitive [@WDFW_2020_state].
+Coho Salmon were the first Pacific salmon species for which coast-wide evolutionarily significant units (ESUs) were delineated [@Ford_2011]. Based on genetic and life history information, the US {{< glossary MUs >}} subject to the {{< glossary PST >}} belong to three different Coho Salmon ESUs, the Puget Sound/Strait of Georgia, the Olympic Peninsula, and the Southwest Washington ESUs. The Puget Sound/Strait of Georgia Coho Salmon ESU is currently a species of concern under the US Endangered Species Act (ESA; @Ford_2011; Species of Concern 4/15/04, 69FR19975). The Olympic Peninsula ESU was evaluated for listing under the ESA and was determined to be not warranted (60 FR 38011; July 25). The Southwest Washington ESU is currently categorized as "undetermined".  Puget Sound/Strait of Georgia Coho Salmon are not currently candidates for listing in Washington as State Endangered, Threatened, or Sensitive [@WDFW_2020_state].
 
 At the federal level, species of concern do not have formal protection under the ESA. The primary purpose of identifying species of concern is to prevent the need to list them as threatened or endangered under the ESA. This purpose can be achieved by the following actions: (1) identifying species potentially at risk; (2) increasing public awareness about those species; (3) identifying data deficiencies and uncertainties in species' status and threats; (4) stimulating cooperative research efforts to obtain the information necessary to evaluate species' status and threats; and, (5) fostering voluntary efforts to conserve the species before listing becomes warranted.
 
-Additionally, at the federal level, Coho Salmon caught in coastal waters of the U.S. (e.g., greater than 3 but within 200 nautical miles offshore) are managed under the Magnuson-Stevens Fishery Conservation and Management Act (MSA), which is the legislation providing for the management of marine fisheries in U.S. waters. In 2018, the National Marine Fisheries Service (NMFS) notified the {{< glossary Council display = PFCM >}} that the Strait of Juan de Fuca, Queets, and Snohomish natural Coho Salmon stocks managed under the {{< glossary Council display = PFCM>}}’s Pacific Coast Salmon Fishery Management Plan (FMP) met the overfished criteria of the FMP and the MSA. NMFS determined that these stocks were overfished under the MSA, due to spawning escapement falling below the required level for the 3-year period 2014-2016. The MSA requires overfished stocks to be rebuilt in as short a time as possible, not to exceed 10 years. The overfished determinations were announced in the Federal Register on August 6, 2018 (83 FR 38292). In response to the overfished determination, the {{< glossary Council display = PFCM >}} developed rebuilding plans for these stocks and provided them to NMFS in 2019. In 2021, NMFS issued a final rule under the authority of the MSA to approve and implement rebuilding plans recommended by the {{< glossary Council display = PFCM >}} for the three stocks ([86 FR 9301](https://www.federalregister.gov/documents/2021/02/12/2021-02834/fisheries-off-west-coast-states-west-coast-salmon-fisheries-rebuilding-Coho-salmon-stocks)). This final rule adopts the existing harvest control rules, which use an annual abundance-based stepped harvest rate control rule with stock-specific abundance levels governing the total {{< glossary ERs >}} applied to forecast stock abundance levels. For Snohomish natural Coho Salmon, this final rule amends the existing harvest control rule by adding a 10% buffer to the existing escapement goal and adjusting the abundance steps during the rebuilding period. For all three Coho Salmon stocks, the {{< glossary Council display = PFCM >}}'s Salmon Technical Team's analysis determined that freshwater and marine habitat conditions were the primary cause of these stocks meeting the FMP's criteria for being overfished rather than fishing. Recently, it was determined that the Queets and Strait of Juan de Fuca {{< glossary MUs >}} have met the criteria for rebuilt status based on the most recent three-year geometric mean of escapement estimates (2020-2022) [@PFMC_3_2024]. 
+Additionally, at the federal level, Coho Salmon caught in coastal waters of the U.S. (e.g., greater than 3 but within 200 nautical miles offshore) are managed under the Magnuson-Stevens Fishery Conservation and Management Act (MSA), which is the legislation providing for the management of marine fisheries in U.S. waters. In 2018, the National Marine Fisheries Service (NMFS) notified the {{< glossary Council display = PFCM >}} that the Strait of Juan de Fuca, Queets, and Snohomish natural Coho Salmon stocks managed under the {{< glossary Council display = "PFCM" >}}’s Pacific Coast Salmon Fishery Management Plan (FMP) met the overfished criteria of the FMP and the MSA. NMFS determined that these stocks were overfished under the MSA, due to spawning escapement falling below the required level for the 3-year period 2014-2016. The MSA requires overfished stocks to be rebuilt in as short a time as possible, not to exceed 10 years. The overfished determinations were announced in the Federal Register on August 6, 2018 (83 FR 38292). In response to the overfished determination, the {{< glossary Council display = PFCM >}} developed rebuilding plans for these stocks and provided them to NMFS in 2019. In 2021, NMFS issued a final rule under the authority of the MSA to approve and implement rebuilding plans recommended by the {{< glossary Council display = PFCM >}} for the three stocks ([86 FR 9301](https://www.federalregister.gov/documents/2021/02/12/2021-02834/fisheries-off-west-coast-states-west-coast-salmon-fisheries-rebuilding-Coho-salmon-stocks)). This final rule adopts the existing harvest control rules, which use an annual abundance-based stepped harvest rate control rule with stock-specific abundance levels governing the total {{< glossary ERs >}} applied to forecast stock abundance levels. For Snohomish natural Coho Salmon, this final rule amends the existing harvest control rule by adding a 10% buffer to the existing escapement goal and adjusting the abundance steps during the rebuilding period. For all three Coho Salmon stocks, the {{< glossary Council display = PFCM >}}'s Salmon Technical Team's analysis determined that freshwater and marine habitat conditions were the primary cause of these stocks meeting the FMP's criteria for being overfished rather than fishing. Recently, it was determined that the Queets and Strait of Juan de Fuca {{< glossary MUs >}} have met the criteria for rebuilt status based on the most recent three-year geometric mean of escapement estimates (2020-2022) [@PFMC_3_2024]. 
 
 # Annual Implementation of the Southern Coho Management Plan
 
 The Coho FRAM (Coho FRAM, Model Evaluation Workgroup (MEW). 2008) has been the tool used to plan US preseason fisheries, and also to evaluate postseason {{< glossary ERs >}} by the fisheries of both Parties on the naturally spawning Coho Salmon {{< glossary MUs >}} specified by the CoABM. Canada has not been using Coho FRAM preseason, instead using a combination of a ‘domestic model’ for planning marine fisheries and a ‘decay model’ for planning Fraser River fisheries. (**Jeromy's comment - Can we describe what get’s exchanged during the preseason process to reconcile this difference here in one or two sentences?**)
 
-Each country manages the Coho Salmon harvest within its {{< glossary ER >}} cap through its own domestic fisheries management processes and annual fisheries plans. For Canada, the annual domestic planning process is documented in the salmon Integrated Fisheries Management Plan (IFMP) at the culmination of the process each June (*is June correct?*). For the US, the North of Cape Falcon ocean salmon fishing plans are reported in Preseason Report III (PFMC documents) at the culmination of the {{< glossary Council display = PFCM >}} process each April. For US Inside {{< glossary MUs >}}, the 2019 {{< glossary PST >}} uses the {{< glossary ER >}} thresholds and stepped harvest rate goals from the Comprehensive Coho Agreement and adopted as (Fishery Management Plan) FMP conservation objectives in 2009. For US Outside {{< glossary MUs >}}, {{< glossary ER >}} constraints represent the Maximum Fishing Mortality Threshold (MFMT). For US domestic purposes, the  {{< glossary display = "Pacific Fishery Management Council" >}} {{< glossary MU >}} status categories are “critical”, “low”, and “normal”, which correspond to the {{< glossary PSC >}} categories of “low”, “moderate” and “abundant”, respectively [@PFMC_amended_2023].   
+Each country manages the Coho Salmon harvest within its {{< glossary ER >}} cap through its own domestic fisheries management processes and annual fisheries plans. For Canada, the annual domestic planning process is documented in the salmon Integrated Fisheries Management Plan (IFMP) at the culmination of the process each June (*is June correct?*). For the US, the North of Cape Falcon ocean salmon fishing plans are reported in Preseason Report III (PFMC documents) at the culmination of the {{< glossary Council display = PFCM >}} process each April. For US Inside {{< glossary MUs >}}, the 2019 {{< glossary PST >}} uses the {{< glossary ER >}} thresholds and stepped harvest rate goals from the Comprehensive Coho Agreement and adopted as (Fishery Management Plan) FMP conservation objectives in 2009. For US Outside {{< glossary MUs >}}, {{< glossary ER >}} constraints represent the Maximum Fishing Mortality Threshold (MFMT). For US domestic purposes, the  {{< glossary Council display = "Pacific Fishery Management Council" >}} {{< glossary MU >}} status categories are “critical”, “low”, and “normal”, which correspond to the {{< glossary PSC >}} categories of “low”, “moderate” and “abundant”, respectively [@PFMC_amended_2023].   
 
 The US FMP includes status determination criteria (SDC) for overfishing, approaching an overfished condition, overfished, not overfished/rebuilding, and rebuilt [@PFMC_1_2023]. These criteria are:
 
@@ -991,11 +1002,11 @@ The US FMP includes status determination criteria (SDC) for overfishing, approac
 
 - Overfished status occurs when the most recent 3-year geometric mean spawning escapement is less than the MSST;
 
-- Not overfished/rebuilding status occurs when a stock has been classified as overfished and has not yet been rebuilt, and the most recent 3-year geometric mean spawning escapement is greater than the MSST but less than SMSY;
+- Not overfished/rebuilding status occurs when a stock has been classified as overfished and has not yet been rebuilt, and the most recent 3-year geometric mean spawning escapement is greater than the MSST but less than Sustainable Maximum Yield (SMSY; the number of spawners need to maintain the highest possible annual catch of a population, a biological benchmark that represents a healthy population);
 
 - A stock is rebuilt when the most recent 3-year geometric mean spawning escapement exceeds SMSY.
 
-Queets natural Coho Salmon, Strait of Juan de Fuca natural Coho Salmon, and Snohomish natural Coho Salmon stocks were classified as overfished in 2018, and the {{< glossary Council display = PFMC >}} adopted rebuilding plans for these stocks in 2019 [@PFMC_3_2023]. In 2020, Snohomish natural Coho Salmon was reported to have met the criteria for not overfished/rebuilding. In 2023, Snohomish natural Coho was reported to have met the criteria for rebuilt and Strait of Juan de Fuca natural Coho Salmon was reported to have met the criteria for not overfished/rebuilding. Queets natural Coho Salmon continue to meet the criteria for overfished. Coho Salmon fisheries, particularly north of Cape Falcon, were shaped to minimize impacts on these stocks and meet the objectives of the rebuilding plans. Objectives of the rebuilding plans for Queets natural Coho Salmon and Strait of Juan de Fuca natural Coho Salmon are to manage the stock under status quo Smsy **[What is this?]**. 
+Queets natural Coho Salmon, Strait of Juan de Fuca natural Coho Salmon, and Snohomish natural Coho Salmon stocks were classified as overfished in 2018, and the {{< glossary Council display = PFMC >}} adopted rebuilding plans for these stocks in 2019 [@PFMC_3_2023]. In 2020, Snohomish natural Coho Salmon was reported to have met the criteria for not overfished/rebuilding. In 2023, Snohomish natural Coho was reported to have met the criteria for rebuilt and Strait of Juan de Fuca natural Coho Salmon was reported to have met the criteria for not overfished/rebuilding. Queets natural Coho Salmon continue to meet the criteria for overfished. Coho Salmon fisheries, particularly north of Cape Falcon, were shaped to minimize impacts on these stocks and meet the objectives of the rebuilding plans. Objectives of the rebuilding plans for Queets natural Coho Salmon and Strait of Juan de Fuca natural Coho Salmon are to manage the stock under status quo SMSY. 
 
 ## Annual Determinations of Allowable Exploitation Rates for Management Units
 
@@ -1194,10 +1205,6 @@ Preseason FRAM’s anticipated fishery related mortality for Canadian Coho Salmo
 
 Canadian fishery planning process generally concludes in June, with the fisheries directed upon Fraser River salmon (Pinks, Sockeye, and Chum) driven by test fisheries. This later planning process can produce anticipated fishery impacts that diverge from the postseason Canadian fishery scalars used for the US domestic modeling the previous April. In such cases the April PFMC FRAM model run can be “updated” to evaluate both Parties compliance with the Coho Agreement.
 
-### 2023 Preseason Forecasts and {{< glossary MU >}} Status  (Placeholder)
-
-*does the Southern Panel wish us to describe forecasts for the year we have not assessed post-season?*  
-
 ## Joint Canadian and US Postseason Evaluations
 
 “Backwards Coho FRAM” is used to generate estimates of {{< glossary ERs >}} that are used to evaluate management performance relative to constraints set forth in the CoABM. Data required to populate FRAM are not available until one year after the fisheries were prosecuted, thus the 2021 postseason {{< glossary ER >}} estimates were produced in February of 2023. The Backwards Coho FRAM is also employed to produce estimates of historic {{< glossary ERs >}} reported in this Periodic Report.
@@ -1316,12 +1323,6 @@ Most {{< glossary MUs >}} in the US have {{< glossary CWT >}} indicator stocks a
 [^26]: Beginning BY 1995, all tagged releases were unmarked.
 [^27]: Beginning BY 1995, all tagged releases were unmarked.
 
-
-** Coded-wire-tag codes used in the Mixed-Stock Model to create the current FRAM base period. "NA" under hatchery denotes wild stock tagging programs**
-
-REPLACE with LINK to file
-
-
 ### Wild Stock Tagging programs
 
 When developing the FRAM base period, the CoTC used wild indicator stocks to represent a {{< glossary MU >}} when the data was available. The figures below summarize data currently reported in {{< glossary RMIS >}} on coded-wire-tagged wild Coho Salmon smolts released within the {{< glossary MUs >}}. Most of the reported wild stock tagging has occurred in the Grays Harbor, and Queets {{< glossary MUs >}}; followed by Strait of Georgia, Hood Canal, Skagit, and Lower Fraser {{< glossary MUs >}}.  However, no wild stock tagging has been reported in the Lower Fraser since brood year 2007.  Very little wild stock tagging has taken place in the remaining {{< glossary MUs >}}. Not all of the data depicted was used in the MSM and subsequent cohort reconstructions.
@@ -1427,14 +1428,6 @@ static$releases |>
   )
 
 ```
-*ToDo*
-REPLACE with LINK to file
-** Double-index-tag codes released within each US {{< glossary MU >}} (data downloaded from RMIS 9-6-2023).**
-|** Management Unit **|** Brood Year **|** Hatchery **|** DIT Group ID **|** Tag Code **|** Mark **|** No. Released **|
-
-
-
-*ToDo -  include figure of reoveries in all fisheries and in just pre-terminal fisheries to give the reader a sense of data available to use the MSM to update the base period.  Collin wrote code at the January meeting that makes these figures.  I still need to give him a better mapping file!*
 
 ### Total Hatchery Production
 
@@ -1659,8 +1652,6 @@ psc_pst |>
 
 ```
 
-*ToDo - summarize the difference between estimated or modelled ERs and what the post-season ER Cap was?  Like we do in the annual ER report, but this would be an MU assessment across the years 2004 to most current catch year. From Denise Hawkins: Yes please.  This would be useful in determining if there is a pattern or consecutive years of exceeding or being way below allowed ERs. Having all of the data in one place would allow better evaluation compared to needing to access the annual ER reports. (2/15/2024)*
-
 ```{r fishery_er_quantiles, fig.height=14, fig.width=10, eval=T}
 
 psc_pst |> 
@@ -1700,8 +1691,6 @@ psc_pst |>
   )
 
 ```
-
-*ToDo - Create figures (I think you have already done so Collin :) ) and place in an "appendix".  Question for Southern Panel –> do you want this type of figure? If so, what changes, if any, would you like to see? Is there a particular group of years to assess?  We are planning on providing better fishery descriptions than the FRAM code fishery names, ordering the fisheries based on average impacts, and making the graphs bigger.  Would you like for us to pursue looking at impacts from a fishery perspective?  For example, summarizing the catch composition of some of the larger fisheries impacting multiple MU stocks.  From Denise Hawkins: Grouping by MUs would be useful.  Knowing which fisheries impact sensitive stocks would be very helpful. (2/15/2024)*
 
 ### Forecast Performance
 
@@ -1792,8 +1781,6 @@ plot_mus(ests.joint |>
 ```
 
 <!-- ![](images/US_Outside_forecast_perf.png){width=100% fig-alt="US Outside MU Forecast Performance"} -->
-
-*ToDo - A question for Southern Panel Members --> Would you like to see summaries using forecasted and post-season abundances in addition to abundance categories?  From Denise Hawkins:  That level of granularity of the data may not be needed although interesting to see by how much we were off. (2/15/2024)  LP: This would be helpful.  Possibly include as an appendix due to higher level of granularity? Just an idea.*  
 
 ## Management Unit Descriptions and Assessment of Performance 
 
@@ -2341,8 +2328,6 @@ Numerous salmon hatchery facilities exist within the Skagit Basin, including sma
 
 Under the Comprehensive Coho Management Plan, Skagit River wild Coho Salmon is the primary (or key) {{< glossary MU >}} and hatchery production {{< glossary MUs>}} are either secondary (Swinomish Channel, Oak Harbor Pens) or auxiliary (Marblemount Hatchery, Baker River Hatchery) {{< glossary MUs >}} [@CCW_1998]. Under this plan, primary {{< glossary MUs >}} are controlling units in the sense that predefined management actions will be undertaken under specified abundance conditions, auxiliary {{< glossary MUs >}} are those managed to meet or exceed a minimum escapement, and secondary units are passively managed in mixed stock fisheries. Therefore, Skagit River Coho Salmon are managed for natural (wild) production. * JJ question - So, hatchery fish spawning in the river count towards the wild escapement goal, or not?  This type of specificity should be spelled out for each MU very clearly.* While there is hatchery production within the system, fisheries are constrained to meet the natural escapement objectives. Thus, there are frequently significant surplus returns to the Marblemount Hatchery on the Cascade River. There have been fisheries in the Skagit terminal area targeted at hatchery Coho Salmon, but these have been sporadic, and have been confined to small areas (e.g., the creek immediately downstream of the hatchery, Swinomish Channel from 1986–1991, and Oak Harbor from 1994–1996).
 
-*ToDo - update the next citation with the most recent document (if applicable)*
-
 Skagit Coho Salmon are also a primary {{< glossary MU >}} for Puget Sound under the {{< glossary Council display = PFMC >}} FMP [@PFMC_1_2013]. Other primary {{< glossary MUs >}} in this region are Strait of Juan de Fuca, Hood Canal, Snohomish, Stillaguamish, and South Puget Sound (hatchery) Coho Salmon [@PFMC_1_2013]. The {{< glossary Council display = PFMC >}}’s conservation objectives for these {{< glossary MUs >}} are based on the Puget Sound Salmon Management Plan, which includes management objectives and long-term goals for these stocks as developed by representatives from federal, state, and tribal agencies. 
 
 In Puget Sound, conservation objectives for specific stocks are based on either maximum sustainable production for stocks managed primarily for natural production or on hatchery escapement needs for stocks managed for artificial production. The original conservation objectives were developed by a State/Tribal Management Plan Development Team following the Boldt Decision (384 F. Supp. 312 [W.D. Wash. 1974]) with the goal for natural spawning stocks defined as "the adult spawning population that will, on the average, maximize biomass of juvenile outmigrants subsequent to incubation and freshwater rearing under average environmental conditions”. The method used to develop the objectives was based on assessment of the quantity and quality of rearing habitat and the number of adult spawners required to fully seed the habitat. Some objectives have subsequently been modified by the US District Court Fisheries Advisory Board and later determinations of the WDFW/Tribal Technical Committee. However, annual natural management objectives may be adopted by the {{< glossary Council display = PFMC >}} and authorized by NMFS which vary from the fisheries management plan (FMP) conservation objectives if agreed to by WDFW and the treaty Indian tribes under the provisions of US versus Washington (384 F. Supp. 312 [W.D. Wash. 1974]) and subsequent US District Court orders. 
@@ -2365,7 +2350,7 @@ The current {{< glossary PST >}}/{{< glossary Council display = PFMC >}} {{< glo
 
 The Skagit MU has both hatchery and wild Coho Salmon {{< glossary CWT >}} indicator stock programs. Wild Yearling Coho Salmon are captured, coded-wire-tagged, and released within the Skagit Basin [@Litz_2023]. These releases are currently used as a marine survival rate indicator for the wild stock. The Skagit hatchery stock releases from Marblemount Hatchery and the tagged wild stock releases are used as {{< glossary ER >}} indicator stocks. Coho Salmon released from Marblemount Hatchery have been double index tagged starting with brood year 1994.
 
-Coded wire tag recovery-based survival and {{< glossary ER >}} data are available for the Marblemount Hatchery and wild Coho Salmon tagging programs [@Haymes_2008]. The wild stock program (AKA Baker River program) began with broodyear 1983 and its purpose is to supply experimental and research smolts for gulper efficiency testing, serve as an indicator stock for wild Skagit Coho Salmon, and supplement natural production in the basin [@WDFW_and_PSE_2003]. An average of 39,000 Baker Lake wild smolts were captured, coded-wire tagged, and adipose fin clipped annually (@fig_wild_stock_tagging_skagit) for broodyears 1983 through 1995. Beginning with brood year 1996, an average of 20,000 fish have been captured and released annually with a {{< glossary CWT >}} and their fins intact. The Marblemount Hatchery Coho Salmon program has been in existence for over 64 years and its purpose is to provide harvest opportunity [@WDFW_2003_marblemount]. The hatchery indicator program is currently a {{< glossary DIT >}} program (differentially tagged fish released with or without adipose clips) with a goal of releasing 45,000 tagged fish of each group, one with an adipose fin clip and one without [@WDFW_2003_marblemount] (@fig_hatch_stock_releases_mu_cwt_only_skagit). Annual tagged and adipose fin clipped releases prior to the implementation of the {{< glossary DIT >}} program were 68,000 on average. The {{< glossary DIT >}} program began with brood year 1994 and an average of 70,000 tagged and clipped fish have been released annually, while tagged and unclipped fish have averaged approximately 44,000 annually. {{< glossary ERs >}} values for the non-ad clipped+{{< glossary CWT >}} Coho Salmon provide a surrogate measure of exploitation for natural origin Coho Salmon from this {{< glossary MU >}}. There is no regular {{< glossary CWT >}} sampling of the freshwater sport fisheries in the {{< glossary MU >}}, which results in some negative bias in tag recoveries. Double index tag groups released for the Skagit {{< glossary MU >}} are provided below.
+Coded wire tag recovery-based survival and {{< glossary ER >}} data are available for the Marblemount Hatchery and wild Coho Salmon tagging programs [@Haymes_2008]. The wild stock program (AKA Baker River program) began with broodyear 1983 and its purpose is to supply experimental and research smolts for gulper efficiency testing, serve as an indicator stock for wild Skagit Coho Salmon, and supplement natural production in the basin [@WDFW_and_PSE_2003]. An average of 39,000 Baker Lake wild smolts were captured, coded-wire tagged, and adipose fin clipped annually (@fig_wild_stock_tagging_skagit) for broodyears 1983 through 1995. Beginning with brood year 1996, an average of 20,000 fish have been captured and released annually with a {{< glossary CWT >}} and their fins intact. The Marblemount Hatchery Coho Salmon program has been in existence for over 64 years and its purpose is to provide harvest opportunity [@WDFW_2003_marblemount]. The hatchery indicator program is currently a {{< glossary DIT >}} program (differentially tagged fish released with or without adipose clips) with a goal of releasing 45,000 tagged fish of each group, one with an adipose fin clip and one without [@WDFW_2003_marblemount] (@fig_hatch_stock_releases_mu_cwt_only_skagit). Annual tagged and adipose fin clipped releases prior to the implementation of the {{< glossary DIT >}} program were 68,000 on average (@tbl-dit-skagit). The {{< glossary DIT >}} program began with brood year 1994 and an average of 70,000 tagged and clipped fish have been released annually, while tagged and unclipped fish have averaged approximately 44,000 annually. {{< glossary ERs >}} values for the non-ad clipped+{{< glossary CWT >}} Coho Salmon provide a surrogate measure of exploitation for natural origin Coho Salmon from this {{< glossary MU >}}. There is no regular {{< glossary CWT >}} sampling of the freshwater sport fisheries in the {{< glossary MU >}}, which results in some negative bias in tag recoveries. Double index tag groups released for the Skagit {{< glossary MU >}} are provided below.
 
 *ToDo: Fix the figure references in above paragraph *
 
@@ -2418,96 +2403,18 @@ static$releases |>
   )
 
 ```
-*question for Collin - move these tables to "static table" and pull?*  Reviewers want this in an Appendix (There is a tab in excel file that contains DIT info for all MUs called "DIT_Codes"  I just added BY 2022 releases to it.
 
-
-|** Brood Year **|** Hatchery **|** DIT Group ID **|** Tag Code **|** Mark **|** No. Released **| 
-|:--------:|:--------:|:--------:|:--------:|:--------|--------:|
-|	1994	|	MARBLEMOUNT HATCHERY	|	04199600000211	|	635909	|	Clipped	|	 99,623 	|
-|	1994	|	MARBLEMOUNT HATCHERY	|	04199600000211	|	635906	|	Unclipped	|	 45,865 	|
-|	1995	|	MARBLEMOUNT HATCHERY	|	04199700000212	|	636158	|	Clipped	|	 42,489 	|
-|	1995	|	MARBLEMOUNT HATCHERY	|	04199700000212	|	636201	|	Unclipped	|	 42,566 	|
-|	1996	|	MARBLEMOUNT HATCHERY	|	04199800000196	|	630545	|	Clipped	|	 43,348 	|
-|	1996	|	MARBLEMOUNT HATCHERY	|	04199800000196	|	630546	|	Unclipped	|	 45,089 	|
-|	1997	|	MARBLEMOUNT HATCHERY	|	04199900000195	|	630554	|	Clipped	|	 42,299 	|
-|	1997	|	MARBLEMOUNT HATCHERY	|	04199900000195	|	636211	|	Unclipped	|	 41,906 	|
-|	1998	|	MARBLEMOUNT HATCHERY	|	04200000000209	|	631107	|	Clipped	|	 40,398 	|
-|	1998	|	MARBLEMOUNT HATCHERY	|	04200000000209	|	631108	|	Unclipped	|	 40,525 	|
-|	1999	|	MARBLEMOUNT HATCHERY	|	04200100000199	|	630299	|	Clipped	|	 45,831 	|
-|	1999	|	MARBLEMOUNT HATCHERY	|	04200100000199	|	630298	|	Unclipped	|	 45,052 	|
-|	2000	|	MARBLEMOUNT HATCHERY	|	04200200000200	|	630950	|	Clipped	|	 10,582 	|
-|	2000	|	MARBLEMOUNT HATCHERY	|	04200200000200	|	630387	|	Clipped	|	 10,777 	|
-|	2000	|	MARBLEMOUNT HATCHERY	|	04200200000200	|	630946	|	Clipped	|	 10,783 	|
-|	2000	|	MARBLEMOUNT HATCHERY	|	04200200000200	|	630948	|	Clipped	|	 10,861 	|
-|	2000	|	MARBLEMOUNT HATCHERY	|	04200200000200	|	630386	|	Unclipped	|	 10,988 	|
-|	2000	|	MARBLEMOUNT HATCHERY	|	04200200000200	|	630947	|	Unclipped	|	 10,969 	|
-|	2000	|	MARBLEMOUNT HATCHERY	|	04200200000200	|	630949	|	Unclipped	|	 10,935 	|
-|	2000	|	MARBLEMOUNT HATCHERY	|	04200200000200	|	630945	|	Unclipped	|	 10,988 	|
-|	2001	|	MARBLEMOUNT HATCHERY	|	04200300000206	|	631257	|	Clipped	|	 10,745 	|
-|	2001	|	MARBLEMOUNT HATCHERY	|	04200300000206	|	631259	|	Clipped	|	 11,240 	|
-|	2001	|	MARBLEMOUNT HATCHERY	|	04200300000206	|	631253	|	Clipped	|	 9,013 	|
-|	2001	|	MARBLEMOUNT HATCHERY	|	04200300000206	|	631255	|	Clipped	|	 9,975 	|
-|	2001	|	MARBLEMOUNT HATCHERY	|	04200300000206	|	631254	|	Unclipped	|	 7,472 	|
-|	2001	|	MARBLEMOUNT HATCHERY	|	04200300000206	|	631069	|	Unclipped	|	 6,887 	|
-|	2001	|	MARBLEMOUNT HATCHERY	|	04200300000206	|	631256	|	Unclipped	|	 9,063 	|
-|	2001	|	MARBLEMOUNT HATCHERY	|	04200300000206	|	631258	|	Unclipped	|	 8,999 	|
-|	2002	|	MARBLEMOUNT HATCHERY	|	04200400000192	|	632090	|	Clipped	|	 11,046 	|
-|	2002	|	MARBLEMOUNT HATCHERY	|	04200400000192	|	632088	|	Clipped	|	 10,781 	|
-|	2002	|	MARBLEMOUNT HATCHERY	|	04200400000192	|	632089	|	Clipped	|	 6,947 	|
-|	2002	|	MARBLEMOUNT HATCHERY	|	04200400000192	|	632091	|	Clipped	|	 10,861 	|
-|	2002	|	MARBLEMOUNT HATCHERY	|	04200400000192	|	632092	|	Unclipped	|	 10,967 	|
-|	2002	|	MARBLEMOUNT HATCHERY	|	04200400000192	|	632094	|	Unclipped	|	 10,878 	|
-|	2002	|	MARBLEMOUNT HATCHERY	|	04200400000192	|	632093	|	Unclipped	|	 9,781 	|
-|	2002	|	MARBLEMOUNT HATCHERY	|	04200400000192	|	632095	|	Unclipped	|	 11,100 	|
-|	2003	|	MARBLEMOUNT HATCHERY	|	04200500000191	|	631997	|	Clipped	|	 46,348 	|
-|	2003	|	MARBLEMOUNT HATCHERY	|	04200500000191	|	632289	|	Unclipped	|	 46,823 	|
-|	2004	|	MARBLEMOUNT HATCHERY	|	04200600000183	|	633099	|	Clipped	|	 47,305 	|
-|	2004	|	MARBLEMOUNT HATCHERY	|	04200600000183	|	633197	|	Unclipped	|	 41,300 	|
-|	2005	|	MARBLEMOUNT HATCHERY	|	04200700000184	|	633571	|	Clipped	|	 43,100 	|
-|	2005	|	MARBLEMOUNT HATCHERY	|	04200700000184	|	633572	|	Unclipped	|	 43,575 	|
-|	2006	|	MARBLEMOUNT HATCHERY	|	04200800000187	|	633691	|	Clipped	|	 47,072 	|
-|	2006	|	MARBLEMOUNT HATCHERY	|	04200800000187	|	633690	|	Unclipped	|	 47,206 	|
-|	2007	|	MARBLEMOUNT HATCHERY	|	04200900000180	|	634484	|	Clipped	|	 44,174 	|
-|	2007	|	MARBLEMOUNT HATCHERY	|	04200900000180	|	634485	|	Unclipped	|	 44,604 	|
-|	2008	|	MARBLEMOUNT HATCHERY	|	04201000000181	|	634495	|	Clipped	|	 43,359 	|
-|	2008	|	MARBLEMOUNT HATCHERY	|	04201000000181	|	634496	|	Unclipped	|	 43,568 	|
-|	2009	|	MARBLEMOUNT HATCHERY	|	04201100000213	|	635381	|	Clipped	|	 44,465 	|
-|	2009	|	MARBLEMOUNT HATCHERY	|	04201100000213	|	635382	|	Unclipped	|	 43,354 	|
-|	2010	|	MARBLEMOUNT HATCHERY	|	04201200000215	|	635799	|	Clipped	|	 41,840 	|
-|	2010	|	MARBLEMOUNT HATCHERY	|	04201200000215	|	635798	|	Unclipped	|	 42,100 	|
-|	2011	|	MARBLEMOUNT HATCHERY	|	04201300000030	|	636377	|	Clipped	|	 45,068 	|
-|	2011	|	MARBLEMOUNT HATCHERY	|	04201300000030	|	636376	|	Unclipped	|	 45,650 	|
-|	2012	|	MARBLEMOUNT HATCHERY	|	04201400000080	|	636555	|	Clipped	|	 43,388 	|
-|	2012	|	MARBLEMOUNT HATCHERY	|	04201400000080	|	636554	|	Unclipped	|	 43,163 	|
-|	2013	|	MARBLEMOUNT HATCHERY	|	04201500000796	|	636697	|	Clipped	|	 47,575 	|
-|	2013	|	MARBLEMOUNT HATCHERY	|	04201500000796	|	636696	|	Unclipped	|	 47,670 	|
-|	2014	|	MARBLEMOUNT HATCHERY	|	04201600000837	|	636839	|	Clipped	|	 43,867 	|
-|	2014	|	MARBLEMOUNT HATCHERY	|	04201600000837	|	636840	|	Unclipped	|	 43,868 	|
-|	2015	|	MARBLEMOUNT HATCHERY	|	04201700000878	|	636993	|	Clipped	|	 46,326 	|
-|	2015	|	MARBLEMOUNT HATCHERY	|	04201700000878	|	636994	|	Unclipped	|	 46,309 	|
-|	2016	|	MARBLEMOUNT HATCHERY	|	04201800000906	|	637089	|	Clipped	|	 36,508 	|
-|	2016	|	MARBLEMOUNT HATCHERY	|	04201800000906	|	637088	|	Unclipped	|	 36,893 	|
-|	2017	|	MARBLEMOUNT HATCHERY	|	04201900000951	|	637272	|	Clipped	|	 41,744 	|
-|	2017	|	MARBLEMOUNT HATCHERY	|	04201900000951	|	637271	|	Unclipped	|	 41,842 	|
-|	2018	|	MARBLEMOUNT HATCHERY	|	04202000001028	|	637555	|	Clipped	|	 44,326 	|
-|	2018	|	MARBLEMOUNT HATCHERY	|	04202000001028	|	637554	|	Unclipped	|	 46,243 	|
-|	2019	|	MARBLEMOUNT HATCHERY	|	04202100001068	|	637678	|	Clipped	|	 41,895 	|
-|	2019	|	MARBLEMOUNT HATCHERY	|	04202100001068	|	637677	|	Unclipped	|	 42,653 	|
-|	2020	|	MARBLEMOUNT HATCHERY	|	04202200001130	|	638003	|	Clipped	|	 40,507 	|
-|	2020	|	MARBLEMOUNT HATCHERY	|	04202200001130	|	638002	|	Unclipped	|	 40,547 	|
-|	2021	|	MARBLEMOUNT HATCHERY	|	04202300001147	|	638230	|	Clipped	|	 45,944 	|
-|	2021	|	MARBLEMOUNT HATCHERY	|	04202300001147	|	638229	|	Unclipped	|	 45,747 	|
-
-:Double-index tag codes released within the Skagit MU, brood years 1994 through 2021. {#tbl-dit-for-appendix}
 
 ###### Forecast Methods
 
-Since 1996, WDFW and tribal biologists have developed forecasts of wild Coho Salmon run size for all primary and most secondary {{< glossary MUs >}} in Puget Sound and the Washington coast [@Zimmerman_2013]. These annual forecasts are described in the {{< glossary CounCouncil display = PFMCcil >}}’s Preseason Forecast I document available each February [e.g., @PFMC_1_2013; www.pcouncil.org]. These forecasts rely on estimates of wild Coho Salmon production (i.e., smolts) paired with estimates of marine survival. Wild Coho Salmon production estimates for each of the primary and secondary {{< glossary MUs >}} in Puget Sound were derived from results of juvenile trapping studies conducted in the Skagit, Stillaguamish, Snohomish, Green, Nisqually, and Deschutes rivers as well as in tributaries to Lake Washington and Hood Canal.  Analyses of these long-term data sets have demonstrated that wild Coho Salmon smolt production is limited by a combination of factors including seeding levels (i.e., escapement), environmental effects (flows, marine derived nutrients), and habitat degradation [@Zimmerman_2012]. 
+Since 1996, WDFW and tribal biologists have developed forecasts of wild Coho Salmon run size for all primary and most secondary {{< glossary MUs >}} in Puget Sound and the Washington coast [@Zimmerman_2013]. These annual forecasts are described in the {{< glossary Council display = PFMC >}}’s Preseason Forecast I document available each February [e.g., @PFMC_1_2013; www.pcouncil.org]. These forecasts rely on estimates of wild Coho Salmon production (i.e., smolts) paired with estimates of marine survival. Wild Coho Salmon production estimates for each of the primary and secondary {{< glossary MUs >}} in Puget Sound were derived from results of juvenile trapping studies conducted in the Skagit, Stillaguamish, Snohomish, Green, Nisqually, and Deschutes rivers as well as in tributaries to Lake Washington and Hood Canal.  Analyses of these long-term data sets have demonstrated that wild Coho Salmon smolt production is limited by a combination of factors including seeding levels (i.e., escapement), environmental effects (flows, marine derived nutrients), and habitat degradation [@Zimmerman_2012]. 
 
 Estimates of wild Coho Salmon production in the Skagit Basin are based on catch of wild Coho Salmon smolts in a juvenile trapping program on the lower mainstem Skagit River [@Litz_2023]. WDFW operates a scoop-and-screw trap combination in the lower Skagit River mainstem, located at RM 17 from the river mouth. Trapping began in 1990 and the juvenile trap is calibrated using recaptures of wild yearling Coho marked and released from an upstream tributary (Mannser Creek, RM 35). Coho Salmon abundance is calculated using a Petersen estimator with Chapman modification [@Seber_1973; @Volkhardt_et_al_2007]. Estimated smolt production has been quite consistent in the Skagit {{< glossary MU >}}, averaging 1.1 million smolts annually from 1990 to 2022 (@fig_smolts_skagit). Smolt production has varied from a low of 426,963 in 2008 to a high of 1,885,000 in 2002 and has exceeded 1,000,000 smolts in 20 of the last 33 years. Freshwater productivity (smolts/female) during this period was a function of Coho spawner abundance. The smolt-spawner function derived based on Skagit Coho Salmon estimates is comparable to systems with census counts, lending further credibility to the Skagit juvenile and adult estimates. 
 
 
-```{r fig_smolts_skagit, fig.cap="Estimated number of Skagit MU wild Coho Salmon smolts outmigrants, years 1990 through 2022", fig.height=4, fig.width=6}
+```{r fig_smolts_skagit, fig.height=4, fig.width=6}
+#| fig-cap: Estimated number of Skagit MU wild Coho Salmon smolts outmigrants, years 1990 through 2022
+#| label: fig-smolt-skagit
 plot_smolts("Skagit")
 ```
 
@@ -2556,12 +2463,11 @@ ggplot() + geom_sf(aes(color = USETYPE_DE))
 
 ```
 
+::: {.content-hidden unless-meta="devversion"}
+**We should move the boilerplate Fishery Monitoring text into a generic US Fisheries Monitoring section above. Discuss with the CoTC if there's anything specific under this we should include instead**
+:::
 
 ###### Fishery Monitoring
-
-*CCT: this is canned language used in all of the MUs.  should we include real data here - like fishery sample rates on fisheries that impact this stock?*
-
-*DA: I think canned/uniform langauge around pre-term mixed stock monitoring, i.e. PSSP, belongs ahead of individual MUs, but terminal/freshwater creel can/should go here...and/but that requires either writing it or pulling from multi-year Coho-centric MSF-monitoring report generated by Ty for NOF22*
 
 A fundamental requirement of abundance-based Coho Salmon management under the {{< glossary PST >}} is that all fishery impacts on individual {{< glossary MUs >}} be annually monitored with respect to both number of fish caught and CWTs. This requires basic reporting of total impacts by fishery and the capacity to estimate each fishery’s {{< glossary MU >}}-specific impacts. Total fishing mortalities for each {{< glossary MU >}} must be estimated to enable managers the ability to evaluate the annual {{< glossary ER >}} relative to the {{< glossary PST >}}-prescribed impact limits.
 
@@ -2574,10 +2480,13 @@ Management impacts for each {{< glossary MU >}} are generally evaluated using th
 Post-season {{< glossary ER >}} estimates are also generated using the Post-Season FRAM Model. Post-season estimates of catch and escapement are entered into the updated FRAM model with the same fishery regulation and effort package used for preseason modeling to generate post-season {{< glossary ER >}} estimates.
 
 ##### Enhancement
+
 There are numerous hatchery programs releasing Coho Salmon within the Skagit Basin. Since brood year 1983 to 2020, the largest ones include Marblemount, Baker Lake, Puget Sound Energy, and Swinomish Channel PD Hatchery programs. Over this time period approximately 690,000 Coho Salmon have been released annually on average. Marblemount Hatchery made up the majority (77%) of all releases, followed by Baker Lake Hatchery (9%), Puget Sound Energy (7%; ended with 2009 brood), and Swinomish Channel PD (2%; ended with 1990 brood). Prior to the implmentation of mass marking, total hatchery production within the {{< glossary MU >}} of brood years 1983–1994 were highly variable, ranging from a high of three million fish released from brood year 1983 to a low of 380,000 fish from brood year 1988 (**Figure **) [@RMISD_1977]. With the advent of technology to automatically remove adipose fins and/or insert {{< glossary CWTs >}} using mobile “tagging trailers”, mass marking of hatchery fish was implemented for Coho Salmon in the mid-1990s [@SFEC_1999]. Mass marking allows mark selective fisheries (MSF) for Coho Salmon in which marked hatchery fish can be retained and unmarked wild fish released, resulting in higher harvest rates on hatchery fish than wild fish. Mass marking was fully implemented for Coho Salmon from the Columbia River, Washington coast, and Puget Sound with the 1997 brood, including both mass marking (adipose fin clip) the vast majority of hatchery fish and use of select {{< glossary DIT >}} groups (paired clipped and unclipped fish with {{< glossary CWTs >}}) [@SFEC_1999]. Double index tagging of hatchery fish at Marblemount Hatchery began with the 1994 brood and mass-marked fish were released beginning with brood year 1995. Hatchery production within the {{< glossary MU >}} for brood years 1995 to brood year 2020 have averaged 500,000 annually, with a low of 252,000 in 2000 and a high of 795,000 in 2018. Of these, an average of 290,000 hatchery fish have been mass marked and released within the {{< glossary MU >}} (fig_hatch_stock_releases_skagit) [@RMISD_1977]. 
 
 
-```{r fig_hatch_stock_releases_skagit, fig.cap="Hatchery production of Coho Salmon released within the Skagit {{< glossary MU >}}, brood years 1983 through 2020.", fig.height=6.5, fig.width=6.5}
+```{r fig_hatch_stock_releases_skagit, fig.height=6.5, fig.width=6.5}
+#| fig-cap: Hatchery production of Coho Salmon released within the Skagit {{< glossary MU >}}, brood years 1983 through 2020.
+#| label: fig-hatch-stock-releases-skagit
 static$releases |> 
   filter(
     rearing_type == "H",
@@ -2611,8 +2520,37 @@ This section of the report includes summaries of forecast performance, abundance
 
 A comparison of preseason adult ocean age-3 recruit forecasts with post-season estimates derived from Backwards FRAM run reconstruction have been mixed, with some forecasts over estimating abundances and others underestimating it (Southern Panel --> do you wish to see a table of these data?). During catch years 2004–2021, predicted cohort size (without natural mortality) ranged from a low of 26,799 (2007) to a high of 155,814 (2004), while post-season estimates ranged from 11,521 (2006) to 145,283 (2004).  Accordingly, the difference between preseason and post-season estimates varied from -210% (2007) to +89% (2006) of the preseason estimates. 
 
-CoTC --> need to create this figure for inclusion here
-**Preseason forecasts and post-season estimates of ocean age-3 abundance of Skagit MU. **
+```{r}
+#| fig-cap: Comparison of preseason abundance predictions with the post-season estimates for the Skagit MU.
+#| label: fig-abund-compare-skagit
+dat.pre = psc_pre |> 
+  filter(PSC_StockName == "Skagit") |> 
+  ## Choose a single fishery ID, doesn't matter which
+  filter(FisheryID == 15) |> 
+  select(year = "Catch Year",
+         abund.pre = abund)
+dat.post = psc_pst |> 
+  filter(PSC_StockName == "Skagit") |> 
+  ## Choose a single fishery ID, doesn't matter which
+  filter(FisheryID == 16) |> 
+  select(year = "Catch Year",
+         abund.post = abund)
+left_join(dat.post, dat.pre)  |> 
+  filter(year >=2004) |> 
+  # pivot_longer(cols = abund.post:abund.pre, values_to = "abundance", names_to = "name") |> 
+  # mutate(name = gsub("abund[.]", "", name)) |> 
+  ggplot(aes(x = year))+
+  geom_segment(aes(y = abund.post, yend = abund.pre))+
+  geom_point(aes(y = abund.post, col = "Postseason abundance"), size = 4)+
+  geom_point(aes(y = abund.pre, col = "Preseason abundance"), size = 4)+
+  scale_y_continuous(limits = c(0, NA),
+                     labels = function(x){format(x, big.mark = ",")})+
+  theme_bw()+
+  labs(y = "Abundance")+
+  theme(legend.position = "top")
+
+
+```
 
 
 ##### Fishery Mortality and Escapement
@@ -2711,22 +2649,27 @@ During the base period, Coho Salmon production from the Skagit {{< glossary MU >
 *Current Exploitation Rates*
 
 ```{r f_abund_bar_skagit}
+#| fig-cap: Skagit {{< glossary MU >}} post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years 2004 through 2021. The graphs include dashed trend lines and the vertical dotted lines highlight catch year 2010)
+#| label: fig-abund-bar-skagit
 plot_abund_bar("Skagit")
 ```
 
-** Skagit {{< glossary MU >}} post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years 2004 through 2021. The graphs include dashed trend lines and the vertical dotted lines highlight catch year 2010)
-
 ```{r f_ns_msf_skagit}
+#| fig-cap: Post-season estimates of fishery mortality for the Skagit {{< glossary MU >}} by mark-selective (MSF) and non-selective (NS) fisheries over catch years 1998 through 2021. These estimates are combined US and Canadian harvest impacts.
+#| label: fig-ns-msf-skagit
 plot_ns_msf("Skagit")
 ```
-
-** Post-season estimates of fishery mortality for the Skagit {{< glossary MU >}} by mark-selective (MSF) and non-selective (NS) fisheries over catch years 1998 through 2021. These estimates are combined US and Canadian harvest impacts.**
 
 **Average {{< glossary ERs >}} by fishing area.  The stacked bars represent the rates estimated by gear type during the FRAM base period, catch years 1986–1992.  The line represents the average annual total  {{< glossary ER >}} by fishing area during catch years ??, all gears combined.**
 
 Total {{< glossary ERs >}} have generally declined, averaging 59% between 1986 and 1995 then gradually falling to an extended period of low {{< glossary ERs >}} (26%) during 1998–2004 (Table 5 1; Figure 4 2).  {{< glossary ERs >}} have increased somewhat since 2005, averaging 36% during 2005–2011.  Up until 1997 the {{< glossary ER >}} by Canadian fishers averaged 36%, but has since declined to an average of less than 1.5%.  A comparison of {{< glossary ERs >}} by major fisheries during the base period and the most recent five years (2006–2010) is provided in Figure 5 1, while {{< glossary ERs >}} by major fisheries by year since 1986 are listed in Appendix D.  Individual fishery management areas within Washington State are depicted in Figure 5 2 and Figure 5 3.
 
-To-do --> Add Table 5.1
+To-do --> Add Table 5.1 (** this is the summary table with catch year, total abundance, escapement, marine survival from the static table, and US, Canada, and Total ER rates)
+
+```{r}
+
+```
+
 
 **Historical summary of annual total abundance (January age-3 without natural mortality), adult escapement, marine survival (Baker River Wild), and {{< glossary ER >}} (ER) of the Skagit Management Unit; since 1986. **
 
@@ -2734,14 +2677,14 @@ To-do --> Add Table 5.1
 
 Since catch year 2004, the post-season status of the Skagit {{< glossary MU >}} has been “Moderate” or “Abundant”, except in 2006 when the estimate of age-3 ocean recruits was less than 12,000 fish (Table 7 1).
 
-To-do --> add Table 7.1
-**Pre- and post-season status determinations of the Skagit Management Unit.  These determinations are based on estimates of age-3 ocean recruits.**
-
 Estimated total abundance and escapement in the Skagit {{< glossary MU >}} has been quite variable during 1986–2011, with a downward trend in total abundance and a slightly trend in escapement during this period.  Total abundance has varied from low of 14,123 fish (2006) to a high of 397,120 fish (1986) and has exceeded 100,000 fish in 14 of 26 years between 1986 and 2011, and six times since 2000 (Table 5 1). Estimated escapement has averaged 54,275 during the entire time period and 55,364 during 2000–2011. It has varied from a low of 7,702 fish (2006) and a high of 118,220 (2004) (Table 5 1).
 
 ```{r f_plot_status_skagit, fig.height=3}
 plot_status("Skagit")
 ```
+
+**Consider turning it into a table)
+
 
 ::: {.content-hidden unless-meta="devversion"}
 
@@ -3775,3 +3718,18 @@ gt(static$glossary)
 
 ```
 
+# Appendix: DITs
+
+## Skagit
+
+```{r}
+#| tbl-cap: Double-index tag codes released within the Skagit MU, brood years 1994 through 2021
+#| label: tbl-dit-skagit
+
+static$dit_codes |> 
+  filter(`Management Unit` == "Skagit") |> 
+  filter(DIT == "Yes") |> 
+  select("Brood Year", "Hatchery", "DIT Group ID", "Tag Code", "Mark", "# Released") |> 
+  gt() |> 
+  opt_row_striping()
+```

@@ -1,0 +1,978 @@
+---  
+title: "Joint Coho Technical Committee Periodic Report"
+author: "PSC Joint Coho Technical Committee"
+date: "`r Sys.Date()`"
+bibliography: references.bib
+csl: american-fisheries-society.csl
+params:
+  static_tables: StaticTables.xlsx
+  mdb_pre: ../PeriodicReportData/PSC_CoTC_Preseason_CohoFRAMDB_thru2024_06182024.mdb
+  mdb_pst: ../PeriodicReportData/PSC_CoTC_PostSeason_CohoFRAMDB_thru2022_03042024.mdb
+  clean_run: false
+editor_options:
+  chunk_output_type: console
+glossary:
+    path: glossary.yml
+    popup: hover
+    show: true
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    toc-expand: 1
+    number-sections: true
+    number-depth: 4
+    crossref:
+      chapters: true
+    linkcolor: blue
+    self-contained: true
+    embed-resources: true
+  docx:
+    reference-doc: /Users/auerbdaa/O/code/quarto_template.docx
+devversion: false
+---
+
+::: {.content-hidden unless-meta="devversion"}
+
+Dev note: using quarto-glossary to add hover-over text. Details and installation guide here: https://debruine.github.io/quarto-glossary/
+
+!! DRAFT DOCUMENT UNDER DEVELOPMENT !!
+
+**TO DO**
+
+- further text revisions
+- drop unnecessary tables from StaticTable
+- Clarify + update existing figures
+- Translate "picture" figures into natively created graphics
+- Ditto tables
+- abundance figures overlaying MUs within regions (US in, US out, BC)
+- Extract Quillayute and Queets values from TAMMs (currntly based on FRAM)
+
+
+*New Todos (CBE and CCT 2024+)*
+
+- Populate glossary hover-over tooltips, using glossary.yml and inserting based on nomenclature here: https://debruine.github.io/quarto-glossary/
+- add in the ER vs overages table CBE put together for 5 yr report. Use Mike's code to identify 
+- add the rmis summary data process to our documentation for rerunning this, and to Collin's scripts (automate the SQL call)
+- add the updated coho_lut operation with "TERM" column into the SQL workflow
+- add PSC MU lookup tables from Mike's package to framrosetta
+- update 5-yr report doc to account for coastal fisheries and to use the ER caps calculated via mike's function.
+
+**CBE change log**
+
+- added "clean_run" as a logical to the parameters.  If `TRUE`, recreates the temporary .csv files.
+- Previously used hard-coded RunID numbers when generating intermediate data csv. This was sensitive to changes in numbering scheme;
+updated to instead specify minimum year (1998, to match comments from original) and include all years of FRAM data after that.
+
+:::
+
+```{r internal_parms, include = FALSE}
+## Semi-hardcoded params:
+year.min = 1998 ## minimum year to include from our fram databases. Code uses all years since then.
+```
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+if(interactive()){ ## recreate parameters if being run interactively.
+  params = list(static_tables = "StaticTables.xlsx",
+                mdb_pre = "C:/Repos/PeriodicReportData/PSC_CoTC_Preseason_CohoFRAMDB_thru2024_06182024.mdb",
+                mdb_pst = "C:/Repos/PeriodicReportData/PSC_CoTC_PostSeason_CohoFRAMDB_thru2022_03042024.mdb",
+                clean_run = TRUE
+  )
+}
+
+
+# #biblio CSL (following AFS) from:
+# https://github.com/citation-style-language/styles/blob/master/american-fisheries-society.csl
+# dropped 'text-case="capitalize-first"' on L164
+
+library("tidyverse", quietly = T)
+library("here")
+library("readxl")
+library("kableExtra", quietly = T)
+library("patchwork")
+library("gt")
+library("glue")
+library("scales")
+library("rvest")
+library("plotly")
+theme_set(theme_light())
+
+# #can load an entire environment built ahead of time and save time on reknitting
+# load("PeriodicReport_envi.RData")
+
+static <- list(
+  members = readxl::read_excel(params$static_tables, sheet = "members") |> 
+    mutate(across(where(is.character), ~replace_na(.,"")))
+  ,
+  acronyms = readxl::read_excel(params$static_tables, sheet = "acronyms") |> 
+    mutate(across(where(is.character), ~replace_na(.,"")))
+  ,
+  #modified from: https://github.com/dappdrd/CohoPSC/blob/bb61dd39715a29a739259c3791cdd26bd8f42a2f/server.R#L65
+  #another place with LU info is the "year_template" sheet of the annual escapement compilation 
+  lu_stock = readxl::read_excel(params$static_tables, sheet = "lu_stock") |> 
+    mutate(across(where(is.character), ~replace_na(.,"")))
+  ,
+  #exported from postseason db 'Fishery' table
+  lu_fishery = readxl::read_excel(params$static_tables, sheet = "fram_coho_fishery")
+  ,
+  glossary = readxl::read_excel(params$static_tables, sheet = "glossary") |> 
+    mutate(across(where(is.character), ~replace_na(.,"")))
+  ,
+  run_files = readxl::read_excel(params$static_tables, sheet = "RunFiles") |> 
+    mutate(across(where(is.character), ~replace_na(.,"")))
+  ,
+  #field PSC_MU designates relevant units for report, those in PST
+  #field Indicator defines evaluated CWT release groups (as "Y")
+  releases = readxl::read_excel(
+    params$static_tables, sheet = "Releases",
+    col_types = c(rep('text',9), 'numeric', 'text', rep('numeric',7))
+  ) |> 
+    mutate(across(where(is.character), ~replace_na(.,"")))
+  ,
+  #these data derive from CCT review of annual wild coho forecasts from WDFW
+  #originally compiled/prepared by Volkhardt, Seiler, Zimmerman, Litz
+  #needs review and possible updating
+  smolts = readxl::read_excel(params$static_tables, sheet = "Smolts") |> 
+    select(out_year = `Out-migration Year`, everything(), -Reference) |> 
+    pivot_longer(cols = -out_year, names_to = "mu_name", values_to = "n") |> 
+    drop_na(n)
+  ,
+  status = readxl::read_excel(params$static_tables, sheet = "Status")  
+)
+
+levels <- list(
+  mu_name = c("Interior Fraser", "Lower Fraser",
+              "Strait of Georgia", #created inline by combining Mainland and Van.Isl.
+              "Skagit","Stillaguamish","Snohomish","Hood Canal","US Strait JDF",
+              "Quillayute","Hoh","Queets","Grays Harbor"
+  ))
+
+pal_rel_tag_mark <- c("CWT_Unclipped"= "#4D5370", 
+                      "CWT_Unclipped_DIT" = alpha("#263C19", 0.6),
+                      "CWT_Clipped" = "#A6B7C6",
+                      "Clipped_only"= "#E4C22B", "Unclipped" = "#965127")
+```
+
+
+```{r rebuild_psc_pst_csv, include=FALSE}
+#postseason mdb from params arg above, sourced locally, ultimately from CoTC Sharepoint
+#moved to .csv on load to allow more portability/generality
+
+fram_mdb_reader <- function(
+    mdb_file_path,
+    fram_table,
+    osx = grepl("apple", sessionInfo()$platform)
+) {
+  if(osx){
+    t_out <- readr::read_csv(I(
+      system2(
+        "mdb-export",
+        args = paste(str_replace_all(mdb_file_path, " ", "\\\\ "),
+                     fram_table),
+        stdout = T) 
+    ))
+  } else {
+    db_con <- DBI::dbConnect(
+      drv = odbc::odbc(),
+      .connection_string = paste0(
+        "Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=", mdb_file_path, ";")
+    )
+    
+    t_out <- DBI::dbReadTable(db_con, fram_table)
+    
+    DBI::dbDisconnect(db_con)
+  }
+  return(t_out)
+}
+
+if(params$clean_run == TRUE){
+  fram <- list()
+  
+  fram$stockIDs <- static$lu_stock$StockID
+  
+  #Note the original negative escapement in A12A Wild in 2005 is due to an error in the FRAM database
+  #Mortality is summed across timesteps (and Ages, but only 3s anyway)
+  #maintaining FRAM stocks and fisheries
+  fram$fishery <- fram_mdb_reader(mdb_file_path = params$mdb_pst, fram_table = "Fishery") |> 
+    filter(Species == "COHO") |> select(FisheryID, FisheryName)
+  fram$stock <- fram_mdb_reader(mdb_file_path = params$mdb_pst, fram_table = "Stock") |> 
+    filter(Species == "COHO", StockID %in% fram$stockIDs) |> select(StockID, StockLongName)
+  fram$runid <- fram_mdb_reader(mdb_file_path = params$mdb_pst, fram_table = "RunID") |> 
+    filter(RunYear >= year.min) |> 
+    select(RunID, RunYear)
+  ## snagging starting cohort size
+  fram$ocean_abund = fram_mdb_reader(mdb_file_path = params$mdb_pst, fram_table = "Cohort") |> 
+    filter(StockID %in% fram$stockIDs, RunID %in% fram$runid$RunID) |> 
+    filter(TimeStep == 1) |> 
+    select(RunID, StockID, ocean_abund = StartCohort)
+  fram$escp <- fram_mdb_reader(mdb_file_path = params$mdb_pst, fram_table = "Escapement") |> 
+    filter(StockID %in% fram$stockIDs, RunID %in% fram$runid$RunID) |> 
+    select(RunID, StockID, escp = Escapement) |> 
+    mutate(escp = if_else(escp < 0, 0, escp))
+  fram$mort <- fram_mdb_reader(mdb_file_path = params$mdb_pst, fram_table = "Mortality") |> 
+    filter(StockID %in% fram$stockIDs, RunID %in% fram$runid$RunID) |> 
+    mutate(
+      mort_ns = LandedCatch + NonRetention + Shaker + DropOff,
+      mort_msf = MSFLandedCatch + MSFNonRetention + MSFShaker + MSFDropOff,
+      mort = mort_ns + mort_msf
+    ) |> 
+    group_by(RunID, StockID, FisheryID) |> 
+    summarise(across(LandedCatch:mort, ~sum(., na.rm=T)), .groups = "drop")
+  
+  
+  # #build out the yearly totals and ER info for PSC stock (and fishery?) aggregations
+  # #SUS fisheries are FRAM FisheryID 1:166
+  # #Canadian are FRAM FisheryID 167:193
+  # #AK are 193:max?
+  
+  # join PSC metadata and re-aggregate, 
+  # also adding columns of total mortality per year per re-aggregated PSC stock 
+  # these are summed over fisheries and repeating per individual fishery
+  # same idea for escapement...
+  
+  psc_pst <- left_join(
+    fram$mort |> 
+      left_join(fram$runid, by = "RunID") |> 
+      left_join(fram$fishery, by = "FisheryID") |> 
+      left_join(
+        static$lu_stock |> 
+          select(StockID, PSC_StockID, PSC_StockName),
+        by = "StockID") |> 
+      group_by(RunYear, PSC_StockID, PSC_StockName, FisheryID, FisheryName) |> 
+      summarise(across(starts_with("mort"), sum), 
+                .groups = "drop") |>
+      group_by(RunYear, PSC_StockID, PSC_StockName) |> 
+      mutate(across(starts_with("mort"), list(sum = sum), .names = "{.col}_{.fn}")) |> 
+      ungroup() |> 
+      left_join(
+        ## ocean abundances need to be summed to PSC before joining in
+        left_join(static$lu_stock |> select(StockID, PSC_StockID, PSC_StockName),
+                  fram$ocean_abund |> rename(ocean_abund_sum = ocean_abund), by = c("StockID")) |> 
+          left_join(fram$runid, by = "RunID") |> 
+          group_by(RunYear, PSC_StockName) |> 
+          summarize(ocean_abund_sum = sum(ocean_abund_sum)) |> 
+          ungroup(),
+        by = c("RunYear", "PSC_StockName")
+      )
+    ,
+    fram$escp |> 
+      left_join(fram$runid, by = "RunID") |> 
+      left_join(
+        static$lu_stock |> 
+          select(StockID, PSC_StockID, PSC_StockName),
+        by = "StockID") |> 
+      group_by(RunYear, PSC_StockID, PSC_StockName) |> 
+      summarise(across(escp, sum), .groups = "drop") 
+    ,
+    by = c("RunYear", "PSC_StockID", "PSC_StockName")
+  ) |>
+    mutate(
+      abund = mort_sum + escp,
+      across(c(mort, mort_sum), list(er = ~.x/abund))
+    ) |> 
+    left_join(
+      static$lu_stock |> 
+        distinct(PSC_StockID, PSC_Region, cap_method,
+                 low_mod_abund, mod_abd_abund,
+                 low_er_cap, mod_er_cap, abd_er_cap,
+                 low_escp_goal, upr_escp_goal)
+      , by = "PSC_StockID"
+    )
+  
+  write_csv(psc_pst, here("../PeriodicReportData/psc_postfram_2004_2023.csv"))
+  
+  ##Quillayute and Queets post-season values are drawn from TAMM
+  #https://github.com/PSC-CoTC/AnnualReport/blob/master/csv/TammFisheryQueetsRef.csv
+  #need to swap out some fishery values (and escp for Quil?)
+  #sheet 2, r48, col26 Quil escp (2021: 9916)
+  #sheet 2, r38, col26 Quil TR net, fid 71 (2021: 1083)
+  #sheet 2, r39, col26 Quil spt, fid 70 (2021: 174)
+  #plus 0 fid72 for sid131, 70:72 for sid132
+  
+  #sheet 2, r48, col31 Queets escp (2021: 4530)
+  #sheet 2, r38, col31 Queets TR net, fid 68 (2021: 164)
+  #sheet 2, r39, col31 Queets spt, fid 65 (2021: 56)
+  #plus 0 out 66,67,69 for sid 139 and 65:69 for sid140 (prob already 0)
+}
+```
+
+```{r rebuild_psc_pre_csv, include=FALSE}
+
+if(params$clean_run == TRUE){
+  #using fram_mdb_reader from postseason rebuild chunk
+  #overwrites (temporary) `fram` object
+  #identical to postseason other than mdb_file_path argument
+  
+  fram <- list()
+  fram$stockIDs <- static$lu_stock$StockID
+  
+  fram$fishery <- fram_mdb_reader(mdb_file_path = params$mdb_pre, fram_table = "Fishery") |> 
+    filter(Species == "COHO") |> select(FisheryID, FisheryName)
+  fram$stock <- fram_mdb_reader(mdb_file_path = params$mdb_pre, fram_table = "Stock") |> 
+    filter(Species == "COHO", StockID %in% fram$stockIDs) |> select(StockID, StockLongName)
+  fram$runid <- fram_mdb_reader(mdb_file_path = params$mdb_pre, fram_table = "RunID") |> 
+    filter(RunYear >= year.min) |> 
+    select(RunID, RunYear) |> arrange(RunYear)
+  ## snagging starting cohort size
+  fram$ocean_abund = fram_mdb_reader(mdb_file_path = params$mdb_pre, fram_table = "Cohort") |> 
+    filter(StockID %in% fram$stockIDs, RunID %in% fram$runid$RunID) |> 
+    filter(TimeStep == 1) |> 
+    select(RunID, StockID, ocean_abund = StartCohort)
+  fram$escp <- fram_mdb_reader(mdb_file_path = params$mdb_pre, fram_table = "Escapement") |> 
+    filter(StockID %in% fram$stockIDs, RunID %in% fram$runid$RunID) |> 
+    select(RunID, StockID, escp = Escapement) |> 
+    mutate(escp = if_else(escp < 0, 0, escp))
+  fram$mort <- fram_mdb_reader(mdb_file_path = params$mdb_pre, fram_table = "Mortality") |> 
+    filter(StockID %in% fram$stockIDs, RunID %in% fram$runid$RunID) |> 
+    mutate(
+      mort_ns = LandedCatch + NonRetention + Shaker + DropOff,
+      mort_msf = MSFLandedCatch + MSFNonRetention + MSFShaker + MSFDropOff,
+      mort = mort_ns + mort_msf
+    ) |> 
+    group_by(RunID, StockID, FisheryID) |> 
+    summarise(across(LandedCatch:mort, ~sum(., na.rm=T)), .groups = "drop")
+  
+  
+  psc_pre <- left_join(
+    fram$mort |> 
+      left_join(fram$runid, by = "RunID") |> 
+      left_join(fram$fishery, by = "FisheryID") |> 
+      left_join(
+        static$lu_stock |> 
+          select(StockID, PSC_StockID, PSC_StockName),
+        by = "StockID") |> 
+      group_by(RunYear, PSC_StockID, PSC_StockName, FisheryID, FisheryName) |> 
+      summarise(across(starts_with("mort"), sum), .groups = "drop") |> 
+      group_by(RunYear, PSC_StockID, PSC_StockName) |> 
+      mutate(across(starts_with("mort"), list(sum = sum), .names = "{.col}_{.fn}")) |> 
+      ungroup() |> 
+      left_join(
+        ## ocean abundances need to be summed to PSC before joining in
+        left_join(static$lu_stock |> select(StockID, PSC_StockID, PSC_StockName),
+                  fram$ocean_abund |> rename(ocean_abund_sum = ocean_abund), by = c("StockID")) |> 
+          left_join(fram$runid, by = "RunID") |> 
+          group_by(RunYear, PSC_StockName) |> 
+          summarize(ocean_abund_sum = sum(ocean_abund_sum)) |> 
+          ungroup(),
+        by = c("RunYear", "PSC_StockName")
+      )
+    ,
+    fram$escp |> 
+      left_join(fram$runid, by = "RunID") |> 
+      left_join(
+        static$lu_stock |> 
+          select(StockID, PSC_StockID, PSC_StockName),
+        by = "StockID") |> 
+      group_by(RunYear, PSC_StockID, PSC_StockName) |> 
+      summarise(across(escp, sum), .groups = "drop") 
+    ,
+    by = c("RunYear", "PSC_StockID", "PSC_StockName")
+  ) |>
+    mutate(
+      abund = mort_sum + escp,
+      across(c(mort, mort_sum), list(er = ~.x/abund))
+    ) |> 
+    left_join(
+      static$lu_stock |> 
+        distinct(PSC_StockID, PSC_Region, cap_method,
+                 low_mod_abund, mod_abd_abund,
+                 low_er_cap, mod_er_cap, abd_er_cap,
+                 low_escp_goal, upr_escp_goal)
+      , by = "PSC_StockID"
+    )
+  
+  # full_join(
+  #   psc_pst |> count(RunYear),
+  #   psc_pre |> count(RunYear),
+  #   by = "RunYear"  
+  # ) |> print(n=100)
+  
+  write_csv(psc_pre, here("../PeriodicReportData/psc_prefram_2004_2023.csv"))
+}
+```
+
+```{r loading_in, include=FALSE}
+#but to deal with WA Coast stocks from TAMM spreadsheets, among other reasons
+psc_pst <- readr::read_csv(here("../PeriodicReportData/psc_postfram_2004_2023_temp.csv")) |> 
+  rename(`Catch Year` = RunYear)
+psc_pre <- readr::read_csv(here("../PeriodicReportData/psc_prefram_2004_2023.csv")) |> 
+  rename(`Catch Year` = RunYear)
+```
+
+::: {.content-hidden unless-meta="devversion"}
+*Note that Quillayute and Queets values are those from the FRAM database and have not yet been extracted from the relevant TAMM cells for each year*
+
+:::
+
+```{r func_plot_abund_bar}
+# #export these data for CCT to have for text summaries
+# psc_pst |> 
+#   filter(RunYear > 2003) |> 
+#   split(~PSC_StockName) |> 
+#   writexl::write_xlsx("psc_mort_escp_abund_data.xlsx")
+
+plot_abund_bar <- function(stknm = "Skagit"){
+  psc_pst |> 
+    filter(PSC_StockName==stknm, `Catch Year` > 2003) |>
+    distinct(`Catch Year`, PSC_StockName, 
+             Harvest = mort_sum, Escapement = escp, Abundance = abund, 
+             low_mod_abund, mod_abd_abund) |> 
+    pivot_longer(names_to = "var", values_to = "val",
+                 -c(`Catch Year`, PSC_StockName, low_mod_abund, mod_abd_abund)) |> 
+    mutate(across(ends_with("_abund"), ~if_else(var == "Abundance", ., NA_real_))) |> 
+    ggplot(aes(`Catch Year`, val, fill = var, color = var)) + 
+    geom_col(width = 0.7) + 
+    geom_hline(aes(yintercept = low_mod_abund), color = "orange", linetype = 5, linewidth = 1.2) +
+    geom_hline(aes(yintercept = mod_abd_abund), color = "orange", linetype = 5) +
+    geom_vline(xintercept = 2010, linetype = 3, alpha = 0.5) +
+    #geom_smooth(formula = y ~ x, method = "lm", se = F, linewidth = 0.5, linetype = 2) +
+    scale_fill_grey("", start = 0.3, end = 0.7, aesthetics = c("fill", "color")) +
+    scale_x_continuous(breaks = seq(1998, 2040, by = 3), guide = guide_axis(n.dodge = 2)) +
+    scale_y_continuous("", labels = scales::comma) +
+    facet_wrap(~var, nrow = 1) +
+    theme(legend.position = "none") +
+    labs(subtitle = stknm)
+}
+
+#plot_abund_bar()
+```
+
+```{r func_plot_ns_msf}
+plot_ns_msf <- function(stknm = "Skagit"){
+  psc_pst |> 
+    filter(PSC_StockName==stknm) |> 
+    distinct(`Catch Year`, PSC_StockName, NS = mort_ns_sum, MSF = mort_msf_sum) |> 
+    pivot_longer(names_to = "var", values_to = "val", -c(`Catch Year`, PSC_StockName)) |> 
+    ggplot(aes(`Catch Year`, val, fill = var)) +
+    geom_col(width = 0.7, show.legend = T) +
+    scale_fill_grey() +
+    scale_x_continuous(breaks = seq(1998, 2040, by = 3), guide = guide_axis(n.dodge = 2)) +
+    scale_y_continuous("Mortality", labels = scales::comma) +
+    #facet_wrap(~var, nrow = 1) +
+    theme(legend.title = element_blank(), legend.position = "top") +
+    labs(subtitle = stknm)
+}
+
+```
+
+```{r func_plot_smolt_out_migration_est}
+plot_smolts <- function(stknm = "Skagit"){
+  static$smolts |> 
+    filter(mu_name == stknm) |> 
+    ggplot(aes(out_year, n)) +
+    geom_col() +
+    #geom_smooth() +
+    #geom_line() + geom_point() +
+    scale_x_continuous("Outmigration year") +
+    scale_y_continuous("Smolts", labels = scales::comma) +
+    labs(
+      title = paste(stknm, "estimated naturally produced smolt outmigrants")
+    )
+}
+
+#plot_smolts()
+```
+
+```{r func_plot_status}
+plot_status <- function(mu = "Skagit"){
+  
+  static$status |>
+    filter(MU == mu) |>
+    mutate(
+      across(c(`Pre-season`,`Post-Season`),
+             ~factor(., levels = c("Low","Moderate","Abundant"))
+      ),
+      pre_to_post = case_when(
+        as.integer(`Pre-season`) == as.integer(`Post-Season`) ~ "no change",
+        as.integer(`Pre-season`) >  as.integer(`Post-Season`) ~ "decrease",
+        as.integer(`Pre-season`) < as.integer(`Post-Season`) ~ "increase"
+      ) |> 
+        factor(levels = c("decrease","no change","increase"))
+    ) |> 
+    ggplot() +
+    geom_line(aes(`Catch Year`, `Post-Season`, group = MU), linetype = 2, linewidth = 0.3) +
+    geom_point(aes(`Catch Year`, `Post-Season`, shape = pre_to_post, color = pre_to_post, fill = pre_to_post), size = 3) +
+    scale_x_continuous(breaks = seq(2004, 2021, by=2)) +
+    scale_y_discrete("", breaks = c("Low","Moderate","Abundant")) +
+    scale_shape_manual(values = c(25,21,24)) +
+    scale_fill_manual(values = c("orange","darkgreen","green"), aesthetics = c("fill","color")) +
+    labs(subtitle = paste(mu, "post-season status, relative to preseason"))
+  
+}
+#plot_status()
+
+```
+
+::: {.content-hidden unless-meta="devversion"}
+This report is based on postseason data in `r basename(params$mdb_pst)` and preseason data in `r basename(params$mdb_pre)`, as well as supporting [StaticTables.xlsx](https://github.com/PSC-CoTC/PeriodicReport/blob/main/StaticTables.xlsx).
+:::
+
+![](images/coho_pic2.png){width=100% fig-alt="Coho Picture"}
+
+# Introduction
+
+In response to a decline in natural Coho Salmon (*Onchorynchus kisutch*) abundance, the Pacific Salmon Commission (PSC) established a Southern Coho abundance-based management regime (CoABM) in 1999 [@PSC_1999]. This Southern Coho Management Plan (SCMP, also referred to as ABM, or 'abundance based management') aimed to conserve Coho Salmon Management Units (MUs) of naturally-spawning Coho Salmon in southern British Columbia and Washington/Oregon based on abundance status and escapement goals. The {{< glossary SCMP >}} set out to constrain exploitation rates ({{< glossary ER >}}; defined as total fishing mortality divided by total fishing mortality plus escapement) below maximum levels (caps) on selected {{< glossary MUs >}} in order to achieve long-term Maximum Sustainable Harvests (MSH). These constraints are implemented by specifying {{< glossary ER >}} caps for the individual {{< glossary MUs >}} dependent on annual abundance status. During their respective preseason planning processes, the Parties use management reference points to classify the status of each {{< glossary MU >}} as low, moderate, or abundant. The parties then exchange these status determinations as a key input in the development of pre-season plans.
+
+When a new Coho Management Plan was agreed upon in 2008 (implemented 2009 through 2018; [@PSC_2009]) and the latest agreement finalized (applies to the period from catch years 2019 through 2028; [@PSC_2022]), modifications were made to the list of specified {{< glossary MUs >}} and to the manner in which {{< glossary ER >}} caps are established. This periodic report presents information for the {{< glossary MUs >}} identified in the most current Pacific Salmon Treaty's (PST) {{< glossary SCMP >}} (Chapter 5 of Annex IV in the current {{< glossary PST >}}). In the 2008 {{< glossary SCMP >}} abundance-based management regimes were established to constrain {{< glossary ERs >}} ({{< glossary ERs >}}) on 13 {{< glossary MUs >}} of naturally-spawning Coho Salmon originating in rivers along the Washington/British Columbia (BC) border. Beggining in 2019, the most recent Management Plan [@PSC_2022] combined two of the Canadian {{< glossary MUs >}}, the Georgia Strait Vancouver Island and the Georgia Strait Mainland {{< glossary MUs >}} into the Strait of Georgia {{< glossary MU >}}. The 12 {{< glossary MUs >}} in the current {{< glossary PST >}} are listed below (@tbl-mus).
+
+
+
+
+```{r new_mu_table}
+#| tbl-cap: Management Units within the current Pacific Salmon Treaty Southern Coho Management Plan.
+#| label: tbl-mus
+
+tibble(
+  `Southern BC` = c("Interior Fraser", "Lower Fraser", "Strait of Georgia", "", ""),
+  `US Inside` = c("Skagit", "Stillaguamish", "Snohomish", "Hood Canal", "US Strait JDF"),
+  `US Outside` = c("Quillayute", "Hoh", "Queets", "Grays Harbor", "")
+) |> 
+  gt() |> 
+  tab_options(table.width = px(400)) |> 
+  tab_style(locations = cells_column_labels(), style = cell_text(align = "center", weight = "bold")) |> 
+  tab_style(locations = cells_body(), style = cell_text(align = "left")) 
+
+```
+
+The objective of the {{< glossary SCMP >}}, as described in the Treaty, is to manage salmon directed fisheries impact on Southern Coho stocks by limiting the total fishery exploitation and allow the different {{< glossary MUs >}} to produce long-term {{< glossary MSH >}}, while maintaining the genetic and ecological diversity of the individual populations. In addition, the plan is designed to improve the prospect of sustaining healthy fisheries for both parties over the long-term. The plan is intended to be cost-effective and flexible to available technical capacity and information, while providing a predictable framework for planning fisheries impacts and allowing for objective monitoring, evaluation and modification.
+
+Under the Agreement, the United States and Canada (the "Parties") are required to establish escapement goals or {{< glossary ERs >}} that achieve {{< glossary MSH >}}, determine {{< glossary MSH >}} {{< glossary ERs >}} for each {{< glossary MU >}}, and establish {{< glossary ERs >}} for each {{< glossary MU >}} and status category (low, moderate, and abundant). Until such time as the Parties provide {{< glossary MU >}}-specific {{< glossary ER >}} targets, the {{< glossary SCMP >}} identified default {{< glossary ER >}} ceilings for the following {{< glossary MU >}} status categories:
+
+| **Status** | **Total Exploitation Rate** |
+|:----------:|:---------------------------:|
+|    Low     |          Up to 20%          |
+|  Moderate  |          21% - 40%          |
+|  Abundant  |          41% - 65%          |
+
+: Status categories for MSH {#tbl-msh}
+
+Annual {{< glossary ER >}} caps are established for each of the {{< glossary MUs >}} based on the level of abundance and health of the natural stocks. These caps are then apportioned between the Parties. Constraints for Canadian fisheries on US {{< glossary MUs >}} are determined by formulas that specify sharing of allowable {{< glossary ERs >}} as well as a composite rule, which together adjust caps according to the number of US MUs that fall within a given category. The composite rule adjusts constraints for Canadian fishery {{< glossary ERs >}} based on the number of US {{< glossary MUs >}} which fall in a given category. For example, if only one Washington coastal or Puget Sound Coho {{< glossary MU >}} is in low status, Canadian fisheries are constrained to a total {{< glossary ER >}} on that unit of 12%; if two or more Washington coastal {{< glossary MUs >}} are in low status, the constraint becomes 10%. The most restrictive {{< glossary ER >}} limit for Canadian fishery impacts on US Coho {{< glossary MUs >}} is 10%.
+
+Constraints for US fisheries on Canadian {{< glossary MUs >}} depend on the status of the Interior Fraser {{< glossary MU >}} until the biological statuses of the other Canadian {{< glossary MUs >}} have been determined. The status determination methodology developed and applied by Canada to the Interior Fraser Coho {{< glossary MU >}} (REFERENCE Korman and Sawada) consists of two criteria: smolt-to-adult survival, and escapement, which must be met for three consecutive years in order increase the status from low to moderate or moderate to high.  Canada is currently working to develop the information (smolt to adult survival rates, escapements) needed to apply this status determination methodology to the Lower Fraser and Strait of Georgia {{< glossary MUs >}}. Details as to how {{< glossary ER >}} constraints are established based on the status of {{< glossary MUs >}} under the {{< glossary SCMP >}} are contained in Annex IV Chapter 5 Section 9.b-c (Canadian {{< glossary ER >}} caps on inside and outside US {{< glossary MUs >}}) and Section 9.d (US {{< glossary ER >}} caps on Canadian {{< glossary MUs >}}).
+
+## Management Unit Overview
+
+The Canadian {{< glossary MUs >}} are comprised of geographical aggregates of naturally spawning Coho conservation units (CUs) within the Interior Fraser River, Lower Fraser River, and Strait of Georgia. A {{< glossary CU >}} consists of one or more spawning populations which are genetically distinct from other conspecific spawning populations. The 2019 renewal of the {{< glossary PST >}} combined the Georgia Basin – East and Georgia Basin – West {{< glossary MUs >}} into a single Strait of Georgia {{< glossary MU >}}, reducing the number of Canadian {{< glossary MUs >}} in the bilateral management regime to three.  The CoTC chose to combine model outputs for these {{< glossary MUs >}} in carrying out its pre-season and post-season responsibilities beginning in 2019 and forward rather than reconfigure the FRAM framework.
+
+The US Inside {{< glossary MUs >}} consist of naturally spawning populations originating in the Skagit, Stillaguamish, Snohomish, Hood Canal, and the Strait of Juan de Fuca. Coho populations in the US Inside {{< glossary MUs >}} belong to the larger Puget Sound/Strait of Georgia Coho Salmon evolutionarily significant unit (ESU; [@Weitkamp_et_al_1995]). Only the eastern portion of the Strait of Juan de Fuca {{< glossary MU >}} is in this ESU. An ESU is a Pacific salmon population or group of populations that is substantially reproductively isolated from other conspecific populations and represents an important component of the evolutionary legacy of the species. The ESU policy (56 FR 58612) for Pacific salmon defines the criteria for identifying a Pacific salmon population as a distinct population segment, which can be listed under the US Endangered Species Act of 1973.
+
+The US Outside {{< glossary MUs >}} consist of naturally-spawning populations from the Quillayute, Hoh, Queets, and Grays Harbor basins. All US Outside {{< glossary MUs >}}, except the Grays Harbor {{< glossary MU >}}, are part of the Olympic Peninsula ESU. Populations from the western portion of the Strait of Juan de Fuca {{< glossary MU >}} are also in this ESU. The Grays Harbor {{< glossary MU >}} is part of the Southwest Washington ESU.
+
+## Fishery Overview
+
+Under the CoABM regime, each Party is required to regulate its fisheries so as not to exceed {{< glossary ER >}} constraints on {{< glossary MUs >}}. Fishery Management Areas for British Columbia (@fig-dfomap), Washington (@fig-wdfwmap), and Oregon (@fig-odfwmap) are shown below.
+
+![Canadian DFO Southern BC Pacific Fisheries Management Areas.](images/PFMA_CDFO.png){#fig-dfomap}
+
+![Washington Coast and Puget Sound Marine Fishery Areas.](images/WA_MFA.jpg){#fig-wdfwmap}
+
+![Oregon Ocean Salmon Management Areas and Major Port Locations.](images/OR_SMA.jpg){#fig-odfwmap}
+
+### Canadian Fisheries (CoTC note - this needs updating)
+
+Southern BC Coho Salmon are caught in First Nations, recreational, and commercial troll and net fisheries. Since Coho Salmon rear in areas near the coast they are readily caught in directed fisheries and as bycatch in fisheries targeting other species. As a result, Coho Salmon are harvested in mixed-stock fisheries, creating many challenges for the assessment and management of the species.
+
+Coho Salmon catches on the south coast of BC have declined since the mid-1980s, initially due to declining abundance and more recently because of severe conservation measures in response to the declining abundance. Total fishery {{< glossary ERs >}} in Canada were reduced from a range of 75 to 80% in the mid-1980s to 60% in 1995, 37% in 1997, 5% in 1998, and are currently estimated by Backwards Coho Fisheries Regulation Assessment Model (FRAM) during catch years 2011 through 2021 at less than 10%.
+
+Historically 89% of the commercial Coho Salmon catch on the south coast of BC was taken by the troll sector with the remainder harvested by commercial net fisheries. The West Coast of Vancouver Island (WCVI) troll fishery was the single largest commercial harvester, taking an average of 1.5 million Coho Salmon in the 10-year period before 1997, when major fishing restrictions were imposed. This fishery intercepted stocks from the US, Strait of Georgia, and WCVI. Since 2001, average catch retained in the WCVI troll fishery has been 725 Coho, due primarily to the timing and non-retention restrictions in place for this fishery. Historically, catch in the Strait of Georgia troll fishery, comprised predominantly of Strait of Georgia stocks, was much smaller than the WCVI troll fishery (1986-1995 averaged 150,000 Coho Salmon, annually). The Strait of Georgia troll fishery has not been permitted to retain Coho Salmon since 1995.
+
+Net fisheries in Johnstone Strait, Strait of Juan de Fuca and the Strait of Georgia harvest Coho Salmon incidentally during directed fisheries on Sockeye (*O. nerka*), Pink (*O. gorbuscha*), and Chum (*O. keta*) Salmon. Net fisheries have been curtailed in recent years due to low returns of the target species and concerns for Chinook (*O. tshawytscha*) and Coho Salmon bycatch.
+
+While the First Nations’ harvest of Coho Salmon is small compared with other salmon species, several First Nations harvest Coho Salmon for food, social, and ceremonial {{< glossary FSC >}} purposes. They are caught in hook and line, net, and spear fisheries in or near their local streams. They are also caught incidentally in other First Nations’ salmon fisheries directed on other species, such as Sockeye and Chum Salmon.
+
+Recreational fishing for Coho Salmon in BC tidal waters continues to be important to residents and visitors. Until the recent decline in Coho Salmon abundance and subsequent severe fishing restrictions, 70% of tidal recreational fishing took place within the Strait of Georgia. Since 1995, most Coho Salmon recreational fishery effort and catch has shifted from the Strait of Georgia to the WCVI, in part due to low abundance of Coho Salmon inside Vancouver Island. Overall, the proportion of Coho Salmon harvested by the recreational fishery has increased as commercial harvest has been significantly reduced as a result of the timing and non-retention harvest restrictions, as well as domestic allocation considerations in Canada that were implemented in response to the low abundance of Coho Salmon.
+
+Due to conservation concerns, most notably for the Interior Fraser {{< glossary MU >}}, Canadian Coho Salmon fisheries have seen unprecedented restrictions since 1997. In 1998 and 1999, no directed fisheries on naturally-spawning stocks of Coho Salmon were permitted; mandatory non-retention and non-possession of incidentally caught Coho Salmon was implemented in all areas, with the exception of some terminal hatchery locations. In the Pacific Region, (i.e., all marine waters of BC), barbless hooks became required for all salmon-directed commercial and recreational hook and line gear in 1998, a regulation that remains in effect. Pacific Region waters were classified as red or yellow zones. In red zones, areas where Thompson River Coho Salmon from the Interior Fraser River {{< glossary MU >}} were known to be prevalent, fishing was restricted to very limited experimental selective fisheries, as well as some limited First Nations’ fisheries to meet food, social, and ceremonial requirements. Red zones included inshore waters of Victoria to Barkley Sound and offshore waters of Barkley Sound to Quatsino Sound, from June to September. Special management zones (SMZs), areas of mandatory Coho Salmon non-retention with special restrictions, were identified with the intent to avoid Coho Salmon encounters. Fisheries were only permitted in locations and times when Thompson River Coho Salmon could be avoided or released unharmed. These areas were subject to in-season adjustments, including time and area closures for all sectors. Fisheries conducted in these SMZs were monitored to ensure Coho Salmon encounter rates did not become too high, and tissue samples were taken for stock identification. In yellow zones, where endangered stocks were not prevalent, a selective fishing strategy was implemented for all commercial and recreational fisheries [**Jeromy comment: Does this mean in red zones, endangered stocks (under SARA?) are prevalent?  This context is not provided.**]. These fisheries were required to release any live Coho Salmon Salmon that were caught during operations. Mandatory logbooks and an onboard observer program were initiated in commercial fisheries. Limited Coho Salmon retention was allowed only for First Nations and recreational fisheries.
+
+Since 2000, fisheries impacting naturally-spawning Coho Salmon from southern BC, Washington State, and Oregon have been managed under the {{< glossary PST >}} ABM regime. The ABM plan constrains total fishery exploitation on key stock {{< glossary MUs >}} in BC For each {{< glossary MU >}}, annual limits of fishing mortality are established based on the categorical level of abundance and the health of the naturally-spawning stocks. In Canada, low status of Interior Fraser Coho Salmon has constrained southern BC fisheries for the last decade. The Southern US has been limited to 10% {{< glossary ER >}} on Coho Salmon originating from the Interior Fraser {{< glossary MU >}}. Southern BC fisheries, in waters south of Cape Caution where Interior Fraser Coho Salmon are prevalent, have been managed to a maximum 3% total fishing mortality rate on the Interior Fraser Coho Salmon {{< glossary MU >}}. Non-retention of naturally-spawning Coho Salmon is generally in effect except for First Nations {{< glossary FSC >}} opportunities in specific terminal systems where abundance permits and where retention of by-catch during fisheries for other species is permitted. Release of unmarked Coho Salmon during periods when Interior Fraser Coho Salmon may be caught is required in all Canadian commercial and recreational fisheries.
+
+### US Fisheries
+
+Current US fisheries are constrained by domestic and {{< glossary PST >}} conservation objectives. For the Puget Sound {{< glossary MUs >}}, the current {{< glossary PST >}} {{< glossary SCMP >}} of CoABM uses the thresholds and stepped harvest rate goals from the Comprehensive Coho Agreement [@CCW_1998], developed by Washington State and the Puget Sound tribes, and adopted by the {{< glossary Council display = "Pacific Fisheries Management Council (PFMC)" >}} as Fishery Management Plan conservation objectives in November 2009. Actual {{< glossary ER >}} constraints for Canadian fisheries on US Coho Salmon {{< glossary MUs >}} are determined by formulas that specify sharing of allowable total {{< glossary ERs >}} and a “composite rule”. The composite rule adjusts constraints for Canadian fishery {{< glossary ERs >}} based on the number of US {{< glossary MUs >}} that fall in a given category. For example, if only one Washington coastal Coho Salmon {{< glossary MU >}} is in low status, Canadian fisheries are constrained to a total {{< glossary ER >}} on that unit of 12%; if two or more Washington coastal {{< glossary MUs >}} are in low status, the constraint becomes 10%. The most restrictive {{< glossary ER >}} limit for Canadian fishery impacts on US Coho Salmon {{< glossary MUs >}} is 10%.
+
+Fisheries between Cape Falcon, Oregon and the US/Canada Border are constrained by four factors: (1) management objectives and treaty Indian obligations for individual stock US MUs; (2) treaty Indian/non-Indian and ocean/in-river sharing agreements; (3) stocks listed under the ESA; and (4) requirements of the {{< glossary PST >}}. The starting point for implementing these constraints is the forecasted January age-3 (JA3) abundance and the modeled ocean distribution of each Coho Salmon stock.
+
+Most Coho-directed recreational fisheries [**Jeromy comment: Freshwater and marine?  I think so, for WA, and Columbia River but would be good to add this qualifier in if true. More recently the OR coast freshwater fisheries are all non-selective, hence why I am asking for a bit of a qualifier here if possible.**] have been mark-selective since 1999. Non-Indian commercial troll fisheries have been mostly restricted to mark-selective Coho Salmon retention since 2000. Treaty Indian fisheries are not restricted to mark-selective retention of Coho Salmon.
+
+<!-- <span style="color: red;">**Carrie: With the fram databases we have, we could plot MSF vs non MSF by fishery type through time. Not sure if that would be helpful. **</span> -->
+
+## Bilateral Assessment Tool (FRAM) Overview
+
+Coho Salmon fisheries are evaluated with the Coho Fisheries Regulation Assessment Model [(Coho FRAM)](https://framverse.github.io/fram_doc/calcs_data_coho.html), a bilaterally developed tool that is employed for both pre-season fishery planning and post-season estimation of escapements and {{< glossary ERs >}} [(see: pre- and post-season applications)](https://framverse.github.io/fram_doc/apps_coho.html). 
+
+Coho FRAM is an annual mixed-stock accounting model that evaluates a set of stock units within a set of fisheries over time periods within a single fishing year (the calendar year for Coho Salmon) (documentation on FRAM can be found here: [https://framverse.github.io/fram_doc/](https://framverse.github.io/fram_doc/)). It can be used to estimate catch and escapement based on forecast abundance and planned fisheries (‘forward’), or it can be used to reconstruct ocean abundance from observed escapements and fisheries (‘backward’). 
+`
+The Coho FRAM base period parameterization, determining stock-fishery-timestep impacts, was constructed from stock-specific fishery recoveries of coded-wire tags {{< glossary CWTs >}} within the time steps January to June, July, August, September, and October to December during coast wide fisheries from 1986 to 1992. The procedure used to generate base period data is depicted below (@fig-FRAMdev). For each base period year, post-season reconstruction of cohort abundances for each Coho Salmon {{< glossary MU >}} is based on two different models: the Mixed-Stock Model (MSM) that estimates the Production Expansion Factors for each Production Region and Terminal Area Run Reconstruction (RRTERM) program that estimates stock-specific impacts for terminal marine and freshwater fisheries. The MSM uses {{< glossary CWT >}} recoveries for each model stock expanded by the Production Expansion Factors to best describe the total catch in each marine mixed-stock fishery. The MSM/{{< glossary RRTERM >}} cohort analysis has been used for post-season reconstructions for catch years 1986-2007. However, beginning with catch year 1993, too few coded-wire tags were recovered in mixed-stock fisheries to perform robust cohort analyses using the mixed-stock model (@fig-recoveries-total).
+
+```{r}
+dat.rmis = read_csv("updated-rmis-summaries.csv")
+terminal.lut = read_tsv("coho_rmis_fishery_lut.tsv") |> 
+  janitor::clean_names() |> 
+  select(fishery_id, fishery_name, term) |> 
+  distinct()
+dat.rmis = dat.rmis |> 
+  left_join(terminal.lut, by = c("fishery_name", "fishery_id"))
+
+plot_rmis_recoveries_all = function(mu.name,
+                                    dat.use,
+                                    subtitle = NULL){
+  gp = ggplot(dat.use |> 
+                filter(mu_name == mu.name), 
+              aes(x = run_year, y = n_expanded, fill = fishery_name))+
+    geom_col()+
+    ggtitle(glue("RMIS recoveries by FRAM fishery for {mu.name} MU"))+
+    labs(x = "Run year of recovery",
+         y = "CWT Recoveries (expanded)")+
+    theme_bw(base_size = 14)
+  if(!is.null(subtitle)){
+    gp = gp +
+      labs(subtitle = subtitle)
+  }
+  return(ggplotly(gp))
+}
+```
+
+
+```{r}
+#| fig-height: 8
+#| fig-cap: Total preterminal tag recoveries for all Coho Salmon ages 3 and 4 (regardless of clip status).
+#| label: fig-recoveries-total
+ggplot(dat.rmis |> 
+         filter(term == "P") |> 
+         mutate(mu_name = gsub("Georgia ","Georgia\n" , mu_name),
+                mu_name = gsub("of Juan","of\nJuan" , mu_name)), 
+       aes(x = run_year, y = n_expanded))+
+  geom_col()+
+  ggtitle("Total recoveries by year")+
+  labs(x = "Run year of recovery",
+       y = "CWT Recoveries (expanded)")+
+  scale_y_continuous(labels = function(x){format(x, big.mark = ",")})+
+  facet_wrap(.~ mu_name)+
+  theme_bw(base_size = 12)
+
+```
+
+
+![Procedure used to generate base period data for Coho FRAM.](images/FRAMDevel.jpg){#fig-FRAMdev}
+
+### Key Uncertainties with FRAM analysis
+
+FRAM is a deterministic model that reports point estimates of cohort abundances and {{< glossary ERs >}} without explicit measures of uncertainty associated with them. Managers should consider the following data limitations and model assumptions when interpreting FRAM results:
+
+-	Cohort abundances and {{< glossary ERs >}} are sensitive to the quality of escapement estimates, with estimation practices varying substantially among stocks. For example, Puget Sound net pens programs often lack escapement estimates. For these programs, pre-season abundances were used or were scaled to a nearby hatchery program using a pre-post ratio.
+-	Marine survival indices are used to estimate Canadian {{< glossary MU >}} abundances, except for Interior Fraser, in both pre- and post-season FRAM runs because abundance forecasts and escapement estimates are highly uncertain or unavailable for the remaining two Canadian MUs.
+-	It is unknown if average ocean distribution during the FRAM base period (derived using catch year 1986 to 1992 {{< glossary CWT >}} data) reflect the true annual ocean distribution of Coho Salmon stocks in contemporary years; this leads to increased uncertainty in fishery-specific stock impacts.
+-	Complex regulations, such as fine-scale spatial/temporal and mixed retention limits for natural and hatchery Coho Salmon within a fishery, are difficult to represent and assess within FRAM and as a result, FRAM may not accurately represent stock-specific impacts within fisheries with these regulations.
+-	Spatial and temporal gaps in catch monitoring of some Canadian fisheries result in underestimation of catch.
+-	Uncertainty in mortality estimates arises from several sources, including creel census and catch estimation.
+-	Within time steps in FRAM, natural mortality is constant; additionally, natural mortality does not reflect inter-annual variability in survival during adult ocean residence (January Age-3 through FRAM’s final time step). [**Jeromy comment: Can we describe the year or years it was built in, and that it has not been updated since.**  *note from 1/7/25: ever since this was a spreadsheet model, these have been built in. Unclear if they've changed during that time*.]
+
+
+## Environmental Trends Contextualizing Management
+
+The productivity of Pacific salmon populations is influenced by numerous factors, including human activities (e.g., fishing mortality, habitat restoration and degradation, hatchery production) and environmental conditions in both fresh and marine habitats. Because of this, changes in the productivity for most populations partially reflects variation in environmental conditions. Due to large-scale environmental variation captured by metrics such as the El Niño–Southern Oscillation (ENSO) and Pacific Decadal Oscillation (PDO), population productivity undergoes periods of high and low productivity. Relatively productive conditions resulted in high freshwater and marine survival rates and subsequent high adult returns for many salmon stocks throughout the Pacific Northwest at various times, especially in the late 2000s and early 2010s. However, changes in ocean and freshwater conditions beginning in early 2014 due to exceptionally warm ocean waters and associated terrestrial impacts, plus an extremely strong El Niño event, led to subsequent declines in abundance in many populations. Here, we briefly summarize marine and terrestrial conditions over the past 15–20 years to provide environmental context when examining trends in southern Coho Salmon under the {{< glossary PST >}}.
+
+### Terrestrial Conditions
+
+Annual average temperatures and precipitation by water year (Oct–Sep) provide a broad-brush view of terrestrial conditions across the Pacific Northwest. A strong and persistent warming trend and large year-to-year variations in precipitation are among the most notable features in recent decades (@fig-envi1). Within snow-dominated watersheds, warmer winters and springs experienced in recent years reduce snow accumulation and hasten snowmelt. Reduced snowpack causes an earlier and smaller freshet in spring and can result in lower minimum flows and higher stream temperatures in summer.  
+
+
+```{r noaa weather data}
+#| label: fig-envi1
+#| fig-cap: "Water year (Oct–Sep) surface air temperature (top) and precipitation (bottom) for the Pacific Northwest (OR, WA, and ID combined). The historical average is shown with a black horizontal line. Data from NOAA: https://www.ncdc.noaa.gov/cag/regional/time-series."
+#| fig-height: 10
+## Update notes: 
+## Temperature data can be found here:
+## https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/regional/time-series/108/tavg/12/9/1895-2024?base_prd=true&begbaseyear=1901&endbaseyear=2000
+## Use the following settings:
+## 
+## Parameter: annual temperature, 
+## Time Scale: 12-Month, 
+## Month: September
+## Start Year: 1895
+## End Year: [current year]
+## Region: Northwest
+## 
+## Download as CSV, save as "NOAA-temperature.csv" into the data folder
+## 
+## Precipitation data can be found here: 
+## https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/regional/time-series/108/pcp/12/9/1895-2024?base_prd=true&begbaseyear=1901&endbaseyear=2000
+## ## Use the following settings:
+## 
+## Parameter: Precipitation, 
+## Time Scale: 12-Month, 
+## Month: September
+## Start Year: 1895
+## End Year: [current year]
+## Region: Northwest
+## 
+## Download as CSV, save as "NOAA-precipitation.csv" into the data folder
+## 
+## Note: dates are stored in funny format! First 4 digits are year, last two digits are month.
+
+
+dat.temp = read_csv(here("data/NOAA-temperature.csv"), skip = 4) |> 
+  janitor::clean_names() |> 
+  mutate(value = if_else(value == -99, NA, value)) |> 
+  mutate(year = as.numeric(substr(as.character(date), 1, 4)))
+dat.precip = read_csv(here("data/NOAA-precipitation.csv"), skip = 4)|> 
+  janitor::clean_names() |> 
+  mutate(value = if_else(value == -99, NA, value)) |> 
+  mutate(year = as.numeric(substr(as.character(date), 1, 4)))
+
+temp.breaks = seq(floor(min(dat.temp$value)),
+                  ceiling(max(dat.temp$value)),
+                  by = 1)
+f_to_c = function(x) { 5/9*(x - 32)} 
+
+gp1 = ggplot(dat.temp, aes(x = year, y = value))+
+  geom_area(fill = 'coral', alpha = 0.4)+
+  geom_path(col = 'coral')+
+  geom_point(col = 'coral', size = 2)+
+  scale_y_continuous(breaks = temp.breaks,
+                     labels = function(x){paste0(format(x, nsmall = 1), "\u00B0F")},
+                     sec.axis = dup_axis(
+                       breaks = temp.breaks,
+                       labels = function(x) {
+                         paste0(format(round(f_to_c(x),1), nsmall = 1), "\u00B0C")
+                       }
+                     ),
+                     limits = range(dat.temp$value, na.rm = T),
+                     oob = scales::oob_keep
+  )+
+  scale_x_continuous(breaks = seq(round(min(dat.temp$year), -1),
+                                  round(max(dat.temp$year), -1),
+                                  by = 10),
+                     expand = c(0,0)
+  )+
+  geom_hline(yintercept = mean(dat.temp$value),
+             linetype = 2, linewidth = 1)+
+  geom_label(x = min(dat.temp$year),
+             y = mean(dat.temp$value),
+             label = glue("{min(dat.temp$year)}-{max(dat.temp$year)} Mean: {round(mean(dat.temp$value),2)}\u00B0F"),
+             hjust = 0,
+             vjust = -0.4,
+             fill = alpha(c("white"),0.1))+
+  labs(x = "", y = "", title = "Northwest Average Temperature (NOAA)",
+       subtitle = "October-September")
+
+in_to_mm = function(x) { x * 25.4} 
+
+gp2 =
+  ggplot(dat.precip, aes(x = year, y = value))+
+  geom_area(fill = 'cornflowerblue', alpha = 0.4)+
+  geom_path(col = 'cornflowerblue')+
+  geom_point(col = 'cornflowerblue', size = 2)+
+  scale_y_continuous(breaks = seq(20, 50, by = 5),
+                     labels = function(x){paste0(format(x, nsmall = 2), "in")},
+                     sec.axis = dup_axis(
+                       labels = function(x) {
+                         paste0(format(round(in_to_mm(x),1), nsmall = 2), "mm")
+                       }
+                     ),
+                     limits = c(20, 50),
+                     oob = scales::oob_keep
+  )+
+  scale_x_continuous(breaks = seq(round(min(dat.temp$year), -1),
+                                  round(max(dat.temp$year), -1),
+                                  by = 10),
+                     expand = c(0,0)
+  )+
+  geom_hline(yintercept = mean(dat.precip$value),
+             linetype = 2, linewidth = 1)+
+  geom_label(x = min(dat.precip$year),
+             y = mean(dat.precip$value),
+             label = glue("{min(dat.precip$year)}-{max(dat.precip$year)} Mean: {round(mean(dat.precip$value),2)}in"),
+             hjust = 0,
+             vjust = -0.4,
+             fill = alpha(c("white"),0.1))+
+  labs(x = "", y = "", title = "Northwest Precipitation",
+       subtitle = "October-September")
+
+gp1 / gp2
+```
+
+<!-- ![Water year (Oct–Sep) surface air temperature (top) and precipitation (bottom) for the Pacific Northwest (OR, WA, and ID combined). The historical average for 1981–2010 is shown with a black horizontal line. Data from https://www.ncdc.noaa.gov/cag/regional/time-series.](images/Env_fig1.jpg){#fig-envi1} -->
+
+
+For the Pacific Northwest, water year 2015 stands out as the warmest year on record (@fig-envi1). The combination of below-average precipitation and record-high surface air temperature in 2015 brought record-low springtime snowpack to much of the west. Diminished snowpack and high surface temperatures combined with low springtime precipitation yielded especially low runoff to western watersheds in spring and early summer 2015. Unusually low flows and warm stream temperatures in spring/summer 2015 caused widespread problems for salmon throughout the western United States, including large mortality events for returning Sockeye Salmon to the Fraser and Columbia Rivers. 
+
+In June 2021, record-breaking terrestrial temperatures were recorded across western North America due to a ‘heat dome’ [@White_et_al_2023]. It resulted in some of the highest temperatures ever recorded across large parts of British Columbia, Oregon, and Washington (11–19°C, 20–35°F above normal temperatures), including the highest temperature ever recorded in Canada (49.5°C, 121.3°F).  This 1,000-year event was due to an exceptionally strong ridge centered over the area (the "heat dome"), whose strength was greatly increased by climate change. The heat wave sparked numerous extensive wildfires, extensive damage to forest vegetation and crops, and was responsible for the deaths of nearly 1,400 people across the region.
+
+Coho Salmon inhabiting streams, rivers, and marine environments were likely affected by the heat dome, although many of these impacts are not well documented. Streams temperatures across the region increased dramatically in response to the heat dome, which also decreases oxygen saturation, potentially causing to physiological stress to stream-dwelling fish. In intertidal environments in the Salish Sea, an estimated 1 billion animals (primarily shellfish) died as a result of the heat wave coinciding with extreme low tides, which then impacted water quality [@Raymond_et_al_2022]. The true impacts of the 2021 heat dome on Coho Salmon populations managed under {{< glossary PST >}} will likely never be known, but may include generally decreased productivity and survival for the 2020 year class (which returns as adults in 2023), because it was residing in freshwater during the extraordinary event.
+
+### Marine Conditions
+
+Surface temperatures in the northeastern Pacific Ocean vary on decadal time scales, with periods of above and below average temperatures, as indicated by the Pacific Decadal Oscillation (PDO; [@Mantua_et_al_1997). Recently, surface temperatures were notably cooler than average from 1999–2002, 2008–13 and again starting in 2020 (@fig-envi2). They were warmer than normal from 2003–05, and at record highs for much of the period from fall 2013–20 due to a series of marine heat waves. For the California Current region, surface temperatures reached record high levels from 2014–16, with 2015 being the single warmest year in the historical record [@Jacox_et_al_2018]. In most years, positive PDO values correspond to El Niño events (e.g., the 2015/2016 El Niño), while negative PDO values correspond to La Niña events (e.g., 2021, 2022, and 2023 La Niñas).
+
+```{r}
+#| label: fig-envi2
+#| fig-cap: "Time series of shifts in sign of the Pacific Decadal Oscillation (PDO; bars) and the Ocean Niño Index (ONI; line) from 1996 to the present. Red bars indicate positive (warm) years; blue bars are negative (cool) year. Data from NOAA: https://www.ncei.noaa.gov/pub/data/cmb/ersst/v5/index/ersst.v5.pdo.dat, https://origin.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ONI_v5.php."
+# PDO Data is pulled directly from here:
+# https://www.ncei.noaa.gov/pub/data/cmb/ersst/v5/index/ersst.v5.pdo.dat
+# ONI data is pulled directly from here: 
+# https://origin.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ONI_v5.php
+
+if(params$clean_run){
+  raw.pdo = read_table("https://www.ncei.noaa.gov/pub/data/cmb/ersst/v5/index/ersst.v5.pdo.dat",
+                       skip = 1) |> 
+    janitor::clean_names()
+  write_csv(raw.pdo, here("data/NOAA-pdo.csv"))
+}else{
+  raw.pdo = read_csv(here("data/NOAA-pdo.csv"))
+}
+dat.pdo = raw.pdo |> 
+  pivot_longer(cols = jan:dec,
+               names_to = "month") |> 
+  mutate(month.num = case_match(month,
+                                "jan" ~ 1,
+                                "feb" ~ 2,
+                                "mar" ~ 3,
+                                "apr" ~ 4,
+                                "may" ~ 5,
+                                "jun" ~ 6,
+                                "jul" ~ 7,
+                                "aug" ~ 8,
+                                "sep" ~ 9,
+                                "oct" ~ 10,
+                                "nov" ~ 11,
+                                "dec" ~ 12,
+                                .default = -99
+                                
+  )) |> 
+  mutate(date = as_date(glue("{year}-{month.num}-15")))
+
+if(params$clean_run){
+raw.oni <- "https://origin.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ONI_v5.php" %>% 
+  read_html() %>% 
+  html_nodes("table") %>% 
+  html_table(fill = T)
+mat.oni = raw.oni[[9]]
+dat.oni = data.frame(mat.oni[-which(mat.oni$X1=="Year"),])
+names(dat.oni) = mat.oni[1,]
+  write_csv(dat.oni, here("data/NOAA-oni.csv"))
+}else{
+  dat.oni = read_csv(here("data/NOAA-oni.csv"))
+}
+dat.oni = dat.oni |> 
+  pivot_longer(DJF:NDJ) |> 
+  ## each of the names is the initials of 3 months; we want the central month in numeric form
+  mutate(month.num = case_match(name, 
+                                "DJF" ~ 1, 
+                                "JFM" ~ 2, 
+                                "FMA" ~ 3, 
+                                "MAM" ~ 4,
+                                "AMJ" ~ 5,
+                                "MJJ" ~ 6,
+                                "JJA" ~ 7,
+                                "JAS" ~ 8,
+                                "ASO" ~ 9,
+                                "SON" ~ 10,
+                                "OND" ~ 11,
+                                "NDJ" ~ 12)) |> 
+  mutate(date = as_date(glue("{Year}-{month.num}-15"))) |> 
+  mutate(value = as.numeric(value))
+
+ggplot(dat.pdo |> 
+         filter(year>=1996),
+       aes(x = date, y = value))+
+  geom_col(aes(fill = value>0))+
+  geom_path(data = dat.oni |> 
+              filter(Year>=1996),
+            linewidth = 1)+
+  geom_point(data = dat.oni |> 
+               filter(Year>=1996),
+             size = 2)+
+  scale_fill_manual(breaks = c("TRUE", "FALSE"),
+                    values = c(alpha("darkred", .6), alpha("darkblue", .6)))+
+  xlab("Year")+
+  ylab("PDO & ONI")+
+  ggtitle("PDO (bars) and ONI (line)")+
+  scale_x_date(breaks = "1 year",
+               minor_breaks = "1 year",
+               labels = scales::label_date(format = "%y"),
+               expand = c(0,0))+
+  theme(legend.position = "none")
+```
+
+
+<!-- ![Time series of shifts in sign of the Pacific Decadal Oscillation (PDO; bars) and the Ocean Niño Index (ONI; line) from 1996 to the present. Red bars indicate positive (warm) years; blue bars are negative (cool) year. Data from NOAA, https://www.ncei.noaa.gov/pub/data/cmb/ersst/v5/index/ersst.v5.pdo.dat](images/Env_fig2.png){#fig-envi2} -->
+
+Since the original “blob” in 2014–16 [@Bond_et_al_2015], a series of marine heat waves have spread across large parts of the North Pacific Ocean in 2019, 2020, 2022, and 2023. These heat waves not only cause elevated water temperatures, but are also associated with extremely low nutrient levels. These heat waves vary greatly in their location across the North Pacific Ocean and although largely offshore, they occasionally spread to coastal waters such as 2015.
+
+#### Biological impacts of marine conditions
+
+The biological impacts of these temperature swings and marine heat waves are documented in a number of annual reports and descriptive papers [e.g., @Morgan_et_al_2019] for areas of the northeastern Pacific Ocean that Coho Salmon occupy during their marine residence period. In all cases, the reports show a dramatic biological response at all trophic levels—from primary producers to marine mammals and seabirds—to the marine heatwaves that have spread across the northeastern Pacific Ocean since 2014 and continued into 2023. These ecosystem changes have had large effects (both positive and negative) on Pacific salmon returns around the Pacific Rim, not just southern Coho Salmon.  
+
+Overall, the marine heat wave in 2014–2016 had the most drastic impact on marine ecosystems in 2015, with lingering effects into 2016 and 2017. Conditions had somewhat returned to “normal” in 2018 and again in 2021, but marine heat waves in coastal waters in 2019 and 2022 set off a series of marine ecosystem changes across the North Pacific. Here we provide a brief summary of some of the largest biological impacts recent ocean conditions that were observed. 
+
+**Primary Producers**. One of the most dramatic impacts to coastal waters was the largest bloom of the diatom Pseudo-nitzschia ever recorded in 2015 [@Bates_et_al_2018]. It stretched from Southern California to the Aleutian Islands in Alaska. Pseudo-nitzschia produces domoic acid, a neurotoxin that causes amnesic shellfish poisoning, which is potentially fatal in mammals (including humans) and seabirds, but apparently does not affect fish.  The 2015 bloom caused high domoic acid levels, resulting in fishery closures for razor clams and Dungeness crab and the death of hundreds of seabirds and marine mammals. Continuing (but much smaller) Pseudo-nitzschia blooms have continued across to flare up along the coasts from California to British Columbia ever since. 
+
+**Lower Trophic Levels**. Marine heatwaves also dramatically altered the lower trophic levels, resulting in decreases in high quality prey such as lipid-rich copepods and krill, and increases in gelatinous organisms (jellyfish, pelagic tunicates), which have low nutritional value. This shift to poor prey quality was expected to cause poor survival for juvenile fish and seabirds which rely on these prey types. The year 2017 also saw an explosion of *Pyrosoma atlanticum*, from California to SE Alaska. These normally tropical species are rare north of Southern California but spread north starting in 2013, peaking in 2017, and largely absent north of California by 2019. Pyrosomes are a low-quality, high-fiber prey, but were observed in the stomachs of dozens of species, including juvenile and adult Pacific salmon. Lower trophic levels rebounded in 2021, but less so in 2022 due to inconsistent upwelling.
+
+**Nekton**. Larger fish and invertebrates, which serve as forage fish, showed both increases and decreases in abundance and ranges. For example, California market squid has been expanding as far north as SE Alaska, and caught in commercial quantities in Washington and Oregon waters since 2016.  Other species that proliferated in the warm water of the California Current include Pacific Pompano, Northern Anchovy, and both Jack and Pacific Mackerel.  Species with marked declines include Pacific Hake, juvenile sardine and anchovy, and Pacific Herring. Juvenile rockfish were extremely abundant in the northern California Current and as far north as British Columbia in 2016–18. Exotic American shad, has also exhibited remarkable increases in abundance in the Columbia River, with counts over Bonneville Dam reaching 7.4 million fish in 2019 and exceeding 5 million fish since 2018.
+
+Farther north, Northern Anchovy have been extremely abundant in the Salish Sea since 2016. Juvenile salmon of all species except chum have also been below average off the west coast of Vancouver Island, while Chum Salmon have been abundant. The catch of juvenile salmon in 2017 in both Icy Straits, Alaska (mainly Pink, Chum, and Sockeye Salmon), and off the Washington/Oregon coasts (spring Chinook and Coho Salmon), were both extremely low, consistent with low adult returns (e.g., Columbia River spring Chinook Salmon in 2019). Forage fish in Alaskan waters show mixed trends with decreases in Capelin and Sand Lance and increases in Pacific Herring.
+
+**Apex fishes**. Reports from northern waters suggest increases in several apex fishes, including Spiny Dogfish, Arrowtooth Flounder and sablefish. By contrast, Pacific Cod crashed in 2017, resulting in closures for Alaskan cod fisheries in 2018. Elevated sea surface temperatures in 2015 (and to less extent in 2019) also resulted dramatic range extensions for warm water fishes including billfish, tunas, and sharks.
+
+**Seabirds**. Particularly notable impacts to seabirds were large die-offs of Cassin’s Auklet in winter 2014–15, and Common Murres between summer 2015 and spring 2016 from California to Alaska and again along the Washington–Oregon coasts in fall 2019.
+
+**Marine mammals**. Recent extreme ocean conditions have resulted in several large mortality events for marine mammals. In the California Current, record numbers of California sea lion pups were found starving in early 2015, while there was elevated sea lion mortality during 2013–16.  Because of poor conditions along the entire coast, the number of California and Stellar sea lions in the Columbia River estuary peaked in 2015, where they consumed large quantities of adult (and presumably juvenile) salmon. There have also been two large whale unusual mortality events recently: in the western Gulf of Alaska and British Columbia in 2015–16 (52 whales of many species), and a gray whale mortality event in 2019 (over 250 dead whales reported from Mexico to Alaska).
+
+**Pacific salmon**.  The abundance of Pacific salmon populations around the Pacific Rim have also shown dramatic changes since 2015. While some populations (especially in northern areas) have returned at record high abundances, others have dropped to new lows. These trends demonstrates that unusually high or low returns are not restricted to any one region, species, or production type (hatchery or natural), but were ocean-wide. For example, recent low steelhead (*O. mykiss*) returns to the Columbia River basin parallel extremely low steelhead returns to the Fraser River basin, and while Russian Pink and Bristol Bay Sockeye Salmon reached record highs, Fraser Sockeye and Japanese Chum Salmon fell to record lows. 
+
+Coho Salmon populations from the Oregon coast to the Salish Sea had unexpectedly low returns in 2015, including some of the lowest returns on record. Although returns were predicted to be above average, the small body size and low abundance of these adults suggested poor feeding conditions during the last summer in marine waters. Steelhead returns were extremely low in 2017 and 2018 in the same areas, to the point that Thompson and Chilcotin River (Fraser River, British Columbia) steelhead were petitioned for emergency protection under the Canadian Species At Risk Act [@Neilson_&_Taylor_2018]. One species in the region that increased in abundance was Chum Salmon starting in 2016, perhaps in part due to their reliance on gelatinous prey, which were abundant.
+
+Both Fraser and Columbia River Sockeye Salmon, which re-enter freshwater in mid-summer, incurred huge in-river mortalities in 2015 due to elevated river temperatures. The following year (2016), Fraser River Sockeye Salmon had the smallest return on record (total run of <1 million fish), but was even lower in 2019 (500,000 fish), as progeny of the 2015 year class returned as adults. The 2020 Fraser River Sockeye Salmon return was still lower (<300,000 fish). By contrast, Columbia River Sockeye Salmon returns were relatively high in 2016 (326,000), and reached an all-time high of 341,000 counted over Bonneville Dam in 2020.
+
+In Alaska, there was a strong east–west gradient in run size, with western Alaska generally having exceptionally high salmon returns, while central and southeastern Alaska saw declines. Perhaps most impressive has been the annual catch of Bristol Bay Sockeye Salmon, which broke a new abundance record in 2022 with 79 million adults (the 20 year [2002–2021] average run was 43.6 million). Similarly, 2017 was the highest statewide catch of Chum Salmon on record, due in part to record Prince William Sound catches. In contrast, the abundance of Yukon River Chinook and Chum Salmon have greatly declined for reasons that aren’t entirely clear, leading to conservation concerns for both the salmon and the many subsistence fishers who rely on these runs for nutrition.
+
+# Determination of {{< glossary MU >}} Status Benchmarks and ER Caps
+
+## Canadian Management Units  *(this needs to be updated)*
+
+Procedures for determining the pre-season status of Canadian {{< glossary MUs >}} are being developed concurrently with determination of Conservation Unit (CU) status benchmarks required with implementation of the Canada Department of Fisheries and Oceans’ (CDFO) Wild Salmon Policy. Methods have been approved through the {{< glossary CDFO >}}’s internal peer review process, Center for Scientific Advice - Pacific (CSAP) (@Holt_et_al_2009). Work in 2018 identified a framework to develop potential Management Reference Points for Canadian {{< glossary MUs >}} (DFO 2018, Korman et al. 2019; [https://www.pac.dfo-mpo.gc.ca/consultation/smon/pst-coho-tsp/index-eng.html](https://www.pac.dfo-mpo.gc.ca/consultation/smon/pst-coho-tsp/index-eng.html)) included spawner abundance targets but also {{< glossary CWT >}} smolt-to-adult (or “marine”) survival index targets. It was deemed that targets must contain spawner abundance targets, which limited creation of management reference points to the Interior Fraser River {{< glossary MU >}} because it was the only unit with an aggregate abundance timeseries. 
+
+Since 2002, in the absence of benchmarks, the {{< glossary CDFO >}} Stock Assessment staff has provided a categorical outlook for the next year's salmon status. The [outlook](http://www.pac.dfo-mpo.gc.ca/fm-gp/species-especes/salmon-saumon/index-eng.htm) is intended to provide an objective and consistent context within which to initiate fisheries planning.The category reflects the current interpretation of existing quantitative and qualitative information, including pre-season forecasts if available, and the opinion of {{< glossary CDFO >}} Area stock assessment staff. Where management targets for stocks have not been formally described, interim targets were either based on historical return levels or, if necessary, opinion of local staff.
+
+Canadian Coho Salmon abundance has declined, particularly in southern BC. Interior Fraser River Coho Salmon was assessed as endangered by the Committee on the Status of Endangered Wildlife in Canada (COSEWIC) in2002 and then reassessed as threatened in 2016. Interior Fraser River Coho Salmon have not been listed on Schedule 1 of the Species at Risk Act, which would afford additional protections to the stock.  However, the Canadian Minister of Fisheries and Oceans has established a domestic {{< glossary ER >}} cap of 3-5% for Canadian fishery impacts on Interior Fraser Coho Salmon. The Interior Fraser {{< glossary MU >}} is comprised of five {{< glossary CUs >}} (North Thompson, South Thompson, Lower Thompson, Fraser Canyon, and Upper Fraser). The Interior Fraser River Coho Salmon recovery planning process has determined the critical benchmark needed to maintain population viability. Even with the reduction in fisheries exploitation, all Southern BC {{< glossary MUs >}} have followed a similar dramatic declining trend in both marine survival and total abundance from the high levels observed in the 1980s and early 1990s. Spawning escapements have responded to the decreased exploitation and are within the range observed during the 1970s and 1980s. However, the sustained low marine survival has resulted in a decreased total abundance.
+
+Because of the absence of programs to estimate total abundance and escapement for the Strait of Georgia and Lower Fraser River Canadian {{< glossary MUs >}}, the bilaterally-developed tool, Backwards Coho FRAM, is relied upon to generate estimates of ocean age-3 cohort abundance and {{< glossary ERs >}} using post-season data scalars. Cohort abundances (catch and escapement) of Canadian {{< glossary MUs >}}, estimated by Backwards Coho FRAM based on modelled scalars, are depicted in Figure @fig-postseason-abund-bc. Reduced abundances apparent since 1996 were a major consideration that led to the development of ABM regimes for management of southern Coho Salmon.
+
+### IFR {{< glossary MU >}} (*this needs to be moved!)
+Prior to the establishment of {{< glossary PST >}} Management Reference Points, IFR have been assessed by COSEWIC and {{< glossary CDFO >}}. 
+
+A COSEWIC assessment in 2002 (Irvine 2002) identified IFR status as endangered while the COSEWIC re-assessment in 2016 (COSEWIC 2016) identified their status as threatened. Between 1990-2000, IFR experienced declines in recruitment in excess of 60% due to changes in freshwater and marine habitats and lagged reductions in harvest, resulting in a status of endangered in 2002. Since 2000, the population has persisted at relatively low abundance and low smolt-to-adult survival rates and was therefore re-assessed as threatened in 2016.
+
+In a review done in 2014, estimated abundance of IFR was below the Interior Fraser Recovery Team (IFCRT) lower benchmark of 23,000 spawners in five out of 10 years, and was below the upper rebuilding benchmark of 35,000 spawners in all 10 years (Decker et al. 2014).  For two decades (1992-2011), abundance was also below the lower and upper benchmarks in 50% and 100% of the years respectively. Based on the criteria proposed by the IFCRT (2006), this would indicate that recent abundances of Interior Fraser Coho Salmon may be insufficient to conserve genetic diversity and to provide a reasonable expectation of growth and recovery for some of the local populations within the {{< glossary MU >}}.  For returns prior to 1992, abundance exceeded the upper benchmark every year going back to 1975.  
+
+A Wild Salmon Policy (WSP) assessment in 2013 of the five CUs comprising IFR was undertaken by Parken et al. (in draft). Through this exercise it was determined that two of the CUs, the North Thompson and Lower Thompson, were amber/green and the remaining three CUs were amber. WSP designation is determined to provide guidance to managers on the status of populations and their likelihood of a COSEWIC assessment. It is an expert judgment on the past and current state of escapements and does not speak to productivity of a stock.  In the case of IFR WSP determinations, the escapements under review were achieved under a low exploitation regime and productivity of the five populations within the IFR {{< glossary MU >}} have recently been determined to be low (Decker et al. 2014).
+
+It is important to note that designation under the WSP is different from that under the {{< glossary PST >}}. Within the {{< glossary PST >}} chapter 5, two of the five stated objectives of the Coho Salmon Management program, which guides the establishment of {{< glossary ER >}} ergo {{< glossary PST >}} status, are to a) constrain total {{< glossary ER >}} to maintain maximum sustainable harvest over the long term while maintaining genetic and ecological diversity of the component populations and b) improve long term prospects for healthy fisheries in both countries.
+
+Though the WSP Status review determined that two of the five CUs comprising IFR {{< glossary MU >}} may have enough spawners on the ground to maintain genetic and ecological diversity, IFR are still in a low productivity regime. Allowable harvest that meets the criteria of the {{< glossary PST >}} is still low, therefore {{< glossary PST >}} status may be low while WSP status is green.
+
+Since 2018, and retrospectively, the survival index and abundances have been compared directly to the {{< glossary PST >}} Management Reference Points. The {{< glossary MU >}} survival index has never exceeded 3% since 1999, so the {{< glossary MU >}} has persisted in a low status.
+
+## US Inside Management Units
+
+The status for US Inside {{< glossary MUs >}} is assigned based on ocean abundance (forecasted or re-constructed). Pre-season estimates of ocean abundance are typically forecasted from measured or modeled smolt production for each {{< glossary MU >}} and multiplied by a marine survival rate predicted for each {{< glossary MU >}}. Marine survival is predicted with a variety of methods including average return rates, correlations between jack and adult return rates, and correlations between environmental variables and historical return rates [**Jeromy comment: Are these static to each MU?  If so then a table for what type of method applies to each MU would be very useful, particularly if we are trying to determine what environmental conditions are useful for not for tracking long term, but if not then disregard this comment.**]. Post-season estimates of ocean abundance are estimated using escapement and catch data and the Backwards Coho FRAM (@fig-postseason-abund-inside). The status of each {{< glossary MU >}} is defined by a series of ocean abundance breakpoints. Domestic management of Puget Sound naturally-spawning Coho Salmon stocks also uses abundance-based, tiered {{< glossary ER >}} objectives defined in the Comprehensive Coho Plan [@CCW_1998], that are similar to but not exactly consistent with the {{< glossary PSC >}} guidelines. The identified break points between Low, Moderate, and Abundant status are based on population-specific productivity analyses conducted by the state and tribal co-managers in each river basin.
+
+## US Outside Management Units
+
+The status for US Outside {{< glossary MUs >}} is assigned based on the {{< glossary ER >}} ceiling identified annually, ocean abundance, and existing {{< glossary MU >}} escapement goals [@PSC_2022]. Management objectives are expressed as a range of spawning escapements expected to produce MSY [@PFMC_3_2023]. Allowable {{< glossary ERs >}} are calculated from the forecast abundance and the lower end of the existing escapement goal range and used to classify the categorical status of the {{< glossary MUs >}}. This rate is the maximum allowed under the {{< glossary PST >}} when the {{< glossary MU >}} is in the moderate or abundant status, but {{< glossary ERs >}} up to 20 percent are allowed if the {{< glossary MU >}} is in the low abundance status.
+
+Pre- and post-season ocean abundances are estimated with the same approach described for the US Inside {{< glossary MUs >}} (@fig-postseason-abund-outside). Escapement goals for the US Outside {{< glossary MUs >}} are defined by state and tribal co-managers in each river basin and include escapement ranges in all but one (Grays Harbor) {{< glossary MU >}}. Escapement ranges were originally intended to reflect the range of uncertainty in the {{< glossary MSH >}} escapement goals identified for each of these populations. Unlike the US Inside {{< glossary MUs >}}, escapement goals for the US Outside {{< glossary MUs >}} do not vary with run size. The escapement goals used for {{< glossary PST >}} status determinations are the floor of the designated escapement ranges (see Table: \@ref(tab:OutsideMUABM)). The stock status is “Low” if the ocean abundance is low enough that the {{< glossary ER >}} ceiling falls at or below 20% in order to achieve the bottom end of the escapement range. The stock status is “Moderate” if ocean abundance results in an {{< glossary ER >}} ceiling between 21% and 40%. The stock status is “Abundant” if ocean abundance results in an {{< glossary ER >}} ceiling above 41%.
+
+
+## US Management Units Federal Status 
+
+Coho Salmon were the first Pacific salmon species for which coast-wide evolutionarily significant units (ESUs) were delineated [@Ford_2011]. Based on genetic and life history information, the US {{< glossary MUs >}} subject to the {{< glossary PST >}} belong to three different Coho Salmon ESUs, the Puget Sound/Strait of Georgia, the Olympic Peninsula, and the Southwest Washington ESUs. The Puget Sound/Strait of Georgia Coho Salmon ESU is currently a species of concern under the US Endangered Species Act [ESA; @Ford_2011; Species of Concern 4/15/04, 69FR19975]. The Olympic Peninsula ESU was evaluated for listing under the ESA and was determined to be not warranted (**ADD link to: 60 FR 38011; July 25, 1995** *CBE does not know what this means*). The Southwest Washington ESU is currently categorized as "undetermined".  Puget Sound/Strait of Georgia Coho Salmon are not currently candidates for listing in Washington as State Endangered, Threatened, or Sensitive [@WDFW_2020_state].
+
+At the federal level, species of concern do not have formal protection under the ESA. The primary purpose of identifying species of concern is to prevent the need to list them as threatened or endangered under the ESA. This purpose can be achieved by the following actions: (1) identifying species potentially at risk; (2) increasing public awareness about those species; (3) identifying data deficiencies and uncertainties in species' status and threats; (4) stimulating cooperative research efforts to obtain the information necessary to evaluate species' status and threats; and, (5) fostering voluntary efforts to conserve the species before listing becomes warranted.
+
+Additionally, at the federal level, Coho Salmon caught in coastal waters of the U.S. (e.g., greater than 3 but within 200 nautical miles offshore) are managed under the Magnuson-Stevens Fishery Conservation and Management Act (MSA), which is the legislation providing for the management of marine fisheries in U.S. waters. In 2018, the National Marine Fisheries Service (NMFS) notified the {{< glossary Council display = "PFCM" >}} that the Strait of Juan de Fuca, Queets, and Snohomish natural Coho Salmon stocks managed under the {{< glossary Council display = PFCM >}}
