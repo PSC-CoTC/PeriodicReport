@@ -3698,12 +3698,13 @@ gt(static$glossary)
 
 ```
 
-# Appendix: DITs
+# Appendix: U.S. DITs
+Data provided here was queried from the RMIS release database on 1/27/2025. 
 
-## Skagit
+## Skagit MU
 
 ```{r}
-#| tbl-cap: Double-index tag codes released within the Skagit MU, brood years 1994 through 2021
+#| tbl-cap: Double-index tag codes released within the Skagit MU, brood years 1994 through 2022.
 #| label: tbl-dit-skagit
 
 static$dit_codes |> 
@@ -3713,3 +3714,95 @@ static$dit_codes |>
   gt() |> 
   opt_row_striping()
 ```
+## Stillaguamish MU
+No Double-index-tag groups have been released in the Stillaguamish {{< glossary MU >}} to date.
+
+## Snohomish MU
+
+```{r}
+#| tbl-cap: Double-index tag codes released within the Snohomish MU, brood years 1996 through 2022.
+#| label: tbl-dit-snohomish
+
+static$dit_codes |> 
+  filter(`Management Unit` == "Snohomish") |> 
+  filter(DIT == "Yes") |> 
+  select("Brood Year", "Hatchery", "DIT Group ID", "Tag Code", "Mark", "# Released") |> 
+  gt() |> 
+  opt_row_striping()
+```
+
+## Hood Canal MU
+
+```{r}
+#| tbl-cap: Double-index tag codes released within the Hood Canal MU, brood years 1995 through 2022.
+#| label: tbl-dit-hoodcanal
+
+static$dit_codes |> 
+  filter(`Management Unit` == "Hood Canal") |> 
+  filter(DIT == "Yes") |> 
+  select("Brood Year", "Hatchery", "DIT Group ID", "Tag Code", "Mark", "# Released") |> 
+  gt() |> 
+  opt_row_striping()
+```
+
+## Strait of Juan de Fuca MU
+
+```{r}
+#| tbl-cap: Double-index tag codes released within the Strait of Juan de Fuca (SJDF) MU, brood years 1995 through 2022.
+#| label: tbl-dit-sjdf
+
+static$dit_codes |> 
+  filter(`Management Unit` == "SJDF") |> 
+  filter(DIT == "Yes") |> 
+  select("Brood Year", "Hatchery", "DIT Group ID", "Tag Code", "Mark", "# Released") |> 
+  gt() |> 
+  opt_row_striping()
+```
+
+## Quillayute MU
+
+```{r}
+#| tbl-cap: Double-index tag codes released within the Quillayute MU, brood years 1996 through 2022.
+#| label: tbl-dit-quillayute
+
+static$dit_codes |> 
+  filter(`Management Unit` == "Quillayute") |> 
+  filter(DIT == "Yes") |> 
+  select("Brood Year", "Hatchery", "DIT Group ID", "Tag Code", "Mark", "# Released") |> 
+  gt() |> 
+  opt_row_striping()
+```
+## Hoh MU
+No Double-index-tag groups have been released in the Hoh {{< glossary MU >}} to date.
+
+## Queets MU
+
+```{r}
+#| tbl-cap: Double-index tag codes released within the Queets MU, brood years 1995 through 2022.
+#| label: tbl-dit-Queets
+
+static$dit_codes |> 
+  filter(`Management Unit` == "Queets") |> 
+  filter(DIT == "Yes") |> 
+  select("Brood Year", "Hatchery", "DIT Group ID", "Tag Code", "Mark", "# Released") |> 
+  gt() |> 
+  opt_row_striping()
+```
+
+## Grays Harbor MU
+
+```{r}
+#| tbl-cap: Double-index tag codes released within the Grays Harbor MU, brood years 1995 through 2022.
+#| label: tbl-dit-graysharbor
+
+static$dit_codes |> 
+  filter(`Management Unit` == "Grays Harbor") |> 
+  filter(DIT == "Yes") |> 
+  select("Brood Year", "Hatchery", "DIT Group ID", "Tag Code", "Mark", "# Released") |> 
+  gt() |> 
+  opt_row_striping()
+```
+
+
+
+
