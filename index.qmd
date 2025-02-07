@@ -592,7 +592,7 @@ Southern BC Coho Salmon are caught in First Nations, recreational, and commercia
 
 Coho Salmon catches on the south coast of BC have declined since the mid-1980s, initially due to declining abundance and more recently because of severe conservation measures in response to the declining abundance. Total fishery {{< glossary ERs >}} in Canada were reduced from a range of 75 to 80% in the mid-1980s to 60% in 1995, 37% in 1997, 5% in 1998, and are currently estimated by Backwards Coho Fisheries Regulation Assessment Model (FRAM) during catch years 2011 through 2021 at less than 10%.
 
-Historically 89% of the commercial Coho Salmon catch on the south coast of BC was taken by the troll sector with the remainder harvested by commercial net fisheries. The West Coast of Vancouver Island (WCVI) troll fishery was the single largest commercial harvester, taking an average of 1.5 million Coho Salmon in the 10-year period before 1997, when major fishing restrictions were imposed. This fishery intercepted stocks from the US, Strait of Georgia, and WCVI. Since 2001, average catch retained in the WCVI troll fishery has been 725 Coho, due primarily to the timing and non-retention restrictions in place for this fishery. Historically, catch in the Strait of Georgia troll fishery, comprised predominantly of Strait of Georgia stocks, was much smaller than the WCVI troll fishery (1986-1995 averaged 150,000 Coho Salmon, annually). The Strait of Georgia troll fishery has not been permitted to retain Coho Salmon since 1995.
+Historically 89% of the commercial Coho Salmon catch on the south coast of BC was taken by the troll sector with the remainder harvested by commercial net fisheries. The West Coast of Vancouver Island (WCVI) troll fishery was the single largest commercial harvester, taking an average of 1.5 million Coho Salmon in the 10-year period before 1997, when major fishing restrictions were imposed. This fishery intercepted stocks from the US, Strait of Georgia, and WCVI. Since 2001, average catch retained in the WCVI troll fishery has been 725 Coho, due primarily to the timing and non-retention restrictions in place for this fishery. Historically, catch in the Strait of Georgia troll fishery, comprised predominantly of Strait of Georgia stocks, was much smaller than the WCVI troll fishery (1986–1995 averaged 150,000 Coho Salmon, annually). The Strait of Georgia troll fishery has not been permitted to retain Coho Salmon since 1995.
 
 Net fisheries in Johnstone Strait, Strait of Juan de Fuca and the Strait of Georgia harvest Coho Salmon incidentally during directed fisheries on Sockeye (*O. nerka*), Pink (*O. gorbuscha*), and Chum (*O. keta*) Salmon. Net fisheries have been curtailed in recent years due to low returns of the target species and concerns for Chinook (*O. tshawytscha*) and Coho Salmon bycatch.
 
@@ -619,8 +619,10 @@ Most Coho-directed recreational fisheries [**Jeromy comment: Freshwater and mari
 Coho Salmon fisheries are evaluated with the Coho Fisheries Regulation Assessment Model [(Coho FRAM)](https://framverse.github.io/fram_doc/calcs_data_coho.html), a bilaterally developed tool that is employed for both pre-season fishery planning and post-season estimation of escapements and {{< glossary ERs >}} [(see: pre- and post-season applications)](https://framverse.github.io/fram_doc/apps_coho.html). 
 
 Coho FRAM is an annual mixed-stock accounting model that evaluates a set of stock units within a set of fisheries over time periods within a single fishing year (the calendar year for Coho Salmon) (documentation on FRAM can be found here: [https://framverse.github.io/fram_doc/](https://framverse.github.io/fram_doc/)). It can be used to estimate catch and escapement based on forecast abundance and planned fisheries (‘forward’), or it can be used to reconstruct ocean abundance from observed escapements and fisheries (‘backward’). 
-`
-The Coho FRAM base period parameterization, determining stock-fishery-timestep impacts, was constructed from stock-specific fishery recoveries of coded-wire tags {{< glossary CWTs >}} within the time steps January to June, July, August, September, and October to December during coast wide fisheries from 1986 to 1992. The procedure used to generate base period data is depicted below (@fig-FRAMdev). For each base period year, post-season reconstruction of cohort abundances for each Coho Salmon {{< glossary MU >}} is based on two different models: the Mixed-Stock Model (MSM) that estimates the Production Expansion Factors for each Production Region and Terminal Area Run Reconstruction (RRTERM) program that estimates stock-specific impacts for terminal marine and freshwater fisheries. The MSM uses {{< glossary CWT >}} recoveries for each model stock expanded by the Production Expansion Factors to best describe the total catch in each marine mixed-stock fishery. The MSM/{{< glossary RRTERM >}} cohort analysis has been used for post-season reconstructions for catch years 1986-2007. However, beginning with catch year 1993, too few coded-wire tags were recovered in mixed-stock fisheries to perform robust cohort analyses using the mixed-stock model (@fig-recoveries-total).
+
+The Coho FRAM base period parameterization, determining stock-fishery-timestep impacts, was constructed from stock-specific fishery recoveries of coded-wire tags (CWTs) within the 5 time steps of January to June, July, August, September, and October to December during coast wide fisheries from 1986 to 1992. The procedure used to generate base period data is depicted below (@fig-FRAMdev). For each base period year, post-season reconstruction of cohort abundances for each Coho Salmon {{< glossary MU >}} is based on two different models: the Mixed-Stock Model (MSM) that estimates the Production Expansion Factors for each Production Region and Terminal Area Run Reconstruction (RRTERM) program that estimates stock-specific impacts for terminal marine and freshwater fisheries. The MSM uses {{< glossary CWT >}} recoveries for each model stock expanded by the Production Expansion Factors to best describe the total catch in each marine mixed-stock fishery. The MSM/{{< glossary RRTERM >}} cohort analysis has been used for post-season reconstructions for catch years 1986-2007. However, beginning with catch year 1993, too few coded-wire tags were recovered in mixed-stock fisheries to perform robust cohort analyses using the mixed-stock model (@fig-recoveries-total).
+
+![General procedure used to generate base period data for Coho FRAM.](images/FRAMDevel.jpg){#fig-FRAMdev}
 
 ```{r}
 dat.rmis = read_csv("updated-rmis-summaries.csv")
@@ -650,10 +652,9 @@ plot_rmis_recoveries_all = function(mu.name,
 }
 ```
 
-
 ```{r}
 #| fig-height: 8
-#| fig-cap: Total preterminal tag recoveries for all Coho Salmon ages 3 and 4 (regardless of clip status).
+#| fig-cap: Total estimated pre-terminal coded-wire-tag recoveries for all Coho Salmon ages 3 and 4 (regardless of clip status).
 #| label: fig-recoveries-total
 ggplot(dat.rmis |> 
          filter(term == "P") |> 
@@ -663,7 +664,7 @@ ggplot(dat.rmis |>
   geom_col()+
   ggtitle("Total recoveries by year")+
   labs(x = "Run year of recovery",
-       y = "CWT Recoveries (expanded)")+
+       y = "CWT Recoveries (expanded for fishery sampling rate)")+
   scale_y_continuous(labels = function(x){format(x, big.mark = ",")})+
   facet_wrap(.~ mu_name)+
   theme_bw(base_size = 12)
@@ -671,19 +672,17 @@ ggplot(dat.rmis |>
 ```
 
 
-![Procedure used to generate base period data for Coho FRAM.](images/FRAMDevel.jpg){#fig-FRAMdev}
-
-### Key Uncertainties with FRAM analysis
+### Key Uncertainties with Coho FRAM analysis
 
 FRAM is a deterministic model that reports point estimates of cohort abundances and {{< glossary ERs >}} without explicit measures of uncertainty associated with them. Managers should consider the following data limitations and model assumptions when interpreting FRAM results:
 
--	Cohort abundances and {{< glossary ERs >}} are sensitive to the quality of escapement estimates, with estimation practices varying substantially among stocks. For example, Puget Sound net pens programs often lack escapement estimates. For these programs, pre-season abundances were used or were scaled to a nearby hatchery program using a pre-post ratio.
+-	Cohort abundances and {{< glossary ERs >}} are sensitive to the quality of escapement estimates, with estimation practices varying substantially among stocks. For example, Puget Sound net pen programs often lack escapement estimates. For these programs, pre-season abundances are used or are scaled to a nearby hatchery program using a pre-post ratio.
 -	Marine survival indices are used to estimate Canadian {{< glossary MU >}} abundances, except for Interior Fraser, in both pre- and post-season FRAM runs because abundance forecasts and escapement estimates are highly uncertain or unavailable for the remaining two Canadian MUs.
--	It is unknown if average ocean distribution during the FRAM base period (derived using catch year 1986 to 1992 {{< glossary CWT >}} data) reflect the true annual ocean distribution of Coho Salmon stocks in contemporary years; this leads to increased uncertainty in fishery-specific stock impacts.
+-	It is unknown if average ocean distribution during the FRAM base period (derived using catch years 1986 to 1992 {{< glossary CWT >}} data) reflect the true annual ocean distribution of Coho Salmon stocks in contemporary years. A change in ocean distribution would lead to increased uncertainty in fishery-specific stock impacts.
 -	Complex regulations, such as fine-scale spatial/temporal and mixed retention limits for natural and hatchery Coho Salmon within a fishery, are difficult to represent and assess within FRAM and as a result, FRAM may not accurately represent stock-specific impacts within fisheries with these regulations.
 -	Spatial and temporal gaps in catch monitoring of some Canadian fisheries result in underestimation of catch.
 -	Uncertainty in mortality estimates arises from several sources, including creel census and catch estimation.
--	Within time steps in FRAM, natural mortality is constant; additionally, natural mortality does not reflect inter-annual variability in survival during adult ocean residence (January Age-3 through FRAM’s final time step).
+-	Between time steps in FRAM, natural mortality is a constant rate; additionally, natural mortality does not reflect inter-annual variability in survival during adult ocean residence (January Age-3 through FRAM’s final time step).
 
 For more details, see the [FRAM documentation](https://framverse.github.io/fram_doc/).
 
@@ -818,7 +817,7 @@ For the Pacific Northwest, water year 2015 stands out as the warmest year on rec
 
 In June 2021, record-breaking terrestrial temperatures were recorded across western North America due to a ‘heat dome’ [@White_et_al_2023]. It resulted in some of the highest temperatures ever recorded across large parts of British Columbia, Oregon, and Washington (11–19°C, 20–35°F above normal temperatures), including the highest temperature ever recorded in Canada (49.5°C, 121.3°F).  This 1,000-year event was due to an exceptionally strong ridge centered over the area (the "heat dome"), whose strength was greatly increased by climate change. The heat wave sparked numerous extensive wildfires, extensive damage to forest vegetation and crops, and was responsible for the deaths of nearly 1,400 people across the region.
 
-Coho Salmon inhabiting streams, rivers, and marine environments were likely affected by the heat dome, although many of these impacts are not well documented. Streams temperatures across the region increased dramatically in response to the heat dome, which also decreases oxygen saturation, potentially causing to physiological stress to stream-dwelling fish. In intertidal environments in the Salish Sea, an estimated 1 billion animals (primarily shellfish) died as a result of the heat wave coinciding with extreme low tides, which then impacted water quality [@Raymond_et_al_2022]. The true impacts of the 2021 heat dome on Coho Salmon populations managed under {{< glossary PST >}} will likely never be known, but may include generally decreased productivity and survival for the 2020 year class (which returns as adults in 2023), because it was residing in freshwater during the extraordinary event.
+Coho Salmon inhabiting streams, rivers, and marine environments were likely affected by the heat dome, although many of these impacts are not well documented. Streams temperatures across the region increased dramatically in response to the heat dome, which also decreases oxygen saturation, potentially causing to physiological stress to stream-dwelling fish. In intertidal environments in the Salish Sea, an estimated 1 billion animals (primarily shellfish) died as a result of the heat wave coinciding with extreme low tides, which then impacted water quality [@Raymond_et_al_2022]. The true impacts of the 2021 heat dome on Coho Salmon populations managed under {{< glossary PST >}} will likely never be known, but may include generally decreased productivity and survival for the 2020 year class (which will return as adults in 2023), because it was residing in freshwater during the extraordinary event.
 
 ### Marine Conditions
 
@@ -917,7 +916,7 @@ ggplot(dat.pdo |>
 
 <!-- ![Time series of shifts in sign of the Pacific Decadal Oscillation (PDO; bars) and the Ocean Niño Index (ONI; line) from 1996 to the present. Red bars indicate positive (warm) years; blue bars are negative (cool) year. Data from NOAA, https://www.ncei.noaa.gov/pub/data/cmb/ersst/v5/index/ersst.v5.pdo.dat](images/Env_fig2.png){#fig-envi2} -->
 
-Since the original “blob” in 2014–16 [@Bond_et_al_2015], a series of marine heat waves have spread across large parts of the North Pacific Ocean in 2019, 2020, 2022, and 2023. These heat waves not only cause elevated water temperatures, but are also associated with extremely low nutrient levels. These heat waves vary greatly in their location across the North Pacific Ocean and although largely offshore, they occasionally spread to coastal waters such as 2015.
+Since the original “blob” in 2014–16 [@Bond_et_al_2015], a series of marine heat waves have spread across large parts of the North Pacific Ocean in 2019, 2020, 2022, and 2023. These heat waves not only cause elevated water temperatures, but are also associated with extremely low nutrient levels. These heat waves vary greatly in their location across the North Pacific Ocean and although largely offshore, they occasionally spread to coastal waters such as in 2015.
 
 #### Biological impacts of marine conditions
 
