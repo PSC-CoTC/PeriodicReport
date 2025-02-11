@@ -437,7 +437,7 @@ psc_stock_pst <- psc_pst |>
 
 ```{r}
 ## Historic ER #s
-fram_db = connect_fram_db(params$mdb_pst)
+fram_db = connect_fram_db(params$mdb_pst, quiet = TRUE)
 post_esc = fram_db |> fetch_table("Escapement") |> 
   select(-primary_key) |> 
   filter(time_step == 5) |> 
@@ -485,6 +485,7 @@ post_ers <- post_calcs |>
     fishery_id >= 167 & fishery_id < 194 ~ "Canada",
     fishery_id >= 194 ~ "AK"
   ))
+disconnect_fram_db(fram_db)
 ```
 
 
