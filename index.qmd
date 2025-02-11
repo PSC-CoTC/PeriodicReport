@@ -18,7 +18,7 @@ glossary:
 format:
   html:
     toc: true
-    toc-depth: 4
+    toc-depth: 5
     toc-expand: 1
     number-sections: true
     number-depth: 4
@@ -2857,7 +2857,7 @@ Estimated total abundance and escapement in the Skagit {{< glossary MU >}} has b
 
 Harvest of Skagit MU has also varied from year to year, and has declined slightly over this time period. Less than 50,000 fish have been harvested annually in all but one of the years (2013) and most of the harvest has been in non-selective fisheries.
 
-**(Jeromy note - can a line be added also for the critical threshold of 22,858 across the plots?)**
+<!-- **(Jeromy note - can a line be added also for the critical threshold of 22,858 across the plots?)** -->
 
 ```{r f_abund_bar_skagit}
 #| fig-cap: Skagit {{< glossary MU >}} post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years 2004 through 2021. The graphs include dashed trend lines and the vertical dotted lines highlight catch year 2010)
