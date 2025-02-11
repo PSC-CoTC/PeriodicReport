@@ -100,6 +100,8 @@ library("glue")
 library("scales")
 library("rvest")
 library("plotly")
+library(framrsquared)
+library(framrosetta)
 theme_set(theme_light())
 
 # #can load an entire environment built ahead of time and save time on reknitting
@@ -159,7 +161,6 @@ pal_rel_tag_mark <- c("CWT_Unclipped"= "#4D5370",
                       "CWT_Clipped" = "#A6B7C6",
                       "Clipped_only"= "#E4C22B", "Unclipped" = "#965127")
 ```
-
 
 ```{r rebuild_psc_pst_csv, include=FALSE}
 #postseason mdb from params arg above, sourced locally, ultimately from CoTC Sharepoint
@@ -401,15 +402,169 @@ if(params$clean_run == TRUE){
 ```{r loading_in, include=FALSE}
 #but to deal with WA Coast stocks from TAMM spreadsheets, among other reasons
 psc_pst <- readr::read_csv(here("../PeriodicReportData/psc_postfram_2004_2023_temp.csv")) |> 
-  rename(`Catch Year` = RunYear)
+  rename(`Catch Year` = RunYear) |> 
+  mutate(fishery_region = case_when(
+    FisheryID < 167 ~ "SUS",
+    FisheryID >= 167 & FisheryID < 194 ~ "Canada",
+    FisheryID >= 194 ~ "AK"
+  ))
 psc_pre <- readr::read_csv(here("../PeriodicReportData/psc_prefram_2004_2023.csv")) |> 
-  rename(`Catch Year` = RunYear)
+  rename(`Catch Year` = RunYear) |> 
+  mutate(fishery_region = case_when(
+    FisheryID < 167 ~ "SUS",
+    FisheryID >= 167 & FisheryID < 194 ~ "Canada",
+    FisheryID >= 194 ~ "AK"
+  ))
+
+## Janky recreation of stock-specific info.
+## At some point, I should overhaul the original readin to be less annoying.
+
+psc_stock_pre <- psc_pre |> 
+  select("Catch Year", PSC_StockID, PSC_StockName,
+         PSC_Region, escp, abund,
+         low_mod_abund, mod_abd_abund, 
+         low_er_cap, mod_er_cap, abd_er_cap) |> 
+  distinct()
+
+psc_stock_pst <- psc_pst |> 
+  select("Catch Year", PSC_StockID, PSC_StockName,
+         PSC_Region, escp, abund,
+         low_mod_abund, mod_abd_abund, 
+         low_er_cap, mod_er_cap, abd_er_cap) |> 
+  distinct()
+
 ```
+
+```{r}
+## Historic ER #s
+fram_db = connect_fram_db(params$mdb_pst)
+post_esc = fram_db |> fetch_table("Escapement") |> 
+  select(-primary_key) |> 
+  filter(time_step == 5) |> 
+  select(stock_id, escapement, run_id) |> 
+  left_join(framrosetta::stock_coho_psc,
+            by = c("stock_id" = "fram_stock_id")) |> 
+  filter(!is.na(psc_stock_name)) |> 
+  group_by(run_id, psc_stock_name) |> 
+  summarize(escapement = sum(escapement)) |> 
+  ungroup()
+post_mort = fram_db |> fetch_table("Mortality") |> 
+  select(-primary_key) |> 
+  left_join(framrosetta::stock_coho_psc,
+            by = c("stock_id" = "fram_stock_id")) |> 
+  filter(!is.na(psc_stock_name))
+  
+post_runid = fram_db |> fetch_table("RunID") |> 
+  select(run_id, run_year)
+
+
+post_calcs = post_mort |> 
+  left_join(post_runid, by = "run_id") |> 
+  mutate(mort = landed_catch + non_retention + shaker + drop_off +
+      msf_landed_catch + msf_non_retention + msf_shaker + msf_drop_off) |> 
+  group_by(run_id, psc_stock_name, fishery_id) |> 
+  summarize(mort = sum(mort)) |> 
+  ungroup() 
+
+post_total_mort = post_calcs |> 
+  group_by(run_id, psc_stock_name) |> 
+  summarize(stock_mort = sum(mort)) |> 
+  ungroup()
+
+post_ers <- post_calcs |> 
+  left_join(post_total_mort, 
+            by = c("run_id", "psc_stock_name")
+  ) |> 
+  full_join(post_esc, by = c("psc_stock_name", "run_id")) |> 
+  mutate(er = mort/(stock_mort + escapement)) |>
+  inner_join(post_runid) |> 
+  select(run_year, psc_stock_name, fishery_id, er) |> 
+  left_join(framrosetta::fishery_coho_fram) |> 
+  mutate(fishery_region = case_when(
+    fishery_id < 167 ~ "SUS",
+    fishery_id >= 167 & fishery_id < 194 ~ "Canada",
+    fishery_id >= 194 ~ "AK"
+  ))
+```
+
 
 ::: {.content-hidden unless-meta="devversion"}
 *Note that Quillayute and Queets values are those from the FRAM database and have not yet been extracted from the relevant TAMM cells for each year*
-
 :::
+
+```{r}
+## ER calculation stuff
+ests.post = psc_pst |> 
+  distinct(`Catch Year`, PSC_Region, PSC_StockName, abund, low_mod_abund, mod_abd_abund) |> 
+  mutate(
+    PSC_Region = factor(PSC_Region, levels = c("Canada","US Inside","US Outside")),
+    abd = case_when(
+      abund < low_mod_abund ~ 1,
+      abund >= low_mod_abund & abund <= mod_abd_abund ~ 2,
+      abund > mod_abd_abund ~ 3,
+      is.na(low_mod_abund) ~ NA
+    )) |> 
+  filter(!is.na(abd))  |> 
+  select("Catch Year", PSC_Region, PSC_StockName, abd)
+
+ests.pre = psc_pre |> 
+  distinct(`Catch Year`, PSC_Region, PSC_StockName, abund, low_mod_abund, mod_abd_abund) |> 
+  mutate(
+    PSC_Region = factor(PSC_Region, levels = c("Canada","US Inside","US Outside")),
+    abd = case_when(
+      abund < low_mod_abund ~ 1,
+      abund >= low_mod_abund & abund <= mod_abd_abund ~ 2,
+      abund > mod_abd_abund ~ 3,
+      is.na(low_mod_abund) ~ NA
+    )) |> 
+  filter(!is.na(abd))  |> 
+  select("Catch Year", PSC_Region, PSC_StockName, abd)
+
+
+ests.joint = inner_join(ests.post, ests.pre, by = c("Catch Year", "PSC_Region", "PSC_StockName"),
+                        suffix = c("_post", "_pre")) |> 
+  mutate(prediction = case_when(
+    abd_post == abd_pre ~ "No Change",
+    abd_post < abd_pre ~ "Too High",
+    abd_post > abd_pre ~ "Too Low"
+  )) |> 
+  count(`Catch Year`, PSC_Region, prediction) |> 
+  mutate(prediction = factor(prediction, c("Too High", "No Change", "Too Low")))
+
+## WE MAY WANT TO MOVE THESE ELSEWHERE
+year.initial = 2004
+year.final = 2022
+
+er.limits = inner_join(ests.post, ests.pre, by = c("Catch Year", "PSC_Region", "PSC_StockName"),
+                       suffix = c("_post", "_pre")) |> 
+  filter(`Catch Year` >= year.initial) |> 
+  filter(`Catch Year` <= year.final) |> 
+  left_join(psc_pst |> select(low_er_cap, mod_er_cap, abd_er_cap, "Catch Year", PSC_StockName) |> distinct()) |> 
+  filter(PSC_Region == "US Inside") |> 
+  mutate(limit_post = case_when(
+    abd_post == 1 ~ low_er_cap,
+    abd_post == 2 ~ mod_er_cap,
+    abd_post == 3 ~ abd_er_cap)
+  ) |> 
+  mutate(limit_pre = case_when(
+    abd_pre == 1 ~ low_er_cap,
+    abd_pre == 2 ~ mod_er_cap,
+    abd_pre == 3 ~ abd_er_cap)
+  ) |> 
+  select(-low_er_cap, -mod_er_cap, -abd_er_cap)
+
+er.vals = psc_pre |> 
+  select("Catch Year", PSC_StockName, er_pre =mort_sum_er) |> 
+  distinct() |> 
+  inner_join(
+    psc_pst |> 
+      select("Catch Year", PSC_StockName, er_post =mort_sum_er) |> 
+      distinct(),
+    by = c("Catch Year", "PSC_StockName")
+  )
+
+```
+
 
 ```{r func_plot_abund_bar}
 # #export these data for CCT to have for text summaries
@@ -1032,13 +1187,7 @@ The US annual salmon fishery planning process starts in January with a Stock and
 
 Because the domestic planning processes of the Parties are not synchronous, a single pre-season command file containing expectations for both Canada and the US is not available prior to the conclusion of the {{< glossary Council display = PFMC >}} process (US pre-season fishery planning) in April. Therefor, in any given year the pre-season command file used by the {{< glossary Council display = PFMC >}} incorporates cohort abundance for both Canadian and US {{< glossary MUs >}}, but planned fishery regulations for US fisheries only. Unless other information is available, Canadian regulations are assumed to be similar to those implemented in the previous year. Subsequent to this process, additional command files are generated to represent the actual Canadian fishing plans. Command files used in pre-season planning from 2004 to 2023 are detailed in @tbl-commands. These files contain specific information used at the time to model fisheries along with the pre-season forecasts of stock abundances.
 
-```{r}
-#| tbl-cap: Pre- and post-season command files and base period used in FRAM to evaluate {{< glossary ERs >}} {{< glossary MUs >}} over catch years 2004 through 2023. "Post-season Original" command files are those used to generate estimates for the Annual {{< glossary ER >}} Report provided to the Southern Panel during the {{< glossary PSC >}} Annual Meeting.
-#| label: tbl-commands
-static$run_files |> 
-  select("Catch Year":"Base Period Used in Revised BKFRAM Run") |> 
-  gt()
-```
+
 
 
 <!-- | **Catch Year** | **Pre-season US** | **Pre-season Canada** | **Post-season Original** | **Post-season Revised** | **Base Period Used in Revised BKFRAM Run** | -->
@@ -1133,7 +1282,7 @@ Key considerations for Canadian fishery management for Coho Salmon in 2024 are e
 (2) Coho Salmon harvests by First Nations fisheries; 
 (3) incidental impacts during commercial and First Nations fisheries directed at Chinook, Chum, and especially Fraser Sockeye Salmon which will see a dominant late run return in 2024. The Canadian fishery regimes affecting Coho Salmon are expected to be driven by Canadian domestic allowable impacts on the Thompson River component of the IFR management unit, Fraser Chinook concerns and Fraser Sockeye stocks of concern co-migrating with the late run.
 
-In years prior to 2014, Canadian fisheries were managed so as not to exceed a 3% maximum {{< glosarry ER >}}. In May 2014, Canada decided to permit up to a 16% {{< glosarry ER >}} on upper Fraser Coho Salmon in Canadian fisheries to allow for impacts in fisheries directed at a record Fraser Sockeye forecast. Since 2015, upper Fraser Coho Salmon in Canadian fisheries have been managed per low status limitations. The projected status of Canadian coho {{< glosarry MUs >}} in 2024 indicates continuing concerns for the condition of Interior Fraser Coho Salmon. The Interior Fraser Coho Salmon {{< glosarry MU >}} is anticipated to remain in low abundance status, resulting in a requirement to constrain the total mortality fishery {{< glosarry ER >}} for 2024 Southern U.S. fisheries to a maximum of 10.0%.
+In years prior to 2014, Canadian fisheries were managed so as not to exceed a 3% maximum {{< glossary ER >}}. In May 2014, Canada decided to permit up to a 16% {{< glossary ER >}} on upper Fraser Coho Salmon in Canadian fisheries to allow for impacts in fisheries directed at a record Fraser Sockeye forecast. Since 2015, upper Fraser Coho Salmon in Canadian fisheries have been managed per low status limitations. The projected status of Canadian coho {{< glossary MUs >}} in 2024 indicates continuing concerns for the condition of Interior Fraser Coho Salmon. The Interior Fraser Coho Salmon {{< glossary MU >}} is anticipated to remain in low abundance status, resulting in a requirement to constrain the total mortality fishery {{< glossary ER >}} for 2024 Southern U.S. fisheries to a maximum of 10.0%.
 
 ### Development of Canadian Preseason Coho FRAM Inputs
 
@@ -1209,107 +1358,13 @@ At present, the utility of the {{< glossary DIT >}} programs and the {{< glossar
 
 Most {{< glossary MUs >}} in the US have {{< glossary CWT >}} indicator stocks and {{< glossary DIT >}} programs. However, some of the programs have been eliminated in recent years due to budgetary constraints. Canada has discontinued all of their Coho Salmon {{< glossary DIT >}} programs. The current Coho Salmon {{< glossary CWT >}} indicator stocks for each {{< glossary MU >}} and the brood years with {{< glossary DIT >}} groups are listed below. The tag codes used in the Mixed-Stock-Model to develop the FRAM base period for catch years 1986-1997 are also listed below. All {{< glossary DIT >}} groups released within US {{< glossary MUs >}} to date are also listed below.
 
-| **Management Unit**               | **Indicator Stock**                   | **Brood Yr SIT**                | **Brood Yr {{< glossary DIT >}}** |
-|:----------------------------------|:--------------------------------------|:-------------------------------:|:---------------------------------:|
-| **Southern BC MUs**               |                                       |                                 |                                   |
-| Lower Fraser                      | Inch Creek Hatchery                   | 83-95,14-19                     | 96-13                             |
-|                                   | Salmon River (Wild)[^1]               | 84-99,01,03,05-07               | NA                                |
-|                                   | Chilliwack R. H. (Chilliwack R.)      | 83-95                           | 96-02                             |
-|                                   | Chehalis R. H. (Chehalis R.)          | 83-97                           | --                                |
-| Interior Fraser                   | Spius Cr. H. (Coldwater R.)[^2]       | 84-94,96-98,03-19               | 99-02                             |
-|                                   | Spius Cr. H. (Salmon R./TOMF)[^3]     | 95-96,99,01-02,04-05,07,14,17-19| --                                |
-|                                   | Spius Cr. H. (Spius Cr.)[^4]          | 94-96,99-00                     | 97-98                             |
-|                                   | Spius Cr. H. (Eagle R.)               | 10-13,15-19                     | --                                |
-|                                   | Chilliwack R. H. (Coldwater R.)[^5]   | 16-19                           | --                                |
-|                                   | Eagle R. H. (Salmon R.)[^6]           | 83-93                           | --                                |
-|                                   | Eagle R. H. (Eagle R.)[^7]            | 83-93                           | --                                |
-|                                   | Eagle R. H. (Perry R.)[^8]            | 84-86                           | --                                |
-|                                   | Dunn Cr. H. (Dunn Cr.)[^9]            | 86-87,89-90,92,95,98-07         | --                                |
-|                                   | Dunn Cr. H. (Dunn Lake)[^10]          | 84-91,94,97                     | --                                |
-|                                   | Dunn Cr. H. (Lemieux Cr.)[^11]        | 83-86,88,92-93,97-99,03,06-09   | --                                |
-|                                   | Dunn Cr. H. (Louis Cr.)[^12]          | 88-94,97-07                     | --                                |
-|                                   | Dunn Cr. H. (Ianson Ch.)[^13]         | 88-91,94-95,00-02,04-05         | --                                |
-|                                   | Eagle River (Wild)[^14]               | 00-03                           | NA                                |
-|                                   | Lemieux Creek (Wild)                  | 92-93                           | NA                                |
-| Strait of Georgia Mainland        | Capilano R. H.                        | 83-97,00                        | --                                |
-|                                   | Lang Creek H. (Lang Cr.)[^15]         | 87-91,95-96,08-09               | --                                |
-| Strait of Georgia Vancouver Island| Quinsam R. H.                         | 83-85,18-19                     | 96-17                             |
-|                                   | Big Qualicum R. H.                    | 83-85,87-95,03-15,17-19         | 96-02                             |
-|                                   | Goldstream R. H.                      | 91-94,03-11                     | 96-02                             |
-|                                   | Puntledge R. H.[^16]                  | 83-97,99-02,09-10,19            | --                                |
-|                                   | Black Creek (Wild)[^17]               | 83-17                           | NA                                |
-| **US Inside MUs**                 |                                       |                                 |                                   |
-| Skagit                            | Marblemount H. (Skagit R.)            | 83-93                           | 94-21                             |
-|                                   | Baker River (Wild)[^18]               | 83-97,00-22                     | NA                                |
-| Stillaguamish[^19]                | Wallace R. H. (Skykomish R.)          | 83-95                           | 96-21                             |
-|                                   | Harvey Creek H.                       | 91,07,14,16-20                  | --                                |
-|                                   | Stillaguamish R. (Wild)               | 84-87                           | NA                                |
-| Snohomish                         | Wallace R. H. (Skykomish R.)          | 83-95                           | 96-21                             |
-|                                   | Bernie Gobin H. (Tulalip Cr.)[^20]    | 83-21                           | --                                |
-| Hood Canal                        | Quilcene NFH                          | 87-95                           | 96-21                             |
-|                                   | Quilcene Bay Sea Pens                 | 88,90,93,95,02-11,13-14         | 96-01                             |
-|                                   | Port Gamble Bay Pens                  | 83-95,04-21                     | 96-03                             |
-|                                   | George Adams H. (Skokomish R.)        | 83-94,96                        | 95,97-21                          |
-|                                   | Big Beef Creek (Wild)[^21]            | 83-21                           | NA                                |
-| Strait of Juan de Fuca            | Lower Elwha H.[^22]                   | 85-94,12,15,18                  | 95-11,13-14,16-17,09-20           |
-|                                   | Dungeness H.                          | 83,86,89,91-94,05-08,18-20      | --                                |
-|                                   | Hoko Falls H.                         | 18-20                           | --                                |
-|                                   | Hoko and Salmon Creek (Wild)          | 84-87,08                        | NA                                |
-| **US Outside MUs**                |                                       |                                 |                                   |
-| Quillayute                        | Sol Duc H.                            | 83-88,90-95                     | 96-21                             |
-|                                   | Various Tributaries (Wild)[^23]       | 83-86,88-92                     |                                   |
-| Hoh                               | Chalaat Creek H.                      | 84,86-89                        | --                                |
-|                                   | Canyon Springs Pond                   | 86-87                           | --                                |
-|                                   | Sol Duc H.                            | 85,87                           | --                                |
-|                                   | Hoh River (Wild)[^24]                 | 83-87,03,05-12                  | NA                                |
-| Queets                            | Quinault Lake H.                      | 83-84,90-92                     | --                                |
-|                                   | Salmon R. Fish Culture                | 83,85-94                        | 95-21                             |
-|                                   | Queets/Clearwater wild[^25]           | 83-11,13-20                     | NA                                |
-| Grays Harbor                      | Bingham Creek H.                      | 83-94                           | 95-21                             |
-|                                   | Aberdeen Net Pens                     | 88-90,92-94                     | --                                |
-|                                   | Humptulips H. (Stevens Cr.)           | 83-94,06,10-12,19-20            | 95-96                             |
-|                                   | Bingham Creek (Wild)[^26]             | 83-20                           | NA                                |
-|                                   | Stevens & Scatter Creek (Wild)        | 83-90,92-93                     | NA                                |
-|                                   | Chehalis Upriver (Wild)[^27]          | 83-97,00-20                     | NA                                |
-|                                   | Skookumchuck H.                       | 83,89,98,06-07,09, 11-12        | 98                                |
-
-:Coded-wire-tag indicator stocks and brood years with single index tag (SIT) and {{< glossary DIT >}} groups for each Coho Salmon {{< glossary MU >}}, beginning with brood year 1983. Indicator stocks are hatchery-produced Coho Salmon unless specified as "Wild" (Release data downloaded from RMIS 1-10-2023). SIT groups may be either marked or unmarked releases of {{< glossary CWT >}} Coho Salmon. {{< glossary DIT >}} groups are marked (adipose-fin clipped) and unmarked pairs of {{< glossary CWT >}} Coho Salmon. {#tbl-cwt-releases-by-broood-years}
-
-[^1]: Beginning BY 1996, all tagged releases were unmarked.
-[^2]: BYs 1997 and 1998, all tagged releases were unmarked; fry released BYs 84-90 and 93.
-[^3]: BYs 1999, 2001-02, and 2005, all tagged releases were unmarked; fry released BY 1995.
-[^4]: BYs 1997 and 1998 were released as fry.
-[^5]: When space is limited at Spius Creek Hatchery, additional fish are raised at Chilliwack River Hatchery and released in the Coldwater River.
-[^6]: Fry released BYs 1983-1990.
-[^7]: All fry releases.
-[^8]: All fry releases.
-[^9]: Beginning BY 1998, all tagged releases were unmarked; fry released BY 1987, 1989-90.
-[^10]: BY 1997 released unmarked; fry released BY 1984-86, 1988.
-[^11]: Beginning BY 1997, all tagged releases were unmarked; fry released BY 1983-86, 1988.
-[^12]: Beginning BY 1997, all tagged releases were unmarked; fry released BY 1988-89.
-[^13]: Begging BY 2000, all tagged releases were unmarked. 
-[^14]: All tagged releases were unmarked.
-[^15]: Fry released BY 1989.
-[^16]: Fry released BYs 2009-10.
-[^17]: Beginning with BY 1997 (except 2004) tagged releases were unmarked. 
-[^18]: Beginning BY 1996, all tagged releases were unmarked.
-[^19]: Bernie Gobin Hatchery tagging program and the Skykomish tagging program at the Wallace River Hatchery are used to represent production in both the Stillaguamish and Snohomish River Basins.
-[^20]: BY 1997-98 were released unmarked; this stock was used to represent Stillaguamish in the FRAM base period.
-[^21]: BY 1996 and 1998-2020, all tagged releases were unmarked.
-[^22]: Fry released BY 1986.
-[^23]: Release groups were very small.
-[^24]: In all years, release groups are very small. Beginning BY 2003, all tagged releases were unmarked.
-[^25]: Beginning BY 1996, all tagged releases were unmarked.
-[^26]: Beginning BY 1995, all tagged releases were unmarked.
-[^27]: Beginning BY 1995, all tagged releases were unmarked.
-
 ### Wild Stock Tagging programs
 
 When developing the FRAM base period, the CoTC used wild indicator stocks to represent a {{< glossary MU >}} when the data was available. The figures below summarize data currently reported in {{< glossary RMIS >}} on coded-wire-tagged wild Coho Salmon smolts released within the {{< glossary MUs >}}. Most of the reported wild stock tagging has occurred in the Grays Harbor, and Queets {{< glossary MUs >}}; followed by Strait of Georgia, Hood Canal, Skagit, and Lower Fraser {{< glossary MUs >}}.  However, no wild stock tagging has been reported in the Lower Fraser since brood year 2007.  Very little wild stock tagging has taken place in the remaining {{< glossary MUs >}}. Not all of the data depicted was used in the MSM and subsequent cohort reconstructions.
 
 
 ```{r fig_wild_stock_tagging, fig.height=9, fig.width=8}
-#| fig-caption: Total number of wild Coho Salmon smolts caught, tagged, and released by clip status for each Management Unit over brood years 1983 through 2020 (data downloaded from RMIS 9-6-2023).
+#| fig-cap: Total number of wild Coho Salmon smolts caught, tagged, and released by clip status for each Management Unit over brood years 1983 through 2020 (data downloaded from RMIS 9-6-2023).
 #| label: fig-wild-stock-tagging
 static$releases |> 
   filter(
@@ -1348,7 +1403,7 @@ When wild stock tagging was insufficient to represent a {{< glossary MU >}}, the
 
 
 ```{r fig_hatch_stock_releases_all_cwt_only}
-#| fig-caption: Total number of hatchery Coho Salmon smolts released by clip status for all Management Units combined over brood years 1983 through 2020 (data downloaded from RMIS 9-6-2023). "CWT_Unclipped_DIT" refer to tagged fish that are released with an intact adipose fin and are associated with a clipped release group. "CWT_Unclipped" are tagged fish that are unclipped but not associated with another tagged release group.  These fish are often associated with new hatchery programs.
+#| fig-cap: Total number of hatchery Coho Salmon smolts released by clip status for all Management Units combined over brood years 1983 through 2020 (data downloaded from RMIS 9-6-2023). "CWT_Unclipped_DIT" refer to tagged fish that are released with an intact adipose fin and are associated with a clipped release group. "CWT_Unclipped" are tagged fish that are unclipped but not associated with another tagged release group.  These fish are often associated with new hatchery programs.
 #| label: fig-hatch-stock-releases
 static$releases |> 
   filter(
@@ -1671,6 +1726,12 @@ psc_pst |>
   )
 
 ```
+
+
+
+
+
+
 
 ### Forecast Performance
 
@@ -2330,11 +2391,13 @@ The current {{< glossary PST >}}/{{< glossary Council display = PFMC >}} {{< glo
 
 The Skagit MU has both hatchery and wild Coho Salmon {{< glossary CWT >}} indicator stock programs. Wild Yearling Coho Salmon are captured, coded-wire-tagged, and released within the Skagit Basin [@Litz_2023]. These releases are currently used as a marine survival rate indicator for the wild stock. The Skagit hatchery stock releases from Marblemount Hatchery and the tagged wild stock releases are used as {{< glossary ER >}} indicator stocks. Coho Salmon released from Marblemount Hatchery have been double index tagged starting with brood year 1994.
 
-Coded wire tag recovery-based survival and {{< glossary ER >}} data are available for the Marblemount Hatchery and wild Coho Salmon tagging programs [@Haymes_2008]. The wild stock program (AKA Baker River program) began with broodyear 1983 and its purpose is to supply experimental and research smolts for gulper efficiency testing, serve as an indicator stock for wild Skagit Coho Salmon, and supplement natural production in the basin [@WDFW_and_PSE_2003]. An average of 39,000 Baker Lake wild smolts were captured, coded-wire tagged, and adipose fin clipped annually (@fig_wild_stock_tagging_skagit) for broodyears 1983 through 1995. Beginning with brood year 1996, an average of 20,000 fish have been captured and released annually with a {{< glossary CWT >}} and their fins intact. The Marblemount Hatchery Coho Salmon program has been in existence for over 64 years and its purpose is to provide harvest opportunity [@WDFW_2003_marblemount]. The hatchery indicator program is currently a {{< glossary DIT >}} program (differentially tagged fish released with or without adipose clips) with a goal of releasing 45,000 tagged fish of each group, one with an adipose fin clip and one without [@WDFW_2003_marblemount] (@fig_hatch_stock_releases_mu_cwt_only_skagit). Annual tagged and adipose fin clipped releases prior to the implementation of the {{< glossary DIT >}} program were 68,000 on average (@tbl-dit-skagit). The {{< glossary DIT >}} program began with brood year 1994 and an average of 70,000 tagged and clipped fish have been released annually, while tagged and unclipped fish have averaged approximately 44,000 annually. {{< glossary ERs >}} values for the non-ad clipped+{{< glossary CWT >}} Coho Salmon provide a surrogate measure of exploitation for natural origin Coho Salmon from this {{< glossary MU >}}. There is no regular {{< glossary CWT >}} sampling of the freshwater sport fisheries in the {{< glossary MU >}}, which results in some negative bias in tag recoveries. Double index tag groups released for the Skagit {{< glossary MU >}} are provided below.
+Coded wire tag recovery-based survival and {{< glossary ER >}} data are available for the Marblemount Hatchery and wild Coho Salmon tagging programs [@Haymes_2008]. The wild stock program (AKA Baker River program) began with broodyear 1983 and its purpose is to supply experimental and research smolts for gulper efficiency testing, serve as an indicator stock for wild Skagit Coho Salmon, and supplement natural production in the basin [@WDFW_and_PSE_2003]. An average of 39,000 Baker Lake wild smolts were captured, coded-wire tagged, and adipose fin clipped annually (@fig-wild-stock-tagging-skagit) for broodyears 1983 through 1995. Beginning with brood year 1996, an average of 20,000 fish have been captured and released annually with a {{< glossary CWT >}} and their fins intact. The Marblemount Hatchery Coho Salmon program has been in existence for over 64 years and its purpose is to provide harvest opportunity [@WDFW_2003_marblemount]. The hatchery indicator program is currently a {{< glossary DIT >}} program (differentially tagged fish released with or without adipose clips) with a goal of releasing 45,000 tagged fish of each group, one with an adipose fin clip and one without [@WDFW_2003_marblemount]
+(@fig-hatch-stock-releases-mu-cwt-only-skagit). Annual tagged and adipose fin clipped releases prior to the implementation of the {{< glossary DIT >}} program were 68,000 on average (@tbl-dit-skagit). The {{< glossary DIT >}} program began with brood year 1994 and an average of 70,000 tagged and clipped fish have been released annually, while tagged and unclipped fish have averaged approximately 44,000 annually. {{< glossary ERs >}} values for the non-ad clipped+{{< glossary CWT >}} Coho Salmon provide a surrogate measure of exploitation for natural origin Coho Salmon from this {{< glossary MU >}}. There is no regular {{< glossary CWT >}} sampling of the freshwater sport fisheries in the {{< glossary MU >}}, which results in some negative bias in tag recoveries. Double index tag groups released for the Skagit {{< glossary MU >}} are provided below.
 
-*ToDo: Fix the figure references in above paragraph *
+```{r fig.height=4, fig.width=6}
+#| label: fig-wild-stock-tagging-skagit
+#| fig-cap: Number of wild fish caught, tagged, and released by clip status, within the Skagit MU over brood years 1983 through 2020.
 
-```{r fig_wild_stock_tagging_skagit, fig.cap="Number of wild fish caught, tagged, and released by clip status, within the Skagit MU over brood years 1983 through 2020.", fig.height=4, fig.width=6}
 static$releases |> 
   filter(
     rearing_type != "H",
@@ -2358,7 +2421,10 @@ static$releases |>
 
 ```
 
-```{r fig_hatch_stock_releases_mu_cwt_only_skagit, fig.cap="Total number of coded-wire-tagged hatchery Coho Salmon released, by clip status, within the Skagit MU for brood years 1983 through 2020.", fig.height=4, fig.width=6}
+```{r fig.height=4, fig.width=6}
+#| label: fig-hatch-stock-releases-mu-cwt-only-skagit
+#| fig-cap: Total number of coded-wire-tagged hatchery Coho Salmon released, by clip status, within the Skagit MU for brood years 1983 through 2020.
+
 static$releases |> 
   filter(
     rearing_type == "H",
@@ -2389,23 +2455,40 @@ static$releases |>
 
 Since 1996, WDFW and tribal biologists have developed forecasts of wild Coho Salmon run size for all primary and most secondary {{< glossary MUs >}} in Puget Sound and the Washington coast [@Zimmerman_2013]. These annual forecasts are described in the {{< glossary Council display = PFMC >}}’s Preseason Forecast I document available each February [e.g., @PFMC_1_2013; www.pcouncil.org]. These forecasts rely on estimates of wild Coho Salmon production (i.e., smolts) paired with estimates of marine survival. Wild Coho Salmon production estimates for each of the primary and secondary {{< glossary MUs >}} in Puget Sound were derived from results of juvenile trapping studies conducted in the Skagit, Stillaguamish, Snohomish, Green, Nisqually, and Deschutes rivers as well as in tributaries to Lake Washington and Hood Canal.  Analyses of these long-term data sets have demonstrated that wild Coho Salmon smolt production is limited by a combination of factors including seeding levels (i.e., escapement), environmental effects (flows, marine derived nutrients), and habitat degradation [@Zimmerman_2012]. 
 
-Estimates of wild Coho Salmon production in the Skagit Basin are based on catch of wild Coho Salmon smolts in a juvenile trapping program on the lower mainstem Skagit River [@Litz_2023]. WDFW operates a scoop-and-screw trap combination in the lower Skagit River mainstem, located at RM 17 from the river mouth. Trapping began in 1990 and the juvenile trap is calibrated using recaptures of wild yearling Coho marked and released from an upstream tributary (Mannser Creek, RM 35). Coho Salmon abundance is calculated using a Petersen estimator with Chapman modification [@Seber_1973; @Volkhardt_et_al_2007]. Estimated smolt production has been quite consistent in the Skagit {{< glossary MU >}}, averaging 1.1 million smolts annually from 1990 to 2022 (@fig_smolts_skagit). Smolt production has varied from a low of 426,963 in 2008 to a high of 1,885,000 in 2002 and has exceeded 1,000,000 smolts in 20 of the last 33 years. Freshwater productivity (smolts/female) during this period was a function of Coho spawner abundance. The smolt-spawner function derived based on Skagit Coho Salmon estimates is comparable to systems with census counts, lending further credibility to the Skagit juvenile and adult estimates. 
+Estimates of wild Coho Salmon production in the Skagit Basin are based on catch of wild Coho Salmon smolts in a juvenile trapping program on the lower mainstem Skagit River [@Litz_2023]. WDFW operates a scoop-and-screw trap combination in the lower Skagit River mainstem, located at RM 17 from the river mouth. Trapping began in 1990 and the juvenile trap is calibrated using recaptures of wild yearling Coho marked and released from an upstream tributary (Mannser Creek, RM 35). Coho Salmon abundance is calculated using a Petersen estimator with Chapman modification [@Seber_1973; @Volkhardt_et_al_2007]. Estimated smolt production has been quite consistent in the Skagit {{< glossary MU >}}, averaging 1.1 million smolts annually from 1990 to 2022 (@fig-smolts-skagit). Smolt production has varied from a low of 426,963 in 2008 to a high of 1,885,000 in 2002 and has exceeded 1,000,000 smolts in 20 of the last 33 years. Freshwater productivity (smolts/female) during this period was a function of Coho spawner abundance. The smolt-spawner function derived based on Skagit Coho Salmon estimates is comparable to systems with census counts, lending further credibility to the Skagit juvenile and adult estimates. 
 
 
-```{r fig_smolts_skagit, fig.height=4, fig.width=6}
+```{r fig.height=4, fig.width=6}
 #| fig-cap: Estimated number of Skagit MU wild Coho Salmon smolts outmigrants, years 1990 through 2022
-#| label: fig-smolt-skagit
+#| label: fig-smolts-skagit
 plot_smolts("Skagit")
 ```
 
 Marine survival rates of wild Coho Salmon stocks have been estimated using wild {{< glossary CWT >}} indicator stocks in four geographic regions of Puget Sound: Big Beef Creek (within the Hood Canal MU); Deschutes River; South Fork Skykomish River; and Baker River (within the Skagit MU) [@Zimmerman_2012]. These populations are assumed to be representative of the different Puget Sound regions. In the Baker River, a tributary to the Skagit River, marine survival of Coho Salmon smolts has averaged 7.8% (range of 1.1% and 13.9%) over 29 brood years (1989–1997, 2000–2020), with a high of 13.9% for brood year 1987 and a low of 1.1% for brood year 2003. High survival (>11.5%) for brood years 2020 through 2022 is encouraging.
 
-ToDo: create this image from the excel file:
-![](images/Skagit_marine_SR.png){width=100% fig-alt="Skagit Marine Survival Rates"}
+```{r}
+#| fig-cap: Estimated marine survival rates for Baker River Coho Salmon, (data provided by M. Litz, WDFW).
+#| label: fig-skagit-msr
 
-**Estimated marine survival rates for Baker River Coho Salmon, (data provided by M. Litz, WDFW).**
+static$marine_survival_data |> 
+  mutate(Baker = if_else(Baker == "NA",
+                         NA,
+                         Baker)) |> 
+  mutate(Baker = as.numeric(Baker)) |> 
+  filter(BY >= 1989) |> ## a little janky, handling early years being NA 
+ggplot(aes(x = BY, y = Baker))+ 
+  geom_path(linewidth = 0.8)+
+  geom_point()+
+  scale_y_continuous(breaks = c(0:8)*.02,
+                     labels = function(x){paste0(x*100,"%")}
+                     )+
+  labs(x = "Brood Year",
+       y = "Marine Survival Rate")+
+  theme_bw(base_size = 14)
+```
 
 **Most Recent Abundance Forecast and Methods**
+
 This information is available in the {{< glossary Council display = PFMC >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
 
 The 2024 Skagit {{< glossary MU >}} {{< glossary OA3 >}} abundance forecast is 63,430, resulting in a classification of the stock abundance as "Abundant" under the 2019 {{< glossary PST >}} {{< glossary SCMP >}} and “Normal” under the {{< glossary FMP >}}. This results in an allowable total {{< glossary ER >}} of no more than 60%. 
@@ -2464,7 +2547,7 @@ Post-season {{< glossary ER >}} estimates are also generated using the Post-Seas
 There are numerous hatchery programs releasing Coho Salmon within the Skagit Basin. Since brood year 1983 to 2020, the largest ones include Marblemount, Baker Lake, Puget Sound Energy, and Swinomish Channel PD Hatchery programs. Over this time period approximately 690,000 Coho Salmon have been released annually on average. Marblemount Hatchery made up the majority (77%) of all releases, followed by Baker Lake Hatchery (9%), Puget Sound Energy (7%; ended with 2009 brood), and Swinomish Channel PD (2%; ended with 1990 brood). Prior to the implmentation of mass marking, total hatchery production within the {{< glossary MU >}} of brood years 1983–1994 were highly variable, ranging from a high of three million fish released from brood year 1983 to a low of 380,000 fish from brood year 1988 (**Figure **) [@RMISD_1977]. With the advent of technology to automatically remove adipose fins and/or insert {{< glossary CWTs >}} using mobile “tagging trailers”, mass marking of hatchery fish was implemented for Coho Salmon in the mid-1990s [@SFEC_1999]. Mass marking allows mark selective fisheries (MSF) for Coho Salmon in which marked hatchery fish can be retained and unmarked wild fish released, resulting in higher harvest rates on hatchery fish than wild fish. Mass marking was fully implemented for Coho Salmon from the Columbia River, Washington coast, and Puget Sound with the 1997 brood, including both mass marking (adipose fin clip) the vast majority of hatchery fish and use of select {{< glossary DIT >}} groups (paired clipped and unclipped fish with {{< glossary CWTs >}}) [@SFEC_1999]. Double index tagging of hatchery fish at Marblemount Hatchery began with the 1994 brood and mass-marked fish were released beginning with brood year 1995. Hatchery production within the {{< glossary MU >}} for brood years 1995 to brood year 2020 have averaged 500,000 annually, with a low of 252,000 in 2000 and a high of 795,000 in 2018. Of these, an average of 290,000 hatchery fish have been mass marked and released within the {{< glossary MU >}} (fig_hatch_stock_releases_skagit) [@RMISD_1977]. 
 
 
-```{r fig_hatch_stock_releases_skagit, fig.height=6.5, fig.width=6.5}
+```{r fig.height=6.5, fig.width=6.5}
 #| fig-cap: Hatchery production of Coho Salmon released within the Skagit {{< glossary MU >}}, brood years 1983 through 2020.
 #| label: fig-hatch-stock-releases-skagit
 static$releases |> 
@@ -2529,7 +2612,6 @@ left_join(dat.post, dat.pre)  |>
   labs(y = "Abundance")+
   theme(legend.position = "top")
 
-
 ```
 
 
@@ -2540,10 +2622,11 @@ The base period for the FRAM defines the temporal and spatial distributions of s
 
 During the base period, Coho Salmon production from the Skagit {{< glossary MU >}} contributed to US and Canadian marine sport and commercial fisheries in southern British Columbia, the northern Washington coast, Strait of Juan de Fuca, and inner Puget Sound. Terminal tribal and non-tribal set and drift-net Coho Salmon net fisheries occur in commercial fishery management area 8 and the lower Skagit River. Moderate-sized Coho Salmon sport fisheries occured in sport fishery management area 8.1, the mainstem Skagit River, and the Cascade River. The terminal fishery co-managers are WDFW, and the Upper Skagit, Sauk-Suiattle, and Swinomish Tribes.  
 
-**Skagit {{< glossary MU >}} average annual (total) and time period specific {{< glossary ERs >}} used in the current FRAM base period.** (CoTC --> is there a way to autobuild these tables directly from the FRAM database?)
+::: {.content-hidden unless-meta="devversion"}
+ (CoTC --> is there a way to autobuild these tables directly from the FRAM database?)
+:::
 
-|		|||	Time Period	||				 |	     |
-|** Fishery **|** Jan-Jun **|** Jul **|** Aug **|** Sept **|** Oct-Dec **|** Total **|
+|**Fishery**| **Jan-Jun **| **Jul**| **Aug** | **Sept** | **Oct-Dec** | **Total** |
 |:------------|------------:|--------:|--------:|---------:|------------:|----------:|
 |SEAK Southwest Troll	|	-	|	0.00%	|	-	|	-	|	-	|	0.00%	|
 |BC Northern Net	|	-	|	0.02%	|	-	|	-	|	-	|	0.02%	|
@@ -2625,8 +2708,8 @@ During the base period, Coho Salmon production from the Skagit {{< glossary MU >
 |Brookings Troll	|	0.00%	|	0.00%	|	0.00%	|	0.00%	|	-	|	0.01%	|
 |** Total **|	5.40%	|	23.10%	|	17.80%	|	12.60%	|	7.30%	|	66.10%	|
 
+: Skagit {{< glossary MU >}} average annual (total) and time period specific {{< glossary ERs >}} used in the current FRAM base period. {#tbl-bp-skagit}
 
-*Current Exploitation Rates*
 
 ```{r f_abund_bar_skagit}
 #| fig-cap: Skagit {{< glossary MU >}} post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years 2004 through 2021. The graphs include dashed trend lines and the vertical dotted lines highlight catch year 2010)
@@ -2640,18 +2723,108 @@ plot_abund_bar("Skagit")
 plot_ns_msf("Skagit")
 ```
 
+::: {.content-hidden unless-meta="devversion"}
+
 **Average {{< glossary ERs >}} by fishing area.  The stacked bars represent the rates estimated by gear type during the FRAM base period, catch years 1986–1992.  The line represents the average annual total  {{< glossary ER >}} by fishing area during catch years ??, all gears combined.**
 
-Total {{< glossary ERs >}} have generally declined, averaging 59% between 1986 and 1995 then gradually falling to an extended period of low {{< glossary ERs >}} (26%) during 1998–2004 (Table 5 1; Figure 4 2).  {{< glossary ERs >}} have increased somewhat since 2005, averaging 36% during 2005–2011.  Up until 1997 the {{< glossary ER >}} by Canadian fishers averaged 36%, but has since declined to an average of less than 1.5%.  A comparison of {{< glossary ERs >}} by major fisheries during the base period and the most recent five years (2006–2010) is provided in Figure 5 1, while {{< glossary ERs >}} by major fisheries by year since 1986 are listed in Appendix D.  Individual fishery management areas within Washington State are depicted in Figure 5 2 and Figure 5 3.
+[[This one still needs to be made]]
 
-To-do --> Add Table 5.1 (** this is the summary table with catch year, total abundance, escapement, marine survival from the static table, and US, Canada, and Total ER rates)
+:::
+
+Total {{< glossary ERs >}} have generally declined, averaging 59% between 1986 and 1995 then gradually falling to an extended period of low {{< glossary ERs >}} (26%) during 1998–2004 (Table 5 1; Figure 4 2).  {{< glossary ERs >}} have increased somewhat since 2005, averaging 36% during 2005–2011.  Up until 1997 the {{< glossary ER >}} by Canadian fishers averaged 36%, but has since declined to an average of less than 1.5%.  A comparison of {{< glossary ERs >}} by major fisheries during the base period and the most recent five years (2006–2010) is provided in Figure 5 1, while {{< glossary ERs >}} by major fisheries by year since 1986 are listed in Appendix D.  Individual fishery management areas within Washington State are depicted in Figure @fig-wdfwmap.
+
 
 ```{r}
+#| label: tbl-summary-skagit
+#| tbl-cap: Historical summary of annual total abundance (January age-3 without natural mortality), adult escapement, marine survival (Baker River Wild), and {{< glossary ER >}} (ER) of the Skagit Management Unit; since 2004. 
+
+tbl_summary = psc_stock_pst |> 
+  filter(PSC_StockName == "Skagit") |> 
+  select(catch_year = "Catch Year", 
+         abundance = abund,
+         escapement = escp)
+
+tbl_summary = 
+  static$marine_survival_data |> 
+  select(BY, Baker) |> 
+  filter(Baker != "NA") |> 
+  mutate(Baker = as.numeric(Baker)) |> 
+  mutate(catch_year = BY+3) |> 
+  rename(marine_survival = "Baker") |> 
+  select(-BY) |> 
+  full_join(tbl_summary)
+
+
+local_er_summary = psc_pst |> 
+  filter(PSC_StockName == "Skagit") |> 
+  group_by(`Catch Year`, fishery_region) |> 
+  summarize(er = sum(mort_er)) |> 
+  ungroup() |> 
+  rename(catch_year = "Catch Year") |> 
+  pivot_wider(names_from = fishery_region,
+              values_from = er)
+
+tbl_summary = tbl_summary |> 
+  full_join(local_er_summary)
+
+tbl_summary = tbl_summary |> 
+  select(catch_year, abundance, marine_survival, escapement, Canada, SUS) |> 
+  filter(catch_year >= 2004) 
+
+tbl_summary |> 
+  gt() |> 
+  fmt_number(columns = c(abundance, escapement),
+             decimals = 0, 
+             sep_mark = ",") |> 
+  fmt_percent(columns = c(marine_survival, Canada, SUS),
+              decimals = 1) |> 
+    tab_spanner(
+    label = "ER",
+    columns = c(Canada, SUS)
+  )
 
 ```
 
+```{r}
+#| label: fig-skagit-escapement-and-ER
+#| fig-cap: Total exploitation rate (A) and escapement (B) of Skagit MU by country, catch years 1986 through 2022. Dashed line indicates escapement goal for the Skagit MU (30,000 individuals).   
+#| fig-width: 8
+#| fig-height: 7
 
-**Historical summary of annual total abundance (January age-3 without natural mortality), adult escapement, marine survival (Baker River Wild), and {{< glossary ER >}} (ER) of the Skagit Management Unit; since 1986. **
+options(scipen = 999)
+
+gp1 = post_ers |>
+  filter(psc_stock_name == "Skagit") |> 
+  filter(fishery_region != "AK") |>
+  group_by(fishery_region, run_year) |> 
+  summarize(er = sum(er)) |> 
+  ungroup() |> 
+  # pivot_longer(cols = c(Canada, SUS),
+  #              names_to = "region",
+  #              values_to = "er") |>
+  ggplot(aes(x = run_year, y = er,
+             fill = fishery_region))+
+  geom_col(position = "stack")+
+  scale_y_continuous(labels = function(x){paste0(x*100, "%")})+
+  labs(x = "", y = "Exploitation Rate", title = "A)")+
+  theme_bw(base_size = 14)+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+gp2 = post_esc |> 
+  inner_join(post_runid) |>
+  mutate(run_year = as.numeric(run_year)) |> 
+  filter(psc_stock_name == "Skagit") |> 
+  ggplot(aes(x = run_year, y = escapement))+
+  geom_hline(yintercept = 30000, linetype = 2) +
+  geom_path(linewidth = 0.8) +
+  scale_y_continuous(labels = function(x){format(x, big.mark = ",")})+
+  labs(x = "Year", y = "Escapement", title = "B)")+
+  theme_bw(base_size = 14)
+
+gp1 / gp2 + plot_layout(heights = c(3,2))
+```
+
+
 
 ##### Historical Overview of Status of Management Unit
 
@@ -2659,11 +2832,32 @@ Since catch year 2004, the post-season status of the Skagit {{< glossary MU >}} 
 
 Estimated total abundance and escapement in the Skagit {{< glossary MU >}} has been quite variable during 1986–2011, with a downward trend in total abundance and a slightly trend in escapement during this period.  Total abundance has varied from low of 14,123 fish (2006) to a high of 397,120 fish (1986) and has exceeded 100,000 fish in 14 of 26 years between 1986 and 2011, and six times since 2000 (Table 5 1). Estimated escapement has averaged 54,275 during the entire time period and 55,364 during 2000–2011. It has varied from a low of 7,702 fish (2006) and a high of 118,220 (2004) (Table 5 1).
 
-```{r f_plot_status_skagit, fig.height=3}
+```{r, fig.height=3}
+#| label: fig-status-skagit
+
 plot_status("Skagit")
 ```
 
-**Consider turning it into a table)
+```{r}
+#| label: tbl-status-skagit
+#| tbl-cap: Preseason and post-season abundance estimates for Skagit from 2004 onwards.
+
+partial_pst <- psc_stock_pst |> 
+  filter(PSC_StockName == "Skagit") |> 
+  select(catch_year = "Catch Year", 
+         abund_postseason = abund)
+partial_pre <- psc_stock_pre |> 
+  filter(PSC_StockName == "Skagit") |> 
+  select(catch_year = "Catch Year", 
+         abund_preseason = abund)
+
+left_join(partial_pre, partial_pst) |> 
+  filter(catch_year >= 2004) |> 
+  gt() |> 
+  fmt_number(columns = 2:3, decimals = 1, sep_mark = ",")
+
+```
+
 
 
 ::: {.content-hidden unless-meta="devversion"}
@@ -3697,6 +3891,144 @@ gt(static$glossary)
 # gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=ann_rep_merged.pdf *.pdf
 
 ```
+
+# Appendix: realized vs target ERs
+
+
+```{r}
+#| tbl-cap: Table of target ER ("Preseason") and observed ER ("Postseason") for US Inside MUs from 2019 to 2022. "Postseason Unused Using Preseason Cap" compares how well Postseason ER would have met the Preseason cap. This removes the effects of shifts in the abundance category between pre and post-season (if the abundance category remained the same, "Postseason Unused Using Preseason Cap" will be the same as "Postseason Cap"). Outside limits need to be calculated separately; this has not been done yet.
+#| label: tbl-did-we-hit-er
+
+er.comparison = er.limits |> 
+  left_join(er.vals,
+            by = c("Catch Year", "PSC_StockName")) |> 
+  mutate(preseason.residual = limit_pre - er_pre,
+         postseason.residual = limit_post - er_post, 
+         postseason.vs.target = limit_pre - er_post) |> 
+  select(-abd_post, -abd_pre) |> 
+  mutate(across(limit_post:postseason.vs.target, \(x) x*100))
+
+er.comparison |> 
+  select("Catch Year", PSC_StockName, limit_pre, er_pre, preseason.residual,
+         limit_post, er_post, postseason.residual, postseason.vs.target) |> 
+  gt() |> 
+  fmt_number(columns = -"Catch Year", decimals = 1) |> 
+  cols_label(limit_pre = "Preseason Cap",
+             er_pre = "Preseason Model ER",
+             preseason.residual = "Preseason Unused",
+             limit_post = "Postseason Cap",
+             er_post = "Postseason Model ER",
+             postseason.residual = "Postseason Unused",
+             postseason.vs.target = "Postseason Unused Using Preseason Cap")
+```
+
+
+# Appendix: FRAM Pre and Post-Season Command Files
+
+```{r}
+#| tbl-cap: Pre- and post-season command files and base period used in FRAM to evaluate {{< glossary ERs >}} {{< glossary MUs >}} over catch years 2004 through 2023. "Post-season Original" command files are those used to generate estimates for the Annual {{< glossary ER >}} Report provided to the Southern Panel during the {{< glossary PSC >}} Annual Meeting.
+#| label: tbl-commands
+static$run_files |> 
+  select("Catch Year":"Base Period Used in Revised BKFRAM Run") |> 
+  gt()
+```
+
+# Appendix: List of indicator stocks by management units
+
+| **Management Unit**               | **Indicator Stock**                   | **Brood Yr SIT**                | **Brood Yr {{< glossary DIT >}}** |
+|:----------------------------------|:--------------------------------------|:-------------------------------:|:---------------------------------:|
+| **Southern BC MUs**               |                                       |                                 |                                   |
+| Lower Fraser                      | Inch Creek Hatchery                   | 83-95,14-19                     | 96-13                             |
+|                                   | Salmon River (Wild)[^1]               | 84-99,01,03,05-07               | NA                                |
+|                                   | Chilliwack R. H. (Chilliwack R.)      | 83-95                           | 96-02                             |
+|                                   | Chehalis R. H. (Chehalis R.)          | 83-97                           | --                                |
+| Interior Fraser                   | Spius Cr. H. (Coldwater R.)[^2]       | 84-94,96-98,03-19               | 99-02                             |
+|                                   | Spius Cr. H. (Salmon R./TOMF)[^3]     | 95-96,99,01-02,04-05,07,14,17-19| --                                |
+|                                   | Spius Cr. H. (Spius Cr.)[^4]          | 94-96,99-00                     | 97-98                             |
+|                                   | Spius Cr. H. (Eagle R.)               | 10-13,15-19                     | --                                |
+|                                   | Chilliwack R. H. (Coldwater R.)[^5]   | 16-19                           | --                                |
+|                                   | Eagle R. H. (Salmon R.)[^6]           | 83-93                           | --                                |
+|                                   | Eagle R. H. (Eagle R.)[^7]            | 83-93                           | --                                |
+|                                   | Eagle R. H. (Perry R.)[^8]            | 84-86                           | --                                |
+|                                   | Dunn Cr. H. (Dunn Cr.)[^9]            | 86-87,89-90,92,95,98-07         | --                                |
+|                                   | Dunn Cr. H. (Dunn Lake)[^10]          | 84-91,94,97                     | --                                |
+|                                   | Dunn Cr. H. (Lemieux Cr.)[^11]        | 83-86,88,92-93,97-99,03,06-09   | --                                |
+|                                   | Dunn Cr. H. (Louis Cr.)[^12]          | 88-94,97-07                     | --                                |
+|                                   | Dunn Cr. H. (Ianson Ch.)[^13]         | 88-91,94-95,00-02,04-05         | --                                |
+|                                   | Eagle River (Wild)[^14]               | 00-03                           | NA                                |
+|                                   | Lemieux Creek (Wild)                  | 92-93                           | NA                                |
+| Strait of Georgia Mainland        | Capilano R. H.                        | 83-97,00                        | --                                |
+|                                   | Lang Creek H. (Lang Cr.)[^15]         | 87-91,95-96,08-09               | --                                |
+| Strait of Georgia Vancouver Island| Quinsam R. H.                         | 83-85,18-19                     | 96-17                             |
+|                                   | Big Qualicum R. H.                    | 83-85,87-95,03-15,17-19         | 96-02                             |
+|                                   | Goldstream R. H.                      | 91-94,03-11                     | 96-02                             |
+|                                   | Puntledge R. H.[^16]                  | 83-97,99-02,09-10,19            | --                                |
+|                                   | Black Creek (Wild)[^17]               | 83-17                           | NA                                |
+| **US Inside MUs**                 |                                       |                                 |                                   |
+| Skagit                            | Marblemount H. (Skagit R.)            | 83-93                           | 94-21                             |
+|                                   | Baker River (Wild)[^18]               | 83-97,00-22                     | NA                                |
+| Stillaguamish[^19]                | Wallace R. H. (Skykomish R.)          | 83-95                           | 96-21                             |
+|                                   | Harvey Creek H.                       | 91,07,14,16-20                  | --                                |
+|                                   | Stillaguamish R. (Wild)               | 84-87                           | NA                                |
+| Snohomish                         | Wallace R. H. (Skykomish R.)          | 83-95                           | 96-21                             |
+|                                   | Bernie Gobin H. (Tulalip Cr.)[^20]    | 83-21                           | --                                |
+| Hood Canal                        | Quilcene NFH                          | 87-95                           | 96-21                             |
+|                                   | Quilcene Bay Sea Pens                 | 88,90,93,95,02-11,13-14         | 96-01                             |
+|                                   | Port Gamble Bay Pens                  | 83-95,04-21                     | 96-03                             |
+|                                   | George Adams H. (Skokomish R.)        | 83-94,96                        | 95,97-21                          |
+|                                   | Big Beef Creek (Wild)[^21]            | 83-21                           | NA                                |
+| Strait of Juan de Fuca            | Lower Elwha H.[^22]                   | 85-94,12,15,18                  | 95-11,13-14,16-17,09-20           |
+|                                   | Dungeness H.                          | 83,86,89,91-94,05-08,18-20      | --                                |
+|                                   | Hoko Falls H.                         | 18-20                           | --                                |
+|                                   | Hoko and Salmon Creek (Wild)          | 84-87,08                        | NA                                |
+| **US Outside MUs**                |                                       |                                 |                                   |
+| Quillayute                        | Sol Duc H.                            | 83-88,90-95                     | 96-21                             |
+|                                   | Various Tributaries (Wild)[^23]       | 83-86,88-92                     |                                   |
+| Hoh                               | Chalaat Creek H.                      | 84,86-89                        | --                                |
+|                                   | Canyon Springs Pond                   | 86-87                           | --                                |
+|                                   | Sol Duc H.                            | 85,87                           | --                                |
+|                                   | Hoh River (Wild)[^24]                 | 83-87,03,05-12                  | NA                                |
+| Queets                            | Quinault Lake H.                      | 83-84,90-92                     | --                                |
+|                                   | Salmon R. Fish Culture                | 83,85-94                        | 95-21                             |
+|                                   | Queets/Clearwater wild[^25]           | 83-11,13-20                     | NA                                |
+| Grays Harbor                      | Bingham Creek H.                      | 83-94                           | 95-21                             |
+|                                   | Aberdeen Net Pens                     | 88-90,92-94                     | --                                |
+|                                   | Humptulips H. (Stevens Cr.)           | 83-94,06,10-12,19-20            | 95-96                             |
+|                                   | Bingham Creek (Wild)[^26]             | 83-20                           | NA                                |
+|                                   | Stevens & Scatter Creek (Wild)        | 83-90,92-93                     | NA                                |
+|                                   | Chehalis Upriver (Wild)[^27]          | 83-97,00-20                     | NA                                |
+|                                   | Skookumchuck H.                       | 83,89,98,06-07,09, 11-12        | 98                                |
+
+:Coded-wire-tag indicator stocks and brood years with single index tag (SIT) and {{< glossary DIT >}} groups for each Coho Salmon {{< glossary MU >}}, beginning with brood year 1983. Indicator stocks are hatchery-produced Coho Salmon unless specified as "Wild" (Release data downloaded from RMIS 1-10-2023). SIT groups may be either marked or unmarked releases of {{< glossary CWT >}} Coho Salmon. {{< glossary DIT >}} groups are marked (adipose-fin clipped) and unmarked pairs of {{< glossary CWT >}} Coho Salmon. {#tbl-cwt-releases-by-broood-years}
+
+[^1]: Beginning BY 1996, all tagged releases were unmarked.
+[^2]: BYs 1997 and 1998, all tagged releases were unmarked; fry released BYs 84-90 and 93.
+[^3]: BYs 1999, 2001-02, and 2005, all tagged releases were unmarked; fry released BY 1995.
+[^4]: BYs 1997 and 1998 were released as fry.
+[^5]: When space is limited at Spius Creek Hatchery, additional fish are raised at Chilliwack River Hatchery and released in the Coldwater River.
+[^6]: Fry released BYs 1983-1990.
+[^7]: All fry releases.
+[^8]: All fry releases.
+[^9]: Beginning BY 1998, all tagged releases were unmarked; fry released BY 1987, 1989-90.
+[^10]: BY 1997 released unmarked; fry released BY 1984-86, 1988.
+[^11]: Beginning BY 1997, all tagged releases were unmarked; fry released BY 1983-86, 1988.
+[^12]: Beginning BY 1997, all tagged releases were unmarked; fry released BY 1988-89.
+[^13]: Begging BY 2000, all tagged releases were unmarked. 
+[^14]: All tagged releases were unmarked.
+[^15]: Fry released BY 1989.
+[^16]: Fry released BYs 2009-10.
+[^17]: Beginning with BY 1997 (except 2004) tagged releases were unmarked. 
+[^18]: Beginning BY 1996, all tagged releases were unmarked.
+[^19]: Bernie Gobin Hatchery tagging program and the Skykomish tagging program at the Wallace River Hatchery are used to represent production in both the Stillaguamish and Snohomish River Basins.
+[^20]: BY 1997-98 were released unmarked; this stock was used to represent Stillaguamish in the FRAM base period.
+[^21]: BY 1996 and 1998-2020, all tagged releases were unmarked.
+[^22]: Fry released BY 1986.
+[^23]: Release groups were very small.
+[^24]: In all years, release groups are very small. Beginning BY 2003, all tagged releases were unmarked.
+[^25]: Beginning BY 1996, all tagged releases were unmarked.
+[^26]: Beginning BY 1995, all tagged releases were unmarked.
+[^27]: Beginning BY 1995, all tagged releases were unmarked.
+
 
 # Appendix: U.S. DITs
 Data provided here was queried from the RMIS release database on 1/27/2025. 
