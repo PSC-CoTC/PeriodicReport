@@ -485,7 +485,7 @@ post_ers <- post_calcs |>
     fishery_id >= 167 & fishery_id < 194 ~ "Canada",
     fishery_id >= 194 ~ "AK"
   ))
-disconnect_fram_db(fram_db)
+#disconnect_fram_db(fram_db)
 ```
 
 
@@ -664,6 +664,189 @@ plot_status <- function(mu = "Skagit"){
 }
 #plot_status()
 
+```
+
+```{r func_plot_wild_tagged_releases}
+plot_wild_tagged_releases <- function(stknm = "Skagit"){
+  static$releases |> 
+    filter(
+      rearing_type != "H",
+      Indicator == "Y",
+      MU_Name == stknm
+    ) |> 
+    select(MU_Name, brood_year, CWT_Clipped, CWT_Unclipped) |> 
+    pivot_longer(cols = starts_with("CWT_"), names_to = "tag_mark", values_to = "val") |> 
+    mutate(tag_mark = factor(tag_mark, levels = c("CWT_Unclipped", "CWT_Unclipped_DIT","CWT_Clipped"))) |> 
+    drop_na(val) |> 
+    ggplot() +
+    geom_col(aes(brood_year, val, fill = tag_mark)) +
+    scale_fill_manual(values = pal_rel_tag_mark) +
+    scale_x_continuous("Brood Year", breaks = seq(1980, 2024, by = 4)) +
+    scale_y_continuous("Released with CWT", labels = scales::comma) +
+    facet_wrap(~MU_Name, ncol = 2) +
+    theme(
+      legend.position = "bottom", legend.title = element_blank(),
+      strip.background = element_rect(fill = NA), strip.text = element_text(colour = 1, hjust = 0)
+  )
+}
+
+#plot_wild_tagged_releases()
+```
+
+```{r func_plot_hatchery_tagged_releases}
+plot_hatchery_tagged_releases <- function(stknm = "Skagit") {
+  
+  static$releases |> 
+    filter(
+      rearing_type == "H",
+      Indicator=="Y",
+      MU_Name == stknm
+  ) |> 
+    select(MU_Name, brood_year, tag_code_or_release_id, CWT_Clipped, CWT_Unclipped, CWT_Unclipped_DIT) |> 
+    pivot_longer(cols = -c(MU_Name, brood_year, tag_code_or_release_id), names_to = "tag_mark", values_to = "val") |> 
+    drop_na(val) |> 
+    mutate(tag_mark = factor(tag_mark, levels = names(pal_rel_tag_mark))) |> 
+    group_by(MU_Name, brood_year, tag_mark) |> summarise(val = sum(val), .groups = "drop") |> 
+    filter(between(brood_year,1980,2020)) |> 
+    ggplot() +
+    geom_col(aes(brood_year, val, fill = tag_mark)) +
+    scale_fill_manual(values = pal_rel_tag_mark) +
+    scale_x_continuous("Brood Year", breaks = seq(1980, 2024, by = 4)) +
+    scale_y_continuous("Releases", labels = scales::comma) +
+    facet_wrap(~MU_Name, ncol = 2) +
+    theme(
+      legend.position = "bottom", legend.title = element_blank(),
+      strip.background = element_rect(fill = NA), strip.text = element_text(colour = 1, hjust = 0)
+    )
+}
+
+#plot_hatchery_tagged_releases()
+```
+
+```{r func_plot_hatchery_production}
+plot_hatchery_production <- function(stknm="Skagit"){
+  
+  static$releases |> 
+  filter(
+    rearing_type == "H",
+    PSC_MU =="Y",
+    MU_Name == stknm
+  ) |> 
+  select(MU_Name, brood_year, tag_code_or_release_id, CWT_Clipped, CWT_Unclipped, CWT_Unclipped_DIT, Clipped_only, Unclipped) |> 
+  pivot_longer(cols = -c(MU_Name, brood_year, tag_code_or_release_id), names_to = "tag_mark", values_to = "val") |> 
+  drop_na(val) |> 
+  mutate(tag_mark = factor(tag_mark, levels = names(pal_rel_tag_mark))) |> 
+  group_by(MU_Name, brood_year, tag_mark) |> summarise(val = sum(val), .groups = "drop") |> 
+  filter(between(brood_year,1980,2020)) |> 
+  ggplot() +
+  geom_col(aes(brood_year, val, fill = tag_mark)) +
+  scale_fill_manual(values = pal_rel_tag_mark) +
+  scale_x_continuous("Brood Year", breaks = seq(1980, 2024, by = 4)) +
+  scale_y_continuous("Releases", labels = scales::comma) +
+  facet_wrap(~MU_Name, ncol = 2) +
+  theme(
+    legend.position = "bottom", legend.title = element_blank(),
+    strip.background = element_rect(fill = NA), strip.text = element_text(colour = 1, hjust = 0)
+  )
+}
+
+#plot_hatchery_production()
+```
+
+```{r func_plot_pre_v_post}
+
+plot_pre_v_post <- function(stknm="Skagit", fishery_id_pre=15, fishery_id_post=16){
+  
+  dat.pre = psc_pre |> 
+  filter(PSC_StockName == stknm) |> 
+  ## Choose a single fishery ID, doesn't matter which
+  filter(FisheryID == fishery_id_pre) |> 
+  select(year = "Catch Year",
+         abund.pre = abund)
+  dat.post = psc_pst |> 
+    filter(PSC_StockName == stknm) |> 
+    ## Choose a single fishery ID, doesn't matter which
+    filter(FisheryID == fishery_id_post) |> 
+    select(year = "Catch Year",
+           abund.post = abund)
+  left_join(dat.post, dat.pre)  |> 
+    filter(year >=2004) |> 
+    # pivot_longer(cols = abund.post:abund.pre, values_to = "abundance", names_to = "name") |> 
+    # mutate(name = gsub("abund[.]", "", name)) |> 
+    ggplot(aes(x = year))+
+    geom_segment(aes(y = abund.post, yend = abund.pre))+
+    geom_point(aes(y = abund.post, col = "Postseason abundance"), size = 4)+
+    geom_point(aes(y = abund.pre, col = "Preseason abundance"), size = 4)+
+    scale_y_continuous(limits = c(0, NA),
+                       labels = function(x){format(x, big.mark = ",")})+
+    theme_bw()+
+    labs(y = "Abundance")+
+    theme(legend.position = "top")
+}
+
+#plot_pre_v_post()
+```
+
+```{r func_plot_er_and_esc}
+
+plot_er_and_esc <- function(stknm="Skagit", esc_goal=30000){
+  
+  options(scipen = 999)
+
+  gp1 = post_ers |>
+    filter(psc_stock_name == stknm) |> 
+    filter(fishery_region != "AK") |>
+    group_by(fishery_region, run_year) |> 
+    summarize(er = sum(er)) |> 
+    ungroup() |> 
+    # pivot_longer(cols = c(Canada, SUS),
+    #              names_to = "region",
+    #              values_to = "er") |>
+    ggplot(aes(x = run_year, y = er,
+               fill = fishery_region))+
+    geom_col(position = "stack")+
+    scale_y_continuous(labels = function(x){paste0(x*100, "%")})+
+    labs(x = "", y = "Exploitation Rate", title = "A)")+
+    theme_bw(base_size = 14)+
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+  
+  gp2 = post_esc |> 
+    inner_join(post_runid) |>
+    mutate(run_year = as.numeric(run_year)) |> 
+    filter(psc_stock_name == stknm) |> 
+    ggplot(aes(x = run_year, y = escapement))+
+    geom_hline(yintercept = esc_goal, linetype = 2) +
+    geom_path(linewidth = 0.8) +
+    scale_y_continuous(labels = function(x){format(x, big.mark = ",")})+
+    labs(x = "Year", y = "Escapement", title = "B)")+
+    theme_bw(base_size = 14)
+  
+  gp1 / gp2 + plot_layout(heights = c(3,2))
+}
+
+#plot_er_and_esc()
+```
+
+```{r table_pre_post_est}
+
+table_pre_post_est <- function(stknm="Skagit"){
+  
+  partial_pst <- psc_stock_pst |> 
+  filter(PSC_StockName == stknm) |> 
+  select(catch_year = "Catch Year", 
+         abund_postseason = abund)
+  partial_pre <- psc_stock_pre |> 
+    filter(PSC_StockName == stknm) |> 
+    select(catch_year = "Catch Year", 
+           abund_preseason = abund)
+  
+  left_join(partial_pre, partial_pst) |> 
+    filter(catch_year >= 2004) |> 
+    gt() |> 
+    fmt_number(columns = 2:3, decimals = 1, sep_mark = ",")
+}
+
+#table_pre_post_est()
 ```
 
 ::: {.content-hidden unless-meta="devversion"}
@@ -1422,8 +1605,8 @@ static$releases |>
     Indicator=="Y"
   ) |> 
   mutate(
-    MU_Name = if_else(str_detect(MU_Name, "Georgia"), "Strait of Georgia", MU_Name) |> 
-      factor(levels = levels$mu_name)
+    MU_Name = if_else(str_detect(MU_Name, "Georgia"), "Strait of Georgia", MU_Name) ###|> 
+      #factor(levels = levels$mu_name)
   ) |> 
   select(MU_Name, brood_year, tag_code_or_release_id, CWT_Clipped, CWT_Unclipped, CWT_Unclipped_DIT) |> 
   pivot_longer(cols = -c(MU_Name, brood_year, tag_code_or_release_id), names_to = "tag_mark", values_to = "val") |> 
@@ -2354,7 +2537,7 @@ The Skagit {{< glossary MU >}} is one of the US Inside {{< glossary MUs >}} (ref
 
 The mainstem Skagit and Sauk rivers have two periods of peak flow, first during winter rain and snowmelt events, and the second during peak snow runoff in spring and early summer. The smaller tributaries are largely rain-fed, and have peak flow events during the winter rain season. Average annual rainfall is 35 inches [89 cm] per year at Mt. Vernon in the lower valley, increasing to up to 180 inches [457 cm] per year in the upper basin. Three large reservoirs in the upper Skagit River drainage (the first located at river mile (RM) 96.6 [KM 155.5] from the estuary) and two in the Baker River drainage provide flood control and hydroelectric generation. Upriver fish passage is only provided at the Baker Reservoir system, via a trap and haul system located at a diversion dam 0.3 miles [0.5 km] upstream of the Baker River confluence with the Skagit River at a diversion dam. Puget Sound Energy completed construction of this new, enhanced fish trap below Lower Baker Dam to capture migrating adult salmon for upstream transport around both Baker River dams. Construction on a juvenile salmon downstream fish trap, a floating surface collector, was completed in 2008 behind the upper Baker River Dam.  A similar fish trap is under construction on Lake Shannon, below Lower Baker Dam.
 
-In the 3,910 mi2 [10,127 km2] watershed, 19% is owned by private and Washington State entities, 24% is managed by the Mt Baker-Snoqualmie National Forest, 44% by the North Cascade National Park and Recreation Area, and 13% is located within British Columbia [@Beechie_et_al_1994]. The Skagit Bay estuary is partially enclosed by Whidbey Island to the west and Camano Island to the south. Relatively minimal development is located directly adjacent to the estuary in most areas. The WDFW Skagit Wildlife Area fronts the southeastern edge of Skagit Bay at the river mouth, and the northeastern end of the bay is bounded by the Swinomish Indian Reservation.
+In the 3,910 mi^2^ [10,127 km^2^] watershed, 19% is owned by private and Washington State entities, 24% is managed by the Mt Baker-Snoqualmie National Forest, 44% by the North Cascade National Park and Recreation Area, and 13% is located within British Columbia [@Beechie_et_al_1994]. The Skagit Bay estuary is partially enclosed by Whidbey Island to the west and Camano Island to the south. Relatively minimal development is located directly adjacent to the estuary in most areas. The WDFW Skagit Wildlife Area fronts the southeastern edge of Skagit Bay at the river mouth, and the northeastern end of the bay is bounded by the Swinomish Indian Reservation.
 
 Recreational, conservation, and commercial forest activities are prevalent in the mid- and upper basin reaches.  The lower and mid-basin areas have significant habitat impacts from agricultural and residential/commercial development in the floodplain and surrounding uplands. Extensive flood control structures degrade the salmonid habitat in the floodplain and estuary, with over 60 miles [97 km] of historically available slough and tributary habitat lost from the construction of flood control structures alone. The rapidly growing city of Mount Vernon, located adjacent to the Skagit River at RM 11 [KM 18] from the estuary, is the largest urban center in the {{< glossary MU >}}. Other moderate-sized communities located in the {{< glossary MU >}} are Burlington and Sedro Woolley, also located in the Skagit River floodplain a few miles upstream of Mt Vernon. Human population densities decline upstream of Sedro Woolley, though smaller, residentially-oriented communities are scattered along the Skagit mainstem upstream to the town of Newhalem at RM 96 (KM 154]. The Sauk River valley has only one significant population center, Darrington, located at RM 22 [KM 35] from the Sauk/Skagit confluence, though residential development and some agricultural activity is scattered along the valley floor.  
 
@@ -2409,26 +2592,7 @@ Coded wire tag recovery-based survival and {{< glossary ER >}} data are availabl
 #| label: fig-wild-stock-tagging-skagit
 #| fig-cap: Number of wild fish caught, tagged, and released by clip status, within the Skagit MU over brood years 1983 through 2020.
 
-static$releases |> 
-  filter(
-    rearing_type != "H",
-    Indicator=="Y",
-    MU_Name == "Skagit"
-  ) |> 
-  select(MU_Name, brood_year, CWT_Clipped, CWT_Unclipped) |> 
-  pivot_longer(cols = starts_with("CWT_"), names_to = "tag_mark", values_to = "val") |> 
-  mutate(tag_mark = factor(tag_mark, levels = c("CWT_Unclipped", "CWT_Unclipped_DIT", "CWT_Clipped"))) |> 
-  drop_na(val) |> 
-  ggplot() +
-  geom_col(aes(brood_year, val, fill = tag_mark)) +
-  scale_fill_manual(values = pal_rel_tag_mark) +
-  scale_x_continuous("Brood Year", breaks = seq(1980, 2024, by = 4)) +
-  scale_y_continuous("Released with CWT", labels = scales::comma) +
-  facet_wrap(~MU_Name, ncol = 2) +
-  theme(
-    legend.position = "bottom", legend.title = element_blank(),
-    strip.background = element_rect(fill = NA), strip.text = element_text(colour = 1, hjust = 0)
-  )
+plot_wild_tagged_releases()
 
 ```
 
@@ -2436,28 +2600,7 @@ static$releases |>
 #| label: fig-hatch-stock-releases-mu-cwt-only-skagit
 #| fig-cap: Total number of coded-wire-tagged hatchery Coho Salmon released, by clip status, within the Skagit MU for brood years 1983 through 2020.
 
-static$releases |> 
-  filter(
-    rearing_type == "H",
-    Indicator=="Y",
-    MU_Name == "Skagit"
-  ) |> 
-  select(MU_Name, brood_year, tag_code_or_release_id, CWT_Clipped, CWT_Unclipped, CWT_Unclipped_DIT) |> 
-  pivot_longer(cols = -c(MU_Name, brood_year, tag_code_or_release_id), names_to = "tag_mark", values_to = "val") |> 
-  drop_na(val) |> 
-  mutate(tag_mark = factor(tag_mark, levels = names(pal_rel_tag_mark))) |> 
-  group_by(MU_Name, brood_year, tag_mark) |> summarise(val = sum(val), .groups = "drop") |> 
-  filter(between(brood_year,1980,2020)) |> 
-  ggplot() +
-  geom_col(aes(brood_year, val, fill = tag_mark)) +
-  scale_fill_manual(values = pal_rel_tag_mark) +
-  scale_x_continuous("Brood Year", breaks = seq(1980, 2024, by = 4)) +
-  scale_y_continuous("Releases", labels = scales::comma) +
-  facet_wrap(~MU_Name, ncol = 2) +
-  theme(
-    legend.position = "bottom", legend.title = element_blank(),
-    strip.background = element_rect(fill = NA), strip.text = element_text(colour = 1, hjust = 0)
-  )
+plot_hatchery_tagged_releases()
 
 ```
 
@@ -2482,13 +2625,13 @@ Marine survival rates of wild Coho Salmon stocks have been estimated using wild 
 #| fig-cap: Estimated marine survival rates for Baker River Coho Salmon, (data provided by M. Litz, WDFW).
 #| label: fig-skagit-msr
 
-static$marine_survival_data |> 
+static$marine_survival_data |>
   mutate(Baker = if_else(Baker == "NA",
                          NA,
-                         Baker)) |> 
-  mutate(Baker = as.numeric(Baker)) |> 
-  filter(BY >= 1989) |> ## a little janky, handling early years being NA 
-ggplot(aes(x = BY, y = Baker))+ 
+                         Baker)) |>
+  mutate(Baker = as.numeric(Baker)) |>
+  filter(BY >= 1989) |> ## a little janky, handling early years being NA
+ggplot(aes(x = BY, y = Baker))+
   geom_path(linewidth = 0.8)+
   geom_point()+
   scale_y_continuous(breaks = c(0:8)*.02,
@@ -2523,7 +2666,7 @@ In the 1990s another escapement estimation approach was developed for Skagit {{<
 
 There are a number of reasons for the differences observed in the escapement estimates derived by the various methods discussed above. The Base-Year Index escapement formula for the Skagit has an inherent negative bias due to a decision made by WDF management biologists following completion of the 1977 mark-recapture escapement study to select a value approaching the lower bound of the 95% confidence interval from the M/R study results as the “base year” escapement estimate [WDF_1985]. The 29,200 value that was selected by the WDF managers is considerably lower than the M/R study point estimate of 43,000, which has a 95% confidence interval (CI) of 25,211–148,464.  This decision was based on concern about the limited number of marks recovered in the M/R study, and the subsequent possibility of positive bias in the M/R-based estimate. Further uncertainty in the 1977 M/R estimate was highlighted by a re-analysis of the 1977 M/R study data by the Northwest Indian Fisheries Commission (NWIFC) that produced a point estimate of 110,758, with a 95% CI of 4,564–216,952 [@Conrad_1995].
 
-There are uncertainties regarding the point estimates of escapement derived by the newer M/R-based estimates, due to the positive bias that can occur from missed mark recoveries at fish traps or spawning grounds, under-estimates of post-tagging mortality or tag loss, size selectivity in the terminal test fisheries, or other issues [@Cousens_et_al_1982]. The accuracy of the “marine survival*smolt outmigration”-based method is dependent upon the assumption that the Baker River natural-origin smolts survive and are exploited in fisheries at the same rate as the rest of the Skagit {{< glossary MU >}} natural origin smolts, which may not be true. The veracity of the “test fishery hatchery/wild ratio”-based method is dependent upon an equal {{< glossary ER >}} on the hatchery and wild populations.  Due to unresolved uncertainties at this time regarding the accuracy of all the various available methods and associated estimates, the escapement estimates currently used by the co-managers for management purposes for the 1986-to-present period are an average of the annual results of the Base-Year Index and M/R (“Reverse Petersen”)-based estimates of escapement. Historical trends in escapement for the Skagit {{< glossary MU >}} are provided in **ToDo**. Known distribution of spawners within the basin is depicted in @fig-spwnskgt (derived from WDFW’s Salmonid Stock Inventory (SaSI) located at: http://wdfw.wa.gov/conservation/fisheries/sasi/).
+There are uncertainties regarding the point estimates of escapement derived by the newer M/R-based estimates, due to the positive bias that can occur from missed mark recoveries at fish traps or spawning grounds, under-estimates of post-tagging mortality or tag loss, size selectivity in the terminal test fisheries, or other issues [@Cousens_et_al_1982]. The accuracy of the “marine survival smolt outmigration”-based method is dependent upon the assumption that the Baker River natural-origin smolts survive and are exploited in fisheries at the same rate as the rest of the Skagit {{< glossary MU >}} natural origin smolts, which may not be true. The veracity of the “test fishery hatchery/wild ratio”-based method is dependent upon an equal {{< glossary ER >}} on the hatchery and wild populations.  Due to unresolved uncertainties at this time regarding the accuracy of all the various available methods and associated estimates, the escapement estimates currently used by the co-managers for management purposes for the 1986-to-present period are an average of the annual results of the Base-Year Index and M/R (“Reverse Petersen”)-based estimates of escapement. Historical trends in escapement for the Skagit {{< glossary MU >}} are provided in **ToDo**. Known distribution of spawners within the basin is depicted in @fig-spwnskgt (derived from WDFW’s Salmonid Stock Inventory (SaSI) located at: http://wdfw.wa.gov/conservation/fisheries/sasi/).
 
 ToDo: create escapement figures (from post-season FRAM database)
 Skagit MU escapement estimates, return years x-x.
@@ -2566,28 +2709,8 @@ There are numerous hatchery programs releasing Coho Salmon within the Skagit Bas
 ```{r fig.height=6.5, fig.width=6.5}
 #| fig-cap: Hatchery production of Coho Salmon released within the Skagit {{< glossary MU >}}, brood years 1983 through 2020.
 #| label: fig-hatch-stock-releases-skagit
-static$releases |> 
-  filter(
-    rearing_type == "H",
-    PSC_MU =="Y",
-    MU_Name == "Skagit"
-  ) |> 
-  select(MU_Name, brood_year, tag_code_or_release_id, CWT_Clipped, CWT_Unclipped, CWT_Unclipped_DIT, Clipped_only, Unclipped) |> 
-  pivot_longer(cols = -c(MU_Name, brood_year, tag_code_or_release_id), names_to = "tag_mark", values_to = "val") |> 
-  drop_na(val) |> 
-  mutate(tag_mark = factor(tag_mark, levels = names(pal_rel_tag_mark))) |> 
-  group_by(MU_Name, brood_year, tag_mark) |> summarise(val = sum(val), .groups = "drop") |> 
-  filter(between(brood_year,1980,2020)) |> 
-  ggplot() +
-  geom_col(aes(brood_year, val, fill = tag_mark)) +
-  scale_fill_manual(values = pal_rel_tag_mark) +
-  scale_x_continuous("Brood Year", breaks = seq(1980, 2024, by = 4)) +
-  scale_y_continuous("Releases", labels = scales::comma) +
-  facet_wrap(~MU_Name, ncol = 2) +
-  theme(
-    legend.position = "bottom", legend.title = element_blank(),
-    strip.background = element_rect(fill = NA), strip.text = element_text(colour = 1, hjust = 0)
-  )
+
+plot_hatchery_production()
 
 ```
 
@@ -2605,31 +2728,8 @@ ToDo: SoPanel also wishes to see the numbers (pre, post, % diff from pre by year
 ```{r}
 #| fig-cap: Comparison of preseason abundance predictions with the post-season estimates for the Skagit MU.
 #| label: fig-abund-compare-skagit
-dat.pre = psc_pre |> 
-  filter(PSC_StockName == "Skagit") |> 
-  ## Choose a single fishery ID, doesn't matter which
-  filter(FisheryID == 15) |> 
-  select(year = "Catch Year",
-         abund.pre = abund)
-dat.post = psc_pst |> 
-  filter(PSC_StockName == "Skagit") |> 
-  ## Choose a single fishery ID, doesn't matter which
-  filter(FisheryID == 16) |> 
-  select(year = "Catch Year",
-         abund.post = abund)
-left_join(dat.post, dat.pre)  |> 
-  filter(year >=2004) |> 
-  # pivot_longer(cols = abund.post:abund.pre, values_to = "abundance", names_to = "name") |> 
-  # mutate(name = gsub("abund[.]", "", name)) |> 
-  ggplot(aes(x = year))+
-  geom_segment(aes(y = abund.post, yend = abund.pre))+
-  geom_point(aes(y = abund.post, col = "Postseason abundance"), size = 4)+
-  geom_point(aes(y = abund.pre, col = "Preseason abundance"), size = 4)+
-  scale_y_continuous(limits = c(0, NA),
-                     labels = function(x){format(x, big.mark = ",")})+
-  theme_bw()+
-  labs(y = "Abundance")+
-  theme(legend.position = "top")
+
+plot_pre_v_post()
 
 ```
 
@@ -2814,38 +2914,9 @@ tbl_summary |>
 #| fig-cap: Total exploitation rate (A) and escapement (B) of Skagit MU by country, catch years 1986 through 2022. Dashed line indicates escapement goal for the Skagit MU (30,000 individuals).   
 #| fig-width: 8
 #| fig-height: 7
+ 
+plot_er_and_esc()
 
-options(scipen = 999)
-
-gp1 = post_ers |>
-  filter(psc_stock_name == "Skagit") |> 
-  filter(fishery_region != "AK") |>
-  group_by(fishery_region, run_year) |> 
-  summarize(er = sum(er)) |> 
-  ungroup() |> 
-  # pivot_longer(cols = c(Canada, SUS),
-  #              names_to = "region",
-  #              values_to = "er") |>
-  ggplot(aes(x = run_year, y = er,
-             fill = fishery_region))+
-  geom_col(position = "stack")+
-  scale_y_continuous(labels = function(x){paste0(x*100, "%")})+
-  labs(x = "", y = "Exploitation Rate", title = "A)")+
-  theme_bw(base_size = 14)+
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-
-gp2 = post_esc |> 
-  inner_join(post_runid) |>
-  mutate(run_year = as.numeric(run_year)) |> 
-  filter(psc_stock_name == "Skagit") |> 
-  ggplot(aes(x = run_year, y = escapement))+
-  geom_hline(yintercept = 30000, linetype = 2) +
-  geom_path(linewidth = 0.8) +
-  scale_y_continuous(labels = function(x){format(x, big.mark = ",")})+
-  labs(x = "Year", y = "Escapement", title = "B)")+
-  theme_bw(base_size = 14)
-
-gp1 / gp2 + plot_layout(heights = c(3,2))
 ```
 
 
@@ -2876,25 +2947,10 @@ plot_status("Skagit")
 #| label: tbl-status-skagit
 #| tbl-cap: Preseason and post-season abundance estimates for Skagit from 2004 onwards.
 
-partial_pst <- psc_stock_pst |> 
-  filter(PSC_StockName == "Skagit") |> 
-  select(catch_year = "Catch Year", 
-         abund_postseason = abund)
-partial_pre <- psc_stock_pre |> 
-  filter(PSC_StockName == "Skagit") |> 
-  select(catch_year = "Catch Year", 
-         abund_preseason = abund)
-
-left_join(partial_pre, partial_pst) |> 
-  filter(catch_year >= 2004) |> 
-  gt() |> 
-  fmt_number(columns = 2:3, decimals = 1, sep_mark = ",")
+table_pre_post_est()
 
 ```
 
-
-
-::: {.content-hidden unless-meta="devversion"}
 
 ### Stillaguamish
 This {{< glossary MU >}} description was prepared by U.S. members of the {{< glossary PSC >}} Coho Technical Committee.
@@ -2911,7 +2967,7 @@ Recreational, environmental conservation, and commercial forest activities are p
 There are no major dams or other large man-made fish passage impediments located in the {{< glossary MU >}}. Granite Falls on the South Fork Stillaguamish River was considered to be a natural migration block to all anadromous salmonids except summer steelhead (C. Kraemer, WDFW retired, personal communication). In 1956, the Washington Department of Fish and Wildlife (WDFW) constructed a fish ladder at the falls to allow consistent anadromous salmonid access to the upper South Fork [@WDFW_2001].  
 
 #### Management Framework
-##### Management Objectives
+##### Objectives
 
 Under the Comprehensive Coho Management Plan [@CCW_1998], Stillaguamish River wild Coho Salmon is the primary (key) {{< glossary MU >}}, and off-station production is a secondary {{< glossary MU >}}.  Under this plan, primary {{< glossary MUs >}} are controlling units in the sense that predefined management actions will be undertaken under specified abundance conditions, auxiliary {{< glossary MUs >}} are those managed to meet or exceed a minimum escapement, and secondary units are passively managed in mixed stock fisheries.
 
@@ -2919,15 +2975,13 @@ The Stillaguamish {{< glossary MU >}} consists of just one stock, managed for na
 
 In 2009, the {{< glossary Council display = PFMC >}} adopted annual management objectives for Puget Sound Coho Salmon as recommended by WDFW and tribal co-managers under provisions of US versus Washington. The annual objectives were based on the {{< glossary PSC >}} categorical status and associated maximum {{< glossary ER >}} limits. The {{< glossary Council display = PFMC >}} formally adopted {{< glossary ER >}} management objectives for Puget Sound Coho Salmon which were consistent with {{< glossary PSC >}} objectives in November 2009. The current {{< glossary PST >}}/{{< glossary Council display = PFMC >}} {{< glossary ER >}} ceilings for the Stillaguamish {{< glossary MU >}} natural Coho Salmon population are provided in the table below. The current corresponding ocean abundance breakpoints are 20,000 and 9,385 [@PFMC_1_2012]. Prior to adoption of {{< glossary ER >}}-based management for this {{< glossary MU >}} in domestic and international management processes, natural Stillaguamish River origin Coho Salmon were managed for a fixed escapement goal of 17,000. This goal was derived from a freshwater juvenile carrying capacity model [@Zillges_1977].
 
-**Current Stillaguamish {{< glossary MU >}} ocean abundance reference breakpoints and maximum total {{< glossary ERs >}} by {{< glossary PSC >}} and {{< glossary Council display = PFMC >}} status categories.**
-
-
 | **Status(PSC/{{< glossary Council display = PFMC >}})**  | **Ocean Abundance** </br> **Reference Breakpoint**  |**Total Exploitation Rate** |
 |:--------------------------|:--------------------------------------:|:-----------------------:|
 | Low/Critical	           |	< 9,386        |	Up to 20% |
 | Moderate/Low	           |	9,386 – 20,000	|	21% – 35% |
 | Abundant/Normal  	   |	> 20,000	|	36% – 60% |
 
+: Current Stillaguamish {{< glossary MU >}} ocean abundance reference breakpoints and maximum total {{< glossary ERs >}} by {{< glossary PSC >}} and {{< glossary Council display = PFMC >}} status categories. {#tbl-stillaguamish-abund-breakpoints}
 
 ##### Stock Assessment
 ###### Indicator Stocks
@@ -2936,14 +2990,30 @@ Hatchery and wild coded-wire tagging programs have been limited within the Still
 
 **add text for recoveries? Make sure to include that this could include clipped and unclipped fish**
 
-```{r}
+```{r fig.height=4, fig.width=6}
+#| label: fig-wild-stock-tagging-stillaguamish
+#| fig-cap: Number of wild fish caught, tagged, and released by clip status, within the Stillaguamish MU over brood years 1983 through 2020.
+
+plot_wild_tagged_releases("Stillaguamish")
+
+```
+
+```{r fig.height=4, fig.width=6}
+#| label: fig-hatch-stock-releases-mu-cwt-only-stillaguamish
+#| fig-cap: Total number of coded-wire-tagged hatchery coho Salmon released, by clip status, within the Stillaguamish MU for brood years 1983 through 2020.
+
+plot_hatchery_tagged_releases("Stillaguamish")
+
+```
+
+```{r, eval=F}
 #| label: fig-recoveries-stillaguamish
 #| fig-cap: Total expanded coded wire tag recoveries released in this MU, by FRAM fishery recovered and year. Includes both terminal and preterminal fisheries. Only uses 3 and 4 year olds. Hover over bars for information. 
 plot_rmis_recoveries_all(mu.name = "Stillaguamish",
                          dat.use = dat.rmis)
 ```
 
-```{r}
+```{r, eval=F}
 #| label: fig-recoveries-stillaguamish-pt
 #| fig-cap: Total expanded coded wire tag recoveries released in this MU, by FRAM fishery recovered and year. Includes ONLY preterminal fisheries. Only uses 3 and 4 year olds. Hover over bars for information. 
 plot_rmis_recoveries_all(mu.name = "Stillaguamish",
@@ -2960,11 +3030,37 @@ WDFW’s Wild Salmon Production Evaluation (WSPE) Unit measured Coho Salmon prod
 
 Estimated smolt production has been quite consistent in the Stillaguamish {{< glossary MU >}}, averaging 355,000 smolts annually during 1995 to 2022. Smolt production has varied from a low of 115,000 in 2016 to a high of 555,000 in 2010 (Table 4 1).  
 
+```{r fig.height=4, fig.width=6}
+#| fig-cap: Estimated number of Stillaguamish MU wild Coho Salmon smolts outmigrants, years 1990 through 2022
+#| label: fig-smolts-stillaguamish
+plot_smolts("Stillaguamish")
+```
+
 Marine survival rates of wild Coho Salmon stocks have been measured using wild {{< glossary CWT >}} indicator stocks in four geographic regions of Puget Sound: Big Beef Creek, Deschutes River, South Fork Skykomish River, and Baker River [@Zimmerman_2011]. These populations are assumed to be representative of the different Puget Sound regions. Marine survival rates for wild Stillaguamish Coho Salmon are estimated from the S.F. Skykomish in the Snohomish {{< glossary MU >}}. Marine survival for this indicator population has averaged 12.7% during return years 1986-2011, with a high of 23.6% in 1994 and a low of 3.6% in 2006.    
 
-ToDo: add table or figure of outmigrating smolts
+```{r}
+#| fig-cap: Estimated marine survival rates for Skykomish River Coho Salmon, (data provided by M. Litz, WDFW).
+#| label: fig-stillaguamish-msr
+
+static$marine_survival_data |>
+  mutate(Skykomish = if_else(Skykomish == "NA",
+                         NA,
+                         Skykomish)) |>
+  mutate(Skykomish = as.numeric(Skykomish)) |>
+  filter(BY >= 1989) |> ## a little janky, handling early years being NA
+ggplot(aes(x = BY, y = Skykomish))+
+  geom_path(linewidth = 0.8)+
+  geom_point()+
+  scale_y_continuous(breaks = c(0:8)*.02,
+                     labels = function(x){paste0(x*100,"%")}
+                     )+
+  labs(x = "Brood Year",
+       y = "Marine Survival Rate")+
+  theme_bw(base_size = 14)
+```
 
 **Most Recent Abundance Forecast and Methods**
+
 This information is available in the {{< glossary Council display = PFMC >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
 
 The 2024 Stillaguamish {{< glossary MU >}} {{< glossary OA3 >}} abundance forecast is 30,809, resulting in a classification of the stock abundance as "Abundant" under the 2019 {{< glossary PST >}} {{< glossary SCMP >}} and “Normal” under the {{< glossary FMP >}}. This results in an allowable total {{< glossary ER >}} of no more than 50%. 
@@ -2975,9 +3071,12 @@ Regressing annual Coho Salmon smolt trap catch per unit of effort (CPUE; total f
 
 The method used for estimating natural Coho Salmon escapements in this {{< glossary MU >}} is the Base-Year Index approach [@Haymes_2008]. This approach is used to estimate annual Coho Salmon escapements to most of the major river basins and geographically associated aggregations of smaller independent tributaries in the Puget Sound region, exclusive of the Strait of Juan de Fuca. The Base-Year Index approach was adopted for estimating Coho Salmon escapements in this region because the distribution of Coho Salmon spawners is geographically broad in each river basin. Because of this, an approach is required that is not dependent on the direct census of a large portion of the total spawning habitat. In addition, assessments of serial live and/or dead fish observations are needed instead of spawning redd enumeration because the multiple species overlap and/or high spawning densities often make Coho Salmon redd enumeration impractical.
 
-The Base-Year Index method allows expansion of an annual index of abundance developed from serial field counts of live or dead salmon, collected in a relatively small fraction of the total freshwater habitat, to an estimate of basin or region-total escapement. A series of point counts of live Coho Salmon abundance are made in several fixed-location survey reaches, distributed throughout each major river basin or region. At the end of the spawning season an abundance index is developed for each index survey reach using the “area under the curve” (AUC) approach [@Ames_1984; @Irvine_et_al_1993]. The sum of the individual abundance index values from an individual escapement estimation unit (usually a river basin) are then multiplied by a historical “base year” basin-total escapement estimate developed from a mark-recapture study. The resulting value is divided by the base year index of abundance calculated for the same survey reaches that were monitored in the current escapement year, to produce the basin-total escapement estimate for the current year. In the Stillaguamish River basin, Coho Salmon escapement is estimated from 17 index reaches covering 10.7 miles (17.2 km) [@Haymes_2008]. Historical trends in escapement for the Stillaguamish {{< glossary MU >}} are provided in Table 4 3 and Figure 4 2. Known distribution of spawners within the basin is depicted in Figure 4 3.
+The Base-Year Index method allows expansion of an annual index of abundance developed from serial field counts of live or dead salmon, collected in a relatively small fraction of the total freshwater habitat, to an estimate of basin or region-total escapement. A series of point counts of live Coho Salmon abundance are made in several fixed-location survey reaches, distributed throughout each major river basin or region. At the end of the spawning season an abundance index is developed for each index survey reach using the “area under the curve” (AUC) approach [@Ames_1984; @Irvine_et_al_1993]. The sum of the individual abundance index values from an individual escapement estimation unit (usually a river basin) are then multiplied by a historical “base year” basin-total escapement estimate developed from a mark-recapture study. The resulting value is divided by the base year index of abundance calculated for the same survey reaches that were monitored in the current escapement year, to produce the basin-total escapement estimate for the current year. In the Stillaguamish River basin, Coho Salmon escapement is estimated from 17 index reaches covering 10.7 miles (17.2 km) [@Haymes_2008]. Historical trends in escapement for the Stillaguamish {{< glossary MU >}} are provided in **ToDo**. Known distribution of spawners within the basin is depicted in @fig-spwnstilly (derived from WDFW's Salmonid Stock Inventory (SaSI) located at: http://wdfw.wa.gov/conservation/fisheries/sasi/).
 
-**Spawner distribution of Coho Salmon in the Stillaguamish River (figure modified from WDFW’s Salmonid Stock Inventory (SaSI) located at: http://wdfw.wa.gov/conservation/fisheries/sasi/). **
+ToDo: create escapement figures (from post-season FRAM database)
+Stillaguamish MU escapement estimates, return years x-x.
+
+![Spawner distribution of Coho Salmon in the Stillaguamish River Basin.](images/Stilly_spawners.jpg){#fig-spwnstilly}
 
 ###### Fishery Monitoring  **(canned language across all US MUs.  Shall we move this?)**
 
@@ -2998,13 +3097,21 @@ Post-season {{< glossary ER >}} estimates are also generated using the Post-Seas
 
 ##### Enhancement
 
-Hatchery production within the Stillaguamish {{< glossary MU >}} is very small compared to other US {{< glossary MUs >}}. Approximately 39,000 hatchery fish have been released within the basin annually since brood year 1985 (**Figure x**).  Hatchery releases have also been highly variable, from a high of 183,000 fish released from brood year 2007 to a low of 1,000 fish from brood year 2012. Hatchery production of Coho Salmon in the Stillaguamish {{< glossary MU >}} is currently limited to a very small WDFW Coop program and the Harvey Creek Hatchery which is operated by the Stillaguamish Tribe, is located 2 miles upstream of the mouth of Harvey/Armstrong Creek, which is located 15.3 miles upstream of the mouth of the Stillaguamish main stem. Harvey Creek releases have averaged 74,000 annually since 2007 when production was raised considerably from previous years.  
+Hatchery production within the Stillaguamish {{< glossary MU >}} is very small compared to other US {{< glossary MUs >}}. Approximately 39,000 hatchery fish have been released within the basin annually since brood year 1985 (@fig-hatch-stock-releases-stilly).  Hatchery releases have also been highly variable, from a high of 183,000 fish released from brood year 2007 to a low of 1,000 fish from brood year 2012 [@RMISD_1977]. Hatchery production of Coho Salmon in the Stillaguamish {{< glossary MU >}} is currently limited to a very small WDFW Coop program and the Harvey Creek Hatchery which is operated by the Stillaguamish Tribe, is located 2 miles upstream of the mouth of Harvey/Armstrong Creek, which is located 15.3 miles upstream of the mouth of the Stillaguamish main stem. Harvey Creek releases have averaged 74,000 annually since 2007 when production was raised considerably from previous years.  
 
-Two programs that are no longer in operation, but contributed to hatchery production over the period of brood years 1983 to 2020.  One is the the North Fork/Johnson Creek Hatchery, which was operated by the Stillaguamish Tribe and is located approximately 2.5 miles upstream of the mouth of Johnson Creek located on the North Fork Stillaguamish [@Stillaguamish_Tribe_2004] (Figure x). The other discontinued Coho Salmon program is the US Navy’s hatchery at Jim Creek. In the past the Stillaguamish Tribe propagated Coho Salmon at the Tribe’s Harvey Creek and Johnson Creek Hatcheries and at a satellite facility at the Navy’s Jim Creek Hatchery. Wild broodstock and the progeny of wild broodstock were captured at the respective sites. Small to moderate numbers of juvenile Coho Salmon produced from a wild broodstock collection program were released annually into selected lower Stillaguamish River tributaries for enhancement purposes since the 1993 brood year. Fish were collected with stick weirs and other approaches from lower river tributaries, then spawned and reared at Jim Creek Hatchery, a small incubation and rearing facility located on a lower river tributary and operated by the Stillaguamish Tribe.  
+Two programs are no longer in operation, but contributed to hatchery production over the period of brood years 1983 to 2020.  One is the the North Fork/Johnson Creek Hatchery, which was operated by the Stillaguamish Tribe and is located approximately 2.5 miles upstream of the mouth of Johnson Creek located on the North Fork Stillaguamish [@Stillaguamish_Tribe_2004] (Figure x). The other discontinued Coho Salmon program is the US Navy’s hatchery at Jim Creek. In the past the Stillaguamish Tribe propagated Coho Salmon at the Tribe’s Harvey Creek and Johnson Creek Hatcheries and at a satellite facility at the Navy’s Jim Creek Hatchery. Wild broodstock and the progeny of wild broodstock were captured at the respective sites. Small to moderate numbers of juvenile Coho Salmon produced from a wild broodstock collection program were released annually into selected lower Stillaguamish River tributaries for enhancement purposes since the 1993 brood year. Fish were collected with stick weirs and other approaches from lower river tributaries, then spawned and reared at Jim Creek Hatchery, a small incubation and rearing facility located on a lower river tributary and operated by the Stillaguamish Tribe.  
 
-The Stillaguamish Coho Salmon program is an integrated harvest/recovery program with the following goals: 1) providing for a limited selective terminal area fishery for tribal members during years when natural escapement requirements would not normally allow for a tribal fishery; and 2) to provide for a natural origin broodstock program for restoration activities within the basin (Stillaguamish 2004).
+The Stillaguamish Coho Salmon program is an integrated harvest/recovery program with the following goals: 1) providing for a limited selective terminal area fishery for tribal members during years when natural escapement requirements would not normally allow for a tribal fishery; and 2) to provide for a natural origin broodstock program for restoration activities within the basin [@Stillaguamish_Tribe_2004].
 
-With the advent of technology to automatically remove adipose fins and/or insert {{< glossary CWTs >}} using mobile “tagging trailers”, mass marking of hatchery fish was implemented for Coho Salmon in the mid-1990s (SFEC 1999). Mass marking allows mark selective fisheries (MSFs) for Coho Salmon in which marked hatchery fish can be retained and unmarked wild fish released, resulting in higher harvest rates on hatchery fish than wild fish. Mass marking was implemented for Coho Salmon from the Columbia River, Washington Coast, and Puget Sound beginning with the 1994 brood, including both mass marking (adipose fin clip) the vast majority of hatchery fish and the use of select {{< glossary DIT >}} groups (unclipped fish with {{< glossary CWTs >}}) (SFEC 1999). Mass marking of hatchery fish within the Stillaguamish began with the 2004 brood, but has been limited to an average of 8,000 fish annually (Figure 6 1). There are no {{< glossary DIT >}} programs within the Stillaguamish {{< glossary MU >}}; however, {{< glossary DIT >}} groups from the Snohomish are used as a surrogate and are listed in **ToDo**. 
+With the advent of technology to automatically remove adipose fins and/or insert {{< glossary CWTs >}} using mobile “tagging trailers”, mass marking of hatchery fish was implemented for Coho Salmon in the mid-1990s [@SFEC_1999]. Mass marking allows mark selective fisheries (MSFs) for Coho Salmon in which marked hatchery fish can be retained and unmarked wild fish released, resulting in higher harvest rates on hatchery fish than wild fish. Mass marking was implemented for Coho Salmon from the Columbia River, Washington Coast, and Puget Sound beginning with the 1994 brood, including both mass marking (adipose fin clip) the vast majority of hatchery fish and the use of select {{< glossary DIT >}} groups (unclipped fish with {{< glossary CWTs >}}) [@SFEC_1999]. Mass marking of hatchery fish within the Stillaguamish began with the 2004 brood, but has been limited to an average of 8,000 fish annually (@fig-hatch-stock-releases-stilly) [@RMISD_1977]. There are no {{< glossary DIT >}} programs within the Stillaguamish {{< glossary MU >}}; however, {{< glossary DIT >}} groups from the Snohomish are used as a surrogate and are listed in (@tbl-dit-snohomish). 
+
+```{r fig.height=6.5, fig.width=6.5}
+#| fig-cap: Hatchery production of Coho Salmon released within the Stillaguamish {{< glossary MU >}}, brood years 1983 through 2020.
+#| label: fig-hatch-stock-releases-stilly
+
+plot_hatchery_production("Stillaguamish")
+
+```
 
 #### Management Performance 
 
@@ -3012,35 +3119,126 @@ With the advent of technology to automatically remove adipose fins and/or insert
 
 ##### Forecast Evaluation
 
-add table of pre vs post season forecasts of abundance
-
 The forecasts of Stillaguamish Coho Salmon abundance have generally been higher than postseason estimates. During catch years 2004–2010, predicted cohort size (without natural mortality) ranged from a low of 13,400 (2009) to a high of 69,200 (2007) while post-season estimates ranged from 10,808 (2006) to 73,935 (2004) (CoTC 2011) (Table 4 2). Accordingly, the difference between preseason forecasts and post-season estimates varied from -130% (2009) to +77% (2006). 
 
+ToDo: SoPanel also wishes to see the numbers (pre, post, % diff from pre by year).
+
+
+```{r}
+#| fig-cap: Comparison of preseason abundance predictions with the post-season estimates for the Stillaguamish MU.
+#| label: fig-abund-compare-stilly
+
+plot_pre_v_post("Stillaguamish", 17, 17)
+
+```
 
 ##### Fishery Mortality and Escapement
 
-The base period for the Fisheries Regulation Assessment Model (FRAM) defines the temporal and spatial distributions of salmon fishing mortalities from each {{< glossary MU >}}.  The current FRAM base period for Coho Salmon includes catch years 1986–1992.  During this period, fishing effort, tagging, and fishery sampling of Coho Salmon was high, allowing relatively fine-scale discrimination between salmon distributions.  Coded-wire-tag codes used during the base period for the Stillaguamish {{< glossary MU >}} are provided in Appendix B and average base period {{< glossary ERs >}} by individual fisheries are provided in Appendix C.
+The base period for the Fisheries Regulation Assessment Model (FRAM) defines the temporal and spatial distributions of salmon fishing mortalities from each {{< glossary MU >}}.  The current FRAM base period for Coho Salmon includes catch years 1986–1992. During this period, fishing effort, tagging, and fishery sampling of Coho Salmon was high, allowing relatively fine-scale discrimination between salmon distributions.  Coded-wire-tag codes used during the base period for the Stillaguamish {{< glossary MU >}} are provided in the Appendix and average base period {{< glossary ERs >}} by individual fisheries are provided **ToDo**.
 
-During the base period, Coho Salmon production from the {{< glossary MU >}} contributed to US and Canadian marine sport and commercial fisheries in southern BC, the northern Washington coast, Strait of Juan de Fuca, and inner Puget Sound (Haymes 2008) (Figure 5 1; Appendix C).  Terminal tribal and non-tribal set and drift-net Coho Salmon net fisheries occur in commercial Marine Management Areas (MMAs) 8A (Port Susan/Possession Sound) and 8D (Tulalip Bay).  No directed commercial salmon fisheries typically occur in the Stillaguamish River, though there may periodically be tribal ceremonial and subsistence fisheries.  A substantial marine sport fishery occurs in sport MMA 8.2 (Port Susan/Possession Sound), and small freshwater Coho Salmon sport fishery occurs in the Stillaguamish River basin.  The terminal fishery co-managers are WDFW, and the Tulalip and Stillaguamish Tribes. 
+ToDo: create table of the list of CWTs used in the base period. I think they are identified in the static file.
 
-```{r f_abund_bar_stillaguamish}
-plot_abund_bar("Stillaguamish")
-```
+During the base period, Coho Salmon production from the Stillaguamish {{< glossary MU >}} contributed to US and Canadian marine sport and commercial fisheries in southern BC, the northern Washington coast, Strait of Juan de Fuca, and inner Puget Sound [@Haymes_2008]. Terminal tribal and non-tribal set and drift-net Coho Salmon net fisheries occur in commercial Marine Management Areas (MMAs) 8A (Port Susan/Possession Sound) and 8D (Tulalip Bay).  No directed commercial salmon fisheries typically occur in the Stillaguamish River, though there may periodically be tribal ceremonial and subsistence fisheries. A substantial marine sport fishery occurs in sport MMA 8.2 (Port Susan/Possession Sound), and small freshwater Coho Salmon sport fishery occurs in the Stillaguamish River basin.  The terminal fishery co-managers are WDFW, and the Tulalip and Stillaguamish Tribes. 
 
 ```{r f_ns_msf_stillaguamish}
+#| fig-cap: Post-season estimates of fishery mortality for the Stillaguamish {{< glossary MU >}} by mark-selective (MSF) and non-selective (NS) fisheries over catch years 1998 through 2022. These estimates are combined US and Canadian harvest impacts.
+#| label: fig-ns-msf-stilly
 plot_ns_msf("Stillaguamish")
 ```
 
 Total {{< glossary ERs >}} have generally declined since 1986 having averaged 71% during 1986–1993, then gradually falling to an extended period of low {{< glossary ERs >}} (10%) during 2002–2004 (Table 4 3; Figure 4 1).  {{< glossary ERs >}} have increased since 2004, averaging 23% during 2005–2009.  Up until 1997 the {{< glossary ER >}} by Canadian fishers averaged 26%, but has since declined to an average of less than 1.0% (Appendix D). 
 
-A comparison of {{< glossary ERs >}} by major fisheries during the base period and the most recent five years (2006–2010) is provided in Figure 5 1, while {{< glossary ERs >}} by major fisheries by year since 1986 are given in Appendix D.  Individual fishery management areas within Washington State are depicted in Figure 5 2.
+A comparison of {{< glossary ERs >}} by major fisheries during the base period and the most recent five years (2006–2010) is provided in Figure 5 1, while {{< glossary ERs >}} by major fisheries by year since 1986 are given in Appendix D.  Individual fishery management areas within Washington State are depicted in Figure @fig-wdfwmap.
+
+```{r}
+#| label: tbl-summary-stilly
+#| tbl-cap: Historical summary of annual total abundance (January age-3 without natural mortality), adult escapement, marine survival (Skykomish), and {{< glossary ER >}} (ER) of the Stillaguamish Management Unit; since 2004. 
+
+tbl_summary = psc_stock_pst |> 
+  filter(PSC_StockName == "Stillaguamish") |> 
+  select(catch_year = "Catch Year", 
+         abundance = abund,
+         escapement = escp)
+
+tbl_summary = 
+  static$marine_survival_data |> 
+  select(BY, Skykomish) |> 
+  filter(Skykomish != "NA") |> 
+  mutate(Skykomish = as.numeric(Skykomish)) |> 
+  mutate(catch_year = BY+3) |> 
+  rename(marine_survival = "Skykomish") |> 
+  select(-BY) |> 
+  full_join(tbl_summary)
+
+
+local_er_summary = psc_pst |> 
+  filter(PSC_StockName == "Stillaguamish") |> 
+  group_by(`Catch Year`, fishery_region) |> 
+  summarize(er = sum(mort_er)) |> 
+  ungroup() |> 
+  rename(catch_year = "Catch Year") |> 
+  pivot_wider(names_from = fishery_region,
+              values_from = er)
+
+tbl_summary = tbl_summary |> 
+  full_join(local_er_summary)
+
+tbl_summary = tbl_summary |> 
+  select(catch_year, abundance, marine_survival, escapement, Canada, SUS) |> 
+  filter(catch_year >= 2004) 
+
+tbl_summary |> 
+  gt() |> 
+  fmt_number(columns = c(abundance, escapement),
+             decimals = 0, 
+             sep_mark = ",") |> 
+  fmt_percent(columns = c(marine_survival, Canada, SUS),
+              decimals = 1) |> 
+    tab_spanner(
+    label = "ER",
+    columns = c(Canada, SUS)
+  )
+
+```
+
+```{r}
+#| label: fig-stilly-escapement-and-ER
+#| fig-cap: Total exploitation rate (A) and escapement (B) of Stillaguamish MU by country, catch years 1986 through 2022. Dashed line indicates escapement goal for the Stillaguamish MU (**Need esc goal for Stilly** 30,000 individuals).   
+#| fig-width: 8
+#| fig-height: 7
+ 
+plot_er_and_esc("Stillaguamish")
+
+```
 
 ##### Historical Overview of Status of Management Unit
 
-```{r f_plot_status_stilly, fig.height=3}
-plot_status("Stillaguamish")
+**ToDo: Need to add a summary here**
+
+```{r f_abund_bar_stillaguamish}
+#| fig-cap: Stillaguamish {{< glossary MU >}} post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years 2004 through 2022. The graphs include dashed trend lines and the vertical dotted lines highlight catch year 2010)
+#| label: fig-abund-bar-stilly
+#| 
+plot_abund_bar("Stillaguamish")
+
 ```
 
+```{r f_plot_status_stilly, fig.height=3}
+#| label: fig-status-stilly
+
+plot_status("Stillaguamish")
+
+```
+
+```{r}
+#| label: tbl-status-stilly
+#| tbl-cap: Preseason and post-season abundance estimates for Stillaguamish from 2004 onwards.
+
+table_pre_post_est("Stillaguamish")
+
+```
+
+::: {.content-hidden unless-meta="devversion"}
 
 ### Snohomish
 This {{< glossary MU >}} description was prepared by U.S. members of the {{< glossary PSC >}} Coho Technical Committee.
