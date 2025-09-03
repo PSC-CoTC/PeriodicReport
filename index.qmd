@@ -48,7 +48,6 @@ Dev note: using quarto-glossary to add hover-over text. Details and installation
 - abundance figures overlaying MUs within regions (US in, US out, BC)
 - Extract Quillayute and Queets values from TAMMs (currntly based on FRAM)
 
-
 *New Todos (CBE and CCT 2024+)*
 
 - Populate glossary hover-over tooltips, using glossary.yml and inserting based on nomenclature here: https://debruine.github.io/quarto-glossary/
@@ -930,6 +929,85 @@ bper <- function(stocks=c()){
 #bper(c(231,232))
 ```
 
+```{r tbl_summary}
+
+tbl_summary <- function(stknm, msi_source, msi=FALSE){
+  
+  msi_source <- ensym(msi_source)
+  
+  summary <- psc_stock_pst |> 
+    filter(PSC_StockName == stknm) |> 
+    select(catch_year = "Catch Year",
+           abundance = abund,
+           escapement = escp)
+  
+  if(msi){
+      summary <- static$marine_survival_data |> 
+      select(BY, {{msi_source}}) |> 
+      filter({{msi_source}} != "NA") |> 
+      mutate({{msi_source}} := as.numeric({{msi_source}})) |> 
+      mutate(catch_year = BY+3) |> 
+      rename(marine_survival := {{msi_source}}) |> 
+      select(-BY) |> 
+      full_join(summary)
+  }
+  
+  local_er_summary = psc_pst |> 
+    filter(PSC_StockName == stknm) |> 
+    group_by(`Catch Year`, fishery_region) |> 
+    summarize(er = sum(mort_er)) |> 
+    ungroup() |> 
+    rename(catch_year = "Catch Year") |> 
+    pivot_wider(names_from = fishery_region,
+                values_from = er)
+  
+  summary = summary |> 
+    full_join(local_er_summary)
+  
+  if(msi){
+    summary = summary |> 
+      select(catch_year, abundance, marine_survival, escapement, Canada, SUS) |> 
+      filter(catch_year >= 2004) 
+  } else {
+    summary = summary |> 
+      select(catch_year, abundance, escapement, Canada, SUS) |> 
+      filter(catch_year >= 2004)
+  }
+  
+  if(msi){
+    summary <- summary |> 
+      gt() |> 
+      fmt_number(columns = c(abundance, escapement),
+             decimals = 0, 
+             sep_mark = ",") |> 
+      fmt_percent(columns = c(marine_survival, Canada, SUS),
+              decimals = 1) |> 
+      tab_spanner(
+        label = "ER",
+        columns = c(Canada, SUS)
+        )
+    return(summary)
+  } else{
+  summary <- summary |> 
+    gt() |> 
+    fmt_number(columns = c(abundance, escapement),
+               decimals = 0,
+               sep_mark = ",") |> 
+    fmt_percent(columns = c(Canada, SUS),
+                decimals = 1) |> 
+    tab_spanner(
+      label = "ER",
+      columns = c(Canada, SUS)
+    )
+  
+  return(summary)
+  }
+}
+
+#tbl_summary("Stillaguamish", "Skykomish", TRUE)
+
+```
+
 ::: {.content-hidden unless-meta="devversion"}
 This report is based on postseason data in `r basename(params$mdb_pst)` and preseason data in `r basename(params$mdb_pre)`, as well as supporting [StaticTables.xlsx](https://github.com/PSC-CoTC/PeriodicReport/blob/main/StaticTables.xlsx).
 :::
@@ -938,7 +1016,7 @@ This report is based on postseason data in `r basename(params$mdb_pst)` and pres
 
 # Introduction
 
-In response to a decline in natural Coho Salmon (*Onchorynchus kisutch*) abundance, the Pacific Salmon Commission (PSC) established a Southern Coho abundance-based management regime (CoABM) in 1999 [@PSC_1999]. This Southern Coho Management Plan (SCMP, also referred to as ABM, or 'abundance based management') aimed to conserve Coho Salmon Management Units (MUs) of naturally-spawning Coho Salmon in southern British Columbia and Washington/Oregon based on abundance status and escapement goals. The {{< glossary SCMP >}} set out to constrain exploitation rates ({{< glossary ER >}}; defined as total fishing mortality divided by total fishing mortality plus escapement) below maximum levels (caps) on selected {{< glossary MUs >}} in order to achieve long-term Maximum Sustainable Harvests (MSHs). These constraints are implemented by specifying {{< glossary ER >}} caps for the individual {{< glossary MUs >}} dependent on annual abundance status. During their respective preseason planning processes, the Parties use management reference points to classify the status of each {{< glossary MU >}} as low, moderate, or abundant. The parties then exchange these status determinations as a key input in the development of pre-season plans.
+In response to a decline in natural Coho Salmon (*Onchorynchus kisutch*) abundance, the Pacific Salmon Commission (PSC) established a Southern Coho abundance-based management regime ({{< glossary CoABM >}}) in 1999 [@PSC_1999]. This Southern Coho Management Plan (SCMP, also referred to as ABM, or 'abundance based management') aimed to conserve Coho Salmon Management Units (MUs) of naturally-spawning Coho Salmon in southern British Columbia and Washington/Oregon based on abundance status and escapement goals. The {{< glossary SCMP >}} set out to constrain exploitation rates ({{< glossary ER >}}; defined as total fishing mortality divided by total fishing mortality plus escapement) below maximum levels (caps) on selected {{< glossary MUs >}} in order to achieve long-term Maximum Sustainable Harvests (MSHs). These constraints are implemented by specifying {{< glossary ER >}} caps for the individual {{< glossary MUs >}} dependent on annual abundance status. During their respective preseason planning processes, the Parties use management reference points to classify the status of each {{< glossary MU >}} as low, moderate, or abundant. The parties then exchange these status determinations as a key input in the development of pre-season plans.
 
 When a new Coho Management Plan was agreed upon in 2008 (implemented 2009 through 2018; [@PSC_2009]) and the latest agreement finalized (applies to the period from catch years 2019 through 2028; [@PSC_2022]), modifications were made to the list of specified {{< glossary MUs >}} and to the manner in which {{< glossary ER >}} caps are established. This periodic report presents information for the {{< glossary MUs >}} identified in the most current Pacific Salmon Treaty's (PST) {{< glossary SCMP >}} (Chapter 5 of Annex IV in the current {{< glossary PST >}}). In the 2008 {{< glossary SCMP >}} abundance-based management regimes were established to constrain {{< glossary ERs >}} ({{< glossary ERs >}}) on 13 {{< glossary MUs >}} of naturally-spawning Coho Salmon originating in rivers along the Washington/British Columbia (BC) border. Beginning in 2019, the most recent Management Plan [@PSC_2022] combined two of the Canadian {{< glossary MUs >}}, the Georgia Strait Vancouver Island and the Georgia Strait Mainland {{< glossary MUs >}} into the Strait of Georgia {{< glossary MU >}}. The 12 {{< glossary MUs >}} in the current {{< glossary PST >}} are listed below (@tbl-mus).
 
@@ -982,7 +1060,7 @@ Annual {{< glossary ER >}} caps are established for each of the {{< glossary MUs
 
 At this time, constraints for US fisheries on Canadian {{< glossary MUs >}} depend on the status of the Interior Fraser {{< glossary MU >}} until the biological statuses of the other Canadian {{< glossary MUs >}} have been determined. Under Annex IV Chapter 5 Section 8.c(i), until Canada establishes status determination methods for Canadian MUs other than the Interior Fraser {{< glossary MU >}}, the Parties shall implement this Chapter to comply with status and associated {{<glossary ER >}} caps that relate to the Interior Fraser {{< glossary MU >}} and US {{< glossary MUs >}} only.
 
-The status determination methodology developed and applied by Canada to the Interior Fraser Coho {{< glossary MU >}} [@Korman_et_al_2019] consists of two criteria: 1) smolt-to-adult survival; and 2) escapement, which **both?** must be met for three consecutive years in order increase the status from low to moderate or moderate to high. Canada is currently working to develop the information (smolt to adult survival rates, escapements) needed to apply this status determination methodology to the Lower Fraser and Strait of Georgia {{< glossary MUs >}}. Details as to how {{< glossary ER >}} constraints are established based on the status of {{< glossary MUs >}} under the {{< glossary SCMP >}} are contained in Annex IV Chapter 5 Section 9.b-c (Canadian {{< glossary ER >}} caps on inside and outside US {{< glossary MUs >}}) and Section 9.d (US {{< glossary ER >}} caps on Canadian {{< glossary MUs >}}).
+The status determination methodology developed and applied by Canada to the Interior Fraser Coho {{< glossary MU >}} [@Korman_et_al_2019] consists of two criteria: 1) smolt-to-adult survival; and 2) escapement, which must be met for three consecutive years in order increase the status from low to moderate or moderate to high. Canada is currently working to develop the information (smolt to adult survival rates, escapements) needed to apply this status determination methodology to the Lower Fraser and Strait of Georgia {{< glossary MUs >}}. Details as to how {{< glossary ER >}} constraints are established based on the status of {{< glossary MUs >}} under the {{< glossary SCMP >}} are contained in Annex IV Chapter 5 Section 9.b-c (Canadian {{< glossary ER >}} caps on inside and outside US {{< glossary MUs >}}) and Section 9.d (US {{< glossary ER >}} caps on Canadian {{< glossary MUs >}}).
 
 ## Management Unit Overview
 
@@ -998,7 +1076,7 @@ The US Outside {{< glossary MUs >}} consist of naturally-spawning populations fr
 
 ## Fishery Overview
 
-Under the CoABM regime, each Party is required to regulate its fisheries so as not to exceed {{< glossary ER >}} constraints on {{< glossary MUs >}}. Fishery Management Areas for British Columbia (@fig-dfomap), Washington (@fig-wdfwmap), and Oregon (@fig-odfwmap) are shown below.
+Under the {{< glossary CoABM >}} regime, each Party is required to regulate its fisheries so as not to exceed {{< glossary ER >}} constraints on {{< glossary MUs >}}. Fishery Management Areas for British Columbia (@fig-dfomap), Washington (@fig-wdfwmap), and Oregon (@fig-odfwmap) are shown below.
 
 ![Canadian DFO Southern BC Pacific Fisheries Management Areas.](images/PFMA_CDFO.png){#fig-dfomap}
 
@@ -1024,13 +1102,13 @@ Recreational fishing for Coho Salmon in BC tidal waters continues to be importan
 
 Due to conservation concerns, most notably for the Interior Fraser {{< glossary MU >}}, Canadian Coho Salmon fisheries have seen unprecedented restrictions since 1997. In 1998 and 1999, no directed fisheries on naturally-spawning stocks of Coho Salmon were permitted; mandatory non-retention and non-possession of incidentally caught Coho Salmon was implemented in all areas, with the exception of some terminal hatchery locations. In the Pacific Region, (i.e., all marine waters of BC), barbless hooks became required for all salmon-directed commercial and recreational hook and line gear in 1998, a regulation that remains in effect. Pacific Region waters were classified as red or yellow zones. In red zones, areas where Thompson River Coho Salmon from the Interior Fraser River {{< glossary MU >}} were known to be prevalent, fishing was restricted to very limited experimental selective fisheries, as well as some limited First Nations’ fisheries to meet food, social, and ceremonial requirements. Red zones included inshore waters of Victoria to Barkley Sound and offshore waters of Barkley Sound to Quatsino Sound, from June to September. Special management zones (SMZs), areas of mandatory Coho Salmon non-retention with special restrictions, were identified with the intent to avoid Coho Salmon encounters. Fisheries were only permitted in locations and times when Thompson River Coho Salmon could be avoided or released unharmed. These areas were subject to in-season adjustments, including time and area closures for all sectors. Fisheries conducted in these SMZs were monitored to ensure Coho Salmon encounter rates did not become too high, and tissue samples were taken for stock identification. In yellow zones, where endangered stocks were not prevalent, a selective fishing strategy was implemented for all commercial and recreational fisheries. These fisheries were required to release any live Coho Salmon Salmon that were caught during operations. Mandatory logbooks and an onboard observer program were initiated in commercial fisheries. Limited Coho Salmon retention was allowed only for First Nations and recreational fisheries.
 
-Since 2000, fisheries impacting naturally-spawning Coho Salmon from southern BC, Washington State, and Oregon have been managed under the {{< glossary PST >}} ABM regime. The ABM plan constrains total fishery exploitation on key stock {{< glossary MUs >}} in BC for each {{< glossary MU >}}, annual limits of fishing mortality are established based on the categorical level of abundance and the health of the naturally-spawning stocks. In Canada, low status of Interior Fraser Coho Salmon has constrained southern BC fisheries for the last decade. The Southern US has been limited to 10% {{< glossary ER >}} on Coho Salmon originating from the Interior Fraser {{< glossary MU >}}. Southern BC fisheries, in waters south of Cape Caution where Interior Fraser Coho Salmon are prevalent, have been managed to a maximum 3% total fishing mortality rate on the Interior Fraser Coho Salmon {{< glossary MU >}}. Non-retention of naturally-spawning Coho Salmon is generally in effect except for First Nations {{< glossary FSC >}} opportunities in specific terminal systems where abundance permits and where retention of by-catch during fisheries for other species is permitted. Release of unmarked Coho Salmon during periods when Interior Fraser Coho Salmon may be caught is required in all Canadian commercial and recreational fisheries.
+Since 2000, fisheries impacting naturally-spawning Coho Salmon from southern BC, Washington State, and Oregon have been managed under the {{< glossary PST >}} {{< glossary ABM >}} regime. The {{< glossary ABM >}} plan constrains total fishery exploitation on key stock {{< glossary MUs >}} in BC for each {{< glossary MU >}}, annual limits of fishing mortality are established based on the categorical level of abundance and the health of the naturally-spawning stocks. In Canada, low status of Interior Fraser Coho Salmon has constrained southern BC fisheries for the last decade. The Southern US has been limited to 10% {{< glossary ER >}} on Coho Salmon originating from the Interior Fraser {{< glossary MU >}}. Southern BC fisheries, in waters south of Cape Caution where Interior Fraser Coho Salmon are prevalent, have been managed to a maximum 3% total fishing mortality rate on the Interior Fraser Coho Salmon {{< glossary MU >}}. Non-retention of naturally-spawning Coho Salmon is generally in effect except for First Nations {{< glossary FSC >}} opportunities in specific terminal systems where abundance permits and where retention of by-catch during fisheries for other species is permitted. Release of unmarked Coho Salmon during periods when Interior Fraser Coho Salmon may be caught is required in all Canadian commercial and recreational fisheries.
 
 ### US Fisheries
 
-Current US fisheries are constrained by domestic and {{< glossary PST >}} conservation objectives. For the Puget Sound {{< glossary MUs >}}, the current {{< glossary PST >}} {{< glossary SCMP >}} of CoABM uses the thresholds and stepped harvest rate goals from the Comprehensive Coho Agreement [@CCW_1998], developed by Washington State and the Puget Sound tribes, and adopted by the {{< glossary Council display = "Pacific Fisheries Management Council (PFMC)" >}} as Fishery Management Plan conservation objectives in November 2009. Actual {{< glossary ER >}} constraints for Canadian fisheries on US Coho Salmon {{< glossary MUs >}} are determined by formulas that specify sharing of allowable total {{< glossary ERs >}} and a “composite rule”. The composite rule adjusts constraints for Canadian fishery {{< glossary ERs >}} based on the number of US {{< glossary MUs >}} that fall in a given category. For example, if only one Washington coastal Coho Salmon {{< glossary MU >}} is in low status, Canadian fisheries are constrained to a total {{< glossary ER >}} on that unit of 12%; if two or more Washington coastal {{< glossary MUs >}} are in low status, the constraint becomes 10%. The most restrictive {{< glossary ER >}} limit for Canadian fishery impacts on US Coho Salmon {{< glossary MUs >}} is 10%.
+Current US fisheries are constrained by domestic and {{< glossary PST >}} conservation objectives. For the Puget Sound {{< glossary MUs >}}, the current {{< glossary PST >}} {{< glossary SCMP >}} of {{< glossary CoABM >}} uses the thresholds and stepped harvest rate goals from the Comprehensive Coho Agreement [@CCW_1998], developed by Washington State and the Puget Sound tribes, and adopted by the {{< glossary Council display = "Pacific Fisheries Management Council (PFMC)" >}} as Fishery Management Plan conservation objectives in November 2009. Actual {{< glossary ER >}} constraints for Canadian fisheries on US Coho Salmon {{< glossary MUs >}} are determined by formulas that specify sharing of allowable total {{< glossary ERs >}} and a “composite rule”. The composite rule adjusts constraints for Canadian fishery {{< glossary ERs >}} based on the number of US {{< glossary MUs >}} that fall in a given category. For example, if only one Washington coastal Coho Salmon {{< glossary MU >}} is in low status, Canadian fisheries are constrained to a total {{< glossary ER >}} on that unit of 12%; if two or more Washington coastal {{< glossary MUs >}} are in low status, the constraint becomes 10%. The most restrictive {{< glossary ER >}} limit for Canadian fishery impacts on US Coho Salmon {{< glossary MUs >}} is 10%.
 
-Fisheries between Cape Falcon, Oregon and the US/Canada Border are constrained by four factors: (1) management objectives and treaty Indian obligations for individual stock US MUs; (2) treaty Indian/non-Indian and ocean/in-river sharing agreements; (3) stocks listed under the ESA; and (4) requirements of the {{< glossary PST >}}. The starting point for implementing these constraints is the forecasted January age-3 (JA3) abundance and the modeled ocean distribution of each Coho Salmon stock.
+Fisheries between Cape Falcon, Oregon and the US/Canada Border are constrained by four factors: (1) management objectives and treaty Indian obligations for individual stock US {{< glossary MU >}}s; (2) treaty Indian/non-Indian and ocean/in-river sharing agreements; (3) stocks listed under the ESA; and (4) requirements of the {{< glossary PST >}}. The starting point for implementing these constraints is the forecasted January age-3 (JA3) abundance and the modeled ocean distribution of each Coho Salmon stock.
 
 Most Coho-directed recreational fisheries [**Jeromy comment: Freshwater and marine?  I think so, for WA, and Columbia River but would be good to add this qualifier in if true. More recently the OR coast freshwater fisheries are all non-selective, hence why I am asking for a bit of a qualifier here if possible.**] have been mark-selective since 1999. Non-Indian commercial troll fisheries have been mostly restricted to mark-selective Coho Salmon retention since 2000. Treaty Indian fisheries are not restricted to mark-selective retention of Coho Salmon.
 
@@ -1378,7 +1456,7 @@ Since 2002, in the absence of benchmarks, the {{< glossary CDFO >}} Stock Assess
 
 Canadian Coho Salmon abundance has declined, particularly in southern BC. Interior Fraser River Coho Salmon was assessed as endangered by the Committee on the Status of Endangered Wildlife in Canada (COSEWIC) in2002 and then reassessed as threatened in 2016. Interior Fraser River Coho Salmon have not been listed on Schedule 1 of the Species at Risk Act, which would afford additional protections to the stock.  However, the Canadian Minister of Fisheries and Oceans has established a domestic {{< glossary ER >}} cap of 3-5% for Canadian fishery impacts on Interior Fraser Coho Salmon. The Interior Fraser {{< glossary MU >}} is comprised of five {{< glossary CUs >}} (North Thompson, South Thompson, Lower Thompson, Fraser Canyon, and Upper Fraser). The Interior Fraser River Coho Salmon recovery planning process has determined the critical benchmark needed to maintain population viability. Even with the reduction in fisheries exploitation, all Southern BC {{< glossary MUs >}} have followed a similar dramatic declining trend in both marine survival and total abundance from the high levels observed in the 1980s and early 1990s. Spawning escapements have responded to the decreased exploitation and are within the range observed during the 1970s and 1980s. However, the sustained low marine survival has resulted in a decreased total abundance.
 
-Because of the absence of programs to estimate total abundance and escapement for the Strait of Georgia and Lower Fraser River Canadian {{< glossary MUs >}}, the bilaterally-developed tool, Backwards Coho FRAM, is relied upon to generate estimates of ocean age-3 cohort abundance and {{< glossary ERs >}} using post-season data scalars. Cohort abundances (catch and escapement) of Canadian {{< glossary MUs >}}, estimated by Backwards Coho FRAM based on modeled scalars, are depicted in Figure @fig-postseason-abund-bc. Reduced abundances apparent since 1996 were a major consideration that led to the development of ABM regimes for management of southern Coho Salmon.
+Because of the absence of programs to estimate total abundance and escapement for the Strait of Georgia and Lower Fraser River Canadian {{< glossary MUs >}}, the bilaterally-developed tool, Backwards Coho FRAM, is relied upon to generate estimates of ocean age-3 cohort abundance and {{< glossary ERs >}} using post-season data scalars. Cohort abundances (catch and escapement) of Canadian {{< glossary MUs >}}, estimated by Backwards Coho FRAM based on modeled scalars, are depicted in Figure @fig-postseason-abund-bc. Reduced abundances apparent since 1996 were a major consideration that led to the development of {{< glossary ABM >}} regimes for management of southern Coho Salmon.
 
 ::: {.content-hidden unless-meta="devversion"}
 
@@ -1420,7 +1498,7 @@ Additionally, at the federal level, Coho Salmon caught in coastal waters of the 
 
 # Annual Implementation of the Southern Coho Management Plan
 
-The Coho FRAM (Coho FRAM, Model Evaluation Workgroup (MEW). 2008) has been the tool used to plan US preseason fisheries, and also to evaluate postseason {{< glossary ERs >}} by the fisheries of both Parties on the naturally spawning Coho Salmon {{< glossary MUs >}} specified by the CoABM. Canada has not been using Coho FRAM preseason, instead using a combination of a ‘domestic model’ for planning marine fisheries and a ‘decay model’ for planning Fraser River fisheries. (**Jeromy's comment - Can we describe what get’s exchanged during the preseason process to reconcile this difference here in one or two sentences?**)
+The Coho FRAM (Coho FRAM, Model Evaluation Workgroup (MEW). 2008) has been the tool used to plan US preseason fisheries, and also to evaluate postseason {{< glossary ERs >}} by the fisheries of both Parties on the naturally spawning Coho Salmon {{< glossary MUs >}} specified by the {{< glossary CoABM >}}. Canada has not been using Coho FRAM preseason, instead using a combination of a ‘domestic model’ for planning marine fisheries and a ‘decay model’ for planning Fraser River fisheries. (**Jeromy's comment - Can we describe what get’s exchanged during the preseason process to reconcile this difference here in one or two sentences?**)
 
 Each country manages the Coho Salmon harvest within its {{< glossary ER >}} cap through its own domestic fisheries management processes and annual fisheries plans. For Canada, the annual domestic planning process is documented in the salmon Integrated Fisheries Management Plan (IFMP) at the culmination of the process each June (*is June correct?*). For the US, the North of Cape Falcon ocean salmon fishing plans are reported in Preseason Report III (PFMC documents) at the culmination of the {{< glossary Council display = PFCM >}} process each April. For US Inside {{< glossary MUs >}}, the 2019 {{< glossary PST >}} uses the {{< glossary ER >}} thresholds and stepped harvest rate goals from the Comprehensive Coho Agreement and adopted as (Fishery Management Plan) FMP conservation objectives in 2009. For US Outside {{< glossary MUs >}}, {{< glossary ER >}} constraints represent the Maximum Fishing Mortality Threshold (MFMT). For US domestic purposes, the  {{< glossary Council display = "Pacific Fishery Management Council" >}} {{< glossary MU >}} status categories are “critical”, “low”, and “normal”, which correspond to the {{< glossary PSC >}} categories of “low”, “moderate” and “abundant”, respectively [@PFMC_amended_2023].   
 
@@ -2338,39 +2416,7 @@ Observed escapement for each of the five {{< glossary IFR >}} Coho Salmon popula
 #| label: tbl-summary-ifr
 #| tbl-cap: Historical summary of annual total abundance (January age-3 without natural mortality), adult escapement, and (ER) of the Interior Fraser Management Unit; since 2004. 
 
-tbl_summary = psc_stock_pst |> 
-  filter(PSC_StockName == "Interior Fraser") |> 
-  select(catch_year = "Catch Year", 
-         abundance = abund,
-         escapement = escp)
-
-local_er_summary = psc_pst |> 
-  filter(PSC_StockName == "Interior Fraser") |> 
-  group_by(`Catch Year`, fishery_region) |> 
-  summarize(er = sum(mort_er)) |> 
-  ungroup() |> 
-  rename(catch_year = "Catch Year") |> 
-  pivot_wider(names_from = fishery_region,
-              values_from = er)
-
-tbl_summary = tbl_summary |> 
-  full_join(local_er_summary)
-
-tbl_summary = tbl_summary |> 
-  select(catch_year, abundance, escapement, Canada, SUS) |> 
-  filter(catch_year >= 2004) 
-
-tbl_summary |> 
-  gt() |> 
-  fmt_number(columns = c(abundance, escapement),
-             decimals = 0, 
-             sep_mark = ",") |> 
-  fmt_percent(columns = c(Canada, SUS),
-              decimals = 1) |> 
-    tab_spanner(
-    label = "ER",
-    columns = c(Canada, SUS)
-  )
+tbl_summary("Interior Fraser")
 
 ```
 
@@ -2464,7 +2510,7 @@ Additionally, two pipelines run through the lower Fraser Valley: the Trans Mount
 
 #### Management Framework
 ##### Objectives
-Under the ABM regime, {{< glossary ERs >}} (defined as total fishing mortality divided by total fishing mortality plus escapement) for each Party's fisheries are to be constrained for each {{< glossary MU >}}, depending on status determinations provided by each Party. Under the ABM plan, the Parties are required to establish escapement goals or {{< glossary ERs >}} that achieve Maximum Sustainable Harvest, for each {{< glossary MU >}} and status category (low, moderate, and abundant). Until such time as the Parties provide the {{< glossary MU >}} {{< glossary ER >}} targets, the {{< glossary PST >}} plan identified {{< glossary ER >}} ceilings for the following {{< glossary MU >}} status categories (for details see [http://www.psc.org/publications_psctreaty.htm](http://www.psc.org/publications_psctreaty.htm)). The low category is defined as marine survival less than 3%, moderate 3-6% and abundant as survival greater than 6% [@tbl-lwfr-abund-breakpoints].
+Under the {{< glossary ABM >}} regime, {{< glossary ERs >}} (defined as total fishing mortality divided by total fishing mortality plus escapement) for each Party's fisheries are to be constrained for each {{< glossary MU >}}, depending on status determinations provided by each Party. Under the {{< glossary ABM >}} plan, the Parties are required to establish escapement goals or {{< glossary ERs >}} that achieve Maximum Sustainable Harvest, for each {{< glossary MU >}} and status category (low, moderate, and abundant). Until such time as the Parties provide the {{< glossary MU >}} {{< glossary ER >}} targets, the {{< glossary PST >}} plan identified {{< glossary ER >}} ceilings for the following {{< glossary MU >}} status categories (for details see [http://www.psc.org/publications_psctreaty.htm](http://www.psc.org/publications_psctreaty.htm)). The low category is defined as marine survival less than 3%, moderate 3-6% and abundant as survival greater than 6% [@tbl-lwfr-abund-breakpoints].
 
 | **Status**	|	**Survival and Abundance Targets**	| **Total Exploitation Rate** |
 |:----------|:-------------------------------:|:-----------:|
@@ -2693,39 +2739,7 @@ Post-season summary of total {{< glossary ERs >}}, abundance, and escapement est
 #| label: tbl-summary-lwfr
 #| tbl-cap: Historical summary of annual total abundance (January age-3 without natural mortality), adult escapement, and (ER) of the Lower Fraser Management Unit; since 2004. 
 
-tbl_summary = psc_stock_pst |> 
-  filter(PSC_StockName == "Lower Fraser") |> 
-  select(catch_year = "Catch Year", 
-         abundance = abund,
-         escapement = escp)
-
-local_er_summary = psc_pst |> 
-  filter(PSC_StockName == "Lower Fraser") |> 
-  group_by(`Catch Year`, fishery_region) |> 
-  summarize(er = sum(mort_er)) |> 
-  ungroup() |> 
-  rename(catch_year = "Catch Year") |> 
-  pivot_wider(names_from = fishery_region,
-              values_from = er)
-
-tbl_summary = tbl_summary |> 
-  full_join(local_er_summary)
-
-tbl_summary = tbl_summary |> 
-  select(catch_year, abundance, escapement, Canada, SUS) |> 
-  filter(catch_year >= 2004) 
-
-tbl_summary |> 
-  gt() |> 
-  fmt_number(columns = c(abundance, escapement),
-             decimals = 0, 
-             sep_mark = ",") |> 
-  fmt_percent(columns = c(Canada, SUS),
-              decimals = 1) |> 
-    tab_spanner(
-    label = "ER",
-    columns = c(Canada, SUS)
-  )
+tbl_summary("Lower Fraser")
 
 ```
 
@@ -2893,39 +2907,7 @@ plot_ns_msf("Strait of Georgia")
 #| label: tbl-summary-gs
 #| tbl-cap: Historical summary of annual total abundance (January age-3 without natural mortality), adult escapement, and (ER) of the Strait of Georgia Management Unit; since 2004. 
 
-tbl_summary = psc_stock_pst |> 
-  filter(PSC_StockName == "Strait of Georgia") |> 
-  select(catch_year = "Catch Year", 
-         abundance = abund,
-         escapement = escp)
-
-local_er_summary = psc_pst |> 
-  filter(PSC_StockName == "Strait of Georgia") |> 
-  group_by(`Catch Year`, fishery_region) |> 
-  summarize(er = sum(mort_er)) |> 
-  ungroup() |> 
-  rename(catch_year = "Catch Year") |> 
-  pivot_wider(names_from = fishery_region,
-              values_from = er)
-
-tbl_summary = tbl_summary |> 
-  full_join(local_er_summary)
-
-tbl_summary = tbl_summary |> 
-  select(catch_year, abundance, escapement, Canada, SUS) |> 
-  filter(catch_year >= 2004) 
-
-tbl_summary |> 
-  gt() |> 
-  fmt_number(columns = c(abundance, escapement),
-             decimals = 0, 
-             sep_mark = ",") |> 
-  fmt_percent(columns = c(Canada, SUS),
-              decimals = 1) |> 
-    tab_spanner(
-    label = "ER",
-    columns = c(Canada, SUS)
-  )
+tbl_summary("Strait of Georgia")
 
 ```
 
@@ -2993,7 +2975,7 @@ Numerous salmon hatchery facilities exist within the Skagit Basin, including sma
 
 ##### Objectives
 
-Under the Comprehensive Coho Management Plan, Skagit River wild Coho Salmon is the primary (or key) {{< glossary MU >}} and hatchery production {{< glossary MUs>}} are either secondary (Swinomish Channel, Oak Harbor Pens) or auxiliary (Marblemount Hatchery, Baker River Hatchery) {{< glossary MUs >}} [@CCW_1998]. Under this plan, primary {{< glossary MUs >}} are controlling units in the sense that predefined management actions will be undertaken under specified abundance conditions, auxiliary {{< glossary MUs >}} are those managed to meet or exceed a minimum escapement, and secondary units are passively managed in mixed stock fisheries. Therefore, Skagit River Coho Salmon are managed for natural (wild) production. * JJ question - So, hatchery fish spawning in the river count towards the wild escapement goal, or not?  This type of specificity should be spelled out for each MU very clearly.* While there is hatchery production within the system, fisheries are constrained to meet the natural escapement objectives. Thus, there are frequently significant surplus returns to the Marblemount Hatchery on the Cascade River. There have been fisheries in the Skagit terminal area targeted at hatchery Coho Salmon, but these have been sporadic, and have been confined to small areas (e.g., the creek immediately downstream of the hatchery, Swinomish Channel from 1986–1991, and Oak Harbor from 1994–1996).
+Under the Comprehensive Coho Management Plan, Skagit River wild Coho Salmon is the primary (or key) {{< glossary MU >}} and hatchery production {{< glossary MUs>}} are either secondary (Swinomish Channel, Oak Harbor Pens) or auxiliary (Marblemount Hatchery, Baker River Hatchery) {{< glossary MUs >}} [@CCW_1998]. Under this plan, primary {{< glossary MUs >}} are controlling units in the sense that predefined management actions will be undertaken under specified abundance conditions, auxiliary {{< glossary MUs >}} are those managed to meet or exceed a minimum escapement, and secondary units are passively managed in mixed stock fisheries. Therefore, Skagit River Coho Salmon are managed for natural (wild) production. **JJ question - So, hatchery fish spawning in the river count towards the wild escapement goal, or not?  This type of specificity should be spelled out for each MU very clearly.** While there is hatchery production within the system, fisheries are constrained to meet the natural escapement objectives. Thus, there are frequently significant surplus returns to the Marblemount Hatchery on the Cascade River. There have been fisheries in the Skagit terminal area targeted at hatchery Coho Salmon, but these have been sporadic, and have been confined to small areas (e.g., the creek immediately downstream of the hatchery, Swinomish Channel from 1986–1991, and Oak Harbor from 1994–1996).
 
 Skagit Coho Salmon are also a primary {{< glossary MU >}} for Puget Sound under the {{< glossary Council display = PFMC >}} FMP [@PFMC_1_2013]. Other primary {{< glossary MUs >}} in this region are Strait of Juan de Fuca, Hood Canal, Snohomish, Stillaguamish, and South Puget Sound (hatchery) Coho Salmon [@PFMC_1_2013]. The {{< glossary Council display = PFMC >}}’s conservation objectives for these {{< glossary MUs >}} are based on the Puget Sound Salmon Management Plan, which includes management objectives and long-term goals for these stocks as developed by representatives from federal, state, and tribal agencies. 
 
@@ -3295,55 +3277,11 @@ plot_ns_msf("Skagit")
 
 Total {{< glossary ERs >}} have generally declined, averaging 59% between 1986 and 1995 then gradually falling to an extended period of low {{< glossary ERs >}} (26%) during 1998–2004 (Table 5 1; Figure 4 2).  {{< glossary ERs >}} have increased somewhat since 2005, averaging 36% during 2005–2011.  Up until 1997 the {{< glossary ER >}} by Canadian fishers averaged 36%, but has since declined to an average of less than 1.5%.  A comparison of {{< glossary ERs >}} by major fisheries during the base period and the most recent five years (2006–2010) is provided in Figure 5 1, while {{< glossary ERs >}} by major fisheries by year since 1986 are listed in Appendix D.  Individual fishery management areas within Washington State are depicted in Figure @fig-wdfwmap.
 
-
 ```{r}
 #| label: tbl-summary-skagit
 #| tbl-cap: Historical summary of annual total abundance (January age-3 without natural mortality), adult escapement, marine survival (Baker River Wild), and (ER) of the Skagit Management Unit; since 2004. 
 
-tbl_summary = psc_stock_pst |> 
-  filter(PSC_StockName == "Skagit") |> 
-  select(catch_year = "Catch Year", 
-         abundance = abund,
-         escapement = escp)
-
-tbl_summary = 
-  static$marine_survival_data |> 
-  select(BY, Baker) |> 
-  filter(Baker != "NA") |> 
-  mutate(Baker = as.numeric(Baker)) |> 
-  mutate(catch_year = BY+3) |> 
-  rename(marine_survival = "Baker") |> 
-  select(-BY) |> 
-  full_join(tbl_summary)
-
-
-local_er_summary = psc_pst |> 
-  filter(PSC_StockName == "Skagit") |> 
-  group_by(`Catch Year`, fishery_region) |> 
-  summarize(er = sum(mort_er)) |> 
-  ungroup() |> 
-  rename(catch_year = "Catch Year") |> 
-  pivot_wider(names_from = fishery_region,
-              values_from = er)
-
-tbl_summary = tbl_summary |> 
-  full_join(local_er_summary)
-
-tbl_summary = tbl_summary |> 
-  select(catch_year, abundance, marine_survival, escapement, Canada, SUS) |> 
-  filter(catch_year >= 2004) 
-
-tbl_summary |> 
-  gt() |> 
-  fmt_number(columns = c(abundance, escapement),
-             decimals = 0, 
-             sep_mark = ",") |> 
-  fmt_percent(columns = c(marine_survival, Canada, SUS),
-              decimals = 1) |> 
-    tab_spanner(
-    label = "ER",
-    columns = c(Canada, SUS)
-  )
+tbl_summary("Skagit", "Baker", TRUE)
 
 ```
 
@@ -3356,9 +3294,6 @@ tbl_summary |>
 plot_er_and_esc()
 
 ```
-
-
-
 
 ##### Historical Overview of Status of Management Unit
 
@@ -3601,50 +3536,7 @@ A comparison of {{< glossary ERs >}} by major fisheries during the base period a
 #| label: tbl-summary-stilly
 #| tbl-cap: Historical summary of annual total abundance (January age-3 without natural mortality), adult escapement, marine survival (Skykomish), and (ER) of the Stillaguamish Management Unit; since 2004. 
 
-tbl_summary = psc_stock_pst |> 
-  filter(PSC_StockName == "Stillaguamish") |> 
-  select(catch_year = "Catch Year", 
-         abundance = abund,
-         escapement = escp)
-
-tbl_summary = 
-  static$marine_survival_data |> 
-  select(BY, Skykomish) |> 
-  filter(Skykomish != "NA") |> 
-  mutate(Skykomish = as.numeric(Skykomish)) |> 
-  mutate(catch_year = BY+3) |> 
-  rename(marine_survival = "Skykomish") |> 
-  select(-BY) |> 
-  full_join(tbl_summary)
-
-
-local_er_summary = psc_pst |> 
-  filter(PSC_StockName == "Stillaguamish") |> 
-  group_by(`Catch Year`, fishery_region) |> 
-  summarize(er = sum(mort_er)) |> 
-  ungroup() |> 
-  rename(catch_year = "Catch Year") |> 
-  pivot_wider(names_from = fishery_region,
-              values_from = er)
-
-tbl_summary = tbl_summary |> 
-  full_join(local_er_summary)
-
-tbl_summary = tbl_summary |> 
-  select(catch_year, abundance, marine_survival, escapement, Canada, SUS) |> 
-  filter(catch_year >= 2004) 
-
-tbl_summary |> 
-  gt() |> 
-  fmt_number(columns = c(abundance, escapement),
-             decimals = 0, 
-             sep_mark = ",") |> 
-  fmt_percent(columns = c(marine_survival, Canada, SUS),
-              decimals = 1) |> 
-    tab_spanner(
-    label = "ER",
-    columns = c(Canada, SUS)
-  )
+tbl_summary("Stillaguamish", "Skykomish", TRUE)
 
 ```
 
@@ -3871,50 +3763,7 @@ plot_ns_msf("Snohomish")
 #| label: tbl-summary-snohomish
 #| tbl-cap: Historical summary of annual total abundance (January age-3 without natural mortality), adult escapement, marine survival (Snohomish), and (ER) of the Snohomish Management Unit; since 2004. 
 
-tbl_summary = psc_stock_pst |> 
-  filter(PSC_StockName == "Snohomish") |> 
-  select(catch_year = "Catch Year", 
-         abundance = abund,
-         escapement = escp)
-
-tbl_summary = 
-  static$marine_survival_data |> 
-  select(BY, Snohomish) |> 
-  filter(Snohomish != "NA") |> 
-  mutate(Snohomish = as.numeric(Snohomish)) |> 
-  mutate(catch_year = BY+3) |> 
-  rename(marine_survival = "Snohomish") |> 
-  select(-BY) |> 
-  full_join(tbl_summary)
-
-
-local_er_summary = psc_pst |> 
-  filter(PSC_StockName == "Snohomish") |> 
-  group_by(`Catch Year`, fishery_region) |> 
-  summarize(er = sum(mort_er)) |> 
-  ungroup() |> 
-  rename(catch_year = "Catch Year") |> 
-  pivot_wider(names_from = fishery_region,
-              values_from = er)
-
-tbl_summary = tbl_summary |> 
-  full_join(local_er_summary)
-
-tbl_summary = tbl_summary |> 
-  select(catch_year, abundance, marine_survival, escapement, Canada, SUS) |> 
-  filter(catch_year >= 2004) 
-
-tbl_summary |> 
-  gt() |> 
-  fmt_number(columns = c(abundance, escapement),
-             decimals = 0, 
-             sep_mark = ",") |> 
-  fmt_percent(columns = c(marine_survival, Canada, SUS),
-              decimals = 1) |> 
-    tab_spanner(
-    label = "ER",
-    columns = c(Canada, SUS)
-  )
+tbl_summary("Snohomish", "Snohomish", TRUE)
 
 ```
 
@@ -4234,50 +4083,7 @@ Total {{< glossary ERs >}} have generally declined, averaging 72% between 1986 a
 #| label: tbl-summary-hc
 #| tbl-cap: Historical summary of annual total abundance (January age-3 without natural mortality), adult escapement, marine survival (Big Beef Creek), and (ER) of the Hood Canal Management Unit; since 2004. 
 
-tbl_summary = psc_stock_pst |> 
-  filter(PSC_StockName == "Hood Canal") |> 
-  select(catch_year = "Catch Year", 
-         abundance = abund,
-         escapement = escp)
-
-tbl_summary = 
-  static$marine_survival_data |> 
-  select(BY, BBC) |> 
-  filter(BBC != "NA") |> 
-  mutate(BBC = as.numeric(BBC)) |> 
-  mutate(catch_year = BY+3) |> 
-  rename(marine_survival = "BBC") |> 
-  select(-BY) |> 
-  full_join(tbl_summary)
-
-
-local_er_summary = psc_pst |> 
-  filter(PSC_StockName == "Hood Canal") |> 
-  group_by(`Catch Year`, fishery_region) |> 
-  summarize(er = sum(mort_er)) |> 
-  ungroup() |> 
-  rename(catch_year = "Catch Year") |> 
-  pivot_wider(names_from = fishery_region,
-              values_from = er)
-
-tbl_summary = tbl_summary |> 
-  full_join(local_er_summary)
-
-tbl_summary = tbl_summary |> 
-  select(catch_year, abundance, marine_survival, escapement, Canada, SUS) |> 
-  filter(catch_year >= 2004) 
-
-tbl_summary |> 
-  gt() |> 
-  fmt_number(columns = c(abundance, escapement),
-             decimals = 0, 
-             sep_mark = ",") |> 
-  fmt_percent(columns = c(marine_survival, Canada, SUS),
-              decimals = 1) |> 
-    tab_spanner(
-    label = "ER",
-    columns = c(Canada, SUS)
-  )
+tbl_summary("Hood Canal", "BBC", TRUE)
 
 ```
 
@@ -4296,7 +4102,7 @@ plot_er_and_esc("Hood Canal")
 ```{r f_abund_bar_hc}
 #| fig-cap: Hood Canal {{< glossary MU >}} post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years 2004 through 2022. The graphs include dashed trend lines and the vertical dotted lines highlight catch year 2010)
 #| label: fig-abund-bar-hc
-#| 
+
 plot_abund_bar("Hood Canal")
 
 ```
@@ -4490,50 +4296,7 @@ plot_ns_msf("US Strait JDF")
 #| label: tbl-summary-sjf
 #| tbl-cap: Historical summary of annual total abundance (January age-3 without natural mortality), adult escapement, marine survival, and (ER) of the Strait of Juan de Fuca Management Unit; since 2004. 
 
-tbl_summary = psc_stock_pst |> 
-  filter(PSC_StockName == "US Strait JDF") |> 
-  select(catch_year = "Catch Year", 
-         abundance = abund,
-         escapement = escp)
-
-tbl_summary = 
-  static$marine_survival_data |> 
-  select(BY, JDF.MU) |> 
-  filter(JDF.MU != "NA") |> 
-  mutate(JDF.MU = as.numeric(JDF.MU)) |> 
-  mutate(catch_year = BY+3) |> 
-  rename(marine_survival = "JDF.MU") |> 
-  select(-BY) |> 
-  full_join(tbl_summary)
-
-
-local_er_summary = psc_pst |> 
-  filter(PSC_StockName == "US Strait JDF") |> 
-  group_by(`Catch Year`, fishery_region) |> 
-  summarize(er = sum(mort_er)) |> 
-  ungroup() |> 
-  rename(catch_year = "Catch Year") |> 
-  pivot_wider(names_from = fishery_region,
-              values_from = er)
-
-tbl_summary = tbl_summary |> 
-  full_join(local_er_summary)
-
-tbl_summary = tbl_summary |> 
-  select(catch_year, abundance, marine_survival, escapement, Canada, SUS) |> 
-  filter(catch_year >= 2004) 
-
-tbl_summary |> 
-  gt() |> 
-  fmt_number(columns = c(abundance, escapement),
-             decimals = 0, 
-             sep_mark = ",") |> 
-  fmt_percent(columns = c(marine_survival, Canada, SUS),
-              decimals = 1) |> 
-    tab_spanner(
-    label = "ER",
-    columns = c(Canada, SUS)
-  )
+tbl_summary("US Strait JDF", "JDF.MU", TRUE)
 
 ```
 
@@ -4580,9 +4343,9 @@ This {{< glossary MU >}} description was prepared by U.S. members of the {{< glo
 
 #### Biological and Geographic Description
 
-The Quillayute {{< glossary MU >}} consists of naturally-produced fall run Coho Salmon in the Quillayute River basin and its tributaries (Dickey, Sol Duc, Sitkum, Calawah, and Bogachiel rivers) (@fig-quillayutemap). The Quillayute River has two unique populations of Coho Salmon, a summer run and a fall run [@Haymes_2008].  The summer Coho Salmon run has a peak river entry from the last week of August to the first week of September.  The fall Coho Salmon run has a run timing typical of other coastal Coho Salmon populations, with peak river entry in mid-October.  There is a hatchery and natural-origin production component to each population.  The Quillayute River {{< glossary MU >}} consists of the natural-origin fall run.  Quillayute Coho Salmon belong to the Olympic Peninsula evolutionarily significant unit (ESU) (Weitkamp et al. 1995).  This ESU was deemed “not warranted” for listing under the US Endangered Species Act (Ford 2011).
+The Quillayute {{< glossary MU >}} consists of naturally-produced fall run Coho Salmon in the Quillayute River basin and its tributaries (Dickey, Sol Duc, Sitkum, Calawah, and Bogachiel rivers) (@fig-quillayutemap). The Quillayute River has two unique populations of Coho Salmon, a summer run and a fall run [@Haymes_2008].  The summer Coho Salmon run has a peak river entry from the last week of August to the first week of September.  The fall Coho Salmon run has a run timing typical of other coastal Coho Salmon populations, with peak river entry in mid-October.  There is a hatchery and natural-origin production component to each population.  The Quillayute River {{< glossary MU >}} consists of the natural-origin fall run.  Quillayute Coho Salmon belong to the Olympic Peninsula evolutionarily significant unit (ESU) [@Weitkamp_et_al_1995].  This ESU was deemed “not warranted” for listing under the US Endangered Species Act [@Ford_2011].
 
-The Quillayute {{< glossary MU >}} consists of five primary tributaries and numerous smaller tributaries that join to form the Quillayute River (Haymes 2008; Hunter 2006).  The Quillayute River has a short mainstem of 5.5 river miles (RM).  At RM 5 the Bogachiel and Sol Duc river systems combine to form the Quillayute.  The upper reaches of the Sol Duc, Calawah, and Bogachiel rivers originate inside the Olympic National Park, draining the northwest and western slopes of the Olympic Mountains.  These tributaries flow westward to converge and enter the Pacific Ocean at the town of La Push.  The Dickey River drains the coastal hills to the north of the Quillayute River, flowing southward to join the lower mainstem Quillayute one mile from the Pacific Ocean near the town of La Push. 
+The Quillayute {{< glossary MU >}} consists of five primary tributaries and numerous smaller tributaries that join to form the Quillayute River ([@Haymes_2008]; Hunter 2006).  The Quillayute River has a short mainstem of 5.5 river miles (RM).  At RM 5 the Bogachiel and Sol Duc river systems combine to form the Quillayute.  The upper reaches of the Sol Duc, Calawah, and Bogachiel rivers originate inside the Olympic National Park, draining the northwest and western slopes of the Olympic Mountains.  These tributaries flow westward to converge and enter the Pacific Ocean at the town of La Push.  The Dickey River drains the coastal hills to the north of the Quillayute River, flowing southward to join the lower mainstem Quillayute one mile from the Pacific Ocean near the town of La Push. 
 
 The Quillayute system drains over 825 mi^2^ (Hunter 2006).  The basin is primarily rain-fed, with the exception of some snowmelt input into the upper Sol Duc, Bogachiel, and Calawah sub-basins during the winter and spring.  Rainfall is high, exceeding 100 inches [254 cm] in the lower valley, and 150+ inches [381+ cm] in upper reaches of the basin. 
 
@@ -4716,39 +4479,7 @@ plot_ns_msf("Quillayute")
 #| label: tbl-summary-quillayute
 #| tbl-cap: Historical summary of annual total abundance (January age-3 without natural mortality), adult escapement, and (ER) of the Quillayute Management Unit; since 2004. 
 
-tbl_summary = psc_stock_pst |> 
-  filter(PSC_StockName == "Quillayute") |> 
-  select(catch_year = "Catch Year", 
-         abundance = abund,
-         escapement = escp)
-
-local_er_summary = psc_pst |> 
-  filter(PSC_StockName == "Quillayute") |> 
-  group_by(`Catch Year`, fishery_region) |> 
-  summarize(er = sum(mort_er)) |> 
-  ungroup() |> 
-  rename(catch_year = "Catch Year") |> 
-  pivot_wider(names_from = fishery_region,
-              values_from = er)
-
-tbl_summary = tbl_summary |> 
-  full_join(local_er_summary)
-
-tbl_summary = tbl_summary |> 
-  select(catch_year, abundance, escapement, Canada, SUS) |> 
-  filter(catch_year >= 2004) 
-
-tbl_summary |> 
-  gt() |> 
-  fmt_number(columns = c(abundance, escapement),
-             decimals = 0, 
-             sep_mark = ",") |> 
-  fmt_percent(columns = c(Canada, SUS),
-              decimals = 1) |> 
-    tab_spanner(
-    label = "ER",
-    columns = c(Canada, SUS)
-  )
+tbl_summary("Quillayute")
 
 ```
 
@@ -4928,49 +4659,17 @@ plot_ns_msf("Hoh")
 #| label: tbl-summary-hoh
 #| tbl-cap: Historical summary of annual total abundance (January age-3 without natural mortality), adult escapement, and (ER) of the Hoh Management Unit; since 2004. 
 
-tbl_summary = psc_stock_pst |> 
-  filter(PSC_StockName == "Quillayute") |> 
-  select(catch_year = "Catch Year", 
-         abundance = abund,
-         escapement = escp)
-
-local_er_summary = psc_pst |> 
-  filter(PSC_StockName == "Quillayute") |> 
-  group_by(`Catch Year`, fishery_region) |> 
-  summarize(er = sum(mort_er)) |> 
-  ungroup() |> 
-  rename(catch_year = "Catch Year") |> 
-  pivot_wider(names_from = fishery_region,
-              values_from = er)
-
-tbl_summary = tbl_summary |> 
-  full_join(local_er_summary)
-
-tbl_summary = tbl_summary |> 
-  select(catch_year, abundance, escapement, Canada, SUS) |> 
-  filter(catch_year >= 2004) 
-
-tbl_summary |> 
-  gt() |> 
-  fmt_number(columns = c(abundance, escapement),
-             decimals = 0, 
-             sep_mark = ",") |> 
-  fmt_percent(columns = c(Canada, SUS),
-              decimals = 1) |> 
-    tab_spanner(
-    label = "ER",
-    columns = c(Canada, SUS)
-  )
+tbl_summary("Hoh")
 
 ```
 
 ```{r}
 #| label: fig-hoh-escapement-and-ER
-#| fig-cap: Total exploitation rate (A) and escapement (B) of Hoh MU by country, catch years 1986 through 2022. Dashed line indicates escapement goal for the Hoh MU (**Need esc goal for Hoh** 30,000 individuals).   
+#| fig-cap: Total exploitation rate (A) and escapement (B) of Hoh MU by country, catch years 1986 through 2022. Dashed line indicates the upper level escapement goal for the Hoh MU (5,000 individuals).   
 #| fig-width: 8
 #| fig-height: 7
  
-plot_er_and_esc("Hoh")
+plot_er_and_esc("Hoh", 5000)
 
 ```
 
@@ -5138,49 +4837,17 @@ plot_ns_msf("Queets")
 #| label: tbl-summary-queets
 #| tbl-cap: Historical summary of annual total abundance (January age-3 without natural mortality), adult escapement, and (ER) of the Queets Management Unit; since 2004. 
 
-tbl_summary = psc_stock_pst |> 
-  filter(PSC_StockName == "Queets") |> 
-  select(catch_year = "Catch Year", 
-         abundance = abund,
-         escapement = escp)
-
-local_er_summary = psc_pst |> 
-  filter(PSC_StockName == "Queets") |> 
-  group_by(`Catch Year`, fishery_region) |> 
-  summarize(er = sum(mort_er)) |> 
-  ungroup() |> 
-  rename(catch_year = "Catch Year") |> 
-  pivot_wider(names_from = fishery_region,
-              values_from = er)
-
-tbl_summary = tbl_summary |> 
-  full_join(local_er_summary)
-
-tbl_summary = tbl_summary |> 
-  select(catch_year, abundance, escapement, Canada, SUS) |> 
-  filter(catch_year >= 2004) 
-
-tbl_summary |> 
-  gt() |> 
-  fmt_number(columns = c(abundance, escapement),
-             decimals = 0, 
-             sep_mark = ",") |> 
-  fmt_percent(columns = c(Canada, SUS),
-              decimals = 1) |> 
-    tab_spanner(
-    label = "ER",
-    columns = c(Canada, SUS)
-  )
+tbl_summary("Queets")
 
 ```
 
 ```{r}
 #| label: fig-queets-escapement-and-ER
-#| fig-cap: Total exploitation rate (A) and escapement (B) of Queets MU by country, catch years 1986 through 2022. Dashed line indicates escapement goal for the Queets MU (**Need esc goal for Queets** 30,000 individuals).   
+#| fig-cap: Total exploitation rate (A) and escapement (B) of Queets MU by country, catch years 1986 through 2022. Dashed line indicates escapement goal for the Queets MU (8,642 for 2024).   
 #| fig-width: 8
 #| fig-height: 7
  
-plot_er_and_esc("Queets")
+plot_er_and_esc("Queets", 8642)
 
 ```
 
@@ -5397,50 +5064,7 @@ plot_ns_msf("Grays Harbor")
 #| label: tbl-summary-gh
 #| tbl-cap: Historical summary of annual total abundance (January age-3 without natural mortality), adult escapement, marine survival (Bingham Creek), and (ER) of the Grays Harbor Management Unit; since 2004. 
 
-tbl_summary = psc_stock_pst |> 
-  filter(PSC_StockName == "Grays Harbor") |> 
-  select(catch_year = "Catch Year", 
-         abundance = abund,
-         escapement = escp)
-
-tbl_summary = 
-  static$marine_survival_data |> 
-  select(BY, Bingham) |> 
-  filter(Bingham != "NA") |> 
-  mutate(Bingham = as.numeric(Bingham)) |> 
-  mutate(catch_year = BY+3) |> 
-  rename(marine_survival = "Bingham") |> 
-  select(-BY) |> 
-  full_join(tbl_summary)
-
-
-local_er_summary = psc_pst |> 
-  filter(PSC_StockName == "Grays Harbor") |> 
-  group_by(`Catch Year`, fishery_region) |> 
-  summarize(er = sum(mort_er)) |> 
-  ungroup() |> 
-  rename(catch_year = "Catch Year") |> 
-  pivot_wider(names_from = fishery_region,
-              values_from = er)
-
-tbl_summary = tbl_summary |> 
-  full_join(local_er_summary)
-
-tbl_summary = tbl_summary |> 
-  select(catch_year, abundance, marine_survival, escapement, Canada, SUS) |> 
-  filter(catch_year >= 2004) 
-
-tbl_summary |> 
-  gt() |> 
-  fmt_number(columns = c(abundance, escapement),
-             decimals = 0, 
-             sep_mark = ",") |> 
-  fmt_percent(columns = c(marine_survival, Canada, SUS),
-              decimals = 1) |> 
-    tab_spanner(
-    label = "ER",
-    columns = c(Canada, SUS)
-  )
+tbl_summary("Grays Harbor", "Bingham", TRUE)
 
 ```
 
@@ -5764,7 +5388,3 @@ static$dit_codes |>
   gt() |> 
   opt_row_striping()
 ```
-
-
-
-
