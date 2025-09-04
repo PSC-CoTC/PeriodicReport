@@ -7,7 +7,7 @@ csl: american-fisheries-society.csl
 params:
   static_tables: StaticTables.xlsx
   mdb_pre: ../PeriodicReportData/PSC_CoTC_Preseason_CohoFRAMDB_thru2024_06182024.mdb
-  mdb_pst: ../PeriodicReportData/PSC_CoTC_PostSeason_CohoFRAMDB_thru2022_03042024.mdb
+  mdb_pst: ../PeriodicReportData/PSC_CoTC_Preseason_CohoFRAMDB_thru2024_06182024.mdb
   clean_run: false
 editor_options:
   chunk_output_type: console
@@ -79,7 +79,7 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 if(interactive()){ ## recreate parameters if being run interactively.
   params = list(static_tables = "StaticTables.xlsx",
                 mdb_pre = "C:/Repos/PeriodicReportData/PSC_CoTC_Preseason_CohoFRAMDB_thru2024_06182024.mdb",
-                mdb_pst = "C:/Repos/PeriodicReportData/PSC_CoTC_PostSeason_CohoFRAMDB_thru2022_03042024.mdb",
+                mdb_pst = "C:/Repos/PeriodicReportData/PSC_CoTC_PostSeason_CohoFRAMDB_thru2023_04042025.mdb",
                 clean_run = TRUE
   )
 }
@@ -1242,18 +1242,18 @@ temp.breaks = seq(floor(min(dat.temp$value)),
                   ceiling(max(dat.temp$value)),
                   by = 1)
 f_to_c = function(x) { 5/9*(x - 32)} 
+f_labeler = function(x){paste0(format(x, nsmall = 1), "\u00B0F")}
+c_labeler = function(x) {paste0(format(round(f_to_c(x),1), nsmall = 1), "\u00B0C")}
 
 gp1 = ggplot(dat.temp, aes(x = year, y = value))+
   geom_area(fill = 'coral', alpha = 0.4)+
   geom_path(col = 'coral')+
   geom_point(col = 'coral', size = 2)+
   scale_y_continuous(breaks = temp.breaks,
-                     labels = function(x){paste0(format(x, nsmall = 1), "\u00B0F")},
+                     labels = f_labeler,
                      sec.axis = dup_axis(
                        breaks = temp.breaks,
-                       labels = function(x) {
-                         paste0(format(round(f_to_c(x),1), nsmall = 1), "\u00B0C")
-                       }
+                       labels = c_labeler
                      ),
                      limits = range(dat.temp$value, na.rm = T),
                      oob = scales::oob_keep
