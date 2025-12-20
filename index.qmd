@@ -937,7 +937,8 @@ bper <- function(stocks=c()){
       tab_style(
         style = cell_text(weight = "bold"),
         locations = cells_column_labels()
-      )
+      ) |> 
+    add_gt_scrolling()
     
     return(stock_table)
 }
@@ -1001,7 +1002,8 @@ tbl_summary <- function(stknm, msi_source, msi=FALSE){
       tab_spanner(
         label = "ER",
         columns = c(Canada, SUS)
-        )
+        ) |> 
+    add_gt_scrolling()
     return(summary)
   } else{
   summary <- summary |> 
@@ -1014,7 +1016,8 @@ tbl_summary <- function(stknm, msi_source, msi=FALSE){
     tab_spanner(
       label = "ER",
       columns = c(Canada, SUS)
-    )
+    ) |> 
+    add_gt_scrolling()
   
   return(summary)
   }
