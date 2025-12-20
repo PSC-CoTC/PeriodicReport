@@ -176,6 +176,15 @@ pal_rel_tag_mark <- c("CWT_Unclipped"= "#4D5370",
                       "CWT_Unclipped_DIT" = alpha("#263C19", 0.6),
                       "CWT_Clipped" = "#A6B7C6",
                       "Clipped_only"= "#E4C22B", "Unclipped" = "#965127")
+
+## function to add gt table scrolling
+add_gt_scrolling <- function(gt_table, height = 500) {
+  gt_table |>
+    tab_options(
+      container.height = px(height),
+      container.overflow.y = "auto"
+    )
+}
 ```
 
 ```{r rebuild_psc_pst_csv, include=FALSE}
@@ -417,7 +426,7 @@ if(params$clean_run == TRUE){
 
 ```{r loading_in, include=FALSE}
 #but to deal with WA Coast stocks from TAMM spreadsheets, among other reasons
-psc_pst <- readr::read_csv(here("../PeriodicReportData/psc_postfram_2004_2023_temp.csv")) |> 
+psc_pst <- readr::read_csv(here("../PeriodicReportData/psc_postfram_2004_2023.csv")) |> 
   rename(`Catch Year` = RunYear) |> 
   mutate(fishery_region = case_when(
     FisheryID < 167 ~ "SUS",
@@ -515,7 +524,7 @@ post_ers <- post_calcs |>
     fishery_id >= 167 & fishery_id < 194 ~ "Canada",
     fishery_id >= 194 ~ "AK"
   ))
-#disconnect_fram_db(fram_db)
+disconnect_fram_db(fram_db)
 ```
 
 
@@ -871,8 +880,15 @@ table_pre_post_est <- function(stknm="Skagit"){
   
   left_join(partial_pre, partial_pst) |> 
     filter(catch_year >= 2004) |> 
+    mutate(percent_error = (abund_preseason-abund_postseason)/abund_postseason) |> 
     gt() |> 
-    fmt_number(columns = 2:3, decimals = 1, sep_mark = ",")
+    fmt_number(columns = 2:3, decimals = 1, sep_mark = ",") |> 
+    fmt_percent(columns = "percent_error") |> 
+    cols_label(catch_year = "Catch Year",
+               abund_preseason = "Preseason abundance",
+               abund_postseason = "Postseason abundance",
+               percent_error = "% difference") |> 
+    add_gt_scrolling()
 }
 
 #table_pre_post_est()
@@ -1016,9 +1032,9 @@ This report is based on postseason data in `r basename(params$mdb_pst)` and pres
 
 # Introduction
 
-In response to a decline in natural Coho Salmon (*Onchorynchus kisutch*) abundance, the Pacific Salmon Commission (PSC) established a Southern Coho abundance-based management regime ({{< glossary CoABM >}}) in 1999 [@PSC_1999]. This Southern Coho Management Plan (SCMP, also referred to as ABM, or 'abundance based management') aimed to conserve Coho Salmon Management Units (MUs) of naturally-spawning Coho Salmon in southern British Columbia and Washington/Oregon based on abundance status and escapement goals. The {{< glossary SCMP >}} set out to constrain exploitation rates ({{< glossary ER >}}; defined as total fishing mortality divided by total fishing mortality plus escapement) below maximum levels (caps) on selected {{< glossary MUs >}} in order to achieve long-term Maximum Sustainable Harvests (MSHs). These constraints are implemented by specifying {{< glossary ER >}} caps for the individual {{< glossary MUs >}} dependent on annual abundance status. During their respective preseason planning processes, the Parties use management reference points to classify the status of each {{< glossary MU >}} as low, moderate, or abundant. The parties then exchange these status determinations as a key input in the development of pre-season plans.
+In response to a decline in natural Coho Salmon (*Onchorynchus kisutch*) abundance, the Pacific Salmon Commission (PSC) established a Southern Coho abundance-based management regime ({{< glossary CoABM >}}) in 1999 [@PSC_1999]. This Southern Coho Management Plan (SCMP, also referred to as ABM, or 'abundance based management') aimed to conserve Coho Salmon Management Units (MUs) of naturally-spawning Coho Salmon in southern British Columbia and Washington/Oregon based on abundance status and escapement goals. The {{< glossary SCMP >}} set out to constrain exploitation rates ({{< glossary ER >}}; defined as total fishing mortality divided by total fishing mortality plus escapement) below maximum levels (caps) on selected {{< glossary MUs >}} in order to achieve long-term Maximum Sustainable Harvests (MSHs). These constraints are implemented by specifying {{< glossary ER >}} caps for the individual {{< glossary MUs >}} dependent on annual abundance status. During their respective preseason planning processes, the Parties use management reference points to classify the status of each {{< glossary MU >}} as low, moderate, or abundant. The Parties then exchange these status determinations as a key input in the development of pre-season plans.
 
-When a new Coho Management Plan was agreed upon in 2008 (implemented 2009 through 2018; [@PSC_2009]) and the latest agreement finalized (applies to the period from catch years 2019 through 2028; [@PSC_2022]), modifications were made to the list of specified {{< glossary MUs >}} and to the manner in which {{< glossary ER >}} caps are established. This periodic report presents information for the {{< glossary MUs >}} identified in the most current Pacific Salmon Treaty's (PST) {{< glossary SCMP >}} (Chapter 5 of Annex IV in the current {{< glossary PST >}}). In the 2008 {{< glossary SCMP >}} abundance-based management regimes were established to constrain {{< glossary ERs >}} ({{< glossary ERs >}}) on 13 {{< glossary MUs >}} of naturally-spawning Coho Salmon originating in rivers along the Washington/British Columbia (BC) border. Beginning in 2019, the most recent Management Plan [@PSC_2022] combined two of the Canadian {{< glossary MUs >}}, the Georgia Strait Vancouver Island and the Georgia Strait Mainland {{< glossary MUs >}} into the Strait of Georgia {{< glossary MU >}}. The 12 {{< glossary MUs >}} in the current {{< glossary PST >}} are listed below (@tbl-mus).
+When a new Coho Management Plan was agreed upon in 2008 (implemented 2009 through 2018; [@PSC_2009]) and the latest agreement finalized (applies to the period from catch years 2019 through 2028; [@PSC_2022]), modifications were made to the list of specified {{< glossary MUs >}} and to the manner in which {{< glossary ER >}} caps are established. This periodic report presents information for the {{< glossary MUs >}} identified in the most current Pacific Salmon Treaty's (PST) {{< glossary SCMP >}} (Chapter 5 of Annex IV in the current {{< glossary PST >}}). In the 2008 {{< glossary SCMP >}}, abundance-based management regimes were established to constrain {{< glossary ERs >}} on 13 {{< glossary MUs >}} of naturally-spawning Coho Salmon originating in rivers along the Washington/British Columbia (BC) border. Beginning in 2019, the most recent Management Plan [@PSC_2022] combined two of the Canadian {{< glossary MUs >}}, the Georgia Strait Vancouver Island and the Georgia Strait Mainland {{< glossary MUs >}} into the Strait of Georgia {{< glossary MU >}}. The 12 {{< glossary MUs >}} in the current {{< glossary PST >}} are listed below (@tbl-mus).
 
 
 ```{r new_mu_table}
@@ -1026,18 +1042,31 @@ When a new Coho Management Plan was agreed upon in 2008 (implemented 2009 throug
 #| label: tbl-mus
 
 tibble(
-  `Southern BC` = c("Interior Fraser", "Lower Fraser", "Strait of Georgia", "", ""),
-  `US Inside` = c("Skagit", "Stillaguamish", "Snohomish", "Hood Canal", "US Strait JDF"),
-  `US Outside` = c("Quillayute", "Hoh", "Queets", "Grays Harbor", "")
+  `Southern BC` = c("[Interior Fraser](#interior-fraser)", 
+                    "[Lower Fraser](#lower-fraser)", 
+                    "[Strait of Georgia](#strait-of-georgia)",
+                       "",
+                       ""),
+  `US Inside` = c("[Skagit](#skagit)",
+                  "[Stillaguamish](#stillaguamish)", 
+                  "[Snohomish](#snohomish)", 
+                  "[Hood Canal](#hood-canal)",
+                  "[US Strait JDF](#us-straight-of-juan-de-fuca-jdf)"),
+  `US Outside` = c("[Quillayute](#quillayute)",
+                   "[Hoh](#hoh)",
+                   "[Queets](#queets)",
+                   "[Grays Harbor](#grays-harbor)", 
+                   "")
 ) |> 
   gt() |> 
   tab_options(table.width = px(400)) |> 
   tab_style(locations = cells_column_labels(), style = cell_text(align = "center", weight = "bold")) |> 
-  tab_style(locations = cells_body(), style = cell_text(align = "center")) 
+  tab_style(locations = cells_body(), style = cell_text(align = "center")) |> 
+  fmt_markdown()
 
 ```
 
-The objective of the {{< glossary SCMP >}}, as described in the Treaty, is to manage salmon directed fisheries impact on Southern Coho stocks by limiting the total fishery exploitation and allow the different {{< glossary MUs >}} to produce long-term {{< glossary MSH >}}, while maintaining the genetic and ecological diversity of the individual populations. In addition, the plan is designed to improve the prospect of sustaining healthy fisheries for both parties over the long-term. The plan is intended to be cost-effective and flexible to available technical capacity and information, while providing a predictable framework for planning fisheries impacts and allowing for objective monitoring, evaluation and modification.
+The objective of the {{< glossary SCMP >}}, as described in the Treaty, is to manage salmon directed fisheries impact on Southern Coho stocks by limiting the total fishery exploitation and allow the different {{< glossary MUs >}} to produce long-term {{< glossary MSH >}}, while maintaining the genetic and ecological diversity of the individual populations. In addition, the plan is designed to improve the prospect of sustaining healthy fisheries for both Parties over the long-term. The plan is intended to be cost-effective and flexible to available technical capacity and information, while providing a predictable framework for planning fisheries impacts and allowing for objective monitoring, evaluation and modification.
 
 Under the Agreement, the United States and Canada (the "Parties") are required to establish escapement goals or {{< glossary ERs >}} that achieve {{< glossary MSH >}}, determine {{< glossary MSH >}} {{< glossary ERs >}} for each {{< glossary MU >}}, and establish {{< glossary ERs >}} for each {{< glossary MU >}} and status category (low, moderate, and abundant). Until such time as the Parties provide {{< glossary MU >}}-specific {{< glossary ER >}} targets, the {{< glossary SCMP >}} identified default {{< glossary ER >}} ceilings for each {{< glossary MU >}} status category (@tbl-msh).
 
@@ -1064,7 +1093,7 @@ The status determination methodology developed and applied by Canada to the Inte
 
 ## Management Unit Overview
 
-The Canadian {{< glossary MUs >}} are comprised of geographical aggregates of naturally spawning Coho conservation units (CUs) within the Interior Fraser River (@fig-dfo-frasier), Lower Fraser River (@fig-dfo-frasier), and Strait of Georgia (@fig-dfo-sog). A {{< glossary CU >}} consists of one or more spawning populations which are genetically distinct from other conspecific spawning populations. The 2019 renewal of the {{< glossary PST >}} combined the Georgia Basin – East and Georgia Basin – West {{< glossary MUs >}} into a single Strait of Georgia {{< glossary MU >}}, reducing the number of Canadian {{< glossary MUs >}} in the bilateral management regime to three. Beginning with catch year 2019, the CoTC chose to combine model outputs for these {{< glossary MUs >}} in carrying out its pre-season and post-season evaluations, rather than reconfigure the FRAM framework.
+The Canadian {{< glossary MUs >}} are comprised of geographical aggregates of naturally spawning Coho conservation units (CUs) within the Interior Fraser River (@fig-dfo-fraser), Lower Fraser River (@fig-dfo-fraser), and Strait of Georgia (@fig-dfo-sog). A {{< glossary CU >}} consists of one or more spawning populations which are genetically distinct from other conspecific spawning populations. The 2019 renewal of the {{< glossary PST >}} combined the Georgia Basin – East and Georgia Basin – West {{< glossary MUs >}} into a single Strait of Georgia {{< glossary MU >}}, reducing the number of Canadian {{< glossary MUs >}} in the bilateral management regime to three. Beginning with catch year 2019, the CoTC chose to combine model outputs for these {{< glossary MUs >}} in carrying out its pre-season and post-season evaluations, rather than reconfigure the FRAM framework.
 
 ![Canadian Management Units](images/Canadian MUs.JPG){#fig-can-mus}
 
@@ -1454,28 +1483,9 @@ Procedures for determining the pre-season status of Canadian {{< glossary MUs >}
 
 Since 2002, in the absence of benchmarks, the {{< glossary CDFO >}} Stock Assessment staff has provided a categorical outlook for the next year's salmon status. The [outlook](http://www.pac.dfo-mpo.gc.ca/fm-gp/species-especes/salmon-saumon/index-eng.htm) is intended to provide an objective and consistent context within which to initiate fisheries planning.The category reflects the current interpretation of existing quantitative and qualitative information, including pre-season forecasts if available, and the opinion of {{< glossary CDFO >}} Area stock assessment staff. Where management targets for stocks have not been formally described, interim targets were either based on historical return levels or, if necessary, opinion of local staff.
 
-Canadian Coho Salmon abundance has declined, particularly in southern BC. Interior Fraser River Coho Salmon was assessed as endangered by the Committee on the Status of Endangered Wildlife in Canada (COSEWIC) in2002 and then reassessed as threatened in 2016. Interior Fraser River Coho Salmon have not been listed on Schedule 1 of the Species at Risk Act, which would afford additional protections to the stock.  However, the Canadian Minister of Fisheries and Oceans has established a domestic {{< glossary ER >}} cap of 3-5% for Canadian fishery impacts on Interior Fraser Coho Salmon. The Interior Fraser {{< glossary MU >}} is comprised of five {{< glossary CUs >}} (North Thompson, South Thompson, Lower Thompson, Fraser Canyon, and Upper Fraser). The Interior Fraser River Coho Salmon recovery planning process has determined the critical benchmark needed to maintain population viability. Even with the reduction in fisheries exploitation, all Southern BC {{< glossary MUs >}} have followed a similar dramatic declining trend in both marine survival and total abundance from the high levels observed in the 1980s and early 1990s. Spawning escapements have responded to the decreased exploitation and are within the range observed during the 1970s and 1980s. However, the sustained low marine survival has resulted in a decreased total abundance.
+Canadian Coho Salmon abundance has declined, particularly in southern BC. Interior Fraser River Coho Salmon was assessed as endangered by the Committee on the Status of Endangered Wildlife in Canada (COSEWIC) in 2002 and then reassessed as threatened in 2016. Interior Fraser River Coho Salmon have not been listed on Schedule 1 of the Species at Risk Act, which would afford additional protections to the stock.  However, the Canadian Minister of Fisheries and Oceans has established a domestic {{< glossary ER >}} cap of 3-5% for Canadian fishery impacts on Interior Fraser Coho Salmon. The Interior Fraser {{< glossary MU >}} is comprised of five {{< glossary CUs >}} (North Thompson, South Thompson, Lower Thompson, Fraser Canyon, and Upper Fraser). The Interior Fraser River Coho Salmon recovery planning process has determined the critical benchmark needed to maintain population viability. Even with the reduction in fisheries exploitation, all Southern BC {{< glossary MUs >}} have followed a similar dramatic declining trend in both marine survival and total abundance from the high levels observed in the 1980s and early 1990s. Spawning escapements have responded to the decreased exploitation and are within the range observed during the 1970s and 1980s. However, the sustained low marine survival has resulted in a decreased total abundance.
 
 Because of the absence of programs to estimate total abundance and escapement for the Strait of Georgia and Lower Fraser River Canadian {{< glossary MUs >}}, the bilaterally-developed tool, Backwards Coho FRAM, is relied upon to generate estimates of ocean age-3 cohort abundance and {{< glossary ERs >}} using post-season data scalars. Cohort abundances (catch and escapement) of Canadian {{< glossary MUs >}}, estimated by Backwards Coho FRAM based on modeled scalars, are depicted in Figure @fig-postseason-abund-bc. Reduced abundances apparent since 1996 were a major consideration that led to the development of {{< glossary ABM >}} regimes for management of southern Coho Salmon.
-
-::: {.content-hidden unless-meta="devversion"}
-
-### IFR {{< glossary MU >}} (*this needs to be moved!)
-Prior to the establishment of {{< glossary PST >}} Management Reference Points, IFR have been assessed by COSEWIC and {{< glossary CDFO >}}.
-
-A COSEWIC assessment in 2002 (Irvine 2002) identified IFR status as endangered while the COSEWIC re-assessment in 2016 (COSEWIC 2016) identified their status as threatened. Between 1990-2000, IFR experienced declines in recruitment in excess of 60% due to changes in freshwater and marine habitats and lagged reductions in harvest, resulting in a status of endangered in 2002. Since 2000, the population has persisted at relatively low abundance and low smolt-to-adult survival rates and was therefore re-assessed as threatened in 2016.
-
-In a review done in 2014, estimated abundance of IFR was below the Interior Fraser Recovery Team (IFCRT) lower benchmark of 23,000 spawners in five out of 10 years, and was below the upper rebuilding benchmark of 35,000 spawners in all 10 years (Decker et al. 2014).  For two decades (1992-2011), abundance was also below the lower and upper benchmarks in 50% and 100% of the years respectively. Based on the criteria proposed by the IFCRT (2006), this would indicate that recent abundances of Interior Fraser Coho Salmon may be insufficient to conserve genetic diversity and to provide a reasonable expectation of growth and recovery for some of the local populations within the {{< glossary MU >}}.  For returns prior to 1992, abundance exceeded the upper benchmark every year going back to 1975.
-
-A Wild Salmon Policy (WSP) assessment in 2013 of the five CUs comprising IFR was undertaken by Parken et al. (in draft). Through this exercise it was determined that two of the CUs, the North Thompson and Lower Thompson, were amber/green and the remaining three CUs were amber. WSP designation is determined to provide guidance to managers on the status of populations and their likelihood of a COSEWIC assessment. It is an expert judgment on the past and current state of escapements and does not speak to productivity of a stock.  In the case of IFR WSP determinations, the escapements under review were achieved under a low exploitation regime and productivity of the five populations within the IFR {{< glossary MU >}} have recently been determined to be low (Decker et al. 2014).
-
-It is important to note that designation under the WSP is different from that under the {{< glossary PST >}}. Within the {{< glossary PST >}} chapter 5, two of the five stated objectives of the Coho Salmon Management program, which guides the establishment of {{< glossary ER >}} ergo {{< glossary PST >}} status, are to a) constrain total {{< glossary ER >}} to maintain maximum sustainable harvest over the long term while maintaining genetic and ecological diversity of the component populations and b) improve long term prospects for healthy fisheries in both countries.
-
-Though the WSP Status review determined that two of the five CUs comprising IFR {{< glossary MU >}} may have enough spawners on the ground to maintain genetic and ecological diversity, IFR are still in a low productivity regime. Allowable harvest that meets the criteria of the {{< glossary PST >}} is still low, therefore {{< glossary PST >}} status may be low while WSP status is green.
-
-Since 2018, and retrospectively, the survival index and abundances have been compared directly to the {{< glossary PST >}} Management Reference Points. The {{< glossary MU >}} survival index has never exceeded 3% since 1999, so the {{< glossary MU >}} has persisted in a low status.
-
-:::
 
 ## US Inside Management Units
 
@@ -2189,7 +2199,7 @@ Migration among different Thompson River basins and between Thompson and non-Tho
 
 ![Pacific Salmon Treaty Coho {{< glossary MU >}} boundaries in Canada. Note: The Georgia Basin West {{< glossary MU >}} has since been renamed Strait of Georgia Vancouver Island (SGVI) and Georgia Basin East is now Strait of Georgia Mainland (SGML).](images/Canadian MUs.JPG){#fig-BCmap}
 
-![Interior and Lower Fraser MU Watersheds](images/FraserRiver_CO.png){#fig-dfo-frasier}
+![Interior and Lower Fraser MU Watersheds](images/FraserRiver_CO.png){#fig-dfo-fraser}
 
 ```{r}
 #| label: tbl-ifr-pops
@@ -2211,6 +2221,27 @@ Recreational, environmental conservation, and commercial forest activities are p
 There are no major dams or other large anthropogenic fish passage impediments located in the {{< glossary MU >}}. Under certain conditions, water velocities in the Fraser River at Hells Gate in the Fraser Canyon, and in the area referred to as Little Hells Gate in the North Thompson River near Avola could impede upstream passage. In 1914 a major landslide occurred in Hells Gate that greatly impeded salmon passage. The slide was mostly cleared in 1915 but construction of fishways began in 1944 after research was conducted by the International Pacific Salmon Fisheries Commission (IPSFC) [@IPSFC_1945].
 
 #### Management Framework
+
+
+##### IFR {{< glossary MU >}} (*this needs evaluation!)
+
+**This subsection section was originally in "Determination of... > Canadian Management Units" (section 2.1) earlier in this document, with a note from Carrie that this needed to be moved or deleted. It is unclear if this contains information that is necessary in this section, or if it should be dropped entirely.**
+
+Prior to the establishment of {{< glossary PST >}} Management Reference Points, IFR have been assessed by COSEWIC and {{< glossary CDFO >}}.
+
+A COSEWIC assessment in 2002 (Irvine 2002) identified IFR status as endangered while the COSEWIC re-assessment in 2016 (COSEWIC 2016) identified their status as threatened. Between 1990-2000, IFR experienced declines in recruitment in excess of 60% due to changes in freshwater and marine habitats and lagged reductions in harvest, resulting in a status of endangered in 2002. Since 2000, the population has persisted at relatively low abundance and low smolt-to-adult survival rates and was therefore re-assessed as threatened in 2016.
+
+In a review done in 2014, estimated abundance of IFR was below the Interior Fraser Recovery Team (IFCRT) lower benchmark of 23,000 spawners in five out of 10 years, and was below the upper rebuilding benchmark of 35,000 spawners in all 10 years (Decker et al. 2014).  For two decades (1992-2011), abundance was also below the lower and upper benchmarks in 50% and 100% of the years respectively. Based on the criteria proposed by the IFCRT (2006), this would indicate that recent abundances of Interior Fraser Coho Salmon may be insufficient to conserve genetic diversity and to provide a reasonable expectation of growth and recovery for some of the local populations within the {{< glossary MU >}}.  For returns prior to 1992, abundance exceeded the upper benchmark every year going back to 1975.
+
+A Wild Salmon Policy (WSP) assessment in 2013 of the five CUs comprising IFR was undertaken by Parken et al. (in draft). Through this exercise it was determined that two of the CUs, the North Thompson and Lower Thompson, were amber/green and the remaining three CUs were amber. WSP designation is determined to provide guidance to managers on the status of populations and their likelihood of a COSEWIC assessment. It is an expert judgment on the past and current state of escapements and does not speak to productivity of a stock.  In the case of IFR WSP determinations, the escapements under review were achieved under a low exploitation regime and productivity of the five populations within the IFR {{< glossary MU >}} have recently been determined to be low (Decker et al. 2014).
+
+It is important to note that designation under the WSP is different from that under the {{< glossary PST >}}. Within the {{< glossary PST >}} chapter 5, two of the five stated objectives of the Coho Salmon Management program, which guides the establishment of {{< glossary ER >}} ergo {{< glossary PST >}} status, are to a) constrain total {{< glossary ER >}} to maintain maximum sustainable harvest over the long term while maintaining genetic and ecological diversity of the component populations and b) improve long term prospects for healthy fisheries in both countries.
+
+Though the WSP Status review determined that two of the five CUs comprising IFR {{< glossary MU >}} may have enough spawners on the ground to maintain genetic and ecological diversity, IFR are still in a low productivity regime. Allowable harvest that meets the criteria of the {{< glossary PST >}} is still low, therefore {{< glossary PST >}} status may be low while WSP status is green.
+
+Since 2018, and retrospectively, the survival index and abundances have been compared directly to the {{< glossary PST >}} Management Reference Points. The {{< glossary MU >}} survival index has never exceeded 3% since 1999, so the {{< glossary MU >}} has persisted in a low status.
+
+
 ##### Objectives
 
 The {{< glossary IFR >}} Coho Salmon {{< glossary MU >}} is managed by {{< glossary CDFO >}} and contains five natural (wild) populations (or {{< glossary CUs >}}), each with 1-3 subpopulations as described by the Interior Fraser Coho Recovery Team [@IFCRT_2006]. Hatchery production is auxiliary to the {{< glossary MU >}} but integral to the {{< glossary MU >}} objectives. 
@@ -2274,7 +2305,7 @@ plot_hatchery_tagged_releases("Interior Fraser")
 ```
 
 ```{r, eval=F}
-#| label: fig-recoveries-interior-frasier
+#| label: fig-recoveries-interior-fraser
 #| fig-cap: Total expanded coded wire tag recoveries released in this MU, by FRAM fishery recovered and year. Includes both terminal and preterminal fisheries. Only uses 3 and 4 year olds. Hover over bars for information. 
 plot_rmis_recoveries_all(mu.name = "Interior Fraser",
                          dat.use = dat.rmis)
@@ -2283,7 +2314,7 @@ plot_rmis_recoveries_all(mu.name = "Interior Fraser",
 ```
 
 ```{r, eval=F}
-#| label: fig-recoveries-interior-frasier-pt
+#| label: fig-recoveries-interior-fraser-pt
 #| fig-cap: Total expanded coded wire tag recoveries released in this MU, by FRAM fishery recovered and year. Includes ONLY preterminal fisheries. Only uses 3 and 4 year olds. Hover over bars for information. 
 plot_rmis_recoveries_all(mu.name = "Interior Fraser",
                          dat.use = dat.rmis |> 
@@ -2486,7 +2517,7 @@ The Fraser River is the largest watershed in the province and supports a wide di
 
 :::: {.content-hidden unless-meta="devversion"}
 
-![New DFO image from Dawn, 2/3/25](images/FraserRiver_CO.png){#fig-dfo-frasier}
+![New DFO image from Dawn, 2/3/25](images/FraserRiver_CO.png){#fig-dfo-fraser}
 
 ::::
 
@@ -2555,7 +2586,7 @@ plot_hatchery_tagged_releases("Lower Fraser")
 ```
 
 ```{r, eval=F}
-#| label: fig-recoveries-lower-frasier
+#| label: fig-recoveries-lower-fraser
 #| fig-cap: Total expanded coded wire tag recoveries released in this MU, by FRAM fishery recovered and year. Includes both terminal and preterminal fisheries. Only uses 3 and 4 year olds. Hover over bars for information. 
 plot_rmis_recoveries_all(mu.name = "Lower Fraser",
                          dat.use = dat.rmis)
@@ -2564,7 +2595,7 @@ plot_rmis_recoveries_all(mu.name = "Lower Fraser",
 ```
 
 ```{r, eval=F}
-#| label: fig-recoveries-lower-frasier-pt
+#| label: fig-recoveries-lower-fraser-pt
 #| fig-cap: Total expanded coded wire tag recoveries released in this MU, by FRAM fishery recovered and year. Includes ONLY preterminal fisheries. Only uses 3 and 4 year olds. Hover over bars for information. 
 plot_rmis_recoveries_all(mu.name = "Lower Fraser",
                          dat.use = dat.rmis |> 
@@ -3134,9 +3165,7 @@ This section of the report includes summaries of forecast performance, abundance
 
 ##### Forecast Evaluation
 
-A comparison of preseason adult ocean age-3 recruit forecasts with post-season estimates derived from Backwards FRAM run reconstruction have been mixed, with some forecasts over estimating abundances and others underestimating it (@fig-abund-compare-skagit). During catch years 2004–2021, predicted cohort size (without natural mortality) ranged from a low of 26,799 (2007) to a high of 155,814 (2004), while post-season estimates ranged from 11,521 (2006) to 145,283 (2004). Accordingly, the difference between preseason and post-season estimates varied from -210% (2007) to +89% (2006) of the preseason estimates. 
-
-ToDo: SoPanel also wishes to see the numbers (pre, post, % diff from pre by year).
+A comparison of preseason adult ocean age-3 recruit forecasts with post-season estimates derived from Backwards FRAM run reconstruction have been mixed, with some forecasts over estimating abundances and others underestimating it (@fig-abund-compare-skagit, @tbl-status-skagit). During catch years 2004–2021, predicted cohort size (without natural mortality) ranged from a low of 26,799 (2007) to a high of 155,814 (2004), while post-season estimates ranged from 11,521 (2006) to 145,283 (2004). Accordingly, the difference between preseason and post-season estimates varied from -210% (2007) to +89% (2006) of the preseason estimates (**these numbers don't seem to match table! Table appears to be ballpark correct**).
 
 
 ```{r}
@@ -3147,12 +3176,20 @@ plot_pre_v_post()
 
 ```
 
+```{r}
+#| label: tbl-status-skagit
+#| tbl-cap: Preseason and post-season abundance estimates for Skagit from 2004 onwards.
+
+table_pre_post_est("Skagit")
+
+```
+
 ##### Fishery Mortality and Escapement
 
 *Base Period Exploitation Rates*
 The base period for the FRAM defines the temporal and spatial distributions of salmon fishing mortalities from each {{< glossary MU >}}. The current FRAM base period for Coho Salmon includes catch years 1986-1992.  During this period, fishing effort, tagging, and fishery sampling of Coho Salmon was high, allowing relatively fine-scale discrimination between salmon distributions. Coded-wire-tag codes used during the base period for the Skagit {{< glossary MU >}} are provided in the Appendix and average base period {{< glossary ERs >}} by individual fisheries are listed below.
 
-ToDo: create table of the list of CWTs used in the base period.  I think they are identified in the static file.
+**ToDo: create table of the list of CWTs used in the base period.  I think they are identified in the static file.**
 
 During the base period, Coho Salmon production from the Skagit {{< glossary MU >}} contributed to US and Canadian marine sport and commercial fisheries in southern British Columbia, the northern Washington coast, Strait of Juan de Fuca, and inner Puget Sound. Terminal tribal and non-tribal set and drift-net Coho Salmon net fisheries occur in commercial fishery management area 8 and the lower Skagit River. Moderate-sized Coho Salmon sport fisheries occured in sport fishery management area 8.1, the mainstem Skagit River, and the Cascade River. The terminal fishery co-managers are WDFW, and the Upper Skagit, Sauk-Suiattle, and Swinomish Tribes.  
 
@@ -3317,13 +3354,6 @@ plot_abund_bar("Skagit")
 plot_status("Skagit")
 ```
 
-```{r}
-#| label: tbl-status-skagit
-#| tbl-cap: Preseason and post-season abundance estimates for Skagit from 2004 onwards.
-
-table_pre_post_est()
-
-```
 
 
 ### Stillaguamish
