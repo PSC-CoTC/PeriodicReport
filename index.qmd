@@ -7,7 +7,7 @@ csl: american-fisheries-society.csl
 params:
   static_tables: StaticTables.xlsx
   mdb_pre: ../PeriodicReportData/PSC_CoTC_Preseason_CohoFRAMDB_thru2024_06182024.mdb
-  mdb_pst: ../PeriodicReportData/PSC_CoTC_Preseason_CohoFRAMDB_thru2024_06182024.mdb
+  mdb_pst: ../PeriodicReportData/PSC_CoTC_PostSeason_CohoFRAMDB_thru2023_04042025.mdb
   clean_run: false
 editor_options:
   chunk_output_type: console
