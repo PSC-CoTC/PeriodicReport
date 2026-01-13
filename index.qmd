@@ -2612,7 +2612,8 @@ ToDo: need to fix this     Survival=(100  (C+E+M))/S
 Where percent survival equals catch (C) plus escapement (E) plus natural mortality (M) (which is assumed as negligible) divided by the abundance of brood year smolts (S) multiplied by 100%. The calculated survival rates are used as indicators of smolt releases and the resulting return of three-year-old adults including fisheries removals. 
 
 It has been shown that climatic indicators are correlated to biological processes including marine survival of salmon (DFO unpublished 2020b). Models use data on climatic trends to better inform future marine survival run size. Climate indicators such as Pacific Decadal Oscillation (PDO), North Pacific Gyre Oscillation (NPGO), El Nino Southern Oscillation (ENSO), and Sea Surface Temperature (SST) are included (DFO unpublished 2020b). Climatic models utilize a regression of the logit transformed marine survivals (Y) against the logit transformed climate index (X~1~) and the “odd year” status (X~2~). Each model follows this general equation:
-Y~t+1~=X~t+1~ b~1~+X~2t+1~ b~2~+a
+
+$$Y_{t+1} = X_{t+1} b_1 + X_{2, t+1} b_2 + a$$
 
 Where the regression coefficients (b) are multiplied by the climate index value for the forecast year X~t+1~ and “odd year” status for the forecast year X~2t+1~ summed together with the regression intercept (a). The best-preforming model for each {{< glossary MU >}} is determined through retrospective analysis and a forecast is produced yearly. 
 
@@ -2706,7 +2707,7 @@ Creel surveys are the primary tool used to estimate catch in recreational fisher
 
 ##### Enhancement
 
---> These paragraphs don't match up entirely (update paragraph #2 and delete first one):
+These paragraphs don't match up entirely (update paragraph #2 and delete first one):
 The following hatcheries produce salmon to support {{< glossary CDFO >}} and {{< glossary PST >}} objectives and are located within the lower Fraser River watershed: 1) Chehalis River Hatchery, located on a tributary of the Harrison River, which is a major tributary of the lower Fraser River; 2) Chilliwack River Hatchery, located on a major tributary of the lower Fraser River; and 3) Inch Creek Hatchery, located on a tributary of a large slough connected to the lower Fraser River. The Inch Creek Hatchery rears Coho Salmon for the {{< glossary CWT >}} indicator stock for the {{< glossary LWFR >}} Coho Salmon {{< glossary MU >}}. Numerous community hatcheries support Indigenous and community activities through the Community Economic Development and Public Involvement Program.
 
 The following federal hatcheries are located within the lower Fraser watershed: 1) Chehalis Hatchery located on the Chehalis River, 2.8 km upstream of the confluence of Harrison River; 2) Chilliwack Hatchery located on the Chilliwack River approximately 40 km upstream of the confluence of the Fraser River; and 3) Inch Creek Hatchery located on Norrish Creek 1.6 km upstream of the confluence of Nicomen/Dewdney Slough. Several additional community hatcheries and school programs operate within the {{< glossary MU >}} and release {{< glossary LWFR >}} Coho Salmon. {{< glossary LWFR >}} Coho Salmon releases from the entire {{< glossary MU >}} during the 1980 to 2016 brood years are displayed in (@fig-LWFR_Enhancement). The average number of smolts released during this period was approximately 2.1 million per year. The average number of fry released was approximately 183,000 per year. The majority of the smolts are released from the Inch, Chilliwack, and Chehalis federal hatcheries (averaging approximately 180,000, 1.2 million, and 774,000, respectively). The Alouette and Kanaka hatcheries also release a significant number of Coho Salmon (approximately 42,000 each).
