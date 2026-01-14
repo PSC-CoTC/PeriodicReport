@@ -17,6 +17,7 @@ glossary:
     show: true
 format:
   html:
+    html-math-method: mathjax
     toc: true
     toc-depth: 5
     toc-expand: 1
@@ -492,7 +493,7 @@ post_mort = fram_db |> fetch_table("Mortality") |>
       TRUE ~ psc_stock_name
     )
   )
-  
+
 post_runid = fram_db |> fetch_table("RunID") |> 
   select(run_id, run_year)
 
@@ -500,7 +501,7 @@ post_runid = fram_db |> fetch_table("RunID") |>
 post_calcs = post_mort |> 
   left_join(post_runid, by = "run_id") |> 
   mutate(mort = landed_catch + non_retention + shaker + drop_off +
-      msf_landed_catch + msf_non_retention + msf_shaker + msf_drop_off) |> 
+           msf_landed_catch + msf_non_retention + msf_shaker + msf_drop_off) |> 
   group_by(run_id, psc_stock_name, fishery_id) |> 
   summarize(mort = sum(mort)) |> 
   ungroup() 
@@ -726,7 +727,7 @@ plot_wild_tagged_releases <- function(stknm){
     theme(
       legend.position = "bottom", legend.title = element_blank(),
       strip.background = element_rect(fill = NA), strip.text = element_text(colour = 1, hjust = 0)
-  )
+    )
 }
 
 #plot_wild_tagged_releases()
@@ -740,7 +741,7 @@ plot_hatchery_tagged_releases <- function(stknm) {
       rearing_type == "H",
       Indicator=="Y",
       MU_Name == stknm
-  ) |> 
+    ) |> 
     select(MU_Name, brood_year, tag_code_or_release_id, CWT_Clipped, CWT_Unclipped, CWT_Unclipped_DIT) |> 
     pivot_longer(cols = -c(MU_Name, brood_year, tag_code_or_release_id), names_to = "tag_mark", values_to = "val") |> 
     drop_na(val) |> 
@@ -765,27 +766,27 @@ plot_hatchery_tagged_releases <- function(stknm) {
 plot_hatchery_production <- function(stknm="Skagit"){
   
   static$releases |> 
-  filter(
-    rearing_type == "H",
-    PSC_MU =="Y",
-    MU_Name == stknm
-  ) |> 
-  select(MU_Name, brood_year, tag_code_or_release_id, CWT_Clipped, CWT_Unclipped, CWT_Unclipped_DIT, Clipped_only, Unclipped) |> 
-  pivot_longer(cols = -c(MU_Name, brood_year, tag_code_or_release_id), names_to = "tag_mark", values_to = "val") |> 
-  drop_na(val) |> 
-  mutate(tag_mark = factor(tag_mark, levels = names(pal_rel_tag_mark))) |> 
-  group_by(MU_Name, brood_year, tag_mark) |> summarise(val = sum(val), .groups = "drop") |> 
-  filter(between(brood_year,1980,2020)) |> 
-  ggplot() +
-  geom_col(aes(brood_year, val, fill = tag_mark)) +
-  scale_fill_manual(values = pal_rel_tag_mark) +
-  scale_x_continuous("Brood Year", breaks = seq(1980, 2024, by = 4)) +
-  scale_y_continuous("Releases", labels = scales::comma) +
-  facet_wrap(~MU_Name, ncol = 2) +
-  theme(
-    legend.position = "bottom", legend.title = element_blank(),
-    strip.background = element_rect(fill = NA), strip.text = element_text(colour = 1, hjust = 0)
-  )
+    filter(
+      rearing_type == "H",
+      PSC_MU =="Y",
+      MU_Name == stknm
+    ) |> 
+    select(MU_Name, brood_year, tag_code_or_release_id, CWT_Clipped, CWT_Unclipped, CWT_Unclipped_DIT, Clipped_only, Unclipped) |> 
+    pivot_longer(cols = -c(MU_Name, brood_year, tag_code_or_release_id), names_to = "tag_mark", values_to = "val") |> 
+    drop_na(val) |> 
+    mutate(tag_mark = factor(tag_mark, levels = names(pal_rel_tag_mark))) |> 
+    group_by(MU_Name, brood_year, tag_mark) |> summarise(val = sum(val), .groups = "drop") |> 
+    filter(between(brood_year,1980,2020)) |> 
+    ggplot() +
+    geom_col(aes(brood_year, val, fill = tag_mark)) +
+    scale_fill_manual(values = pal_rel_tag_mark) +
+    scale_x_continuous("Brood Year", breaks = seq(1980, 2024, by = 4)) +
+    scale_y_continuous("Releases", labels = scales::comma) +
+    facet_wrap(~MU_Name, ncol = 2) +
+    theme(
+      legend.position = "bottom", legend.title = element_blank(),
+      strip.background = element_rect(fill = NA), strip.text = element_text(colour = 1, hjust = 0)
+    )
 }
 
 #plot_hatchery_production()
@@ -796,11 +797,11 @@ plot_hatchery_production <- function(stknm="Skagit"){
 plot_pre_v_post <- function(stknm="Skagit", fishery_id_pre=17, fishery_id_post=17){
   
   dat.pre = psc_pre |> 
-  filter(PSC_StockName == stknm) |> 
-  ## Choose a single fishery ID, doesn't matter which
-  filter(FisheryID == fishery_id_pre) |> 
-  select(year = "Catch Year",
-         abund.pre = abund)
+    filter(PSC_StockName == stknm) |> 
+    ## Choose a single fishery ID, doesn't matter which
+    filter(FisheryID == fishery_id_pre) |> 
+    select(year = "Catch Year",
+           abund.pre = abund)
   dat.post = psc_pst |> 
     filter(PSC_StockName == stknm) |> 
     ## Choose a single fishery ID, doesn't matter which
@@ -830,7 +831,7 @@ plot_pre_v_post <- function(stknm="Skagit", fishery_id_pre=17, fishery_id_post=1
 plot_er_and_esc <- function(stknm="Skagit", esc_goal=30000){
   
   options(scipen = 999)
-
+  
   gp1 = post_ers |>
     filter(psc_stock_name == stknm) |> 
     filter(fishery_region != "AK") |>
@@ -870,9 +871,9 @@ plot_er_and_esc <- function(stknm="Skagit", esc_goal=30000){
 table_pre_post_est <- function(stknm="Skagit"){
   
   partial_pst <- psc_stock_pst |> 
-  filter(PSC_StockName == stknm) |> 
-  select(catch_year = "Catch Year", 
-         abund_postseason = abund)
+    filter(PSC_StockName == stknm) |> 
+    select(catch_year = "Catch Year", 
+           abund_postseason = abund)
   partial_pre <- psc_stock_pre |> 
     filter(PSC_StockName == stknm) |> 
     select(catch_year = "Catch Year", 
@@ -897,50 +898,50 @@ table_pre_post_est <- function(stknm="Skagit"){
 ```{r table_bper}
 
 bper_table <- fram_mdb_reader(mdb_file_path = params$mdb_pst, fram_table = "BaseExploitationRate") |> 
-    filter(BasePeriodID == 27)
+  filter(BasePeriodID == 27)
 
 bper <- function(stocks=c()){
   
-    stock_er <- bper_table |> 
+  stock_er <- bper_table |> 
     filter(StockID %in% stocks) |> 
     select(-c(1,3,7))
-    
-    stock_er <- stock_er |> 
-      group_by(FisheryID, TimeStep) |> 
-      summarise(er=mean(ExploitationRate)) |> 
-      left_join(static$lu_fishery, by="FisheryID") |> 
-      mutate(
-        TimeStep = case_when(
-          TimeStep == 1 ~ "Jan-Jun",
-          TimeStep == 2 ~ "Jul",
-          TimeStep == 3 ~ "Aug",
-          TimeStep == 4 ~ "Sept",
-          TimeStep == 5 ~ "Oct-Dec"
-        )
-      ) |> 
-      rename(Fishery = FisheryTitle) |> 
-      pivot_wider(names_from=TimeStep,
-                  values_from=er) |> 
-      ungroup() |> 
-      select("Fishery", "Jan-Jun", "Jul", "Aug", "Sept", "Oct-Dec")
-      
-    stock_er <- stock_er |> 
-      mutate(
-        Total = rowSums(stock_er[, c("Jan-Jun", "Jul", "Aug", "Sept", "Oct-Dec")], na.rm=TRUE)
+  
+  stock_er <- stock_er |> 
+    group_by(FisheryID, TimeStep) |> 
+    summarise(er=mean(ExploitationRate)) |> 
+    left_join(static$lu_fishery, by="FisheryID") |> 
+    mutate(
+      TimeStep = case_when(
+        TimeStep == 1 ~ "Jan-Jun",
+        TimeStep == 2 ~ "Jul",
+        TimeStep == 3 ~ "Aug",
+        TimeStep == 4 ~ "Sept",
+        TimeStep == 5 ~ "Oct-Dec"
       )
-    
-    stock_table <- stock_er |> 
-      gt() |> 
-      fmt_percent(columns = c(2:7),
-                  decimals = 2) |> 
-      sub_missing(missing_text = '-') |> 
-      tab_style(
-        style = cell_text(weight = "bold"),
-        locations = cells_column_labels()
-      ) |> 
+    ) |> 
+    rename(Fishery = FisheryTitle) |> 
+    pivot_wider(names_from=TimeStep,
+                values_from=er) |> 
+    ungroup() |> 
+    select("Fishery", "Jan-Jun", "Jul", "Aug", "Sept", "Oct-Dec")
+  
+  stock_er <- stock_er |> 
+    mutate(
+      Total = rowSums(stock_er[, c("Jan-Jun", "Jul", "Aug", "Sept", "Oct-Dec")], na.rm=TRUE)
+    )
+  
+  stock_table <- stock_er |> 
+    gt() |> 
+    fmt_percent(columns = c(2:7),
+                decimals = 2) |> 
+    sub_missing(missing_text = '-') |> 
+    tab_style(
+      style = cell_text(weight = "bold"),
+      locations = cells_column_labels()
+    ) |> 
     add_gt_scrolling()
-    
-    return(stock_table)
+  
+  return(stock_table)
 }
 
 #bper(c(231,232))
@@ -959,7 +960,7 @@ tbl_summary <- function(stknm, msi_source, msi=FALSE){
            escapement = escp)
   
   if(msi){
-      summary <- static$marine_survival_data |> 
+    summary <- static$marine_survival_data |> 
       select(BY, {{msi_source}}) |> 
       filter({{msi_source}} != "NA") |> 
       mutate({{msi_source}} := as.numeric({{msi_source}})) |> 
@@ -995,31 +996,31 @@ tbl_summary <- function(stknm, msi_source, msi=FALSE){
     summary <- summary |> 
       gt() |> 
       fmt_number(columns = c(abundance, escapement),
-             decimals = 0, 
-             sep_mark = ",") |> 
+                 decimals = 0, 
+                 sep_mark = ",") |> 
       fmt_percent(columns = c(marine_survival, Canada, SUS),
-              decimals = 1) |> 
+                  decimals = 1) |> 
       tab_spanner(
         label = "ER",
         columns = c(Canada, SUS)
-        ) |> 
-    add_gt_scrolling()
+      ) |> 
+      add_gt_scrolling()
     return(summary)
   } else{
-  summary <- summary |> 
-    gt() |> 
-    fmt_number(columns = c(abundance, escapement),
-               decimals = 0,
-               sep_mark = ",") |> 
-    fmt_percent(columns = c(Canada, SUS),
-                decimals = 1) |> 
-    tab_spanner(
-      label = "ER",
-      columns = c(Canada, SUS)
-    ) |> 
-    add_gt_scrolling()
-  
-  return(summary)
+    summary <- summary |> 
+      gt() |> 
+      fmt_number(columns = c(abundance, escapement),
+                 decimals = 0,
+                 sep_mark = ",") |> 
+      fmt_percent(columns = c(Canada, SUS),
+                  decimals = 1) |> 
+      tab_spanner(
+        label = "ER",
+        columns = c(Canada, SUS)
+      ) |> 
+      add_gt_scrolling()
+    
+    return(summary)
   }
 }
 
@@ -1048,8 +1049,8 @@ tibble(
   `Southern BC` = c("[Interior Fraser](#interior-fraser)", 
                     "[Lower Fraser](#lower-fraser)", 
                     "[Strait of Georgia](#strait-of-georgia)",
-                       "",
-                       ""),
+                    "",
+                    ""),
   `US Inside` = c("[Skagit](#skagit)",
                   "[Stillaguamish](#stillaguamish)", 
                   "[Snohomish](#snohomish)", 
@@ -1781,7 +1782,7 @@ static$releases |>
   ) |> 
   mutate(
     MU_Name = if_else(str_detect(MU_Name, "Georgia"), "Strait of Georgia", MU_Name) ###|> 
-      #factor(levels = levels$mu_name)
+    #factor(levels = levels$mu_name)
   ) |> 
   select(MU_Name, brood_year, tag_code_or_release_id, CWT_Clipped, CWT_Unclipped, CWT_Unclipped_DIT) |> 
   pivot_longer(cols = -c(MU_Name, brood_year, tag_code_or_release_id), names_to = "tag_mark", values_to = "val") |> 
@@ -2236,9 +2237,9 @@ A COSEWIC assessment in 2002 (Irvine 2002) identified IFR status as endangered w
 
 In a review done in 2014, estimated abundance of IFR was below the Interior Fraser Recovery Team (IFCRT) lower benchmark of 23,000 spawners in five out of 10 years, and was below the upper rebuilding benchmark of 35,000 spawners in all 10 years (Decker et al. 2014).  For two decades (1992-2011), abundance was also below the lower and upper benchmarks in 50% and 100% of the years respectively. Based on the criteria proposed by the IFCRT (2006), this would indicate that recent abundances of Interior Fraser Coho Salmon may be insufficient to conserve genetic diversity and to provide a reasonable expectation of growth and recovery for some of the local populations within the {{< glossary MU >}}.  For returns prior to 1992, abundance exceeded the upper benchmark every year going back to 1975.
 
-A Wild Salmon Policy (WSP) assessment in 2013 of the five CUs comprising IFR was undertaken by Parken et al. (in draft). Through this exercise it was determined that two of the CUs, the North Thompson and Lower Thompson, were amber/green and the remaining three CUs were amber. WSP designation is determined to provide guidance to managers on the status of populations and their likelihood of a COSEWIC assessment. It is an expert judgment on the past and current state of escapements and does not speak to productivity of a stock.  In the case of IFR WSP determinations, the escapements under review were achieved under a low exploitation regime and productivity of the five populations within the IFR {{< glossary MU >}} have recently been determined to be low (Decker et al. 2014).
+A Wild Salmon Policy (WSP) assessment in 2013 of the five CUs comprising IFR was undertaken by Parken et al. (in draft). Through this exercise it was determined that two of the CUs, the North Thompson and Lower Thompson, were amber/green and the remaining three CUs were amber. {{< glossary WSP >}} designation is determined to provide guidance to managers on the status of populations and their likelihood of a COSEWIC assessment. It is an expert judgment on the past and current state of escapements and does not speak to productivity of a stock.  In the case of IFR {{< glossary WSP >}} determinations, the escapements under review were achieved under a low exploitation regime and productivity of the five populations within the IFR {{< glossary MU >}} have recently been determined to be low (Decker et al. 2014).
 
-It is important to note that designation under the WSP is different from that under the {{< glossary PST >}}. Within the {{< glossary PST >}} chapter 5, two of the five stated objectives of the Coho Salmon Management program, which guides the establishment of {{< glossary ER >}} ergo {{< glossary PST >}} status, are to a) constrain total {{< glossary ER >}} to maintain maximum sustainable harvest over the long term while maintaining genetic and ecological diversity of the component populations and b) improve long term prospects for healthy fisheries in both countries.
+It is important to note that designation under the {{< glossary WSP >}} is different from that under the {{< glossary PST >}}. Within the {{< glossary PST >}} chapter 5, two of the five stated objectives of the Coho Salmon Management program, which guides the establishment of {{< glossary ER >}} ergo {{< glossary PST >}} status, are to a) constrain total {{< glossary ER >}} to maintain maximum sustainable harvest over the long term while maintaining genetic and ecological diversity of the component populations and b) improve long term prospects for healthy fisheries in both countries.
 
 Though the WSP Status review determined that two of the five CUs comprising IFR {{< glossary MU >}} may have enough spawners on the ground to maintain genetic and ecological diversity, IFR are still in a low productivity regime. Allowable harvest that meets the criteria of the {{< glossary PST >}} is still low, therefore {{< glossary PST >}} status may be low while WSP status is green.
 
@@ -2257,30 +2258,102 @@ In 2018, work was completed to identify potential {{< glossary ER >}} [caps and 
 
 Management Reference Points were developed that incorporate biological reference points from a number of previous sources (@tbl-ifr-abund-breakpoints). The Interior Fraser Coho Recovery Team [@IFCRT_2006] determined that a lower benchmark should maintain a minimum 3-year geometric average abundance of 1,000 naturally spawning wild (or natural-origin) Coho Salmon in at least half of the subpopulations (11 subpopulations) within each of the five local populations (CUs; 1-3 subpopulations per {{< glossary CU >}}).  This was based on consideration of the effective population size necessary to conserve genetic diversity (Waples 2002).
 
-An empirical analysis conducted by the [@IFCRT_2006] and a more recent IFC Risk Assessment report [@Decker_et_al_2014] indicated that a total escapement of 20,000 25,000 (3-year geometric mean) would be required to meet the IFCRT above mentioned objective.  This benchmark exceeds 7,000 spawners (exactly half of the subpopulations) because the subpopulations differ in productivity and potential carrying capacity, and they would not all be expected to have the same status at any one time. The analysis was updated in 2018 [@Korman_et_al_2019] and produced a similar total escapement target, 28,000, to achieve the aforementioned objective but did not use a 3-year geometric mean in their analysis.
+An empirical analysis conducted by the [@IFCRT_2006] and a more recent IFC Risk Assessment report [@Decker_et_al_2014] indicated that a total escapement of 20,000 (3-year geometric mean) would be required to meet the IFCRT above mentioned objective.  This benchmark exceeds 7,000 spawners (exactly half of the subpopulations) because the subpopulations differ in productivity and potential carrying capacity, and they would not all be expected to have the same status at any one time. The analysis was updated in 2018 [@Korman_et_al_2019] and produced a similar total escapement target, 28,000, to achieve the aforementioned objective but did not use a 3-year geometric mean in their analysis.
 
-By comparison, the IFCRT’s lower benchmark is about half of the benchmark of 35,000 50,000 individuals proposed by Irvine et al. (2001), This benchmark was derived from the reference points of 4.3 and 6.1 females per km, assuming a 1:1 sex ratio, and converting the female density values to escapements using the IFCRT’s estimate of 4,071 linear kms of suitable spawning habitat for the Coho Salmon in the interior Fraser River watershed [@IFCRT_2006].  
+By comparison, the IFCRT’s lower benchmark is about half of the benchmark of 35,000 individuals proposed by Irvine et al. (2001), This benchmark was derived from the reference points of 4.3 and 6.1 females per km, assuming a 1:1 sex ratio, and converting the female density values to escapements using the IFCRT’s estimate of 4,071 linear kms of suitable spawning habitat for the Coho Salmon in the interior Fraser River watershed [@IFCRT_2006].  
 
-An upper benchmark of 1,000 naturally spawning wild (or natural-origin) Coho Salmon in every subpopulation was proposed by the @IFCRT_2006 as a rebuilding objective, which was indicated as having a high probability of success around 40,000 spawners (3-year geometric mean). A logistic regression performed by @Decker_et_al_2014 predicted that the probability of meeting the long term objective increased from near 0% at an aggregate escapement of 18,000, to 50% at 31,000, to 98% at 40,000. The logistic regression analysis was preformed again in 2018 [@Korman_et_al_2019] but reported that the 95% probability of meeting the long-term objective was 91,000 spawners, but they did not analyze the data using 3-year geometric means.
+An upper benchmark of 1,000 naturally spawning wild (or natural-origin) Coho Salmon in every subpopulation was proposed by the @IFCRT_2006 as a rebuilding objective, which was indicated as having a high probability of success around 40,000 spawners (3-year geometric mean). In the most recent Interior Fraser Coho stock assessment **(DFO, 2025)** a similar value of 41,100 natural origin spawners was used as an MU abundance associated with a 90% probability of all five {{< glossary CUs >}} meeting or exceeding WSP Amber biological status. 
+
+{{< glossary WSP >}} biological status is assigned using the Rapid Status Approach **(Pestal et al. 2023)**. Biological conservation status is assigned by assessing one generation geometric mean natural origin spawner returns against abundance based biological benchmarks, which are summarized in table @tbl-ifr-abund-benchmarks. CU-specific lower biological benchmarks are represented by $S_{gen}$ and the upper biological benchmarks are represented by 80% $S_{MSY}$. When the CU-specific lower and upper benchmarks are less than 1,500 and 10,000 natural origin spawners, respectively, these values are used in place of the CU’s $S_{gen}$ and $S_{MSY}$ values. 
+
+```{r}
+#| label: tbl-ifr-abund-benchmarks
+#| tbl-cap: Interior Fraser Coho conservation unit (CU) specific abundance-based benchmarks and reference points with credible intervals (DFO, 2025)
+
+tab <- read_excel(here("data/IFR-stock-assessment-benchmarks.xlsx"),
+                  sheet = "Sheet1") |> 
+  mutate(Benchmark = gsub(" ", "\\\\;", Benchmark))
+
+# 
+# tab |> 
+#   gt() |> 
+#   fmt_markdown() |> 
+#   fmt_number()
+
+df_formatted <- tab  |> 
+  group_by(CU) |> 
+  mutate(CU_display = if_else(row_number() == 1, as.character(CU), "")) |> 
+  ungroup() |> 
+  select(-CU) |> 
+  rename(CU = CU_display) |> 
+  relocate(CU)
+
+df_formatted |> 
+  gt() |> 
+  tab_style(
+    style = cell_borders(
+      sides = "top",
+      color = "white",
+      weight = px(2)
+    ),
+    locations = cells_body(
+      columns = CU,
+      rows = CU == ""
+    )
+  ) |> 
+  fmt_markdown() |> 
+  fmt_number()
+
+```
+
 
 The most recent {{< glossary IFR >}} Coho Wild Salmon Policy (WSP) Status assessment (Parken et al., unpublished) used spawner recruit analysis to determine 80% SMSY (17,146) and Sgen (8,654) as proposed delineations between green/amber and amber/red zones. The assessment used an approach where WSP status was determined through an integration of a number of sources of information including abundance over time and productivity. The stock recruit information was generally thought to be of low value in the determination of status as the error bounds indicated a high degree of uncertainty.
 
-The work in 2018 to identify potential [Management Reference Points](https://www.pac.dfo-mpo.gc.ca/consultation/smon/pst-coho-tsp/index-eng.html) (DFO 2018, [@Korman_et_al_2019]) included spawner escapement but also a CWT smolt-to-adult (or “marine”) survival index (last column of Table below). It was apparent that the decrease in recruitment that occurred in the early 1990s coincided with a decrease in survival, based on the CWT survival index. The original proposed reference points were solely based on survival, but after engagement workshops, both survival and abundance metrics were included in the reference points. The Low status threshold is triggered if the survival index is less than or equal to 3%. A moderate status is assigned when at least three consecutive years of survival are greater than 3% and there are three consecutive years where either half of the subpopulations in each {{< glossary CU >}} have greater than 1,000 spawners or the moderate aggregate {{< glossary MU >}} escapement objective is met (e.g. 27,000 spawners). An abundant status is assigned when at least three consecutive years of survival are greater than 6% and there are three consecutive years where either half of the subpopulations in each {{< glossary CU >}} have greater than 1,000 spawners or the abundant aggregate {{< glossary MU >}} escapement objective is met (e.g., 40,000 spawners).
+The work in 2018 to identify potential [Management Reference Points](https://www.pac.dfo-mpo.gc.ca/consultation/smon/pst-coho-tsp/index-eng.html) (DFO 2018, [@Korman_et_al_2019]) included spawner escapement but also a CWT smolt-to-adult (or “marine”) survival index (last column of Table @tbl-ifr-abund-breakpoints below). It was apparent that the decrease in recruitment that occurred in the early 1990s coincided with a decrease in survival, based on the CWT survival index. The original proposed reference points were solely based on survival, but after engagement workshops, both survival and abundance metrics were included in the reference points. The Low status threshold is triggered if the survival index is less than or equal to 3%. A moderate status is assigned when at least three consecutive years of survival are greater than 3% and there are three consecutive years where either half of the subpopulations in each {{< glossary CU >}} have greater than 1,000 spawners or the moderate aggregate {{< glossary MU >}} escapement objective is met (e.g. 27,000 spawners). An abundant status is assigned when at least three consecutive years of survival are greater than 6% and there are three consecutive years where either half of the subpopulations in each {{< glossary CU >}} have greater than 1,000 spawners or the abundant aggregate {{< glossary MU >}} escapement objective is met (e.g., 40,000 spawners).
 
-| **Benchmark/Status**  | **IFCRT**  |**Irvine et al. 2001** | **Decker et al. 2014** | **WSP Benchmarks** | **2018 Management Reference Points** |
-|:-------:|:--------------------------|:--------------------|:--------------------------|:-------------------------|:------------------------------|
-| Upper/Abundant |	1,000 (3-year geomean) in each subpop |	NA | 50% at 31,000 3-year geomean, to 98% at 40,000 3-year geomean | 80% of SMSY 17,146 | Three consecutive years of survival > 0.06 & IFCRT upper benchmark OR upper Aggregate MU objective | 
-| Lower/Moderate |	1,000 (3-year geomean) in half the sub-populations within each CU (20-25K 3-year geomean)	|	35K to 50K (4.3 to 6.0 females/km) | 20K 3-year geomean | S~gen~ = 8,654 *similar to the lowest IFR abundance observed | Three consecutive years of survival > 0.03 & IFCRT lower benchmark OR lower Aggregate MU objective|
+```{r}
+#| label: tbl-ifr-abund-breakpoints
+#| tbl-cap: Previous proposed biological reference points and current Management Reference Point (circa 2018).
 
-: Previous proposed biological reference points and current Management Reference Point (circa 2018). {#tbl-ifr-abund-breakpoints}
+tab <- tibble(benchmark = c("Upper/Abundant", "Lower/Moderate"),
+              ifcrt = c("1,000 (3-year geomean) in each subpop",
+                        "1,000 (3-year geomean) in half the sub-populations within each CU (20-25K 3-year geomean)"), 
+              # irvine = c(NA, 
+              # "35K to 50K (4.3 to 6.0 females/km)"), 
+              # decker = c("50% at 31,000 3-year geomean, to 98% at 40,000 3-year geomean",
+              # "20K 3-year geomean"), 
+              wsp = c("See @tbl-ifr-abund-benchmarks for CU benchmarks",
+                      "$$S_{gen} = 8,654$$ *similar to the lowest IFR abundance observed"), 
+              mrp = c("Three consecutive years of survival > 0.06 & IFCRT upper benchmark OR upper Aggregate MU objective",
+                      "Three consecutive years of survival > 0.03 & IFCRT lower benchmark OR lower Aggregate MU objective"
+              ),
+              aggregate_frp = c("has not been determined", 
+                                "24,900-41,000 spawners equals 66% and 90% probability, respectively, of all CUs exceeding $$S_{gen}$$")
+) 
+
+tab |> 
+  gt() |> 
+   cols_label(
+    benchmark = md("**Benchmark/Status**"),
+    ifcrt = md("**IFCRT**"),
+    # irvine = md("**Irvine et al. 2001**"),
+    # decker = md("**Decker et al. 2015**"),
+    wsp = md("**WSP Benchmarks**"),
+    mrp = md("**2018 Management Reference Points**"),
+    aggregate_frp = md("**Aggregate FRPs**")
+  ) |>
+  fmt_markdown()
+
+```
+
 
 ##### Stock Assessment
 ###### Indicator Stocks
 (Add more summary stats here)
 
-Primarily, coded-wire-tagged smolt releases from Spius hatchery and Chilliwack hatchery, into the Eagle River and Salmon River in the South Thompson {{< glossary CU >}} and the Coldwater River in the Lower Thompson {{< glossary CU >}}, and subsequent high precision escapement exercises (primarily fence counts), provide survival rates and act as the indicator stocks for the {{< glossary IFR >}} {{< glossary MU >}}. Catch of tagged Coho Salmon is recorded by the Mark-Recovery Program. Adipose-fin-clipped and coded-wire-tagged smolt releases into the Eagle River average 47,000; releases into the Coldwater River average 54,000; and releases into the Salmon river average 29,000.
+Coded-wire-tagged smolt releases from Spius creek and Chilliwack hatchery, into the Eagle River and Salmon River in the South Thompson {{< glossary CU >}} and into the Coldwater River in the Lower Thompson {{< glossary CU >}}, and subsequent high precision escapement assessments (primarily fence counts), provide survival rates and act as the indicator stocks for the {{< glossary IFR >}} {{< glossary MU >}}. Catch of tagged Coho Salmon is recorded by the Mark-Recovery Program. Adipose-fin-clipped and coded-wire-tagged smolt releases into the Eagle River average 44,000 (BY 2009 to 2020); releases into the Coldwater River average 45,000, prior to additional capacity becoming available at the Chilliwack hatchery and 166,000 average releases since (brood year 2016 to 2020); and releases into the Salmon River were opportunistic until brood year 2016 and then regularized starting in brood year 2017 with an average release  29,000 25,000 (brood year 2017 to 2020).  
 
-From 1997 to 2002 DIT releases occurred in the Coldwater River (Obrien, in draft)(@tbl-ifr-dits) and attempts at wild marking in the Eagle River from 2000 to 2009 were unsuccessful due to low capture rates.
+From 1997 to 2002, DIT releases occurred in the Coldwater River (Obrien, in draft)(@tbl-ifr-dits) and attempts at wild marking in the Eagle River from 2000 to 2009 were unsuccessful due to low capture rates resulting from challenging flow conditions and variable life history traits (unknown proportions outmigrating at various times of year). 
 
 ```{r}
 #| label: tbl-ifr-dits
@@ -2289,7 +2362,7 @@ From 1997 to 2002 DIT releases occurred in the Coldwater River (Obrien, in draft
 gt(static$ifr_dits)
 ```
 
-Historically, coded-wire-tagged smolts were also released into Dunn, Louis, Lemieux, and Spius creeks and the Deadman River and were used to derive smolt-to-adult survival or were used in the base period of FRAM.
+Historically, coded-wire-tagged smolts were also released into Dunn, Louis, Lemieux, and Spius creeks and the Deadman River and were used to derive smolt-to-adult survival or were used in the base period of FRAM. Figure @fig-wild-stock-tagging-ifr summarizes CWT hatchery smolt releases.
 
 ```{r fig.height=4, fig.width=6}
 #| label: fig-wild-stock-tagging-ifr
@@ -2331,9 +2404,10 @@ In 1999, forecasts for southern BC Coho Salmon included {{< glossary IFR >}} Coh
 
 Originally, @Holtby_et_al_1999 concluded that given the data the 3-year average Naïve model (3YRA) was the preferred approach to forecast relative numbers of North and South Thompson Coho Salmon. The model uses the average abundance of the last three return years to forecast the abundance of the next year. As the quality and time-series of information improved in the Lower Thompson River systems those data were included in the annual abundance forecast. The performance of the time-series model is influenced by shifts in the parameters which influence abundance, but the parameters are not dealt with explicitly in the approach. For example, in periods of apparently stable marine survival and low exploitation the 3YRA model is likely adequate to confirm the status of the {{< glossary MU >}}; however, annual shifts in productivity (marine or freshwater) or errors in the {{< glossary ER >}} estimates can result in poor forecast performance.
 
-In more recent forecasts, the forecast model has been chosen by reviewing retrospective performance metrics. Retrospective performance metrics such as mean raw error, mean absolute error, mean percent error, mean absolute percent error, mean absolute scaled error, root mean square error, and the correlation coefficient between forecasts and observed series were calculated to rank the model performance and determine which model performs the best across the time series. For the top performing models, model diagnostics were examined in order to determine if the models reasonably predicted trends in abundance and to ensure that models did not violate assumptions. Both time series models such as the Naïve models (1, 3, and 5 years), ARIMA, and Exponential Smoothing were applied with various data transformations, and a linearized Ricker model that incorporates stock-recruit dynamics are ranked to determine which is used for the forecast each year. The 3YRA has still ranked the highest in most years.
+In more recent forecasts, the forecast model has been chosen by reviewing retrospective performance metrics. Retrospective performance metrics such as mean raw error, mean absolute error, mean percent error, mean absolute percent error, mean absolute scaled error, root mean square error, and the correlation coefficient between forecasts and observed series were calculated to rank the model performance and determine which model performs the best across the time series. For the top performing models, model diagnostics were examined in order to determine if the models reasonably predicted trends in abundance and to ensure that models did not violate assumptions. Both time series models such as the Naïve models (1, 3, and 5 years), ARIMA, and Exponential Smoothing were applied with various data transformations, and a linearized Ricker model that incorporates stock-recruit dynamics are ranked to determine which is used for the forecast each year. The ARIMA model was highest ranking for 2022 and 2023 forecasts.
 
 ###### Escapement Monitoring
+
 Interior Fraser River Coho Salmon spawner assessments have changed over the years based on management priorities and available resources, both in terms of the number of systems surveyed and the extent of coverage. Though {{< glossary IFR >}} spawner estimates exist for a few systems prior to 1975 and the accuracy and precision of those estimates are not understood. Between 1975 and 1997, more effort was expended to estimate {{< glossary IFR >}} escapement in the North and South Thompson CUs. Survey coverage was extended in 1984 to include several key tributaries of the Lower Thompson {{< glossary CU >}}, as well as the Seton and Bridge tributaries of the Middle Fraser {{< glossary CU >}}. Surveys were mainly conducted by Fisheries Officers and hatchery staff; however, the repeatability, and accuracy of these estimates remain poorly understood.
 
 Beginning in 1998, coverage within all CUs increased with respect to both the number of systems assessed and the extent of coverage within previously assessed systems. Coverage was increased to include the Nahatlatch River (Fraser Canyon {{< glossary CU >}}) and Quesnel watershed in the Middle Fraser {{< glossary CU >}}; and in 1999 assessment began in the Chilko watershed (Middle Fraser {{< glossary CU >}}). In addition, more robust methods were employed, including sonar and fence counts, Area-Under-the-Curve (AUC) methodology, mark-recapture, and the calculation of survey life for AUC and expansion factors for peak count estimates based on paired assessments using high precision methods and visual surveys.
@@ -2343,15 +2417,17 @@ Escapement estimates for 1975 to 1997 were revised during the IFCRT recovery tea
 ![Escapement of Interior Fraser River Coho by quality of assessment type.](images/IFR_Escapement.png){#fig-IFREsc}
 
 ###### Fry and Smolt Monitoring
+
 There have been no consistent or basin-wide assessments of fry or smolt densities within the {{< glossary MU >}}.
 
 Smolt-to-adult survival rates of Coho Salmon from the indicator stocks are shown in (@fig-IFR_SAR). Marked Coho Salmon (adipose-fin-clipped) have been released with {{< glossary CWTs >}} since 1983 to support fisheries monitoring and creation of a survival index. Although all of these releases may be used for calculating exploitation, some releases included experimental release sizes or timings that may affect survival. It has been shown that there is strong size-selective mortality in the early marine period ([@Beamish_&_Mahnken_2001]; [@Beamish_et_al_2004], etc); therefore, releases need to be fairly uniform to support a long-term survival index. The survival of the Inch Creek {{< glossary CWT >}} index is thus calculated from specific tag codes releases that do not fall out of a normal range of size at release. The index calculation is simply the sum of adult (age 3+) escapement and catch of all {{< glossary CWT >}} tag codes from a given brood year divided by the total release of that given brood year.
 
-For the hatchery indicator stocks the smolt-to-adult survival rate showed a directed downward trend during the early 1990s (brood years) (@fig-IFR_SAR). Data from brood years 1985-1999 shows the smolt-to-adult survival rate averaged 3.7% during this time with a high of 7.2% in 1989. More recently {{< glossary IFR >}} Coho Salmon has had an average survival rate of 1.0% between brood years 2000-2017.
+For the hatchery indicator stocks the smolt-to-adult survival rate showed a directed downward trend during the early 1990s (@fig-IFR_SAR). Data from brood years 1985-1999 shows the smolt-to-adult survival rate averaged 3.7% during this time with a high of 7.2% in 1989. More recently {{< glossary IFR >}} Coho Salmon has had an average survival rate of 1.2% between brood year 2000-2020 with an average survival rate of 2.1% for the most recent two generations (brood year 2015-2020).
 
 ![Smolt-to-adult survival rate index from coded-wire-tagged ({{< glossary CWT >}}) Interior Fraser River hatchery Coho smolt releases by brood year. Note that insufficient adipose-fin-clipped {{< glossary CWT >}} smolt releases existed prior 1985 and from brood year 1987 to calculate survival; infilled values are the average of the survival up to and including brood year 1991.](images/IFR_SAR.png){#fig-IFR_SAR}
 
 ###### Fishery Monitoring
+
 A fundamental requirement of abundance-based Coho Salmon management under the {{< glossary PST >}} is that all fishery impacts on individual {{< glossary MUs >}} be annually monitored with respect to both number of fish caught and {{< glossary CWTs >}}. This requires basic reporting of total impacts by fishery and the capacity to estimate each fishery’s {{< glossary MU >}}-specific impacts. Total fishing mortalities for each {{< glossary MU >}} must be estimated to enable managers the ability to evaluate the annual {{< glossary ER >}} relative to the {{< glossary PST >}}-prescribed impact limits.
 
 Assessments of total fishing mortalities for each {{< glossary MU >}} must include both directed and incidentally-landed catch as well as estimates of non-landed mortalities. These estimates may be obtained through monitoring programs or, in some cases, generated through the use of algorithms built into the Fisheries Regulation Assessment Model (FRAM). Monitoring programs may involve test fisheries or data collected directly from fishers (e.g., through creel survey interviews, and other fisher-reported techniques, such as log books or fish-tickets). Estimation of non-landed fishing mortality requires annual estimates of encounter rates by fishery and gear.
@@ -2361,15 +2437,16 @@ Management-Unit-specific impacts are generally evaluated using the coast-wide {{
 Post-season {{< glossary ER >}} estimates are also generated using the Post-Season FRAM Model. Post-season estimates of catch and escapement are entered into the updated FRAM model with the same fishery regulation and effort package used for preseason modeling to generate post-season {{< glossary ER >}} estimates.
 
 ##### Enhancement
+
 Enhancement in the {{< glossary IFR >}} {{< glossary MU >}} was initiated in the early 1980s.  There have been up to 13 enhancement projects producing Coho Salmon as well as habitat restoration ongoing at various sites. Most of the projects are in the Thompson River drainage, with only minor enhancement occurring in other areas of this {{< glossary MU >}}. There are also numerous community hatcheries that support Indigenous and community activities through the Community Economic Development and Public Involvement Program.
 
 Production peaked during the mid to late 1980s, when different enhancement strategies were being tested for Coho Salmon in the Eagle, Salmon, and Coldwater systems. The objectives were to evaluate the different strategies and to assess the impact of enhanced production on natural stocks ([@Perry_1995], [@Pitre_&_Cross_1993]). Supplementation was in the form of spring fed fry, fall fry, and yearling smolt releases. Fish were marked by removing the adipose fin and inserting a coded-wire tag. The success of the enhanced component was measured using survival rates calculated from tag data, while the success of the naturally spawning component was measured by returns of natural spawners.
 
 More recent Coho Salmon enhancement activity has occurred primarily out of Spius Creek hatchery with support from Chilliwack, Deadman, Mid-Shuswap (Shuswap Falls) and Dunn Creek hatcheries as production capacity requires. The systems that support the {{< glossary CWT >}} survival index continue to be Eagle, Salmon, and Coldwater rivers. Each of these systems use a combination of trap boxes and high precision sonar to estimate both escapement and clip rate, which is then used to estimate {{< glossary CWT >}} escapement.
 
-The following hatcheries produce salmon to support {{< glossary CDFO >}} and {{< glossary PST >}} objectives and are located within the Fraser River watershed: 1) Chehalis River Hatchery, located on a tributary of the Harrison River, which is a major tributary of the lower Fraser River; 2) Chilliwack River Hatchery, located on a major tributary of the lower Fraser River; 3) Inch Creek Hatchery, located on a tributary of a large slough connected to the lower Fraser River; 4) Spius Creek Hatchery, located on a tributary of the Nicola that drains into the Thompson River; and 5) Shuswap Falls (Middle Shuswap River) Hatchery. Both the Chilliwack River Hatchery and Spius Creek Hatchery rear Coho Salmon for the {{< glossary CWT >}} indicator stocks for the Interior Fraser River {{< glossary MU >}}. 
+Currently, the Spius Creek Hatchery and Chilliwack River Hatchery rear Coho Salmon for the Interior Fraser River MU CWT indicator stocks, to support CDFO and PST Interior Fraser Coho assessment objectives. A number of community-run hatcheries (through the Community Economic Development and Public Involvement Programs) support small scale supplementation activities. 
 
-The average total hatchery release within the {{< glossary IFR >}} basin was 737,000 fish annually between 1983-2018. Fry releases greatly decreased starting in 1990, from a high of 2,226,000 Coho Salmon fry released for brood year 1986 to a low of 90,500 fry from brood year 1996 (@fig-hatch-stock-releases-ifr). After 1996, the total hatchery fry releases have averaged 173,000, primarily in unmarked fry released from community hatcheries. The average hatchery smolt releases within the {{< glossary IFR >}} basin is 227,000 smolts annually between 1983-2018; with relatively smaller fluctuations between total releases. 
+The average total hatchery release within the {{< glossary IFR >}} basin was 1,400,000 fish annually between 1983-2020 (@fig-hatch-stock-releases-ifr). Fry releases greatly decreased starting in 1990, from a high of 2,200,000 Coho Salmon fry released for brood year 1986 to a low of 31,000 fry for brood year 2016. After 1996, the total hatchery fry releases have averaged 163,000, primarily in unmarked fry released from community hatcheries. The average hatchery smolt releases within the {{< glossary IFR >}} basin is 231,000 smolts annually between 1983-2020; with relatively smaller fluctuations between total releases. 
 
 Since the late 1990s, enhancement for {{< glossary IFR >}} Coho Salmon has taken one of three forms: 1) conservation enhancement, used to protect demes that are at risk of extirpation; 2) assessment enhancement, where releases of {{< glossary CWT >}} marked fish provide information for assessment of survival and minimal encounter rates and ocean distribution; and 3) rebuilding enhancement, where hatchery supplementation is used to increase escapements [@IFCRT_2006].  Enhancement activities are described in more detail by @Irvine_et_al_1999b, @Irvine_et_al_2000 and the @IFCRT_2006. Coded wire tagged and total releases are summarized in @fig-hatch-stock-releases-ifr. 
 
@@ -2391,7 +2468,8 @@ With the advent of technology to automatically remove adipose fins and/or insert
 
 #### Management Performance 
 ##### Forecast Evaluation
-(add more description here)
+
+Forecasts are evaluated by assessing pre-season abundance forecasts compared to pre-fishery abundance estimates generated by backwards FRAM. **From Sara: Someone else with more expertise should write this. Mike O?  **
 
 ```{r}
 #| tbl-cap: Return year observed and forecasted Interior Fraser River Coho Salmon MU pre-fishery abundances from 1998 to 2019. Pre-fishery abundance is estimated by backwards FRAM.
@@ -2416,9 +2494,10 @@ plot_pre_v_post("Interior Fraser")
 ```
 
 ##### Fishery Mortality and Escapement
+
 The base period for the FRAM defines the temporal and spatial distributions of salmon fishing mortalities from each {{< glossary MU >}}.  The current FRAM base period for Coho Salmon includes catch years 1986-1992.  During this period, fishing effort, tagging, and fishery sampling of Coho Salmon was high, allowing relatively fine-scale discrimination between salmon distributions. The marine distribution data of marked Coho Salmon populations in Canada was obtained through the Mark Recovery Program (MRP), operated by {{< glossary CDFO >}}. Recoveries of coded-wire tagged and adipose-fin-clipped (AFC) marked Coho Salmon from various fisheries provide information on fishery {{< glossary ER >}} and apparent marine distributions.
 
-During the base period, Coho Salmon production from the {{< glossary MU >}} contributed to US and Canadian marine sport and commercial fisheries in southern BC, the northern Washington coast, Strait of Juan de Fuca, and inner Puget Sound (@fig-IFR_ER1). In general, most were recovered from commercial troll and sport fisheries operating during the summer months off the west coast of Vancouver Island and in the Strait of Georgia. The proportion of the catch of Coho Salmon from fisheries within the Strait of Georgia (inside) compared to fisheries operating off the west coast of Vancouver Island (outside) has varied considerably among years (@fig-IFR_ER2). These variations have been correlated with changes in ocean salinity (Kadowaki 1997). During the 1970s and 1980s, large numbers of Coho Salmon remained inside the Strait of Georgia each year and supported large sport and troll fisheries [@Simpson_et_al_1997]. However, in some recent years, most Coho Salmon leave the Strait of Georgia in the fall of their first year, and have become vulnerable to fisheries operating in outside areas [@Irvine_et_al_1999a]. There are relatively few catch distribution data available for {{< glossary IFR >}} Coho Salmon. However, those that are available support the hypothesis that {{< glossary IFR >}} Coho Salmon have similar distributions to many other southern BC Coho Salmon populations. @Beamish_et_al_1999 suggest that these distribution variations were caused by changing ocean conditions driven by climate. Major fishery closures commencing in 1998 have made it more difficult to infer inside-outside distribution changes. The base period for FRAM contains data from only one outside year, 1991.
+During the base period, Coho Salmon production from the {{< glossary MU >}} contributed to US and Canadian marine sport and commercial fisheries in southern BC, the northern Washington coast, Strait of Juan de Fuca, and inner Puget Sound (@fig-IFR_ER1). In general, most were recovered from commercial troll and sport fisheries operating during the summer months off the west coast of Vancouver Island and in the Strait of Georgia. The proportion of the catch of Coho Salmon from fisheries within the Strait of Georgia (inside) compared to fisheries operating off the west coast of Vancouver Island (outside) has varied considerably among years (@fig-IFR_ER2). These variations have been correlated with changes in ocean salinity (Kadowaki 1997). During the 1970s and 1980s, large numbers of Coho Salmon remained inside the Strait of Georgia each year and supported large sport and troll fisheries [@Simpson_et_al_1997]. However, in some recent years, most Coho Salmon left the Strait of Georgia in the fall and winter of their first year of marine residence, and became vulnerable to fisheries operating in outside areas [@Irvine_et_al_1999a]. There are relatively few catch distribution data available for {{< glossary IFR >}} Coho Salmon. However, those that are available support the hypothesis that {{< glossary IFR >}} Coho Salmon have similar distributions to many other southern BC Coho Salmon populations. @Beamish_et_al_1999 suggest that these distribution variations were caused by changing ocean conditions driven by climate. Major fishery closures commencing in 1998 have made it more difficult to infer inside-outside distribution changes. The base period for FRAM contains data from only one outside year, 1991.
 
 ```{r}
 #| tbl-cap: Interior Fraser MU average annual (total) and time period specific ERs used in the current FRAM base period.
@@ -2428,7 +2507,7 @@ bper(c(231,232))
 
 ```
 
-Total {{< glossary ERs >}} averaged 69% during 1986-1997 and then reductions in harvest starting in 1998 to protect {{< glossary IFR >}} Coho Salmon resulted in a period of low {{< glossary ERs >}} (14.7% average since it has been measured starting in 2004) [@tbl-summary-ifr].
+Total {{< glossary ERs >}} averaged 69% during 1986-1997 and then reductions in harvest starting in 1998 to protect {{< glossary IFR >}} Coho Salmon resulted in a period of low {{< glossary ERs >}} (14.7% average since it has been measured starting in 2004; [@tbl-summary-ifr]). 
 
 ![Average exploitation rates by fishing area of Interior Fraser River Coho Salmon. The stacked bars represent the rates estimated by gear type during the FRAM base period, catch years 1986–1992.](images/IFR_ER1.png){#fig-IFR_ER1}
 
@@ -2442,7 +2521,7 @@ plot_ns_msf("Interior Fraser")
 
 ```
 
-Over the period of record (1985-2018), the 3-year geometric mean escapement for Interior Fraser Coho Salmon peaked in the mid-1980s at over 70,000 fish, and declined to a running average of less than 18,000 individuals in the late 1990s and for the 2006 to 2008 period (@fig-IFREsc). Similar trends are observed in total abundance (pre-fishery recruitment), which declined from over 200,000 in the late 1970s and late 1980s to less than 30,000 in between 1990-2020. Survival of hatchery releases has also declined from a maximum of 7.2% to less than 1% in return year 2003 and an average of 1.0% between brood years 2003-2020 (@fig-IFR_SAR). 
+Over the period of record (1985-2023), the 3-year geometric mean escapement for Interior Fraser Coho Salmon peaked in the late-1980s at over 80,000 fish, and declined to an average of less than 20,000 individuals in the late 1990s and for the 2005 to 2007 period (@fig-IFREsc). Similar trends are observed in total abundance (pre-fishery recruitment), which declined from over 300,000 in the early 1990s to 11,00 in 2006, the lowest on record. The most recent 3-year geometric mean total abundance is 87,000 (return years 2021-2023). 
 
 Observed escapement for each of the five {{< glossary IFR >}} Coho Salmon populations show similar trends as those in the aggregate total (@fig-IFREsc). The populations differ in abundance; however, the North Thompson population has generally been the largest, and the Upper Fraser and Lower Thompson populations are typically much smaller. It should be noted that the escapement estimates to the upper Middle Fraser have low or un-estimated precision.
 
@@ -2459,12 +2538,13 @@ tbl_summary("Interior Fraser")
 #| fig-cap: Total exploitation rate (A) and escapement (B) of Interior Fraser MU by country, catch years 1986 through 2022. Dashed line indicates escapement goal for the Interior Fraser MU (**Need esc goal for ifr** 30,000 individuals).   
 #| fig-width: 8
 #| fig-height: 7
- 
+
 plot_er_and_esc("Interior Fraser")
 
 ```
 
 ##### Historical Overview of Status of Management Unit
+
 Since catch year 2004, the pre- and post-season status of the {{< glossary IFR >}} {{< glossary MU >}} has been Low. Since the development of reference points that include survival, the {{< glossary MU >}} has persisted at a “low” status.
 
 ```{r f_abund_bar_ifr}
@@ -2707,7 +2787,6 @@ Creel surveys are the primary tool used to estimate catch in recreational fisher
 
 ##### Enhancement
 
-These paragraphs don't match up entirely (update paragraph #2 and delete first one):
 The following hatcheries produce salmon to support {{< glossary CDFO >}} and {{< glossary PST >}} objectives and are located within the lower Fraser River watershed: 1) Chehalis River Hatchery, located on a tributary of the Harrison River, which is a major tributary of the lower Fraser River; 2) Chilliwack River Hatchery, located on a major tributary of the lower Fraser River; and 3) Inch Creek Hatchery, located on a tributary of a large slough connected to the lower Fraser River. The Inch Creek Hatchery rears Coho Salmon for the {{< glossary CWT >}} indicator stock for the {{< glossary LWFR >}} Coho Salmon {{< glossary MU >}}. Numerous community hatcheries support Indigenous and community activities through the Community Economic Development and Public Involvement Program.
 
 The following federal hatcheries are located within the lower Fraser watershed: 1) Chehalis Hatchery located on the Chehalis River, 2.8 km upstream of the confluence of Harrison River; 2) Chilliwack Hatchery located on the Chilliwack River approximately 40 km upstream of the confluence of the Fraser River; and 3) Inch Creek Hatchery located on Norrish Creek 1.6 km upstream of the confluence of Nicomen/Dewdney Slough. Several additional community hatcheries and school programs operate within the {{< glossary MU >}} and release {{< glossary LWFR >}} Coho Salmon. {{< glossary LWFR >}} Coho Salmon releases from the entire {{< glossary MU >}} during the 1980 to 2016 brood years are displayed in (@fig-LWFR_Enhancement). The average number of smolts released during this period was approximately 2.1 million per year. The average number of fry released was approximately 183,000 per year. The majority of the smolts are released from the Inch, Chilliwack, and Chehalis federal hatcheries (averaging approximately 180,000, 1.2 million, and 774,000, respectively). The Alouette and Kanaka hatcheries also release a significant number of Coho Salmon (approximately 42,000 each).
@@ -2768,7 +2847,7 @@ plot_ns_msf("Lower Fraser")
 Total {{< glossary ER >}}, Escapement, and abundance for the {{< glossary LWFR >}} {{< glossary MU >}} has been modeled based on the {{< glossary CWT >}} survival scalar in Backwards FRAM for the return years 2004-2022 (@tbl-summary-lwfr). {{< glossary MU >}} abundance and escapement are modeled values that are not direct estimates as abundance data for the {{< glossary LWFR >}} Coho Salmon is limited. Overall, the estimated abundance has averaged 25,800 from 2010-2019 return years. In the more recent years, there has been an increase in abundance, particularly from 2016-2019. During this period, {{< glossary MU >}} run size averaged 34,245, which is almost 10,000 more fish than the long-term average. Prior to 2016, abundance was steadily declining. In 2014, Coho Salmon {{< glossary ERs >}} increased substantially due to high bycatch in Sockeye-directed fisheries. In 2015 a similar situation occurred, however, in Pink fisheries. The lower abundance estimate produced in 2017 could be related to the reduced escapement for the 2014 and 2015 brood years due to the reasons outlined above. Additional environmental factors other than fisheries affect {{< glossary LWFR >}} Coho Salmon abundance during this time. Specifically, a large “Blob” of warm waters began to form during the winter of 2013-2014, peaking in 2015. The Blob created an unprecedented shift in the distribution of marine animals that impacted predation and competition ultimately, producing areas of low productivity affecting several fisheries (Fisheries and Oceans Canada 2019). Both the Blob and increased Coho Salmon impacts in Sockeye and Pink fisheries could have led to the decrease in {{< glossary LWFR >}} Coho Salmon abundance for the 2014 – 2017 return years. Although good-quality escapement data is limited for the {{< glossary MU >}}, escapement to streams surveyed by foot or through swims have generally been low in recent years.
 
 ToDo: ADD TABLE sheet "LWFR_ER" . 
-Post-season summary of total {{< glossary ERs >}}, abundance, and escapement estimates for return years 1986-2019. Data represents cohort abundances of ocean age 3 Coho Salmon. Values are modelled FRAM outputs and not direct estimates. Escapement values are of terminal run size occurring after lower Fraser in river fisheries.  {{< glossary ERs >}} for catch years 1986 to 1997 were estimated using {{< glossary CWT >}} analysis with the Mixed-Stock Model cohort reconstruction. {{< glossary ERs >}} for catch years 2004 to 2019 were estimated using the post-season FRAM assessment technique. Cohort reconstructions have not been completed for the Canadian {{< glossary MUs >}} between 1998 and 2003.
+Post-season summary of total {{< glossary ERs >}}, abundance, and escapement estimates for return years 1986-2019. Data represents cohort abundances of ocean age 3 Coho Salmon. Values are modeled FRAM outputs and not direct estimates. Escapement values are of terminal run size occurring after lower Fraser in river fisheries.  {{< glossary ERs >}} for catch years 1986 to 1997 were estimated using {{< glossary CWT >}} analysis with the Mixed-Stock Model cohort reconstruction. {{< glossary ERs >}} for catch years 2004 to 2019 were estimated using the post-season FRAM assessment technique. Cohort reconstructions have not been completed for the Canadian {{< glossary MUs >}} between 1998 and 2003.
 
 ```{r}
 #| label: tbl-summary-lwfr
@@ -2783,7 +2862,7 @@ tbl_summary("Lower Fraser")
 #| fig-cap: Total exploitation rate (A) and escapement (B) of Lower Fraser MU by country, catch years 1986 through 2022. Dashed line indicates escapement goal for the Lower Fraser MU (**Need esc goal for lwfr** 30,000 individuals).   
 #| fig-width: 8
 #| fig-height: 7
- 
+
 plot_er_and_esc("Lower Fraser")
 
 ```
@@ -2951,7 +3030,7 @@ tbl_summary("Strait of Georgia")
 #| fig-cap: Total exploitation rate (A) and escapement (B) of Strait of Georgia MU by country, catch years 1986 through 2022. Dashed line indicates escapement goal for the Strait of Georgia MU (**Need esc goal for gs** 30,000 individuals).   
 #| fig-width: 8
 #| fig-height: 7
- 
+
 plot_er_and_esc("Strait of Georgia")
 
 ```
@@ -3080,12 +3159,12 @@ static$marine_survival_data |>
                          Baker)) |>
   mutate(Baker = as.numeric(Baker)) |>
   filter(BY >= 1989) |> ## a little janky, handling early years being NA
-ggplot(aes(x = BY, y = Baker))+
+  ggplot(aes(x = BY, y = Baker))+
   geom_path(linewidth = 0.8)+
   geom_point()+
   scale_y_continuous(breaks = c(0:8)*.02,
                      labels = function(x){paste0(x*100,"%")}
-                     )+
+  )+
   labs(x = "Brood Year",
        y = "Marine Survival Rate")+
   theme_bw(base_size = 14)
@@ -3199,7 +3278,7 @@ During the base period, Coho Salmon production from the Skagit {{< glossary MU >
 
 
 ::: {.content-hidden unless-meta="devversion"}
- (CoTC --> is there a way to autobuild these tables directly from the FRAM database?)
+(CoTC --> is there a way to autobuild these tables directly from the FRAM database?)
 
 |**Fishery**| **Jan-Jun **| **Jul**| **Aug** | **Sept** | **Oct-Dec** | **Total** |
 |:------------|------------:|--------:|--------:|---------:|------------:|----------:|
@@ -3331,7 +3410,7 @@ tbl_summary("Skagit", "Baker", TRUE)
 #| fig-cap: Total exploitation rate (A) and escapement (B) of Skagit MU by country, catch years 1986 through 2022. Dashed line indicates escapement goal for the Skagit MU (30,000 individuals).   
 #| fig-width: 8
 #| fig-height: 7
- 
+
 plot_er_and_esc()
 
 ```
@@ -3452,16 +3531,16 @@ Marine survival rates of wild Coho Salmon stocks have been measured using wild {
 
 static$marine_survival_data |>
   mutate(Skykomish = if_else(Skykomish == "NA",
-                         NA,
-                         Skykomish)) |>
+                             NA,
+                             Skykomish)) |>
   mutate(Skykomish = as.numeric(Skykomish)) |>
   filter(BY >= 1989) |> ## a little janky, handling early years being NA
-ggplot(aes(x = BY, y = Skykomish))+
+  ggplot(aes(x = BY, y = Skykomish))+
   geom_path(linewidth = 0.8)+
   geom_point()+
   scale_y_continuous(breaks = c(0:8)*.02,
                      labels = function(x){paste0(x*100,"%")}
-                     )+
+  )+
   labs(x = "Brood Year",
        y = "Marine Survival Rate")+
   theme_bw(base_size = 14)
@@ -3579,7 +3658,7 @@ tbl_summary("Stillaguamish", "Skykomish", TRUE)
 #| fig-cap: Total exploitation rate (A) and escapement (B) of Stillaguamish MU by country, catch years 1986 through 2022. Dashed line indicates escapement goal for the Stillaguamish MU (**Need esc goal for Stilly** 30,000 individuals).   
 #| fig-width: 8
 #| fig-height: 7
- 
+
 plot_er_and_esc("Stillaguamish")
 
 ```
@@ -3713,16 +3792,16 @@ plot_smolts("Snohomish")
 
 static$marine_survival_data |>
   mutate(Snohomish = if_else(Snohomish == "NA",
-                         NA,
-                         Snohomish)) |>
+                             NA,
+                             Snohomish)) |>
   mutate(Snohomish = as.numeric(Snohomish)) |>
   filter(BY >= 1989) |> ## a little janky, handling early years being NA
-ggplot(aes(x = BY, y = Snohomish))+
+  ggplot(aes(x = BY, y = Snohomish))+
   geom_path(linewidth = 0.8)+
   geom_point()+
   scale_y_continuous(breaks = c(0:26)*.02,
                      labels = function(x){paste0(x*100,"%")}
-                     )+
+  )+
   labs(x = "Brood Year",
        y = "Marine Survival Rate")+
   theme_bw(base_size = 14)
@@ -3806,7 +3885,7 @@ tbl_summary("Snohomish", "Snohomish", TRUE)
 #| fig-cap: Total exploitation rate (A) and escapement (B) of Snohomish MU by country, catch years 1986 through 2022. Dashed line indicates escapement goal for the Snohomish MU (**Need esc goal for Snohomish** 30,000 individuals).   
 #| fig-width: 8
 #| fig-height: 7
- 
+
 plot_er_and_esc("Snohomish")
 
 ```
@@ -4009,16 +4088,16 @@ Marine survival for the indicator stock for the Hood Canal {{< glossary MU >}}, 
 
 static$marine_survival_data |>
   mutate(BBC = if_else(BBC == "NA",
-                         NA,
-                         BBC)) |>
+                       NA,
+                       BBC)) |>
   mutate(BBC = as.numeric(BBC)) |>
   filter(BY >= 1989) |> ## a little janky, handling early years being NA
-ggplot(aes(x = BY, y = BBC))+
+  ggplot(aes(x = BY, y = BBC))+
   geom_path(linewidth = 0.8)+
   geom_point()+
   scale_y_continuous(breaks = c(0:20)*.02,
                      labels = function(x){paste0(x*100,"%")}
-                     )+
+  )+
   labs(x = "Brood Year",
        y = "Marine Survival Rate")+
   theme_bw(base_size = 14)
@@ -4126,7 +4205,7 @@ tbl_summary("Hood Canal", "BBC", TRUE)
 #| fig-cap: Total exploitation rate (A) and escapement (B) of Hood Canal MU by country, catch years 1986 through 2022. Dashed line indicates escapement goal for the Hood Canal MU (**Need esc goal for Hood Canal** 30,000 individuals).   
 #| fig-width: 8
 #| fig-height: 7
- 
+
 plot_er_and_esc("Hood Canal")
 
 ```
@@ -4259,16 +4338,16 @@ plot_smolts("Strait of Juan de Fuca")
 
 static$marine_survival_data |>
   mutate(JDF.MU = if_else(JDF.MU == "NA",
-                         NA,
-                         JDF.MU)) |>
+                          NA,
+                          JDF.MU)) |>
   mutate(JDF.MU = as.numeric(JDF.MU)) |>
   filter(BY >= 1989) |> ## a little janky, handling early years being NA
-ggplot(aes(x = BY, y = JDF.MU))+
+  ggplot(aes(x = BY, y = JDF.MU))+
   geom_path(linewidth = 0.8)+
   geom_point()+
   scale_y_continuous(breaks = c(0:20)*.02,
                      labels = function(x){paste0(x*100,"%")}
-                     )+
+  )+
   labs(x = "Brood Year",
        y = "Marine Survival Rate")+
   theme_bw(base_size = 14)
@@ -4339,7 +4418,7 @@ tbl_summary("US Strait JDF", "JDF.MU", TRUE)
 #| fig-cap: Total exploitation rate (A) and escapement (B) of Strait of Juan de Fuca MU by country, catch years 1986 through 2022. Dashed line indicates escapement goal for the Strait of Juan de Fuca MU (**Need esc goal for SJF** 30,000 individuals).   
 #| fig-width: 8
 #| fig-height: 7
- 
+
 plot_er_and_esc("US Strait JDF")
 
 ```
@@ -4522,7 +4601,7 @@ tbl_summary("Quillayute")
 #| fig-cap: Total exploitation rate (A) and escapement (B) of Quillayute MU by country, catch years 1986 through 2022. Dashed line indicates escapement goal for the Quillayute MU (**Need esc goal for Quillayute** 30,000 individuals).   
 #| fig-width: 8
 #| fig-height: 7
- 
+
 plot_er_and_esc("Quillayute")
 
 ```
@@ -4532,7 +4611,7 @@ plot_er_and_esc("Quillayute")
 ```{r f_abund_bar_quill}
 #| fig-cap: Quillayute {{< glossary MU >}} post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years 2004 through 2022. The graphs include dashed trend lines and the vertical dotted lines highlight catch year 2010)
 #| label: fig-abund-bar-quillayute
- 
+
 plot_abund_bar("Quillayute")
 
 ```
@@ -4702,7 +4781,7 @@ tbl_summary("Hoh")
 #| fig-cap: Total exploitation rate (A) and escapement (B) of Hoh MU by country, catch years 1986 through 2022. Dashed line indicates the upper level escapement goal for the Hoh MU (5,000 individuals).   
 #| fig-width: 8
 #| fig-height: 7
- 
+
 plot_er_and_esc("Hoh", 5000)
 
 ```
@@ -4712,7 +4791,7 @@ plot_er_and_esc("Hoh", 5000)
 ```{r f_abund_bar_hoh}
 #| fig-cap: Hoh {{< glossary MU >}} post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years 2004 through 2022. The graphs include dashed trend lines and the vertical dotted lines highlight catch year 2010)
 #| label: fig-abund-bar-hoh
- 
+
 plot_abund_bar("Hoh")
 
 ```
@@ -4880,7 +4959,7 @@ tbl_summary("Queets")
 #| fig-cap: Total exploitation rate (A) and escapement (B) of Queets MU by country, catch years 1986 through 2022. Dashed line indicates escapement goal for the Queets MU (8,642 for 2024).   
 #| fig-width: 8
 #| fig-height: 7
- 
+
 plot_er_and_esc("Queets", 8642)
 
 ```
@@ -4890,7 +4969,7 @@ plot_er_and_esc("Queets", 8642)
 ```{r f_abund_bar_queets}
 #| fig-cap: Queets {{< glossary MU >}} post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years 2004 through 2022. The graphs include dashed trend lines and the vertical dotted lines highlight catch year 2010)
 #| label: fig-abund-bar-queets
- 
+
 plot_abund_bar("Queets")
 
 ```
@@ -5005,12 +5084,12 @@ static$marine_survival_data |>
                          Black)) |>
   mutate(Black = as.numeric(Black)) |>
   filter(BY >= 1989) |> ## a little janky, handling early years being NA
-ggplot(aes(x = BY, y = Black))+
+  ggplot(aes(x = BY, y = Black))+
   geom_path(linewidth = 0.8)+
   geom_point()+
   scale_y_continuous(breaks = c(0:8)*.02,
                      labels = function(x){paste0(x*100,"%")}
-                     )+
+  )+
   labs(x = "Brood Year",
        y = "Marine Survival Rate")+
   theme_bw(base_size = 14)
@@ -5022,16 +5101,16 @@ ggplot(aes(x = BY, y = Black))+
 
 static$marine_survival_data |>
   mutate(Bingham = if_else(Bingham == "NA",
-                         NA,
-                         Bingham)) |>
+                           NA,
+                           Bingham)) |>
   mutate(Bingham = as.numeric(Bingham)) |>
   filter(BY >= 1989) |> ## a little janky, handling early years being NA
-ggplot(aes(x = BY, y = Bingham))+
+  ggplot(aes(x = BY, y = Bingham))+
   geom_path(linewidth = 0.8)+
   geom_point()+
   scale_y_continuous(breaks = c(0:8)*.02,
                      labels = function(x){paste0(x*100,"%")}
-                     )+
+  )+
   labs(x = "Brood Year",
        y = "Marine Survival Rate")+
   theme_bw(base_size = 14)
@@ -5107,7 +5186,7 @@ tbl_summary("Grays Harbor", "Bingham", TRUE)
 #| fig-cap: Total exploitation rate (A) and escapement (B) of Grays Harbor MU by country, catch years 1986 through 2022. Dashed line indicates escapement goal for the Grays Harbor MU (35,400 individuals).   
 #| fig-width: 8
 #| fig-height: 7
- 
+
 plot_er_and_esc("Grays Harbor", 35400)
 
 ```
@@ -5118,7 +5197,7 @@ plot_er_and_esc("Grays Harbor", 35400)
 ```{r f_abund_bar_gh}
 #| fig-cap: Grays Harbor {{< glossary MU >}} post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years 2004 through 2022. The graphs include dashed trend lines and the vertical dotted lines highlight catch year 2010)
 #| label: fig-abund-bar-gh
- 
+
 plot_abund_bar("Grays Harbor")
 
 ```

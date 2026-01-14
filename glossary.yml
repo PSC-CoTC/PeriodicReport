@@ -1,56 +1,58 @@
-FSC: | 
-  Food, Social, Ceremonial
-CWT: |
-  Coded-wire Tag
-CWTs: |
-  coded-wire Tags
-ER: |
-  Exploitation Rate
-ERs: |
-  Exploitation Rates
-MU: |
-  Management Unit
-MUs: |
-  Management Units
-Council: |
-  Pacific Fisheries Management Council
-DIT: |
-  Double Index Tag
-PSC: |
-  Pacific Salmon Commission
-PST: |
-  Pacific Salmon Treaty
-EO: |
-  Economic Opportunity
+ABM: |
+  Abundance Based Management
 CDFO: |
   Canadian Department of Fisheries and Oceans
-SCMP: |
-  Southern Coho Management Plan
-MSH: |
-  Maximum Sustainable Harvest
 CoABM: |
   Coho Abundance Based Management
-WDFW: |
-  Washingtom Department of Fish and Wildlife
-OA3: |
-  Ocean Age-3
-RRTERM: | 
-  Terminal Area Run Reconstruction
-RMIS: |
-  Regional Mark Information System
-IFR: |
-  Interior Fraser River
-LWFR: |
-  Lower Fraser River
+Council: |
+  Pacific Fisheries Management Council
 CU: |
   Conservation Unit
 CUs: |
   Conservation Units
+CWT: |
+  Coded-wire Tag
+CWTs: |
+  coded-wire Tags
+DIT: |
+  Double Index Tag
+EO: |
+  Economic Opportunity
+ER: |
+  Exploitation Rate
+ERs: |
+  Exploitation Rates
+FSC: | 
+  Food, Social, Ceremonial
+IFR: |
+  Interior Fraser River
 JA3: |
   January Age-3
-OFL: |
-  Overfishing Limit
+LWFR: |
+  Lower Fraser River
+MSH: |
+  Maximum Sustainable Harvest
+MU: |
+  Management Unit
+MUs: |
+  Management Units
 NOF: |
   North of Falcon
-ABM: |
-  Abundance Based Management
+OA3: |
+  Ocean Age-3
+OFL: |
+  Overfishing Limit
+PSC: |
+  Pacific Salmon Commission
+PST: |
+  Pacific Salmon Treaty
+RMIS: |
+  Regional Mark Information System
+RRTERM: | 
+  Terminal Area Run Reconstruction
+SCMP: |
+  Southern Coho Management Plan
+WDFW: |
+  Washingtom Department of Fish and Wildlife
+WSP: |
+  Wild Salmon Policy
