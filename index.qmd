@@ -633,7 +633,7 @@ plot_abund_bar <- function(stknm = "Skagit"){ ## abundance category limit, for c
     geom_col(width = 0.7) + 
     geom_hline(aes(yintercept = low_mod_abund), color = "orange", linetype = 5, linewidth = 1.2) +
     geom_hline(aes(yintercept = mod_abd_abund), color = "orange", linetype = 5) +
-    geom_vline(xintercept = 2010, linetype = 3, alpha = 0.5) +
+    #geom_vline(xintercept = 2010, linetype = 3, alpha = 0.5) +
     #geom_smooth(formula = y ~ x, method = "lm", se = F, linewidth = 0.5, linetype = 2) +
     scale_fill_grey("", start = 0.3, end = 0.7, aesthetics = c("fill", "color")) +
     scale_x_continuous(breaks = seq(1998, 2040, by = 3), guide = guide_axis(n.dodge = 2)) +
@@ -967,7 +967,7 @@ plot_pre_v_post <- function(stknm="Skagit", fishery_id_pre=17, fishery_id_post=1
 
 ```{r func_plot_er_and_esc}
 
-plot_er_and_esc <- function(stknm="Skagit", esc_goal=30000){
+plot_er_and_esc <- function(stknm="Skagit", esc_goal=NULL){
   
   options(scipen = 999)
   
@@ -993,11 +993,14 @@ plot_er_and_esc <- function(stknm="Skagit", esc_goal=30000){
     mutate(run_year = as.numeric(run_year)) |> 
     filter(psc_stock_name == stknm) |> 
     ggplot(aes(x = run_year, y = escapement))+
-    geom_hline(yintercept = esc_goal, linetype = 2) +
     geom_path(linewidth = 0.8) +
     scale_y_continuous(labels = function(x){format(x, big.mark = ",")})+
     labs(x = "Year", y = "Escapement", title = "B)")+
     theme_bw(base_size = 14)
+  
+  if (!is.null(esc_goal)) {
+    gp2 <- gp2 + geom_hline(yintercept = esc_goal, linetype = 2)
+  }
   
   gp1 / gp2 + plot_layout(heights = c(3,2))
 }
@@ -1319,7 +1322,7 @@ plot_rmis_recoveries_all = function(mu.name,
   return(ggplotly(gp))
 }
 
-plot_rmis_recoveries_all()
+#plot_rmis_recoveries_all()
 ```
 
 ```{r}
@@ -1839,6 +1842,20 @@ Preseason FRAM’s anticipated fishery related mortality for Canadian Coho Salmo
 
 Canadian fishery planning process generally concludes in June, with the fisheries directed upon Fraser River salmon (Pinks, Sockeye, and Chum) driven by test fisheries. This later planning process can produce anticipated fishery impacts that diverge from the postseason Canadian fishery scalars used for the US domestic modeling the previous April. In such cases the April {{< glossary Council display = PFMC >}} FRAM model run can be “updated” to evaluate both Parties compliance with the Coho Agreement.
 
+## Fishery Monitoring
+
+A fundamental requirement of abundance-based Coho Salmon management under the {{< glossary PST >}} is that all fishery impacts on individual {{< glossary MUs >}} be annually monitored with respect to both number of fish caught and CWTs. This requires basic reporting of total impacts by fishery and the capacity to estimate each fishery’s {{< glossary MU >}}-specific impacts. Total fishing mortalities for each {{< glossary MU >}} must be estimated to enable managers the ability to evaluate the annual {{< glossary ER >}} relative to the {{< glossary PST >}}-prescribed impact limits.
+
+Assessments of total fishing mortalities for each {{< glossary MU >}} must include both directed and incidentally-landed catch as well as estimates of non-landed mortalities. These estimates may be obtained through monitoring programs or, in some cases, generated through the use of algorithms built into the {{< glossary FRAM >}}. Monitoring programs may involve test fisheries or data collected directly from fishers (e.g., through creel survey interviews, and other fisher-reported techniques, such as log books or fish-tickets). Estimation of non-landed fishing mortality requires annual estimates of encounter rates by fishery and gear.
+
+Mark-selective fisheries have been intensively monitored to collect data to estimate key parameters characterizing MSF fisheries and their impacts on unmarked salmon. Sampling activities include dockside creel sampling, on-water observation, and a Voluntary Trip Report (VTR) system. Data collected from this sampling is used to estimate key parameters necessary to manage fisheries and integrate MSFs in the FRAM model. These parameters include: mark rate of the targeted Coho Salmon populations; total number of Coho Salmon harvested or released by mark-status, the coded-wire-tag stock composition of landed Coho Salmon, and total mortality of marked and unmarked Coho. 
+
+Management impacts for each {{< glossary MU >}} are generally evaluated using the coast-wide {{< glossary CWT >}} system. This system manages information on the release and recovery of {{< glossary CWTs >}}. The volume of tags recovered for a given {{< glossary MU >}} will depend on tagging rates, marine survival rates, exploitation and escapement rates, and sampling rates in fisheries and escapements. A recent review of CWT methods [@PSCCWTW_2008] recommends target sampling rates of 20% for the landed catch and 20% for escapements, with a minimum of 10 tags collected in each fishery or escapement stratum. 
+
+Since the introduction of fisheries restrictions in 1997 to protect {{< glossary IFR >}} Coho Salmon, reaching the minimum sampling targets for tagged {{< glossary IFR >}} Coho Salmon has seldom been met.
+
+Post-season {{< glossary ER >}} estimates are also generated using the Post-Season FRAM Model. Post-season estimates of catch and escapement are entered into the updated FRAM model with the same fishery regulation and effort package used for preseason modeling to generate post-season {{< glossary ER >}} estimates.
+
 ## Joint Canadian and US Postseason Evaluations
 
 “Backwards Coho FRAM” is used to generate estimates of {{< glossary ERs >}} that are used to evaluate management performance relative to constraints set forth in the {{< glossary CoABM >}}. Data required to populate FRAM are not available until one year after the fisheries were prosecuted, thus the 2021 postseason {{< glossary ER >}} estimates were produced in February of 2023. The Backwards Coho FRAM is also employed to produce estimates of historic {{< glossary ERs >}} reported in this Periodic Report.
@@ -1945,8 +1962,7 @@ static$releases |>
     Indicator=="Y"
   ) |> 
   mutate(
-    MU_Name = if_else(str_detect(MU_Name, "Georgia"), "Strait of Georgia", MU_Name) |> 
-      factor(levels = levels$mu_name)
+    MU_Name = if_else(str_detect(MU_Name, "Georgia"), "Strait of Georgia", MU_Name)
   ) |> 
   select(MU_Name, brood_year, tag_code_or_release_id, CWT_Clipped, CWT_Unclipped, CWT_Unclipped_DIT) |> 
   pivot_longer(cols = -c(MU_Name, brood_year, tag_code_or_release_id), names_to = "tag_mark", values_to = "val") |> 
@@ -1981,8 +1997,7 @@ static$releases |>
     PSC_MU =="Y"
   ) |> 
   mutate(
-    MU_Name = if_else(str_detect(MU_Name, "Georgia"), "Strait of Georgia", MU_Name) |> 
-      factor(levels = levels$mu_name)
+    MU_Name = if_else(str_detect(MU_Name, "Georgia"), "Strait of Georgia", MU_Name) 
   ) |> 
   select(MU_Name, brood_year, tag_code_or_release_id, CWT_Clipped, CWT_Unclipped, CWT_Unclipped_DIT, Clipped_only, Unclipped) |> 
   pivot_longer(cols = -c(MU_Name, brood_year, tag_code_or_release_id), names_to = "tag_mark", values_to = "val") |> 
@@ -2174,8 +2189,6 @@ US Inside {{< glossary MU >}} {{< glossary ERs >}} were the lowest for the US St
 
 Over catch years 2011 through 2021, the US Outdside {{< glossary MU >}} also experienced a large range of {{< glossary ERs >}}, from a low of 3.8% by the Quillayute {{< glossary MU >}} in 2021 to a high of 69.0% by the Hoh {{< glossary MU >}} in 2013. The {{< glossary ER >}} averaged 41.7% over all years for the Hoh {{< glossary MU >}}, followed by the Quillayute {{< glossary MU >}} at 36.6%, the Queets {{< glossary MU >}} at 34.8%, the Grays Harbor {{< glossary MU >}} at 34.6%, and Strait of Georgia {{< glossary MU >}} at 16.8%.
 
-(ToDo - need to move Canadian MUs to top of table and bold the values when the ERs exceeded the caps)
-
 ```{r gt_annual_ER}
 #| tbl-cap: Total exploitation rates by MU, catch years 2011 through 2021.
 psc_pst |> 
@@ -2360,7 +2373,7 @@ There are no major dams or other large anthropogenic fish passage impediments lo
 #### Management Framework
 
 
-##### IFR {{< glossary MU >}} (*this needs evaluation!)
+##### IFR {{< glossary MU >}}
 
 **This subsection section was originally in "Determination of... > Canadian Management Units" (section 2.1) earlier in this document, with a note from Carrie that this needed to be moved or deleted. It is unclear if this contains information that is necessary in this section, or if it should be dropped entirely.**
 
@@ -2368,7 +2381,7 @@ Prior to the establishment of {{< glossary PST >}} Management Reference Points, 
 
 A COSEWIC assessment in 2002 (Irvine 2002) identified IFR status as endangered while the COSEWIC re-assessment in 2016 (COSEWIC 2016) identified their status as threatened. Between 1990-2000, IFR experienced declines in recruitment in excess of 60% due to changes in freshwater and marine habitats and lagged reductions in harvest, resulting in a status of endangered in 2002. Since 2000, the population has persisted at relatively low abundance and low smolt-to-adult survival rates and was therefore re-assessed as threatened in 2016.
 
-In a review done in 2014, estimated abundance of IFR was below the Interior Fraser Recovery Team (IFCRT) lower benchmark of 23,000 spawners in five out of 10 years, and was below the upper rebuilding benchmark of 35,000 spawners in all 10 years (Decker et al. 2014).  For two decades (1992-2011), abundance was also below the lower and upper benchmarks in 50% and 100% of the years respectively. Based on the criteria proposed by the IFCRT (2006), this would indicate that recent abundances of Interior Fraser Coho Salmon may be insufficient to conserve genetic diversity and to provide a reasonable expectation of growth and recovery for some of the local populations within the {{< glossary MU >}}.  For returns prior to 1992, abundance exceeded the upper benchmark every year going back to 1975.
+In a review done in 2014, estimated abundance of IFR was below the Interior Fraser Recovery Team (IFCRT) lower benchmark of 23,000 spawners in five out of 10 years, and was below the upper rebuilding benchmark of 35,000 spawners in all 10 years (Decker et al. 2014). For two decades (1992-2011), abundance was also below the lower and upper benchmarks in 50% and 100% of the years respectively. Based on the criteria proposed by the IFCRT (2006), this would indicate that recent abundances of Interior Fraser Coho Salmon may be insufficient to conserve genetic diversity and to provide a reasonable expectation of growth and recovery for some of the local populations within the {{< glossary MU >}}.  For returns prior to 1992, abundance exceeded the upper benchmark every year going back to 1975.
 
 A Wild Salmon Policy (WSP) assessment in 2013 of the five CUs comprising IFR was undertaken by Parken et al. (in draft). Through this exercise it was determined that two of the CUs, the North Thompson and Lower Thompson, were amber/green and the remaining three CUs were amber. {{< glossary WSP >}} designation is determined to provide guidance to managers on the status of populations and their likelihood of a COSEWIC assessment. It is an expert judgment on the past and current state of escapements and does not speak to productivity of a stock.  In the case of IFR {{< glossary WSP >}} determinations, the escapements under review were achieved under a low exploitation regime and productivity of the five populations within the IFR {{< glossary MU >}} have recently been determined to be low (Decker et al. 2014).
 
@@ -2571,17 +2584,6 @@ ifr_survival_data |>
 
 ```
 
-
-###### Fishery Monitoring
-
-A fundamental requirement of abundance-based Coho Salmon management under the {{< glossary PST >}} is that all fishery impacts on individual {{< glossary MUs >}} be annually monitored with respect to both number of fish caught and {{< glossary CWTs >}}. This requires basic reporting of total impacts by fishery and the capacity to estimate each fishery’s {{< glossary MU >}}-specific impacts. Total fishing mortalities for each {{< glossary MU >}} must be estimated to enable managers the ability to evaluate the annual {{< glossary ER >}} relative to the {{< glossary PST >}}-prescribed impact limits.
-
-Assessments of total fishing mortalities for each {{< glossary MU >}} must include both directed and incidentally-landed catch as well as estimates of non-landed mortalities. These estimates may be obtained through monitoring programs or, in some cases, generated through the use of algorithms built into the Fisheries Regulation Assessment Model (FRAM). Monitoring programs may involve test fisheries or data collected directly from fishers (e.g., through creel survey interviews, and other fisher-reported techniques, such as log books or fish-tickets). Estimation of non-landed fishing mortality requires annual estimates of encounter rates by fishery and gear.
-
-Management-Unit-specific impacts are generally evaluated using the coast-wide {{< glossary CWT >}} system. This system manages information on the release and recovery of coded-wire tags.  The volume of tags recovered for a given {{< glossary MU >}} will depend on tagging rates, marine survival rates, exploitation and escapement rates, and sampling rates in fisheries and escapements. A recent review of {{< glossary CWT >}} methods [@PSCCWTW_2008] recommends target sampling rates of 20% for the landed catch and 20% for escapements, with a minimum of 10 tags collected in each fishery or escapement stratum. Since the introduction of fisheries restrictions in 1997 to protect {{< glossary IFR >}} Coho Salmon, reaching the minimum sampling targets for tagged {{< glossary IFR >}} Coho Salmon has seldom been met.
-
-Post-season {{< glossary ER >}} estimates are also generated using the Post-Season FRAM Model. Post-season estimates of catch and escapement are entered into the updated FRAM model with the same fishery regulation and effort package used for preseason modeling to generate post-season {{< glossary ER >}} estimates.
-
 ##### Enhancement
 
 Enhancement in the {{< glossary IFR >}} {{< glossary MU >}} was initiated in the early 1980s.  There have been up to 13 enhancement projects producing Coho Salmon as well as habitat restoration ongoing at various sites. Most of the projects are in the Thompson River drainage, with only minor enhancement occurring in other areas of this {{< glossary MU >}}. There are also numerous community hatcheries that support Indigenous and community activities through the Community Economic Development and Public Involvement Program.
@@ -2645,6 +2647,8 @@ The base period for the FRAM defines the temporal and spatial distributions of s
 
 During the base period, Coho Salmon production from the {{< glossary MU >}} contributed to US and Canadian marine sport and commercial fisheries in southern BC, the northern Washington coast, Strait of Juan de Fuca, and inner Puget Sound (@fig-IFR_ER1). In general, most were recovered from commercial troll and sport fisheries operating during the summer months off the west coast of Vancouver Island and in the Strait of Georgia. The proportion of the catch of Coho Salmon from fisheries within the Strait of Georgia (inside) compared to fisheries operating off the west coast of Vancouver Island (outside) has varied considerably among years (@fig-IFR_ER2). These variations have been correlated with changes in ocean salinity (Kadowaki 1997). During the 1970s and 1980s, large numbers of Coho Salmon remained inside the Strait of Georgia each year and supported large sport and troll fisheries [@Simpson_et_al_1997]. However, in some recent years, most Coho Salmon left the Strait of Georgia in the fall and winter of their first year of marine residence, and became vulnerable to fisheries operating in outside areas [@Irvine_et_al_1999a]. There are relatively few catch distribution data available for {{< glossary IFR >}} Coho Salmon. However, those that are available support the hypothesis that {{< glossary IFR >}} Coho Salmon have similar distributions to many other southern BC Coho Salmon populations. @Beamish_et_al_1999 suggest that these distribution variations were caused by changing ocean conditions driven by climate. Major fishery closures commencing in 1998 have made it more difficult to infer inside-outside distribution changes. The base period for FRAM contains data from only one outside year, 1991.
 
+Average base period {{< glossary ERs >}} by individual fisheries are listed below for the Interior Fraser {{< glossary MU >}}.
+
 ```{r}
 #| tbl-cap: Interior Fraser MU average annual (total) and time period specific ERs used in the current FRAM base period.
 #| label: tbl-bp-ifr
@@ -2687,7 +2691,7 @@ tbl_summary("Interior Fraser")
 
 ```{r}
 #| label: fig-ifr-escapement-and-ER
-#| fig-cap: Total exploitation rate (A) and escapement (B) of Interior Fraser MU by country, catch years 1986 through 2022. Dashed line indicates escapement goal for the Interior Fraser MU (**Need esc goal for ifr** 30,000 individuals).   
+#| fig-cap: Total exploitation rate (A) and escapement (B) of Interior Fraser MU by country, catch years 1986 through 2022.  
 #| fig-width: 8
 #| fig-height: 7
 
@@ -2705,7 +2709,7 @@ plot_obj_abund <- plot_abund_bar("Interior Fraser")
 
 
 ```{r f_abund_bar_ifr}
-#| fig-cap: !expr glue::glue("Interior Fraser {{{{< glossary MU >}}}} post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years {plot_obj_abund$year_range}. The vertical dotted lines highlight catch year 2010.")
+#| fig-cap: !expr glue::glue("Interior Fraser {{{{< glossary MU >}}}} post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years {plot_obj_abund$year_range}.")
 #| label: fig-abund-bar-ifr
 plot_obj_abund$plot
 ```
@@ -2975,7 +2979,10 @@ plot_pre_v_post("Lower Fraser",fishery_id_pre=17, fishery_id_post=17)
 ```
 
 ##### Fishery Mortality and Escapement
+
 The base period for the FRAM defines the temporal and spatial distributions of salmon fishing mortalities from each {{< glossary MU >}}.  The current FRAM base period for Coho Salmon includes catch years 1986-1992.  During this period, fishing effort, tagging, and fishery sampling of Coho Salmon was high, allowing relatively fine-scale discrimination between salmon distributions. The marine distribution data of marked Coho Salmon populations in Canada was obtained through the Mark Recovery Program (MRP), operated by {{< glossary CDFO >}}. Recoveries of coded-wire tagged and adipose-fin-clipped (AFC) marked Coho Salmon from various fisheries provide information on fishery {{< glossary ER >}} and apparent marine distributions.
+
+Average base period {{< glossary ERs >}} by individual fisheries are listed below for the Lower Fraser {{< glossary MU >}}.
 
 ```{r}
 #| tbl-cap: Lower Fraser MU average annual (total) and time period specific ERs used in the current FRAM base period.
@@ -3022,7 +3029,7 @@ tbl_summary("Lower Fraser")
 
 ```{r}
 #| label: fig-lwfr-escapement-and-ER
-#| fig-cap: Total exploitation rate (A) and escapement (B) of Lower Fraser MU by country, catch years 1986 through 2022. Dashed line indicates escapement goal for the Lower Fraser MU (**Need esc goal for lwfr** 30,000 individuals).   
+#| fig-cap: Total exploitation rate (A) and escapement (B) of Lower Fraser MU by country, catch years 1986 through 2022.   
 #| fig-width: 8
 #| fig-height: 7
 
@@ -3045,7 +3052,7 @@ plot_obj_abund <- plot_abund_bar("Lower Fraser")
 
 
 ```{r f_abund_bar_lwfr}
-#| fig-cap: !expr glue::glue("Lower Fraser {{{{< glossary MU >}}}} post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years {plot_obj_abund$year_range}. The vertical dotted lines highlight catch year 2010.")
+#| fig-cap: !expr glue::glue("Lower Fraser {{{{< glossary MU >}}}} post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years {plot_obj_abund$year_range}.")
 #| label: fig-abund-bar-lwfr
 
 plot_obj_abund$plot
@@ -3145,7 +3152,6 @@ plot_rmis_recoveries_all(mu.name = "Strait of Georgia Mainland",
 
 ###### Forecast Methods
 ###### Escapement Monitoring
-###### Fishery Monitoring
 ##### Enhancement
 
 ```{r fig.height=6.5, fig.width=6.5}
@@ -3171,6 +3177,8 @@ plot_pre_v_post("Strait of Georgia",fishery_id_pre=17, fishery_id_post=17)
 ##### Fishery Mortality and Escapement
 
 The base period for the FRAM defines the temporal and spatial distributions of salmon fishing mortalities from each {{< glossary MU >}}.  The current FRAM base period for Coho Salmon includes catch years 1986-1992.  During this period, fishing effort, tagging, and fishery sampling of Coho Salmon was high, allowing relatively fine-scale discrimination between salmon distributions. The marine distribution data of marked Coho Salmon populations in Canada was obtained through the Mark Recovery Program (MRP), operated by {{< glossary CDFO >}}. Recoveries of coded-wire tagged and adipose-fin-clipped (AFC) marked Coho Salmon from various fisheries provide information on fishery {{< glossary ER >}} and apparent marine distributions.
+
+Average base period {{< glossary ERs >}} by individual fisheries are listed below for the Strait of Georgia {{< glossary MU >}}.
 
 ```{r}
 #| tbl-cap: Strait of Georgia MU average annual (total) and time period specific ERs used in the current FRAM base period.
@@ -3204,7 +3212,7 @@ tbl_summary("Strait of Georgia")
 
 ```{r}
 #| label: fig-gsml-escapement-and-ER
-#| fig-cap: Total exploitation rate (A) and escapement (B) of Strait of Georgia MU by country, catch years 1986 through 2022. Dashed line indicates escapement goal for the Strait of Georgia MU (**Need esc goal for gs** 30,000 individuals).   
+#| fig-cap: Total exploitation rate (A) and escapement (B) of Strait of Georgia MU by country, catch years 1986 through 2022. 
 #| fig-width: 8
 #| fig-height: 7
 
@@ -3221,7 +3229,7 @@ plot_obj_abund <- plot_abund_bar("Strait of Georgia")
 ```
 
 ```{r f_abund_bar_gs}
-#| fig-cap: !expr glue::glue("Strait of Georgia {{{{< glossary MU >}}}} post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years {plot_obj_abund$year_range}. The vertical dotted lines highlight catch year 2010.")
+#| fig-cap: !expr glue::glue("Strait of Georgia {{{{< glossary MU >}}}} post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years {plot_obj_abund$year_range}.")
 #| label: fig-abund-bar-gs
 
 plot_obj_abund$plot
@@ -3264,7 +3272,7 @@ Numerous salmon hatchery facilities exist within the Skagit Basin, including sma
 
 -	The WDFW operates the Marblemount Hatchery on the Cascade River at RM 0.5 at the confluence with Clark Creek (MU figure). The Cascade River is a tributary to the Skagit River at RM 78. Marblemount Hatchery was constructed in 1946 and currently rears Skagit spring, summer, and fall Chinook Salmon; Skagit Coho Salmon; Skagit Steelhead; and Ross Lake Rainbow Trout [@WDFW_2003_marblemount]. The Coho Salmon program is operated as an isolated harvest program with an annual production goal of 250,000 smolts to be released on station, 45,000 fish to net pen projects (Oak Harbor and Roche Harbor), 100,000 fish to Skagit System Coop (Swinomish Tribe), and 13,000 eggs to educational and volunteer cooperatives. Its current purpose is to provide harvest opportunity for non-tribal sport and commercial fishers and tribal fishers [@WDFW_2003_marblemount]. This program collects adult broodstock on-site, and has egg incubation and rearing facilities. Within the Skagit {{< glossary MU >}} approximately 77% of the total hatchery fish reported to have been released for brood years 1983 through 2020 has been from the Marblemount Hatchery.
 
--	A fish culture facility has also been in operation on the Baker River since the early 1970s, producing Sockeye, Rainbow Trout, and Coho Salmon [@WDFW_and_PSE_2003]. Puget Sound Energy completed construction in 2010 of a new hatchery on the Baker River near the upper Baker Dam. Coho Salmon fry from this program are transported to net pens on Lake Shannon and they are later released as smolts into the Baker River and both reservoirs. This Coho Salmon program is operated as an integrated harvest and research program with an annual goal of releasing 60,000 smolts. The purpose of this program is to supply experimental and research smolts for gulper efficiency testing, serve as an indicator stock for wild Skagit Coho Salmon, and supplement natural production in the basin.  
+-	A fish culture facility has also been in operation on the Baker River since the early 1970s, producing Sockeye, Rainbow Trout, and Coho Salmon (WDFW_and_PSE_2003). Puget Sound Energy completed construction in 2010 of a new hatchery on the Baker River near the upper Baker Dam. Coho Salmon fry from this program are transported to net pens on Lake Shannon and they are later released as smolts into the Baker River and both reservoirs. This Coho Salmon program is operated as an integrated harvest and research program with an annual goal of releasing 60,000 smolts. The purpose of this program is to supply experimental and research smolts for gulper efficiency testing, serve as an indicator stock for wild Skagit Coho Salmon, and supplement natural production in the basin.  
 
 -	Coho Salmon are also reared in net pens within the Oak Harbor Marina [@WDFW_2003_OH]. This Coho Salmon program is a marine net pen program operated by WDFW and local sport angling groups and usually receives stock from the Marblemount Hatchery and is operated as an isolated program with an annual goal of releasing 30,000 smolts. The purpose of this program is to provide harvest opportunity for sport and commercial fishers.
 
@@ -3296,7 +3304,7 @@ The current {{< glossary PST >}}/{{< glossary Council display = PFMC >}} {{< glo
 
 The Skagit MU has both hatchery and wild Coho Salmon {{< glossary CWT >}} indicator stock programs. Wild Yearling Coho Salmon are captured, coded-wire-tagged, and released within the Skagit Basin [@Litz_2023]. These releases are currently used as a marine survival rate indicator for the wild stock. The Skagit hatchery stock releases from Marblemount Hatchery and the tagged wild stock releases are used as {{< glossary ER >}} indicator stocks. Coho Salmon released from Marblemount Hatchery have been double index tagged starting with brood year 1994.
 
-Coded wire tag recovery-based survival and {{< glossary ER >}} data are available for the Marblemount Hatchery and wild Coho Salmon tagging programs [@Haymes_2008]. The wild stock program (AKA Baker River program) began with broodyear 1983 and its purpose is to supply experimental and research smolts for gulper efficiency testing, serve as an indicator stock for wild Skagit Coho Salmon, and supplement natural production in the basin [@WDFW_and_PSE_2003]. An average of 39,000 Baker Lake wild smolts were captured, coded-wire tagged, and adipose fin clipped annually (@fig-wild-stock-tagging-skagit) for broodyears 1983 through 1995. Beginning with brood year 1996, an average of 20,000 fish have been captured and released annually with a {{< glossary CWT >}} and their fins intact. The Marblemount Hatchery Coho Salmon program has been in existence for over 64 years and its purpose is to provide harvest opportunity [@WDFW_2003_marblemount]. The hatchery indicator program is currently a {{< glossary DIT >}} program (differentially tagged fish released with or without adipose clips) with a goal of releasing 45,000 tagged fish of each group, one with an adipose fin clip and one without [@WDFW_2003_marblemount]
+Coded wire tag recovery-based survival and {{< glossary ER >}} data are available for the Marblemount Hatchery and wild Coho Salmon tagging programs [@Haymes_2008]. The wild stock program (AKA Baker River program) began with broodyear 1983 and its purpose is to supply experimental and research smolts for gulper efficiency testing, serve as an indicator stock for wild Skagit Coho Salmon, and supplement natural production in the basin (WDFW_and_PSE_2003). An average of 39,000 Baker Lake wild smolts were captured, coded-wire tagged, and adipose fin clipped annually (@fig-wild-stock-tagging-skagit) for broodyears 1983 through 1995. Beginning with brood year 1996, an average of 20,000 fish have been captured and released annually with a {{< glossary CWT >}} and their fins intact. The Marblemount Hatchery Coho Salmon program has been in existence for over 64 years and its purpose is to provide harvest opportunity [@WDFW_2003_marblemount]. The hatchery indicator program is currently a {{< glossary DIT >}} program (differentially tagged fish released with or without adipose clips) with a goal of releasing 45,000 tagged fish of each group, one with an adipose fin clip and one without [@WDFW_2003_marblemount]
 (@fig-hatch-stock-releases-mu-cwt-only-skagit). Annual tagged and adipose fin clipped releases prior to the implementation of the {{< glossary DIT >}} program were 68,000 on average (@tbl-dit-skagit). The {{< glossary DIT >}} program began with brood year 1994 and an average of 70,000 tagged and clipped fish have been released annually, while tagged and unclipped fish have averaged approximately 44,000 annually. {{< glossary ERs >}} values for the non-ad clipped+{{< glossary CWT >}} Coho Salmon provide a surrogate measure of exploitation for natural origin Coho Salmon from this {{< glossary MU >}}. There is no regular {{< glossary CWT >}} sampling of the freshwater sport fisheries in the {{< glossary MU >}}, which results in some negative bias in tag recoveries. Double index tag groups released for the Skagit {{< glossary MU >}} are provided below.
 
 ```{r fig.height=4, fig.width=6}
@@ -3406,22 +3414,6 @@ ggplot() + geom_sf(aes(color = USETYPE_DE))
 
 ```
 
-::: {.content-hidden unless-meta="devversion"}
-**We should move the boilerplate Fishery Monitoring text into a generic US Fisheries Monitoring section above. Discuss with the CoTC if there's anything specific under this we should include instead**
-:::
-
-###### Fishery Monitoring
-
-A fundamental requirement of abundance-based Coho Salmon management under the {{< glossary PST >}} is that all fishery impacts on individual {{< glossary MUs >}} be annually monitored with respect to both number of fish caught and CWTs. This requires basic reporting of total impacts by fishery and the capacity to estimate each fishery’s {{< glossary MU >}}-specific impacts. Total fishing mortalities for each {{< glossary MU >}} must be estimated to enable managers the ability to evaluate the annual {{< glossary ER >}} relative to the {{< glossary PST >}}-prescribed impact limits.
-
-Assessments of total fishing mortalities for each {{< glossary MU >}} must include both directed and incidentally-landed catch as well as estimates of non-landed mortalities. These estimates may be obtained through monitoring programs or, in some cases, generated through the use of algorithms built into the {{< glossary FRAM >}}. Monitoring programs may involve test fisheries or data collected directly from fishers (e.g., through creel survey interviews, and other fisher-reported techniques, such as log books or fish-tickets). Estimation of non-landed fishing mortality requires annual estimates of encounter rates by fishery and gear.
-
-Mark-selective fisheries have been intensively monitored to collect data to estimate key parameters characterizing MSF fisheries and their impacts on unmarked salmon. Sampling activities include dockside creel sampling, on-water observation, and a Voluntary Trip Report (VTR) system. Data collected from this sampling is used to estimate key parameters necessary to manage fisheries and integrate MSFs in the FRAM model. These parameters include: mark rate of the targeted Coho Salmon populations; total number of Coho Salmon harvested or released by mark-status, the coded-wire-tag stock composition of landed Coho Salmon, and total mortality of marked and unmarked Coho. 
-
-Management impacts for each {{< glossary MU >}} are generally evaluated using the coast-wide {{< glossary CWT >}} system. This system manages information on the release and recovery of {{< glossary CWTs >}}. The volume of tags recovered for a given {{< glossary MU >}} will depend on tagging rates, marine survival rates, exploitation and escapement rates, and sampling rates in fisheries and escapements. A recent review of CWT methods [@PSCCWTW_2008] recommends target sampling rates of 20% for the landed catch and 20% for escapements, with a minimum of 10 tags collected in each fishery or escapement stratum. 
-
-Post-season {{< glossary ER >}} estimates are also generated using the Post-Season FRAM Model. Post-season estimates of catch and escapement are entered into the updated FRAM model with the same fishery regulation and effort package used for preseason modeling to generate post-season {{< glossary ER >}} estimates.
-
 ##### Enhancement
 
 There are numerous hatchery programs releasing Coho Salmon within the Skagit Basin. Since brood year 1983 to 2020, the largest ones include Marblemount, Baker Lake, Puget Sound Energy, and Swinomish Channel PD Hatchery programs. Over this time period approximately 690,000 Coho Salmon have been released annually on average. Marblemount Hatchery made up the majority (77%) of all releases, followed by Baker Lake Hatchery (9%), Puget Sound Energy (7%; ended with 2009 brood), and Swinomish Channel PD (2%; ended with 1990 brood). Prior to the implmentation of mass marking, total hatchery production within the {{< glossary MU >}} of brood years 1983–1994 were highly variable, ranging from a high of three million fish released from brood year 1983 to a low of 380,000 fish from brood year 1988 (@fig-hatch-stock-releases-skagit) [@RMISD_1977]. With the advent of technology to automatically remove adipose fins and/or insert {{< glossary CWTs >}} using mobile “tagging trailers”, mass marking of hatchery fish was implemented for Coho Salmon in the mid-1990s [@SFEC_1999]. Mass marking allows mark selective fisheries (MSF) for Coho Salmon in which marked hatchery fish can be retained and unmarked wild fish released, resulting in higher harvest rates on hatchery fish than wild fish. Mass marking was fully implemented for Coho Salmon from the Columbia River, Washington coast, and Puget Sound with the 1997 brood, including both mass marking (adipose fin clip) the vast majority of hatchery fish and use of select {{< glossary DIT >}} groups (paired clipped and unclipped fish with {{< glossary CWTs >}}) [@SFEC_1999]. Double index tagging of hatchery fish at Marblemount Hatchery began with the 1994 brood and mass-marked fish were released beginning with brood year 1995. {{< glossary DIT >}} group releases and their associated tag codes are listed in @tbl-dit-skagit. Hatchery production within the {{< glossary MU >}} for brood years 1995 to brood year 2020 have averaged 500,000 annually, with a low of 252,000 in 2000 and a high of 795,000 in 2018. Of these, an average of 290,000 hatchery fish have been mass marked and released within the {{< glossary MU >}} (@fig-hatch-stock-releases-skagit) [@RMISD_1977]. 
@@ -3463,100 +3455,10 @@ table_pre_post_est("Skagit")
 ##### Fishery Mortality and Escapement
 
 *Base Period Exploitation Rates*
-The base period for the FRAM defines the temporal and spatial distributions of salmon fishing mortalities from each {{< glossary MU >}}. The current FRAM base period for Coho Salmon includes catch years 1986-1992.  During this period, fishing effort, tagging, and fishery sampling of Coho Salmon was high, allowing relatively fine-scale discrimination between salmon distributions. Coded-wire-tag codes used during the base period for the Skagit {{< glossary MU >}} are provided in the Appendix and average base period {{< glossary ERs >}} by individual fisheries are listed below.
 
-**ToDo: create table of the list of CWTs used in the base period.  I think they are identified in the static file.**
+The base period for the FRAM defines the temporal and spatial distributions of salmon fishing mortalities from each {{< glossary MU >}}. The current FRAM base period for Coho Salmon includes catch years 1986-1992.  During this period, fishing effort, tagging, and fishery sampling of Coho Salmon was high, allowing relatively fine-scale discrimination between salmon distributions. Average base period {{< glossary ERs >}} by individual fisheries are listed below for the Skagit {{< glossary MU >}}.
 
-During the base period, Coho Salmon production from the Skagit {{< glossary MU >}} contributed to US and Canadian marine sport and commercial fisheries in southern British Columbia, the northern Washington coast, Strait of Juan de Fuca, and inner Puget Sound. Terminal tribal and non-tribal set and drift-net Coho Salmon net fisheries occur in commercial fishery management area 8 and the lower Skagit River. Moderate-sized Coho Salmon sport fisheries occured in sport fishery management area 8.1, the mainstem Skagit River, and the Cascade River. The terminal fishery co-managers are WDFW, and the Upper Skagit, Sauk-Suiattle, and Swinomish Tribes.  
-
-
-::: {.content-hidden unless-meta="devversion"}
-(CoTC --> is there a way to autobuild these tables directly from the FRAM database?)
-
-|**Fishery**| **Jan-Jun **| **Jul**| **Aug** | **Sept** | **Oct-Dec** | **Total** |
-|:------------|------------:|--------:|--------:|---------:|------------:|----------:|
-|SEAK Southwest Troll	|	-	|	0.00%	|	-	|	-	|	-	|	0.00%	|
-|BC Northern Net	|	-	|	0.02%	|	-	|	-	|	-	|	0.02%	|
-|BC Northern Troll	|	-	|	0.02%	|	0.01%	|	0.01%	|	-	|	0.04%	|
-|BC North Central Troll	|	-	|	0.09%	|	0.01%	|	-	|	-	|	0.10%	|
-|BC Central Net	|	-	|	0.01%	|	0.00%	|	-	|	-	|	0.02%	|
-|BC South Central Troll	|	0.14%	|	0.39%	|	0.05%	|	0.01%	|	-	|	0.59%	|
-|Johnstone Strait Sport	|	0.02%	|	0.03%	|	0.01%	|	-	|	-	|	0.06%	|
-|Johnstone Strait Troll	|	0.04%	|	0.13%	|	0.01%	|	0.00%	|	-	|	0.17%	|
-|Johnstone Straits Net	|	-	|	0.01%	|	0.14%	|	0.04%	|	0.00%	|	0.18%	|
-|Georgia Straits Net	|	-	|	-	|	0.01%	|	-	|	0.00%	|	0.02%	|
-|Georgia Straits Troll	|	0.14%	|	0.52%	|	0.07%	|	0.02%	|	-	|	0.76%	|
-|North Georgia Straits Sport	|	1.41%	|	0.82%	|	0.41%	|	0.08%	|	0.00%	|	2.73%	|
-|South Georgia Straits Sport	|	0.71%	|	0.12%	|	0.11%	|	0.01%	|	0.02%	|	0.98%	|
-|Fraser R Gill Net	|	-	|	-	|	0.02%	|	0.01%	|	-	|	0.03%	|
-|BC Juan de Fuca Net	|	0.02%	|	0.28%	|	3.75%	|	2.08%	|	-	|	6.13%	|
-|BC Juan de Fuca Sport	|	0.63%	|	1.02%	|	0.35%	|	0.49%	|	0.10%	|	2.59%	|
-|BC Juan de Fuca Troll	|	-	|	0.00%	|	0.00%	|	0.00%	|	-	|	0.00%	|
-|West Coast Vanc Is Sport	|	0.02%	|	0.19%	|	0.07%	|	0.00%	|	-	|	0.28%	|
-|NW Vancouver Island Troll	|	0.18%	|	3.16%	|	1.10%	|	0.33%	|	-	|	4.77%	|
-|SW Vancouver Island Net	|	0.01%	|	0.00%	|	-	|	0.12%	|	0.08%	|	0.21%	|
-|SW Vancouver Island Troll	|	0.84%	|	12.17%	|	6.61%	|	1.34%	|	-	|	20.97%	|
-|WA Area 7 Sport	|	0.04%	|	0.06%	|	0.07%	|	0.09%	|	0.01%	|	0.26%	|
-|WA Area 7-7A Treaty Net	|	-	|	0.00%	|	0.07%	|	0.30%	|	0.07%	|	0.44%	|
-|WA Area 7-7A Non-Treaty Net	|	-	|	0.00%	|	0.07%	|	0.18%	|	0.03%	|	0.28%	|
-|WA Area 7B-7C-7D Treaty Net	|	-	|	-	|	0.01%	|	0.12%	|	0.11%	|	0.24%	|
-|WA Area 7B-7C-7D NT Net	|	-	|	-	|	0.00%	|	0.09%	|	0.08%	|	0.17%	|
-|WA Area 6 Sport	|	0.06%	|	0.30%	|	0.23%	|	0.49%	|	0.20%	|	1.28%	|
-|WA Area 5-6-6C Troll	|	0.00%	|	0.01%	|	0.01%	|	0.09%	|	0.00%	|	0.12%	|
-|WA Area 5 Sport	|	0.27%	|	0.97%	|	1.38%	|	1.18%	|	0.08%	|	3.88%	|
-|WA Area 4B-5-6C Treaty Net	|	-	|	0.09%	|	0.29%	|	0.43%	|	0.21%	|	1.02%	|
-|WA Area 4B-5-6C NT Net	|	-	|	0.00%	|	0.01%	|	0.04%	|	0.00%	|	0.05%	|
-|WA Area 8 Non-Treaty Net	|	-	|	-	|	0.11%	|	0.34%	|	0.79%	|	1.25%	|
-|WA Area 8 Treaty Net	|	-	|	-	|	0.08%	|	0.99%	|	1.56%	|	2.64%	|
-|WA Area 8.1 Sport	|	-	|	-	|	0.29%	|	0.02%	|	0.06%	|	0.37%	|
-|WA Area 8.2 Sport	|	-	|	-	|	0.05%	|	0.05%	|	-	|	0.10%	|
-|Skagit R Net	|	-	|	-	|	-	|	-	|	0.93%	|	0.93%	|
-|Skagit R Sport	|	-	|	-	|	-	|	-	|	0.32%	|	0.32%	|
-|Skagit River Test Net	|	-	|	-	|	-	|	-	|	0.61%	|	0.61%	|
-|WA Area 8A Non-Treaty Net	|	-	|	-	|	-	|	0.74%	|	0.63%	|	1.38%	|
-|WA Area 8A Treaty Net	|	-	|	-	|	-	|	1.17%	|	0.94%	|	2.11%	|
-|WA Area 9 Sport	|	0.20%	|	0.23%	|	0.23%	|	0.38%	|	0.13%	|	1.16%	|
-|Area 9/9A Non-Treaty Net	|	-	|	-	|	-	|	0.00%	|	0.00%	|	0.00%	|
-|Area 9/9A Treaty Net	|	-	|	-	|	-	|	0.00%	|	0.01%	|	0.01%	|
-|WA Area 10 Non-Treaty Net	|	-	|	-	|	-	|	0.41%	|	0.11%	|	0.52%	|
-|WA Area 10 Sport	|	0.15%	|	0.09%	|	0.07%	|	0.06%	|	0.02%	|	0.39%	|
-|WA Area 10 Treaty Net	|	-	|	-	|	-	|	0.24%	|	0.06%	|	0.30%	|
-|WA Area 10E Non-Treaty Net	|	-	|	-	|	-	|	0.00%	|	-	|	0.00%	|
-|WA Area 10E Treaty Net	|	-	|	-	|	-	|	0.00%	|	-	|	0.00%	|
-|WA Area 10F-G Treaty Net	|	-	|	-	|	0.03%	|	-	|	-	|	0.03%	|
-|WA Area 11 Non-Treaty Net	|	-	|	-	|	-	|	0.10%	|	0.02%	|	0.12%	|
-|WA Area 11 Sport	|	0.04%	|	0.00%	|	0.01%	|	0.00%	|	0.00%	|	0.06%	|
-|WA Area 11 Treaty Net	|	-	|	-	|	-	|	0.01%	|	0.00%	|	0.01%	|
-|WA Area 13 Marine Sport	|	0.01%	|	-	|	-	|	0.00%	|	0.00%	|	0.02%	|
-|Area 12 Marine Sport	|	-	|	-	|	-	|	-	|	0.00%	|	0.00%	|
-|Area 12-12B Hood Canal NT Net	|	-	|	-	|	-	|	0.01%	|	0.01%	|	0.02%	|
-|Area 12-12B Hood Canal T Net	|	-	|	-	|	-	|	0.01%	|	0.01%	|	0.02%	|
-|WA Area 4/4B Treaty Troll	|	0.20%	|	0.62%	|	0.60%	|	0.21%	|	0.02%	|	1.66%	|
-|WA Area 4/4B Non-Treaty Troll	|	0.00%	|	0.04%	|	0.35%	|	0.06%	|	0.00%	|	0.45%	|
-|WA Area 4 Sport	|	0.02%	|	0.43%	|	0.34%	|	0.06%	|	-	|	0.85%	|
-|WA Area 3 Treaty Troll	|	0.06%	|	0.13%	|	0.14%	|	0.05%	|	-	|	0.38%	|
-|WA Area 3 Sport	|	0.00%	|	0.04%	|	0.01%	|	-	|	-	|	0.05%	|
-|WA Area 3 Non-Treaty Troll	|	0.05%	|	0.01%	|	0.04%	|	0.03%	|	-	|	0.12%	|
-|Hoh R Net	|	-	|	-	|	-	|	-	|	0.00%	|	0.00%	|
-|WA Area 2 Treaty Troll	|	0.01%	|	0.09%	|	0.05%	|	0.01%	|	-	|	0.16%	|
-|WA Area 2 Sport	|	0.03%	|	0.33%	|	0.15%	|	0.01%	|	-	|	0.52%	|
-|WA Area 2 Non-Treaty Troll	|	0.01%	|	0.04%	|	0.06%	|	0.00%	|	-	|	0.11%	|
-|Willapa Bay & FW Trib Net	|	-	|	-	|	-	|	-	|	0.00%	|	0.00%	|
-|WA Area 1 & Astoria Troll	|	0.01%	|	0.09%	|	0.05%	|	0.04%	|	0.01%	|	0.20%	|
-|WA Area 1 & Astoria Sport	|	0.00%	|	0.06%	|	0.05%	|	-	|	-	|	0.12%	|
-|Col. River Buoy 10 Sport	|	-	|	-	|	0.05%	|	0.00%	|	-	|	0.06%	|
-|Tillamook Sport	|	0.01%	|	0.03%	|	0.02%	|	0.00%	|	-	|	0.06%	|
-|Tillamook Troll	|	0.01%	|	0.17%	|	0.04%	|	0.00%	|	-	|	0.22%	|
-|Newport Sport	|	0.02%	|	0.05%	|	0.03%	|	-	|	-	|	0.10%	|
-|Newport Troll	|	0.05%	|	0.12%	|	0.03%	|	0.00%	|	-	|	0.21%	|
-|Coos Bay Sport	|	0.02%	|	0.02%	|	0.00%	|	0.01%	|	-	|	0.05%	|
-|Coos Bay Troll	|	0.02%	|	0.03%	|	0.00%	|	0.00%	|	-	|	0.06%	|
-|Brookings Sport	|	-	|	0.00%	|	-	|	-	|	-	|	0.00%	|
-|Brookings Troll	|	0.00%	|	0.00%	|	0.00%	|	0.00%	|	-	|	0.01%	|
-|** Total **|	5.40%	|	23.10%	|	17.80%	|	12.60%	|	7.30%	|	66.10%	|
-
-: Skagit {{< glossary MU >}} average annual (total) and time period specific {{< glossary ERs >}} used in the current FRAM base period. {#tbl-bp-skagit}
-:::
+During the base period, Coho Salmon production from the Skagit {{< glossary MU >}} contributed to US and Canadian marine sport and commercial fisheries in southern British Columbia, the northern Washington coast, Strait of Juan de Fuca, and inner Puget Sound. Terminal tribal and non-tribal set and drift-net Coho Salmon net fisheries occur in commercial fishery management area 8 and the lower Skagit River. Moderate-sized Coho Salmon sport fisheries occurred in sport fishery management area 8.1, the mainstem Skagit River, and the Cascade River. The terminal fishery co-managers are WDFW, and the Upper Skagit, Sauk-Suiattle, and Swinomish Tribes.  
 
 ```{r}
 #| tbl-cap: Skagit MU average annual (total) and time period specific ERs used in the current FRAM base period.
@@ -3566,11 +3468,7 @@ bper(c(17,18,23,24))
 
 ```
 
-ToDo: check this text and add summaries for MSF vs NSF too
-
 In the most recent years assessed, the Skagit MU has been primarily harvested by Skagit River Net (median = 14% ER) and Skagit River Sport (8% ER) fisheries, both terminal area fisheries, with the remainder of the fisheries impacting this MU at an average of less than 4% per year.
-
-ToDo: add (or call) the fishery figure for Skagit (fishery on y-axis and ER% on x axis averaged over a set number of years - I belive they are already created!)
 
 ```{r f_ns_msf_skagit_prep}
 plot_obj_nsmsf <- plot_ns_msf("Skagit")
@@ -3585,15 +3483,7 @@ plot_obj_nsmsf$plot
 
 ```
 
-::: {.content-hidden unless-meta="devversion"}
-
-**Average {{< glossary ERs >}} by fishing area.  The stacked bars represent the rates estimated by gear type during the FRAM base period, catch years 1986–1992.  The line represents the average annual total  {{< glossary ER >}} by fishing area during catch years ??, all gears combined.**
-
-[[This one still needs to be made]]
-
-:::
-
-Total {{< glossary ERs >}} have generally declined, averaging 59% between 1986 and 1995 then gradually falling to an extended period of low {{< glossary ERs >}} (26%) during 1998–2004 (Table 5 1; Figure 4 2).  {{< glossary ERs >}} have increased somewhat since 2005, averaging 36% during 2005–2011.  Up until 1997 the {{< glossary ER >}} by Canadian fishers averaged 36%, but has since declined to an average of less than 1.5%.  A comparison of {{< glossary ERs >}} by major fisheries during the base period and the most recent five years (2006–2010) is provided in Figure 5 1, while {{< glossary ERs >}} by major fisheries by year since 1986 are listed in Appendix D.  Individual fishery management areas within Washington State are depicted in Figure @fig-wdfwmap.
+Total {{< glossary ERs >}} have generally declined, averaging 59% between 1986 and 1995 then gradually falling to an extended period of low {{< glossary ERs >}} (26%) during 1998–2004 (Table 5 1; Figure 4 2).  {{< glossary ERs >}} have increased somewhat since 2005, averaging 36% during 2005–2011.  Up until 1997 the {{< glossary ER >}} by Canadian fishers averaged 36%, but has since declined to an average of less than 1.5%. Individual fishery management areas within Washington State are depicted in Figure @fig-wdfwmap.
 
 ```{r}
 #| label: tbl-summary-skagit
@@ -3609,7 +3499,7 @@ tbl_summary("Skagit", "Baker", TRUE)
 #| fig-width: 8
 #| fig-height: 7
 
-plot_er_and_esc()
+plot_er_and_esc(esc_goal = 30000)
 
 ```
 
@@ -3627,14 +3517,10 @@ plot_obj_abund <- plot_abund_bar("Skagit")
 Total abundance has averaged approximately `r plot_obj_abund$abund_avg_as_text` annually, and varied from a low of `r format(plot_obj_abund$abund_min_val, big.mark = ",")` fish (`r plot_obj_abund$abund_year_of_min`) to a high of `r format(plot_obj_abund$abund_max_val, big.mark = ",")` fish (`r plot_obj_abund$abund_year_of_max`) and exceeded the Abundant category threshold of >`r format(plot_obj_abund$abund_cat_limit, big.mark = ",")` fish in `r plot_obj_abund$years_over_abund_thresh` of `r plot_obj_abund$abund_n_years_total` years between `r plot_obj_abund$min_year` and `r plot_obj_abund$max_year`.
 During this time period, abundance was below the critical threshold of `r format(plot_obj_abund$critical_cat_limit, big.mark = ",")` fish in `r plot_obj_abund$years_under_critical_thresh` of these years. Annual estimated escapement has averaged `r plot_obj_abund$esc_avg_as_text` from `r plot_obj_abund$min_year` through `r plot_obj_abund$max_year`, with a low of `r format(plot_obj_abund$esc_min_val, big.mark = ",")` fish (`r plot_obj_abund$esc_year_of_min`) and a high of `r format(plot_obj_abund$esc_max_val, big.mark = ",")` fish (`r plot_obj_abund$esc_year_of_max`).
 
-<<**the following is not currently auto-updating**>>
 Harvest of Skagit MU has also varied from year to year, and has declined slightly over this time period. Less than 50,000 fish have been harvested annually in all but one of the years (2013) and most of the harvest has been in non-selective fisheries.
 
-<!-- **(Jeromy note - can a line be added also for the critical threshold of 22,858 across the plots?)** -->
-
-
 ```{r f_abund_bar_skagit}
-#| fig-cap: !expr glue::glue("Skagit {{< glossary MU >}} post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years {plot_obj_abund$year_range}. The graphs include dashed trend lines and the vertical dotted lines highlight catch year 2010.")
+#| fig-cap: !expr glue::glue("Skagit {{{{< glossary MU >}}}} post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years {plot_obj_abund$year_range}. The graphs include dashed trend lines.")
 #| label: fig-abund-bar-skagit
 
 plot_obj_abund$plot
@@ -3779,27 +3665,7 @@ The method used for estimating natural Coho Salmon escapements in this {{< gloss
 
 The Base-Year Index method allows expansion of an annual index of abundance developed from serial field counts of live or dead salmon, collected in a relatively small fraction of the total freshwater habitat, to an estimate of basin or region-total escapement. A series of point counts of live Coho Salmon abundance are made in several fixed-location survey reaches, distributed throughout each major river basin or region. At the end of the spawning season an abundance index is developed for each index survey reach using the “area under the curve” (AUC) approach [@Ames_1984; @Irvine_et_al_1993]. The sum of the individual abundance index values from an individual escapement estimation unit (usually a river basin) are then multiplied by a historical “base year” basin-total escapement estimate developed from a mark-recapture study. The resulting value is divided by the base year index of abundance calculated for the same survey reaches that were monitored in the current escapement year, to produce the basin-total escapement estimate for the current year. In the Stillaguamish River basin, Coho Salmon escapement is estimated from 17 index reaches covering 10.7 miles (17.2 km) [@Haymes_2008]. Historical trends in escapement for the Stillaguamish {{< glossary MU >}} are provided in **ToDo**. Known distribution of spawners within the basin is depicted in @fig-spwnstilly (derived from WDFW's Salmonid Stock Inventory (SaSI) located at: http://wdfw.wa.gov/conservation/fisheries/sasi/).
 
-ToDo: create escapement figures (from post-season FRAM database)
-Stillaguamish MU escapement estimates, return years x-x.
-
 ![Spawner distribution of Coho Salmon in the Stillaguamish River Basin.](images/Stilly_spawners.jpg){#fig-spwnstilly}
-
-###### Fishery Monitoring  **(canned language across all US MUs.  Shall we move this?)**
-
-A fundamental requirement of abundance-based Coho Salmon management under the {{< glossary PST >}} is that all fishery impacts on individual {{< glossary MUs >}} be annually monitored with respect to both number of fish caught and {{< glossary CWTs >}}. This requires basic reporting of total impacts by fishery and the capacity to estimate each fishery’s {{< glossary MU >}}-specific impacts. Total fishing mortalities for each {{< glossary MU >}} must be estimated to enable managers the ability to evaluate the annual {{< glossary ER >}} relative to the {{< glossary PST >}}-prescribed impact limits. Assessments of total fishing mortalities for each {{< glossary MU >}} must include both directed and incidentally-landed catch as well as estimates of non-landed mortalities. These estimates may be obtained through monitoring programs or, in some cases, generated through the use of algorithms built into the Fisheries Regulation Assessment Model (FRAM). Monitoring programs may involve test fisheries or data collected directly from fishers (e.g., through creel survey interviews, and other fisher-reported techniques, such as log books or fish-tickets). Estimation of non-landed fishing mortality requires annual estimates of encounter rates by fishery and gear.
-
-Management-Unit-specific impacts are generally evaluated using the coast-wide {{< glossary CWT >}} system. This system manages information on the release and recovery of coded-wire tags.  The volume of tags recovered for a given {{< glossary MU >}} will depend on tagging rates, marine survival rates, exploitation and escapement rates, and sampling rates in fisheries and escapements.  A recent review of {{< glossary CWT >}} methods [@PSCCWTW_2008] recommends target sampling rates of 20% for the landed catch and 20% for escapements, with a minimum of 10 tags collected in each fishery or escapement stratum. 
-
-Mark selective fisheries have been intensively monitored to collect data to estimate key parameters characterizing MSF fisheries and their impacts on unmarked salmon. Sampling activities include dockside creel sampling, on-water observation, and a Voluntary Trip Report (VTR) system. Data collected from this sampling is used to estimate key parameters necessary to manage fisheries and integrate MSFs in FRAM. These parameters include the following:  
-
-- mark rate of the targeted Coho Salmon populations;
-- total number of Coho Salmon harvested by mark-status, including an estimate of angler compliance rate with Coho Salmon MSF regulations;
-- total number of Coho Salmon released (by size/mark-status);
-- the coded-wire tag-stock composition of landed Coho Salmon; and
-- total mortality of marked and unmarked Coho Salmon   
-Estimates of observed encounter rates or mortality can then be compared to preseason FRAM projections [WDFW_2011].  
-
-Post-season {{< glossary ER >}} estimates are also generated using the Post-Season FRAM Model. Post-season estimates of catch and escapement are entered into the updated FRAM model with the same fishery regulation and effort package used for preseason modeling to generate post-season {{< glossary ER >}} estimates.
 
 ##### Enhancement
 
@@ -3840,9 +3706,7 @@ plot_pre_v_post("Stillaguamish")
 
 ##### Fishery Mortality and Escapement
 
-The base period for the Fisheries Regulation Assessment Model (FRAM) defines the temporal and spatial distributions of salmon fishing mortalities from each {{< glossary MU >}}.  The current FRAM base period for Coho Salmon includes catch years 1986–1992. During this period, fishing effort, tagging, and fishery sampling of Coho Salmon was high, allowing relatively fine-scale discrimination between salmon distributions.  Coded-wire-tag codes used during the base period for the Stillaguamish {{< glossary MU >}} are provided in the Appendix and average base period {{< glossary ERs >}} by individual fisheries are provided **ToDo**.
-
-ToDo: create table of the list of CWTs used in the base period. I think they are identified in the static file.
+The base period for the Fisheries Regulation Assessment Model (FRAM) defines the temporal and spatial distributions of salmon fishing mortalities from each {{< glossary MU >}}.  The current FRAM base period for Coho Salmon includes catch years 1986–1992. During this period, fishing effort, tagging, and fishery sampling of Coho Salmon was high, allowing relatively fine-scale discrimination between salmon distributions.  Average base period {{< glossary ERs >}} by individual fisheries are listed below for the Stillaguamish {{< glossary MU >}}..
 
 During the base period, Coho Salmon production from the Stillaguamish {{< glossary MU >}} contributed to US and Canadian marine sport and commercial fisheries in southern BC, the northern Washington coast, Strait of Juan de Fuca, and inner Puget Sound [@Haymes_2008]. Terminal tribal and non-tribal set and drift-net Coho Salmon net fisheries occur in commercial Marine Management Areas (MMAs) 8A (Port Susan/Possession Sound) and 8D (Tulalip Bay).  No directed commercial salmon fisheries typically occur in the Stillaguamish River, though there may periodically be tribal ceremonial and subsistence fisheries. A substantial marine sport fishery occurs in sport MMA 8.2 (Port Susan/Possession Sound), and small freshwater Coho Salmon sport fishery occurs in the Stillaguamish River basin.  The terminal fishery co-managers are WDFW, and the Tulalip and Stillaguamish Tribes. 
 
@@ -3882,7 +3746,7 @@ tbl_summary("Stillaguamish", "Skykomish", TRUE)
 
 ```{r}
 #| label: fig-stilly-escapement-and-ER
-#| fig-cap: Total exploitation rate (A) and escapement (B) of Stillaguamish MU by country, catch years 1986 through 2022. Dashed line indicates escapement goal for the Stillaguamish MU (**Need esc goal for Stilly** 30,000 individuals).   
+#| fig-cap: Total exploitation rate (A) and escapement (B) of Stillaguamish MU by country, catch years 1986 through 2022.    
 #| fig-width: 8
 #| fig-height: 7
 
@@ -3904,7 +3768,7 @@ Total abundance has averaged approximately `r plot_obj_abund$abund_avg_as_text` 
 During this time period, abundance was below the critical threshold of `r format(plot_obj_abund$critical_cat_limit, big.mark = ",")` fish in `r plot_obj_abund$years_under_critical_thresh` of these years. Annual estimated escapement has averaged `r plot_obj_abund$esc_avg_as_text` from `r plot_obj_abund$min_year` through `r plot_obj_abund$max_year`, with a low of `r format(plot_obj_abund$esc_min_val, big.mark = ",")` fish (`r plot_obj_abund$esc_year_of_min`) and a high of `r format(plot_obj_abund$esc_max_val, big.mark = ",")` fish (`r plot_obj_abund$esc_year_of_max`).
 
 ```{r f_abund_bar_stillaguamish}
-#| fig-cap: !expr glue::glue("Stillaguamish {{{{< glossary MU >}}}} post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years {plot_obj_abund$year_range}. The graphs include dashed trend lines and the vertical dotted lines highlight catch year 2010.")
+#| fig-cap: !expr glue::glue("Stillaguamish {{{{< glossary MU >}}}} post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years {plot_obj_abund$year_range}. The graphs include dashed trend lines.")
 #| label: fig-abund-bar-stilly
 
 plot_obj_abund$plot
@@ -3969,8 +3833,6 @@ The current {{< glossary PST >}}/{{< glossary Council display = PFMC >}} {{< glo
 Like the Stillaguamish {{< glossary MU >}}, the Snohomish {{< glossary MU >}} primarily relies on the following two indicator stocks releases in the Snohomish {{< glossary MU >}}: Bernie Gobin Hatchery (Tulalip Creek) and Wallace River Hatchery (Skykomish) [@TCCOHO_2013].  Approximately 45,000 coded wire tagged and clipped fish have been released from Wallace River Hatchery since brood year 1983. A double index tag program of 45,000 tagged and unclipped fish was implemented at this hatchery beginning with brood year 1996. Approximately 48,000 tagged fish have been released annually from Bernie Gobin Hatchery, where all broods but 1997 and 1998 were clipped and tagged. Wild stock coded-wire tagging programs have been limited within the basin. A smolt trapping study conducted by the Stillaguamish Tribe on brood years 1984–87 is the only source of wild tagging data from the Stillaguamish Watershed (Figure 4 4). 
 
 There are no direct estimates of marine survival or exploitation for this {{< glossary MU >}} due to the limited numbers of {{< glossary CWTs >}} released from the enhancement projects, and lack of formal escapement accounting for the returning tagged Coho Salmon. Tagged hatchery and wild fish released in the Snohomish {{< glossary MU >}} are used as surrogates for the Stillaguamish {{< glossary MU >}}.
-
-**add text for recoveries? Make sure to include that this could include clipped and unclipped fish**
 
 ```{r fig.height=4, fig.width=6}
 #| label: fig-wild-stock-tagging-snohomish
@@ -4050,6 +3912,7 @@ static$marine_survival_data |>
 ```
 
 **Most Recent Abundance Forecast and Methods**
+
 This information is available in the {{< glossary Council display = PFMC >}}'s 2024 Preseason Report 1 [@PFMC_1_2024] and [@Litz_2024]. 
 The 2024 Snohomish {{< glossary MU >}} {{< glossary OA3 >}} abundance forecast is 71,600, resulting in a classification of the stock abundance as "Moderate" under the 2019 {{< glossary PST >}} {{< glossary SCMP >}} and “Low” under the {{< glossary FMP >}}. This results in an allowable total {{< glossary ER >}} of no more than 40%. 
 
@@ -4059,13 +3922,7 @@ The Snohomish MU forecast is based on 2023 out-migrant smolts estimated from a m
 
 Known distribution of spawners within the basin is depicted in @fig-spwnsno (derived from WDFW's Salmonid Stock Inventory (SaSI) located at: http://wdfw.wa.gov/conservation/fisheries/sasi/).
 
-ToDo: create escapement figures (from post-season FRAM database)
-Snohomish MU escapement estimates, return years x-x.
-
 ![Spawner distribution of Coho Salmon in the Snohomish River Basin.](images/snohomish_spawners.jpg){#fig-spwnsno}
-
-###### Fishery Monitoring
-
 
 ##### Enhancement
 
@@ -4083,9 +3940,9 @@ plot_hatchery_production("Snohomish")
 
 #### Management Performance 
 
-##### Forecast Evaluation
+This section of the report includes summaries of forecast performance, abundances and abundance categories, and {{< glossary ERs >}} and associated impacting fisheries for the Snohomish {{< glossary MU >}}. Base period {{< glossary MU >}} {{< glossary ERs >}} are also provided. 
 
-ToDo: SoPanel also wishes to see the numbers (pre, post, % diff from pre by year).
+##### Forecast Evaluation
 
 ```{r}
 #| fig-cap: Comparison of preseason abundance predictions with the post-season estimates for the Snohomish MU.
@@ -4097,7 +3954,7 @@ plot_pre_v_post("Snohomish")
 
 ##### Fishery Mortality and Escapement
 
-The base period for the FRAM defines the temporal and spatial distributions of salmon fishing mortalities from each {{< glossary MU >}}. The current FRAM base period for Coho Salmon includes catch years 1986-1992.  During this period, fishing effort, tagging, and fishery sampling of Coho Salmon was high, allowing relatively fine-scale discrimination between salmon distributions. Coded-wire-tag codes used during the base period for the Snohomish {{< glossary MU >}} are provided in the Appendix and average base period {{< glossary ERs >}} by individual fisheries are listed below.
+The base period for the FRAM defines the temporal and spatial distributions of salmon fishing mortalities from each {{< glossary MU >}}. The current FRAM base period for Coho Salmon includes catch years 1986-1992.  During this period, fishing effort, tagging, and fishery sampling of Coho Salmon was high, allowing relatively fine-scale discrimination between salmon distributions. Average base period {{< glossary ERs >}} by individual fisheries are listed below for the Snohomish {{< glossary MU >}}.
 
 ```{r}
 #| tbl-cap: Snohomish MU average annual (total) and time period specific ERs used in the current FRAM base period.
@@ -4131,7 +3988,7 @@ tbl_summary("Snohomish", "Snohomish", TRUE)
 
 ```{r}
 #| label: fig-snohomish-escapement-and-ER
-#| fig-cap: Total exploitation rate (A) and escapement (B) of Snohomish MU by country, catch years 1986 through 2022. Dashed line indicates escapement goal for the Snohomish MU (**Need esc goal for Snohomish** 30,000 individuals).   
+#| fig-cap: Total exploitation rate (A) and escapement (B) of Snohomish MU by country, catch years 1986 through 2022.  
 #| fig-width: 8
 #| fig-height: 7
 
@@ -4151,7 +4008,7 @@ Total abundance has averaged approximately `r plot_obj_abund$abund_avg_as_text` 
 During this time period, abundance was below the critical threshold of `r format(plot_obj_abund$critical_cat_limit, big.mark = ",")` fish in `r plot_obj_abund$years_under_critical_thresh` of these years. Annual estimated escapement has averaged `r plot_obj_abund$esc_avg_as_text` from `r plot_obj_abund$min_year` through `r plot_obj_abund$max_year`, with a low of `r format(plot_obj_abund$esc_min_val, big.mark = ",")` fish (`r plot_obj_abund$esc_year_of_min`) and a high of `r format(plot_obj_abund$esc_max_val, big.mark = ",")` fish (`r plot_obj_abund$esc_year_of_max`).
 
 ```{r f_abund_bar_snohomish}
-#| fig-cap: !expr glue::glue("Snohomish {{{{< glossary MU >}}}} post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years {plot_obj_abund$year_range}. The graphs include dashed trend lines and the vertical dotted lines highlight catch year 2010.")
+#| fig-cap: !expr glue::glue("Snohomish {{{{< glossary MU >}}}} post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years {plot_obj_abund$year_range}. The graphs include dashed trend lines.")
 #| label: fig-abund-bar-snohomish
 
 plot_obj_abund$plot
@@ -4383,22 +4240,9 @@ The Base-Year Index method allows expansion of an annual index of abundance deve
 
 In the Hood Canal {{< glossary MU >}}, escapements are estimated in 10 survey reaches covering 9 miles (14.5 km) [@Haymes_2008].  In addition, natural smolt production and adult escapements are intensively monitored by WDFW at the Big Beef Creek Research Station and 3 nearby tributaries that enter Hood Canal on the Kitsap Peninsula northeast of Bremerton. A permanent WDFW upstream/downstream migrant weir is located on Big Beef Cr. just upstream of the estuary, and  juvenile fence traps are installed annually on 3 smaller adjacent tributaries (WRIAs 15.0377, 15.0400, and 15.0404).  The adult escapement information collected at this weir is used as an index abundance adjustment scalar in the Base-Year Index escapement estimation process for the {{< glossary MU >}}. Spawning redd enumeration-based accounting of adult escapement is currently conducted on the three study streams adjacent to Big Beef that are being monitored for juvenile production as part of an ongoing habitat productivity study [@Volkhardt_et_al_2007].  Historical trends in escapement for the Hood Canal {{< glossary MU >}} are provided in Table **ToDo** and Figure **ToDo**. Known distribution of spawners within the basin is depicted in @fig-spwnhc.
 
-ToDo --> add figure 4.2
-
 **Total {{< glossary ER >}} by US and Canada and escapement for the Hood Canal {{< glossary MU >}} for catch years 1986 to 2009. {{< glossary ER >}} ({{< glossary ER >}}) estimates from 1986 to 1997 are based on CWT recoveries and were generated using the Mixed-Stock Model and cohort reconstruction process. A post-season FRAM assessment technique was used to estimate {{< glossary ERs >}} for catch years 1998 to 2009.**
 
-ToDo --> add figure 4.3
-
 ![Spawner distribution of Coho Salmon in the Hood Canal River Basin.](images/Spawners.jpg){#fig-spwnhc}
-
-
-###### Fishery Monitoring (should this be moved to above escapement monitoring?)
-
-A fundamental requirement of abundance-based Coho Salmon management under the {{< glossary PST >}} is that all fishery impacts on individual {{< glossary MUs >}} be monitored with respect to both number of fish caught and CWTs. This requires basic reporting of total impacts by fishery and the capacity to estimate each fishery’s {{< glossary MU >}}-specific impacts. Total fishing mortalities for each {{< glossary MU >}} must be estimated to enable managers the ability to evaluate the annual {{< glossary ER >}} relative to the {{< glossary PST >}}-prescribed impact limits. Assessments of total fishing mortalities for each {{< glossary MU >}} must include both directed and incidentally-landed catch as well as estimates of non-landed mortalities. These estimates may be obtained through monitoring programs or, in some cases, generated through the use of algorithms built into the Fishery Regulation Assessment Model (FRAM). Monitoring programs may involve test fisheries or data collected directly from fishers (e.g., through creel survey interviews and other fisher-reported techniques, such as log books or fish-tickets).  Estimation of non-landed fishing mortality requires annual estimates of encounter rates by fishery and gear.
-
-Management-Unit-specific impacts are generally evaluated using the coast-wide {{< glossary CWT >}} system. This system manages information on the release and recovery of coded-wire tags. The volume of tags recovered for a given {{< glossary MU >}} will depend on tagging rates, marine survival rates, exploitation and escapement rates, and sampling rates in fisheries and escapements. A recent review of the coastwide {{< glossary CWT >}} program [@PSCCWTW_2008] recommends target sampling rates of 20% for the landed catch and 20% for escapements, with a minimum of 10 tags collected in each fishery or escapement stratum. 
-
-Post-season {{< glossary ER >}} estimates are also generated using the Post-Season FRAM Model. Post-season estimates of catch and escapement are entered into the updated FRAM model with the same fishery regulation and effort package used for preseason modeling to generate post-season {{< glossary ER >}} estimates.
 
 ##### Enhancement
 
@@ -4431,7 +4275,7 @@ plot_pre_v_post("Hood Canal")
 
 ##### Fishery Mortality and Escapement
 
-The base period for the FRAM defines the temporal and spatial distributions of salmon fishing mortalities from each {{< glossary MU >}}. The current FRAM base period for Coho Salmon Salmon includes catch years 1986-1992. During this period, fishing effort, tagging, and fishery sampling of Coho Salmon Salmon was high, allowing relatively fine-scale discrimination between salmon distributions. Coded-wire-tag codes used to develop the base period for the Hood Canal {{< glossary MU >}} are provided in (To-do --> add reference to table here) and average base period {{< glossary ERs >}} by individual fisheries are provided here (To-do --> add base period fishery impacts).
+The base period for the FRAM defines the temporal and spatial distributions of salmon fishing mortalities from each {{< glossary MU >}}. The current FRAM base period for Coho Salmon Salmon includes catch years 1986-1992. During this period, fishing effort, tagging, and fishery sampling of Coho Salmon Salmon was high, allowing relatively fine-scale discrimination between salmon distributions. Average base period {{< glossary ERs >}} by individual fisheries are listed below for the Hood Canal {{< glossary MU >}}.
 
 During the base period, Coho Salmon production from the Hood Canal {{< glossary MU >}} contributed to sport and commercial fisheries in southern BC, the northern Washington coast, Strait of Juan de Fuca, and inner Puget Sound (Figure 5.1; Appendix C).  Terminal commercial purse seine, gill and set-net fisheries occur in commercial fishery management areas 9A, 12A, 12, 12B, 12C, 12D, and the Skokomish River.
 
@@ -4474,7 +4318,7 @@ tbl_summary("Hood Canal", "BBC", TRUE)
 
 ```{r}
 #| label: fig-hc-escapement-and-ER
-#| fig-cap: Total exploitation rate (A) and escapement (B) of Hood Canal MU by country, catch years 1986 through 2022. Dashed line indicates escapement goal for the Hood Canal MU (**Need esc goal for Hood Canal** 30,000 individuals).   
+#| fig-cap: Total exploitation rate (A) and escapement (B) of Hood Canal MU by country, catch years 1986 through 2022.  
 #| fig-width: 8
 #| fig-height: 7
 
@@ -4494,7 +4338,7 @@ Total abundance has averaged approximately `r plot_obj_abund$abund_avg_as_text` 
 During this time period, abundance was below the critical threshold of `r format(plot_obj_abund$critical_cat_limit, big.mark = ",")` fish in `r plot_obj_abund$years_under_critical_thresh` of these years. Annual estimated escapement has averaged `r plot_obj_abund$esc_avg_as_text` from `r plot_obj_abund$min_year` through `r plot_obj_abund$max_year`, with a low of `r format(plot_obj_abund$esc_min_val, big.mark = ",")` fish (`r plot_obj_abund$esc_year_of_min`) and a high of `r format(plot_obj_abund$esc_max_val, big.mark = ",")` fish (`r plot_obj_abund$esc_year_of_max`).
 
 ```{r f_abund_bar_hc}
-#| fig-cap: !expr glue::glue("Hood Canal {{{{< glossary MU >}}}} post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years {plot_obj_abund$year_range}. The graphs include dashed trend lines and the vertical dotted lines highlight catch year 2010.")
+#| fig-cap: !expr glue::glue("Hood Canal {{{{< glossary MU >}}}} post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years {plot_obj_abund$year_range}. The graphs include dashed trend lines.")
 #| label: fig-abund-bar-hc
 
 plot_obj_abund$plot
@@ -4653,7 +4497,7 @@ The 2024 Strait of Juan de Fuca {{< glossary MU >}} {{< glossary OA3 >}} abundan
 This forecast includes both Eastern and Western Strait of Juan de Fuca drainages. {{< glossary JA3 >}} ocean recruits were predicted as the product of the estimated 2023 Coho Salmon smolt outmigration from all independent tributaries of the Strait of Juan de Fuca, and a predicted marine survival rate  of 7.15%. The marine survival rate was predicted by an r-square-weighted average of two linear regression models using the southern copepod biomass anomaly and the Pacific decadal oscillation index (PDO) from May through September, both during the year of smolt outmigration. The linear relationships that these models solved for have r-square values of 0.34 and 0.33, respectively.
 
 ###### Escapement Monitoring
-###### Fishery Monitoring
+
 ##### Enhancement
 
 Hatchery production within this {{< glossary MU >}} has averaged 1.3 million Coho Salmon released annually over broods 1983 through 2020.  Most of this production has been split between the Dungeness (50%) and the Lower Elwha Hatchery (44%). Approximately 673,000 Coho Salmon have been released annually from the Dungeness Hatchery over this period with another 626,000 released annually from the Lower Elwha Hatchery beginning with brood 1985. Mass marking of hatchery fish began with brood 1995 at the Lower Elwha Hatchery and with brood 1996 at the Dungeness Hatchery, averaging 1.1 million annually in total in recent years (@fig-hatch-stock-releases-skagit) [@RMISD_1977].
@@ -4680,7 +4524,7 @@ plot_pre_v_post("US Strait JDF")
 
 ##### Fishery Mortality and Escapement
 
-The base period for the FRAM defines the temporal and spatial distributions of salmon fishing mortalities from each {{< glossary MU >}}. The current FRAM base period for Coho Salmon includes catch years 1986-1992.  During this period, fishing effort, tagging, and fishery sampling of Coho Salmon was high, allowing relatively fine-scale discrimination between salmon distributions. Coded-wire-tag codes used during the base period for the Strait of Juan de Fuca {{< glossary MU >}} are provided in the Appendix and average base period {{< glossary ERs >}} by individual fisheries are listed below.
+The base period for the FRAM defines the temporal and spatial distributions of salmon fishing mortalities from each {{< glossary MU >}}. The current FRAM base period for Coho Salmon includes catch years 1986-1992.  During this period, fishing effort, tagging, and fishery sampling of Coho Salmon was high, allowing relatively fine-scale discrimination between salmon distributions. Average base period {{< glossary ERs >}} by individual fisheries are listed below for the U.S. Strait of Juan de Fuca {{< glossary MU >}}.
 
 ```{r}
 #| tbl-cap: Strait of Juan de Fuca MU average annual (total) and time period specific ERs used in the current FRAM base period.
@@ -4714,7 +4558,7 @@ tbl_summary("US Strait JDF", "JDF.MU", TRUE)
 
 ```{r}
 #| label: fig-sjf-escapement-and-ER
-#| fig-cap: Total exploitation rate (A) and escapement (B) of Strait of Juan de Fuca MU by country, catch years 1986 through 2022. Dashed line indicates escapement goal for the Strait of Juan de Fuca MU (**Need esc goal for SJF** 30,000 individuals).   
+#| fig-cap: Total exploitation rate (A) and escapement (B) of Strait of Juan de Fuca MU by country, catch years 1986 through 2022. 
 #| fig-width: 8
 #| fig-height: 7
 
@@ -4732,7 +4576,7 @@ Total abundance has averaged approximately `r plot_obj_abund$abund_avg_as_text` 
 During this time period, abundance was below the critical threshold of `r format(plot_obj_abund$critical_cat_limit, big.mark = ",")` fish in `r plot_obj_abund$years_under_critical_thresh` of these years. Annual estimated escapement has averaged `r plot_obj_abund$esc_avg_as_text` from `r plot_obj_abund$min_year` through `r plot_obj_abund$max_year`, with a low of `r format(plot_obj_abund$esc_min_val, big.mark = ",")` fish (`r plot_obj_abund$esc_year_of_min`) and a high of `r format(plot_obj_abund$esc_max_val, big.mark = ",")` fish (`r plot_obj_abund$esc_year_of_max`).
 
 ```{r f_abund_bar_sjf}
-#| fig-cap: !expr glue::glue("Strait of Juan De Fuca {{{{< glossary MU >}}}} post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years {plot_obj_abund$year_range}. The graphs include dashed trend lines and the vertical dotted lines highlight catch year 2010.")
+#| fig-cap: !expr glue::glue("Strait of Juan De Fuca {{{{< glossary MU >}}}} post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years {plot_obj_abund$year_range}. The graphs include dashed trend lines.")
 #| label: fig-abund-bar-sjf
 
 plot_obj_abund$plot
@@ -4858,7 +4702,7 @@ The 2024 Quillayute {{< glossary MU >}} {{< glossary OA3 >}} abundance forecast 
 This forecast is based on Coho Salmon smolt data measured in the Quillayute watershed in 2023 by West Fork Environmental and the Quileute Nation. A total of 252,000 Coho Salmon smolts are estimated to have emigrated from the Quillayute River system in 2023. Smolt abundance from the Dickey River was estimated to be 27,431 wild Coho Salmon smolts (245 smolts per square mile). Smolt abundance from the Bogachiel, Calawah, and Sol Duc rivers combined was estimated to be 164,701 wild Coho Salmon smolts (316 smolts per square mile). Total smolts were separated into summer and fall natural Coho Salmon smolts by the relative number of natural brood year 2021 spawners, 3.69% and 96.31%, respectively. Results from this separation yield estimates of 9,300 natural summer Coho Salmon smolts and 242,700 natural fall Coho Salmon smolts. The natural Coho Salmon forecast is based on the estimated total natural summer and fall Coho Salmon smolt production (252,000) and a {{< glossary JA3 >}} projected marine survival rate of 5.2%.
 
 ###### Escapement Monitoring
-###### Fishery Monitoring
+
 ##### Enhancement
 
 A few salmon hatchery facilities exist within the basin; however, only one currently produces Coho Salmon, WDFW’s Sol Duc Hatchery on the Sol Duc River at RM 29.  This facility began operating in 1970, collects adult broodstock on-site, and has egg incubation and rearing facilities.  Both summer and fall stock Coho Salmon are produced at this facility and both programs are integrated harvest programs (2012 future brood document available at: http://wdfw.wa.gov/publications/01356/wdfw01356.pdf).  The goals of the programs are to release 250,000 fall run smolts and 100,000 summer run smolts annually.
@@ -4885,7 +4729,7 @@ plot_pre_v_post("Quillayute")
 
 ##### Fishery Mortality and Escapement
 
-The base period for the FRAM defines the temporal and spatial distributions of salmon fishing mortalities from each {{< glossary MU >}}. The current FRAM base period for Coho Salmon includes catch years 1986-1992.  During this period, fishing effort, tagging, and fishery sampling of Coho Salmon was high, allowing relatively fine-scale discrimination between salmon distributions. Coded-wire-tag codes used during the base period for the Quillayute {{< glossary MU >}} are provided in the Appendix and average base period {{< glossary ERs >}} by individual fisheries are listed below.
+The base period for the FRAM defines the temporal and spatial distributions of salmon fishing mortalities from each {{< glossary MU >}}. The current FRAM base period for Coho Salmon includes catch years 1986-1992.  During this period, fishing effort, tagging, and fishery sampling of Coho Salmon was high, allowing relatively fine-scale discrimination between salmon distributions. Average base period {{< glossary ERs >}} by individual fisheries are listed below for the Quillayute {{< glossary MU >}}.
 
 ```{r}
 #| tbl-cap: Quillayute MU average annual (total) and time period specific ERs used in the current FRAM base period.
@@ -4919,7 +4763,7 @@ tbl_summary("Quillayute")
 
 ```{r}
 #| label: fig-quillayute-escapement-and-ER
-#| fig-cap: Total exploitation rate (A) and escapement (B) of Quillayute MU by country, catch years 1986 through 2022. Dashed line indicates escapement goal for the Quillayute MU (**Need esc goal for Quillayute** 30,000 individuals).   
+#| fig-cap: Total exploitation rate (A) and escapement (B) of Quillayute MU by country, catch years 1986 through 2022.  
 #| fig-width: 8
 #| fig-height: 7
 
@@ -4937,7 +4781,7 @@ Total abundance has averaged approximately `r plot_obj_abund$abund_avg_as_text` 
 During this time period, abundance was below the critical threshold of `r format(plot_obj_abund$critical_cat_limit, big.mark = ",")` fish in `r plot_obj_abund$years_under_critical_thresh` of these years. Annual estimated escapement has averaged `r plot_obj_abund$esc_avg_as_text` during `r plot_obj_abund$min_year` through `r plot_obj_abund$max_year`, with a low of `r format(plot_obj_abund$esc_min_val, big.mark = ",")` fish (`r plot_obj_abund$esc_year_of_min`) and a high of `r format(plot_obj_abund$esc_max_val, big.mark = ",")` fish (`r plot_obj_abund$esc_year_of_max`).
 
 ```{r f_abund_bar_quill}
-#| fig-cap: !expr glue::glue("Quillayute {{{{< glossary MU >}}}} post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years {plot_obj_abund$year_range}. The graphs include dashed trend lines and the vertical dotted lines highlight catch year 2010.")
+#| fig-cap: !expr glue::glue("Quillayute {{{{< glossary MU >}}}} post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years {plot_obj_abund$year_range}. The graphs include dashed trend lines.")
 #| label: fig-abund-bar-quillayute
 
 plot_obj_abund$plot
@@ -5059,7 +4903,7 @@ This forecast is based on estimated average natural smolt production per square 
 A marine survival estimate to {{< glossary JA3 >}} of 5.44% was applied to the total natural smolt production estimate to predict the 2024 return of Hoh River natural Coho Salmon. This rate is the mean of two marine survival estimates of wild stocks that are to the north and south of the Hoh River: the Queets wild Coho Salmon to the south with a marine survival estimate of 7.69% {{< glossary JA3 >}} and Washington Coast wild Coho Salmon stocks with a marine survival estimate of 3.20% {{< glossary JA3 >}}. The average marine survival rate of 5.44% {{< glossary JA3 >}} (4.41% {{< glossary OA3 >}}) is within 2% of the {{< glossary OA3 >}} survival of 3.2% predicted in 2024 for other Washington Coast Coho Salmon stocks [@Litz_2024].
 
 ###### Escapement Monitoring
-###### Fishery Monitoring
+
 ##### Enhancement
 
 There is currently no hatchery Coho Salmon production present in the {{< glossary MU >}}. The Chalaat Creek Hatchery is run by the Hoh Indian Tribe and formerly produced Coho Salmon.  There have been periodic releases of hatchery Coho Salmon from other coastal basins.
@@ -5086,7 +4930,7 @@ plot_pre_v_post("Hoh")
 
 ##### Fishery Mortality and Escapement
 
-The base period for the FRAM defines the temporal and spatial distributions of salmon fishing mortalities from each {{< glossary MU >}}. The current FRAM base period for Coho Salmon includes catch years 1986-1992.  During this period, fishing effort, tagging, and fishery sampling of Coho Salmon was high, allowing relatively fine-scale discrimination between salmon distributions. Coded-wire-tag codes used during the base period for the Hoh {{< glossary MU >}} are provided in the Appendix and average base period {{< glossary ERs >}} by individual fisheries are listed below.
+The base period for the FRAM defines the temporal and spatial distributions of salmon fishing mortalities from each {{< glossary MU >}}. The current FRAM base period for Coho Salmon includes catch years 1986-1992.  During this period, fishing effort, tagging, and fishery sampling of Coho Salmon was high, allowing relatively fine-scale discrimination between salmon distributions. Average base period {{< glossary ERs >}} by individual fisheries are listed below for the Hoh {{< glossary MU >}}.
 
 ```{r}
 #| tbl-cap: Hoh MU average annual (total) and time period specific ERs used in the current FRAM base period.
@@ -5138,7 +4982,7 @@ Total abundance has averaged approximately `r plot_obj_abund$abund_avg_as_text` 
 During this time period, abundance was below the critical threshold of `r format(plot_obj_abund$critical_cat_limit, big.mark = ",")` fish in `r plot_obj_abund$years_under_critical_thresh` of these years. Annual estimated escapement has averaged `r plot_obj_abund$esc_avg_as_text` from `r plot_obj_abund$min_year` through `r plot_obj_abund$max_year`, with a low of `r format(plot_obj_abund$esc_min_val, big.mark = ",")` fish (`r plot_obj_abund$esc_year_of_min`) and a high of `r format(plot_obj_abund$esc_max_val, big.mark = ",")` fish (`r plot_obj_abund$esc_year_of_max`).
 
 ```{r f_abund_bar_hoh}
-#| fig-cap: !expr glue::glue("Hoh {{{{< glossary MU >}}}} post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years {plot_obj_abund$year_range}. The graphs include dashed trend lines and the vertical dotted lines highlight catch year 2010.")
+#| fig-cap: !expr glue::glue("Hoh {{{{< glossary MU >}}}} post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years {plot_obj_abund$year_range}. The graphs include dashed trend lines.")
 #| label: fig-abund-bar-hoh
 
 plot_obj_abund$plot
@@ -5261,7 +5105,7 @@ The 2024 Queets {{< glossary MU >}} {{< glossary OA3 >}} abundance forecast is 1
 The natural forecast was developed by multiplying the 2023 smolt outmigration estimate of 205,963 by the predicted marine survival rate of 7.669%, which results in an abundance prediction of 15,795 {{< glossary JA3 >}}. The model uses run reconstructions developed by the Quinault Department of Fisheries (QDFi) as a response, which includes {{< glossary FRAM >}} natural and incidental mortality, but does not include estimates of mark-selective fishery mortality. Expansion for mark-selective fishery mortality for the 2024 run abundance prediction was not available at the time of this report but was estimated as mean (post season FRAM / QDFi run reconstruction for run years 2010 to 2020) * abundance prediction for 2023 = 1.095037 * 13,963 = 15,290. Marine survival is typically predicted using a general additive logistic regression model (logit (recruits/smolts) ~ spline (explanatory variable(s)). The explanatory variables are the Pacific Decadal Oscillation index maximum May-August and Biologically Effective Upwelling Transport Index median April-August.
 
 ###### Escapement Monitoring
-###### Fishery Monitoring
+
 ##### Enhancement
 
 The Salmon River Hatchery, located on a tributary to the Queets River and operated by the Quinault Tribe is the primary Coho Salmon adult broodstock collection, incubation, and rearing program in the {{< glossary MU >}} (Haymes 2008). Coho Salmon juveniles were also periodically reared, coded wire tagged, and released at several other locations in the basin as part of a long-term natural production enhancement program operated by the Quinault tribe, using juveniles produced from wild origin adult Coho Salmon collected with wild broodstock capture programs.
@@ -5288,7 +5132,7 @@ plot_pre_v_post("Queets")
 
 ##### Fishery Mortality and Escapement
 
-The base period for the FRAM defines the temporal and spatial distributions of salmon fishing mortalities from each {{< glossary MU >}}. The current FRAM base period for Coho Salmon includes catch years 1986-1992.  During this period, fishing effort, tagging, and fishery sampling of Coho Salmon was high, allowing relatively fine-scale discrimination between salmon distributions. Coded-wire-tag codes used during the base period for the Queets {{< glossary MU >}} are provided in the Appendix and average base period {{< glossary ERs >}} by individual fisheries are listed below.
+The base period for the FRAM defines the temporal and spatial distributions of salmon fishing mortalities from each {{< glossary MU >}}. The current FRAM base period for Coho Salmon includes catch years 1986-1992.  During this period, fishing effort, tagging, and fishery sampling of Coho Salmon was high, allowing relatively fine-scale discrimination between salmon distributions. Average base period {{< glossary ERs >}} by individual fisheries are listed below for the Queets {{< glossary MU >}}.
 
 ```{r}
 #| tbl-cap: Queets MU average annual (total) and time period specific ERs used in the current FRAM base period.
@@ -5341,7 +5185,7 @@ Total abundance has averaged approximately `r plot_obj_abund$abund_avg_as_text` 
 During this time period, abundance was below the critical threshold of `r format(plot_obj_abund$critical_cat_limit, big.mark = ",")` fish in `r plot_obj_abund$years_under_critical_thresh` of these years. Annual estimated escapement has averaged `r plot_obj_abund$esc_avg_as_text` from `r plot_obj_abund$min_year` through `r plot_obj_abund$max_year`, with a low of `r format(plot_obj_abund$esc_min_val, big.mark = ",")` fish (`r plot_obj_abund$esc_year_of_min`) and a high of `r format(plot_obj_abund$esc_max_val, big.mark = ",")` fish (`r plot_obj_abund$esc_year_of_max`).
 
 ```{r f_abund_bar_queets}
-#| fig-cap: !expr glue::glue("Queets {{{{< glossary MU >}}}} post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years {plot_obj_abund$year_range}. The graphs include dashed trend lines and the vertical dotted lines highlight catch year 2010.")
+#| fig-cap: !expr glue::glue("Queets {{{{< glossary MU >}}}} post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years {plot_obj_abund$year_range}. The graphs include dashed trend lines.")
 #| label: fig-abund-bar-queets
 
 plot_obj_abund$plot
@@ -5512,7 +5356,7 @@ Quinault Department of Fisheries prediction of Queets Coho Salmon {{< glossary J
 The Grays Harbor {{< glossary MU >}} is managed differently than other U.S. {{< glossary MUs >}}, in that the overfishing limit (OFL) is defined in terms of spawner escapement that includes hatchery origin fish that are projected to spawn in natural areas. Potential Grays Harbor Coho Salmon natural area spawner abundance was derived by adding the current forecast of natural origin Coho Salmon {{< glossary OA3 >}} abundance of 74,851, to the predicted abundance of {{< glossary OA3 >}} hatchery origin Coho Salmon spawning in natural areas. The forecast of {{< glossary OA3 >}} naturally spawning hatchery origin Coho is 7,025 and was calculated by multiplying the {{< glossary OA3 >}} hatchery Coho Salmon abundance forecast of 68,200, by the most recent 5-year average stray rate (2018-2022 average = 0.103). Annual stray rates were estimated by dividing the number of hatchery origin spawners in natural areas by the total hatchery origin escapement. 
 
 ###### Escapement Monitoring
-###### Fishery Monitoring
+
 ##### Enhancement
 
 There are three major hatchery Coho Salmon production programs located in the {{< glossary MU >}} with adult collection and juvenile rearing facilities, all of which are operated by WDFW (Haymes 2008).  Humptulips Hatchery is located at the mouth of Stevens Creek on the Humptulips River at RM 22.5 from the estuary.  Bingham Creek Hatchery is located at the mouth of Bingham Creek on the Satsop River at RM 17.5 (the Satsop River enters the Chehalis River at RM 20.2 from the estuary).  Van Winkle (Aberdeen) Hatchery is located on Van Winkle Cr., a tributary to the lower Chehalis River.  Coho Salmon are also reared and released at the WDFW Skookumchuck and Eight Creek Hatcheries, which are located on tributaries to the Chehalis R.  These programs typically use juvenile Coho Salmon production obtained from the Bingham Creek facility.
@@ -5541,7 +5385,7 @@ plot_pre_v_post("Grays Harbor")
 
 ##### Fishery Mortality and Escapement
 
-The base period for the FRAM defines the temporal and spatial distributions of salmon fishing mortalities from each {{< glossary MU >}}. The current FRAM base period for Coho Salmon includes catch years 1986-1992.  During this period, fishing effort, tagging, and fishery sampling of Coho Salmon was high, allowing relatively fine-scale discrimination between salmon distributions. Coded-wire-tag codes used during the base period for the Grays Harbor {{< glossary MU >}} are provided in the Appendix and average base period {{< glossary ERs >}} by individual fisheries are listed below.
+The base period for the FRAM defines the temporal and spatial distributions of salmon fishing mortalities from each {{< glossary MU >}}. The current FRAM base period for Coho Salmon includes catch years 1986-1992.  During this period, fishing effort, tagging, and fishery sampling of Coho Salmon was high, allowing relatively fine-scale discrimination between salmon distributions. Average base period {{< glossary ERs >}} by individual fisheries are listed below for the Grays Harbor {{< glossary MU >}}.
 
 ```{r}
 #| tbl-cap: Grays Harbor MU average annual (total) and time period specific ERs used in the current FRAM base period.
@@ -5594,7 +5438,7 @@ Total abundance has averaged approximately `r plot_obj_abund$abund_avg_as_text` 
 During this time period, abundance was below the critical threshold of `r format(plot_obj_abund$critical_cat_limit, big.mark = ",")` fish in `r plot_obj_abund$years_under_critical_thresh` of these years. Annual estimated escapement has averaged `r plot_obj_abund$esc_avg_as_text` from `r plot_obj_abund$min_year` through `r plot_obj_abund$max_year`, with a low of `r format(plot_obj_abund$esc_min_val, big.mark = ",")` fish (`r plot_obj_abund$esc_year_of_min`) and a high of `r format(plot_obj_abund$esc_max_val, big.mark = ",")` fish (`r plot_obj_abund$esc_year_of_max`).
 
 ```{r f_abund_bar_gh}
-#| fig-cap: !expr glue::glue("Grays Harbor {{< glossary MU >}} post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years 2004 through 2022. The graphs include dashed trend lines and the vertical dotted lines highlight catch year 2010.")
+#| fig-cap: !expr glue::glue("Grays Harbor {{< glossary MU >}} post-season estimates of ocean age-3 abundances, escapement, and harvest for catch years 2004 through 2022. The graphs include dashed trend lines.")
 #| label: fig-abund-bar-gh
 
 plot_obj_abund$plot
