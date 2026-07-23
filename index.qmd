@@ -6,7 +6,7 @@ bibliography: references.bib
 csl: american-fisheries-society.csl
 params:
   static_tables: StaticTables.xlsx
-  mdb_pre: ../PeriodicReportData/PSC_CoTC_Preseason_CohoFRAMDB_thru2025_06192025.mdb
+  mdb_pre: ../PeriodicReportData/PSC_CoTC_Preseason_CohoFRAMDB_thru2026_060526.mdb
   mdb_pst: ../PeriodicReportData/PSC_CoTC_PostSeason_CohoFRAMDB_thru2024_021226.mdb
   clean_run: false
 editor_options:
@@ -44,30 +44,9 @@ Dev note: using quarto-glossary to add hover-over text. Details and installation
 
 **TO DO**
 
-- further text revisions
 - drop unnecessary tables from StaticTable
-- Clarify + update existing figures
-- Translate "picture" figures into natively created graphics
-- Ditto tables
 - abundance figures overlaying MUs within regions (US in, US out, BC)
 - Extract Quillayute and Queets values from TAMMs (currntly based on FRAM)
-
-*New Todos (CBE and CCT 2024+)*
-
-- Populate glossary hover-over tooltips, using glossary.yml and inserting based on nomenclature here: https://debruine.github.io/quarto-glossary/
-- add in the ER vs overages table CBE put together for 5 yr report. Use Mike's code to identify 
-- add the rmis summary data process to our documentation for rerunning this, and to Collin's scripts (automate the SQL call)
-- add the updated coho_lut operation with "TERM" column into the SQL workflow
-- add PSC MU lookup tables from Mike's package to framrosetta
-- update 5-yr report doc to account for coastal fisheries and to use the ER caps calculated via mike's function.
-- Add somewhere that the Ocean Age 3 Abundance is the `abund` column in FRAM.
-- Check on the database we're pulling the numbers from. 
-
-**CBE change log**
-
-- added "clean_run" as a logical to the parameters.  If `TRUE`, recreates the temporary .csv files.
-- Previously used hard-coded RunID numbers when generating intermediate data csv. This was sensitive to changes in numbering scheme;
-updated to instead specify minimum year (1998, to match comments from original) and include all years of FRAM data after that.
 
 :::
 ```{r}
@@ -92,7 +71,7 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 
 if(interactive()){ ## recreate parameters if being run interactively.
   params = list(static_tables = "StaticTables.xlsx",
-                mdb_pre = "C:/Repos/PeriodicReportData/PSC_CoTC_Preseason_CohoFRAMDB_thru2025_06192025.mdb",
+                mdb_pre = "C:/Repos/PeriodicReportData/PSC_CoTC_Preseason_CohoFRAMDB_thru2026_060526.mdb",
                 mdb_pst = "C:/Repos/PeriodicReportData/PSC_CoTC_PostSeason_CohoFRAMDB_thru2024_021226.mdb",
                 clean_run = TRUE
   )
@@ -146,7 +125,7 @@ static <- list(
   #field Indicator defines evaluated CWT release groups (as "Y")
   releases = readxl::read_excel(
     params$static_tables, sheet = "Releases",
-    col_types = c(rep('text',9), 'numeric', 'text', rep('numeric',7))
+    col_types = c(rep('text',9), 'numeric', 'text', rep('numeric',8))
   ) |> 
     mutate(across(where(is.character), ~replace_na(.,"")),
            MU_Name = case_when(
@@ -325,7 +304,7 @@ if(params$clean_run == TRUE){
       , by = "PSC_StockID"
     )
   
-  write_csv(psc_pst, here("../PeriodicReportData/psc_postfram_2004_2023.csv"))
+  write_csv(psc_pst, here("../PeriodicReportData/psc_postfram_2004_2024.csv"))
   
   ##Quillayute and Queets post-season values are drawn from TAMM
   #https://github.com/PSC-CoTC/AnnualReport/blob/master/csv/TammFisheryQueetsRef.csv
@@ -433,20 +412,20 @@ if(params$clean_run == TRUE){
   #   by = "RunYear"  
   # ) |> print(n=100)
   
-  write_csv(psc_pre, here("../PeriodicReportData/psc_prefram_2004_2023.csv"))
+  write_csv(psc_pre, here("../PeriodicReportData/psc_prefram_2004_2026.csv"))
 }
 ```
 
 ```{r loading_in, include=FALSE}
 #but to deal with WA Coast stocks from TAMM spreadsheets, among other reasons
-psc_pst <- readr::read_csv(here("../PeriodicReportData/psc_postfram_2004_2023.csv")) |> 
+psc_pst <- readr::read_csv(here("../PeriodicReportData/psc_postfram_2004_2024.csv")) |> 
   rename(`Catch Year` = RunYear) |> 
   mutate(fishery_region = case_when(
     FisheryID < 167 ~ "SUS",
     FisheryID >= 167 & FisheryID < 194 ~ "Canada",
     FisheryID >= 194 ~ "AK"
   ))
-psc_pre <- readr::read_csv(here("../PeriodicReportData/psc_prefram_2004_2023.csv")) |> 
+psc_pre <- readr::read_csv(here("../PeriodicReportData/psc_prefram_2004_2026.csv")) |> 
   rename(`Catch Year` = RunYear) |> 
   mutate(fishery_region = case_when(
     FisheryID < 167 ~ "SUS",
@@ -908,7 +887,7 @@ plot_hatchery_tagged_releases <- function(stknm) {
     drop_na(val) |> 
     mutate(tag_mark = factor(tag_mark, levels = names(pal_rel_tag_mark))) |> 
     group_by(MU_Name, brood_year, tag_mark) |> summarise(val = sum(val), .groups = "drop") |> 
-    filter(between(brood_year,1980,2020)) |> 
+    filter(between(brood_year,1983,2023)) |> 
     ggplot() +
     geom_col(aes(brood_year, val, fill = tag_mark)) +
     scale_fill_manual(values = pal_rel_tag_mark) +
@@ -924,7 +903,7 @@ plot_hatchery_tagged_releases <- function(stknm) {
 ```
 
 ```{r func_plot_hatchery_production}
-plot_hatchery_production <- function(stknm="Skagit", start_date=1983, end_date=2020, mass_mark_start=1995, mass_mark_end=2020){
+plot_hatchery_production <- function(stknm="Skagit", start_date=1983, end_date=2023, mass_mark_start=1995, mass_mark_end=2020){
   
   dat <- static$releases |> 
     filter(
@@ -1317,8 +1296,8 @@ tibble(
   `Southern BC` = c("[Interior Fraser](#interior-fraser)", 
                     "[Lower Fraser](#lower-fraser)", 
                     "[Strait of Georgia](#strait-of-georgia)",
-                    "",
-                    ""),
+                    "&nbsp;",
+                    "&nbsp;"),
   `US Inside` = c("[Skagit](#skagit)",
                   "[Stillaguamish](#stillaguamish)", 
                   "[Snohomish](#snohomish)", 
@@ -1328,7 +1307,7 @@ tibble(
                    "[Hoh](#hoh)",
                    "[Queets](#queets)",
                    "[Grays Harbor](#grays-harbor)", 
-                   "")
+                   "&nbsp;")
 ) |> 
   gt() |> 
   tab_options(table.width = px(400)) |> 
@@ -1448,7 +1427,6 @@ plot_rmis_recoveries_all = function(mu.name,
   return(ggplotly(gp))
 }
 
-#plot_rmis_recoveries_all()
 ```
 
 ```{r}
@@ -1857,13 +1835,13 @@ Throughout this process, the January post season, Pre I-III reports are provided
 
 ### US Inseason Management
 
-This information is from the {{< glossary Council display = PFMC >}}'s 2025 Preseason Report III [@PFMC_3_2025].
+This information is from the {{< glossary Council display = PFMC >}}'s 2026 Preseason Report III [@PFMC_3_2026].
 
 In season changes to planned U.S fisheries are limited, but have been implemented under some specific conditions. When ocean area/fishery specific quotas are not being caught in an ocean area then part of the quota may be transferred to another ocean area/fishery, based upon FRAM estimates of neutral impacts to the limiting stock(s); this may include adjustments to bag limits, seasons, and/or MSF regulations. The preseason planned prosecution of some fisheries is dependent upon the results of test fisheries, i.e., the Fraser Panel Sockeye directed commercial fisheries. Emergency closures due to attaining or exceeding planned catch quotas or in response to indications of reduced abundance.
 
-### US Management Units 2025 Exploitation Rate Constraints
+### US Management Units 2026 Exploitation Rate Constraints
 
-For 2025, Puget Sound and Washington coast Coho Salmon preliminary constraints are as follows [@PFMC_3_2025]:
+For 2026, Puget Sound and Washington coast Coho Salmon preliminary constraints are as follows [@PFMC_3_2026]:
 
 |**PST MU**              | **Total Exploitation Rate Constraint** | **Categorical Status** |
 |:-------------          |:--------------------------------------:|:----------------------:| 
@@ -1871,11 +1849,11 @@ For 2025, Puget Sound and Washington coast Coho Salmon preliminary constraints a
 | Stillaguamish          | 50%                                    | Abundant               | 
 | Snohomish              | 40%                                    | Moderate               | 
 | Hood Canal             | 45%                                    | Moderate               | 
-| Strait of Juan de Fuca | 40%                                    | Moderate               | 
-| Quillayute Fall        | 42%                                    | Moderate               | 
-| Hoh                    | 63%                                    | Abundant               | 
-| Queets                 | 36%                                    | Moderate               | 
-| Grays Harbor           | 50%                                    | Abundant               | 
+| Strait of Juan de Fuca | 20%                                    | Low                    | 
+| Quillayute Fall        | 51%                                    | Abundant               | 
+| Hoh                    | 65%                                    | Abundant               | 
+| Queets                 | 45%                                    | Abundant               | 
+| Grays Harbor           | 56%                                    | Abundant               | 
 
 : PST Southern Coho Management Plan {#tbl-pst-scmp}
 
@@ -1993,7 +1971,7 @@ When developing the FRAM base period, the CoTC used wild indicator stocks to rep
 
 
 ```{r fig_wild_stock_tagging, fig.height=9, fig.width=8}
-#| fig-cap: Total number of wild Coho Salmon smolts caught, tagged, and released by clip status for each Management Unit over brood years 1983 through 2020 (data downloaded from RMIS 9-6-2023).
+#| fig-cap: Total number of wild Coho Salmon smolts caught, tagged, and released by clip status for each Management Unit over brood years 1983 through 2023 (data downloaded from RMIS 5-22-2026).
 #| label: fig-wild-stock-tagging
 static$releases |> 
   filter(
@@ -2012,6 +1990,7 @@ static$releases |>
   pivot_longer(cols = starts_with("CWT_"), names_to = "tag_mark", values_to = "val") |> 
   mutate(tag_mark = factor(tag_mark, levels = c("CWT_Unclipped", "CWT_Unclipped_DIT", "CWT_Clipped"))) |> 
   drop_na(val) |> 
+  filter(between(brood_year,1983,2023)) |> 
   ggplot() +
   geom_col(aes(brood_year, val, fill = tag_mark)) +
   scale_fill_manual(values = pal_rel_tag_mark) +
@@ -2030,7 +2009,7 @@ static$releases |>
 When wild stock tagging was insufficient to represent a {{< glossary MU >}}, the CoTC used hatchery indicator stocks to represent the {{< glossary MU >}}. The figures below summarize all coded-wire-tagged hatchery Coho Salmon smolts released within the {{< glossary MUs >}} that are currently reported in {{< glossary RMIS >}}. The total number of hatchery coded-wire-tagged fish released annually within the {{< glossary MUs >}} has varied over the years, with a low of approximately 1.4 million for brood year 2003 and a high of over 3 million for brood year 2020. With the advent of mass-marking in the 1990s, hatcheries began to release unmarked tag groups as early as brood year 1993. Most of these unmarked and tagged fish are part of a {{< glossary DIT >}} program. 
 
 ```{r fig_hatch_stock_releases_all_cwt_only}
-#| fig-cap: Total number of hatchery Coho Salmon smolts released by clip status for all Management Units combined over brood years 1983 through 2020 (data downloaded from RMIS 9-6-2023). "CWT_Unclipped_DIT" refer to tagged fish that are released with an intact adipose fin and are associated with a clipped release group. "CWT_Unclipped" are tagged fish that are unclipped but not associated with another tagged release group.  These fish are often associated with new hatchery programs.
+#| fig-cap: Total number of hatchery Coho Salmon smolts released by clip status for all Management Units combined over brood years 1983 through 2023 (data downloaded from RMIS 5-22-26). "CWT_Unclipped_DIT" refer to tagged fish that are released with an intact adipose fin and are associated with a clipped release group. "CWT_Unclipped" are tagged fish that are unclipped but not associated with another tagged release group.  These fish are often associated with new hatchery programs.
 #| label: fig-hatch-stock-releases
 static$releases |> 
   filter(
@@ -2046,7 +2025,7 @@ static$releases |>
   drop_na(val) |> 
   mutate(tag_mark = factor(tag_mark, levels = names(pal_rel_tag_mark))) |> 
   group_by(brood_year, tag_mark) |> summarise(val = sum(val), .groups = "drop") |> 
-  filter(between(brood_year,1980,2020)) |> 
+  filter(between(brood_year,1983,2023)) |> 
   ggplot() +
   geom_col(aes(brood_year, val, fill = tag_mark)) +
   scale_fill_manual(values = pal_rel_tag_mark) +
@@ -2061,7 +2040,7 @@ static$releases |>
 Hatchery stock tagging has consistently occurred in every {{< glossary MU >}}, with the exception of the Stillaguamish and the Hoh {{< glossary MUs >}} where very few hatchery fish are released. Double-index-tagging programs were implemented in all {{< glossary MUs >}} but the Stillaguamish and the Hoh {{< glossary MU >}}; however, {{< glossary DIT >}} programs currently exist only in the US {{< glossary MUs >}}.
 
 ```{r fig_hatch_stock_releases_mu_cwt_only, fig.height=9, fig.width=8}
-#| fig-cap: Total number of tagged hatchery Coho Salmon smolts released by clip status for each {{< glossary MU >}} over brood years 1983 through 2020 (data downloaded from RMIS 9-6-2023). CWT_Unclipped_DIT refer to tagged fish that are released with an intact adipose fin and are associated with a clipped release group. CWT_Unclipped are tagged fish that are unclipped but not associated with another tagged release group.  These fish are often associated with new hatchery programs. 
+#| fig-cap: Total number of tagged hatchery Coho Salmon smolts released by clip status for each {{< glossary MU >}} over brood years 1983 through 2023 (data downloaded from RMIS 5-22-26). CWT_Unclipped_DIT refer to tagged fish that are released with an intact adipose fin and are associated with a clipped release group. CWT_Unclipped are tagged fish that are unclipped but not associated with another tagged release group.  These fish are often associated with new hatchery programs. 
 #| label: fig-hatchery-smolts-clip-status
 static$releases |> 
   filter(
@@ -2076,7 +2055,7 @@ static$releases |>
   drop_na(val) |> 
   mutate(tag_mark = factor(tag_mark, levels = names(pal_rel_tag_mark))) |> 
   group_by(MU_Name, brood_year, tag_mark) |> summarise(val = sum(val), .groups = "drop") |> 
-  filter(between(brood_year,1980,2020)) |> 
+  filter(between(brood_year,1983,2023)) |> 
   ggplot() +
   geom_col(aes(brood_year, val, fill = tag_mark)) +
   scale_fill_manual(values = pal_rel_tag_mark) +
@@ -2111,7 +2090,7 @@ smolt_clip_tag_status <- function(dat){
     drop_na(val) |> 
     mutate(tag_mark = factor(tag_mark, levels = names(pal_rel_tag_mark))) |> 
     group_by(MU_Name, brood_year, tag_mark) |> summarise(val = sum(val), .groups = "drop") |> 
-    filter(between(brood_year,1980,2020))
+    filter(between(brood_year,1980,2023))
   
   plot <- ggplot(dat) +
     geom_col(aes(brood_year, val, fill = tag_mark)) +
@@ -2801,7 +2780,7 @@ plot_wild_tagged_rel_obj$plot
 
 ```{r fig.height=4, fig.width=6}
 #| label: fig-hatch-stock-releases-mu-cwt-only-ifr
-#| fig-cap: Total number of coded-wire-tagged hatchery Coho Salmon released, by clip status, within the Interior Fraser MU for brood years 1983 through 2020.
+#| fig-cap: Total number of coded-wire-tagged hatchery Coho Salmon released, by clip status, within the Interior Fraser MU for brood years 1983 through 2023.
 
 plot_hatchery_tagged_releases("Interior Fraser")
 
@@ -2886,7 +2865,7 @@ The average total hatchery release within the {{< glossary IFR >}} basin was `r 
 Since the late 1990s, enhancement for {{< glossary IFR >}} Coho Salmon has taken one of three forms: 1) conservation enhancement, used to protect demes that are at risk of extirpation; 2) assessment enhancement, where releases of {{< glossary CWT >}} marked fish provide information for assessment of survival and minimal encounter rates and ocean distribution; and 3) rebuilding enhancement, where hatchery supplementation is used to increase escapements [@IFCRT_2006].  Enhancement activities are described in more detail by @Irvine_et_al_1999b, @Irvine_et_al_2000 and the @IFCRT_2006. Coded wire tagged and total releases are summarized in @fig-hatch-stock-releases-ifr. 
 
 ```{r fig.height=6.5, fig.width=6.5}
-#| fig-cap: Hatchery production of Coho Salmon released within the Interior Fraser {{< glossary MU >}}, brood years 1983 through 2020.
+#| fig-cap: Hatchery production of Coho Salmon released within the Interior Fraser {{< glossary MU >}}, brood years 1983 through 2023.
 #| label: fig-hatch-stock-releases-ifr
 
 plot_hatch_prod_obj$plot
@@ -3650,7 +3629,7 @@ The current {{< glossary PST >}}/{{< glossary Council display = PFMC >}} {{< glo
 
 ###### Indicator Stocks
 
-The Skagit MU has both hatchery and wild Coho Salmon {{< glossary CWT >}} indicator stock programs. Wild Yearling Coho Salmon are captured, coded-wire-tagged, and released within the Skagit Basin [@Litz_2025]. These releases are currently used as a marine survival rate indicator for the wild stock. The Skagit hatchery stock releases from Marblemount Hatchery and the tagged wild stock releases are used as {{< glossary ER >}} indicator stocks. Coho Salmon released from Marblemount Hatchery have been double index tagged starting with brood year 1994.
+The Skagit MU has both hatchery and wild Coho Salmon {{< glossary CWT >}} indicator stock programs. Wild Yearling Coho Salmon are captured, coded-wire-tagged, and released within the Skagit Basin [@Litz_2026]. These releases are currently used as a marine survival rate indicator for the wild stock. The Skagit hatchery stock releases from Marblemount Hatchery and the tagged wild stock releases are used as {{< glossary ER >}} indicator stocks. Coho Salmon released from Marblemount Hatchery have been double index tagged starting with brood year 1994.
 
 Coded wire tag recovery-based survival and {{< glossary ER >}} data are available for the Marblemount Hatchery and wild Coho Salmon tagging programs [@Haymes_2008]. The wild stock program (AKA Baker River program) began with broodyear 1983 and its purpose is to supply experimental and research smolts for gulper efficiency testing, serve as an indicator stock for wild Skagit Coho Salmon, and supplement natural production in the basin (WDFW_and_PSE_2003). An average of 39,000 Baker Lake wild smolts were captured, coded-wire tagged, and adipose fin clipped annually (@fig-wild-stock-tagging-skagit) for broodyears 1983 through 1995. Beginning with brood year 1996, an average of 20,000 fish have been captured and released annually with a {{< glossary CWT >}} and their fins intact. 
 
@@ -3964,7 +3943,7 @@ Hatchery and wild coded-wire tagging programs have been limited within the Still
 
 ```{r}
 
-plot_wild_tagged_rel_obj <- plot_wild_tagged_releases("Stillaguamish")
+plot_wild_tagged_rel_obj <- plot_wild_tagged_releases("Stillaguamish") 
 
 ```
 
