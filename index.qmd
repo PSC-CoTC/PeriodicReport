@@ -38,20 +38,17 @@ execute:
 
 ::: {.content-hidden unless-meta="devversion"}
 
-Dev note: using quarto-glossary to add hover-over text. Details and installation guide here: https://debruine.github.io/quarto-glossary/
-
-!! DRAFT DOCUMENT UNDER DEVELOPMENT !!
-
 **TO DO**
 
 - drop unnecessary tables from StaticTable
-- abundance figures overlaying MUs within regions (US in, US out, BC)
 - Extract Quillayute and Queets values from TAMMs (currntly based on FRAM)
 
 :::
+
 ```{r}
 #| echo: false
 #| include: false
+#| eval: false
 
 options(warn = -1)
 
@@ -63,6 +60,11 @@ if ("xfun" %in% loadedNamespaces()){
 ```{r internal_parms, include = FALSE}
 ## Semi-hardcoded params:
 year.min = 1998 ## minimum year to include from our fram databases. Code uses all years since then.
+
+#these are used in er_calculation chunk, currently starts on line 519
+#feeds into Chapter 9 Appendix: realized vs. target ER
+year.initial = 2004
+year.final = 2024
 ```
 
 ```{r setup, include=FALSE}
@@ -77,14 +79,9 @@ if(interactive()){ ## recreate parameters if being run interactively.
   )
 }
 
-# #biblio CSL (following AFS) from:
-# https://github.com/citation-style-language/styles/blob/master/american-fisheries-society.csl
-# dropped 'text-case="capitalize-first"' on L164
-
 library("tidyverse", quietly = T)
 library("here")
 library("readxl")
-#library("kableExtra", quietly = T)
 library("patchwork")
 library("gt")
 library("glue")
@@ -175,7 +172,7 @@ add_gt_scrolling <- function(gt_table, height = 500) {
     tab_options(
       container.height = px(height),
       container.overflow.y = "auto"
-    )
+    ) 
 }
 ```
 
@@ -248,7 +245,7 @@ if(params$clean_run == TRUE){
   # #build out the yearly totals and ER info for PSC stock (and fishery?) aggregations
   # #SUS fisheries are FRAM FisheryID 1:166
   # #Canadian are FRAM FisheryID 167:193
-  # #AK are 193:max?
+  # #AK are 193:max
   
   # join PSC metadata and re-aggregate, 
   # also adding columns of total mortality per year per re-aggregated PSC stock 
@@ -406,18 +403,12 @@ if(params$clean_run == TRUE){
       , by = "PSC_StockID"
     )
   
-  # full_join(
-  #   psc_pst |> count(RunYear),
-  #   psc_pre |> count(RunYear),
-  #   by = "RunYear"  
-  # ) |> print(n=100)
-  
   write_csv(psc_pre, here("../PeriodicReportData/psc_prefram_2004_2026.csv"))
 }
 ```
 
 ```{r loading_in, include=FALSE}
-#but to deal with WA Coast stocks from TAMM spreadsheets, among other reasons
+
 psc_pst <- readr::read_csv(here("../PeriodicReportData/psc_postfram_2004_2024.csv")) |> 
   rename(`Catch Year` = RunYear) |> 
   mutate(fishery_region = case_when(
@@ -432,9 +423,6 @@ psc_pre <- readr::read_csv(here("../PeriodicReportData/psc_prefram_2004_2026.csv
     FisheryID >= 167 & FisheryID < 194 ~ "Canada",
     FisheryID >= 194 ~ "AK"
   ))
-
-## Janky recreation of stock-specific info.
-## At some point, I should overhaul the original readin to be less annoying.
 
 psc_stock_pre <- psc_pre |> 
   select("Catch Year", PSC_StockID, PSC_StockName,
@@ -526,7 +514,7 @@ tryCatch({
 *Note that Quillayute and Queets values are those from the FRAM database and have not yet been extracted from the relevant TAMM cells for each year*
 :::
 
-```{r}
+```{r er_calculation}
 ## ER calculation stuff
 ests.post = psc_pst |> 
   distinct(`Catch Year`, PSC_Region, PSC_StockName, abund, low_mod_abund, mod_abd_abund) |> 
@@ -564,10 +552,6 @@ ests.joint = inner_join(ests.post, ests.pre, by = c("Catch Year", "PSC_Region", 
   )) |> 
   count(`Catch Year`, PSC_Region, prediction) |> 
   mutate(prediction = factor(prediction, c("Too High", "No Change", "Too Low")))
-
-## WE MAY WANT TO MOVE THESE ELSEWHERE
-year.initial = 2004
-year.final = 2022
 
 er.limits = inner_join(ests.post, ests.pre, by = c("Catch Year", "PSC_Region", "PSC_StockName"),
                        suffix = c("_post", "_pre")) |> 
@@ -1275,6 +1259,53 @@ tbl_summary <- function(stknm, msi_source, msi=FALSE){
 
 ```
 
+```{r us_dit_tables}
+
+dit_table <- function(mu_name){
+  
+  if(!mu_name %in% static$dit_codes$MU_Name){
+    return("Not a valid MU")
+  }
+  
+  mu_table <- static$dit_codes |> 
+    filter(
+      related_group_type == "D",
+      mu_name == MU_Name
+    ) |> 
+    select(
+      brood_year, 
+      hatchery_location_name,
+      related_group_id,
+      tag_code_or_release_id,
+      CWT_Clipped,
+      CWT_Unclipped_DIT,
+      Clipped_only,
+      Unclipped,
+      totalRel
+    ) |> 
+    rename(
+      `Brood Year` = brood_year,
+      Hatchery = hatchery_location_name,
+      `DIT Group ID` = related_group_id,
+      `Tag Code` = tag_code_or_release_id,
+      `CWT & Clipped` = CWT_Clipped,
+      `CWT & Unclipped` = CWT_Unclipped_DIT,
+      `Clipped Only` = Clipped_only,
+      `Untagged & Unclipped` = Unclipped,
+      `Total Released` = totalRel
+    ) |> 
+    arrange(Hatchery,`Brood Year`) |> 
+    gt() |> 
+    opt_row_striping() |> 
+    add_gt_scrolling()
+  
+  return(mu_table)
+}
+
+#dit_table("Skagit")
+
+```
+
 ::: {.content-hidden unless-meta="devversion"}
 This report is based on postseason data in `r basename(params$mdb_pst)` and preseason data in `r basename(params$mdb_pre)`, as well as supporting [StaticTables.xlsx](https://github.com/PSC-CoTC/PeriodicReport/blob/main/StaticTables.xlsx).
 :::
@@ -1286,7 +1317,6 @@ This report is based on postseason data in `r basename(params$mdb_pst)` and pres
 In response to a decline in natural Coho Salmon (*Onchorynchus kisutch*) abundance, the Pacific Salmon Commission (PSC) established a Southern Coho abundance-based management regime ({{< glossary CoABM >}}) in 1999 [@PSC_1999]. This Southern Coho Management Plan (SCMP, also referred to as ABM, or 'abundance based management') aimed to conserve Coho Salmon Management Units (MUs) of naturally-spawning Coho Salmon in southern British Columbia and Washington/Oregon based on abundance status and escapement goals. The {{< glossary SCMP >}} set out to constrain exploitation rates ({{< glossary ER >}}; defined as total fishing mortality divided by total fishing mortality plus escapement) below maximum levels (caps) on selected {{< glossary MUs >}} in order to achieve long-term Maximum Sustainable Harvests (MSHs). These constraints are implemented by specifying {{< glossary ER >}} caps for the individual {{< glossary MUs >}} dependent on annual abundance status. During their respective preseason planning processes, the Parties use management reference points to classify the status of each {{< glossary MU >}} as low, moderate, or abundant. The Parties then exchange these status determinations as a key input in the development of pre-season plans.
 
 When a new Coho Management Plan was agreed upon in 2008 (implemented 2009 through 2018; [@PSC_2009]) and the latest agreement finalized (applies to the period from catch years 2019 through 2028; [@PSC_2022]), modifications were made to the list of specified {{< glossary MUs >}} and to the manner in which {{< glossary ER >}} caps are established. This periodic report presents information for the {{< glossary MUs >}} identified in the most current Pacific Salmon Treaty's (PST) {{< glossary SCMP >}} (Chapter 5 of Annex IV in the current {{< glossary PST >}}). In the 2008 {{< glossary SCMP >}}, abundance-based management regimes were established to constrain {{< glossary ERs >}} on 13 {{< glossary MUs >}} of naturally-spawning Coho Salmon originating in rivers along the Washington/British Columbia (BC) border. Beginning in 2019, the most recent Management Plan [@PSC_2022] combined two of the Canadian {{< glossary MUs >}}, the Georgia Strait Vancouver Island and the Georgia Strait Mainland {{< glossary MUs >}} into the Strait of Georgia {{< glossary MU >}}. The 12 {{< glossary MUs >}} in the current {{< glossary PST >}} are listed below (@tbl-mus).
-
 
 ```{r new_mu_table}
 #| tbl-cap: Management Units within the current Pacific Salmon Treaty Southern Coho Management Plan.
@@ -6058,7 +6088,7 @@ gt(static$glossary)
 
 
 ```{r}
-#| tbl-cap: Table of target ER ("Preseason") and observed ER ("Postseason") for US Inside MUs from 2019 to 2022. "Postseason Unused Using Preseason Cap" compares how well Postseason ER would have met the Preseason cap. This removes the effects of shifts in the abundance category between pre and post-season (if the abundance category remained the same, "Postseason Unused Using Preseason Cap" will be the same as "Postseason Cap"). Outside limits need to be calculated separately; this has not been done yet.
+#| tbl-cap: !expr glue::glue('Table of target ER ("Preseason") and observed ER ("Postseason") for US Inside MUs from {year.initial} to {year.final} "Postseason Unused Using Preseason Cap" compares how well Postseason ER would have met the Preseason cap. This removes the effects of shifts in the abundance category between pre and post-season (if the abundance category remained the same, "Postseason Unused Using Preseason Cap" will be the same as "Postseason Cap"). Outside limits need to be calculated separately; this has not been done yet.')
 #| label: tbl-did-we-hit-er
 
 er.comparison = er.limits |> 
@@ -6088,7 +6118,7 @@ er.comparison |>
 # Appendix: FRAM Pre and Post-Season Command Files
 
 ```{r}
-#| tbl-cap: Pre- and post-season command files and base period used in FRAM to evaluate ERs MUs over catch years 2004 through 2023. "Post-season Original" command files are those used to generate estimates for the Annual ER Report provided to the Southern Panel during the PSC Annual Meeting.
+#| tbl-cap: Pre- and post-season command files and base period used in FRAM to evaluate ERs MUs over catch years 2004 through 2026. "Post-season Original" command files are those used to generate estimates for the Annual ER Report provided to the Southern Panel during the PSC Annual Meeting.
 #| label: tbl-commands
 static$run_files |> 
   select("Catch Year":"Base Period Used in Revised BKFRAM Run") |> 
@@ -6192,20 +6222,16 @@ static$run_files |>
 [^27]: Beginning BY 1995, all tagged releases were unmarked.
 
 # Appendix: U.S. DITs
-Data provided here was queried from the RMIS release database on 1/27/2025. 
+Data provided here was queried from the RMIS release database on 5/22/2026. 
 
 ## Skagit MU
 
 ```{r}
-#| tbl-cap: Double-index tag codes released within the Skagit MU, brood years 1994 through 2022.
+#| tbl-cap: Double-index tag codes released within the Skagit MU, brood years 1994 through 2023.
 #| label: tbl-dit-skagit
 
-static$dit_codes |> 
-  filter(`Management Unit` == "Skagit") |> 
-  filter(DIT == "Yes") |> 
-  select("Brood Year", "Hatchery", "DIT Group ID", "Tag Code", "Mark", "# Released") |> 
-  gt() |> 
-  opt_row_striping()
+dit_table("Skagit")
+
 ```
 ## Stillaguamish MU
 No Double-index-tag groups have been released in the Stillaguamish {{< glossary MU >}} to date.
@@ -6213,57 +6239,41 @@ No Double-index-tag groups have been released in the Stillaguamish {{< glossary 
 ## Snohomish MU
 
 ```{r}
-#| tbl-cap: Double-index tag codes released within the Snohomish MU, brood years 1996 through 2022.
+#| tbl-cap: Double-index tag codes released within the Snohomish MU, brood years 1996 through 2023.
 #| label: tbl-dit-snohomish
 
-static$dit_codes |> 
-  filter(`Management Unit` == "Snohomish") |> 
-  filter(DIT == "Yes") |> 
-  select("Brood Year", "Hatchery", "DIT Group ID", "Tag Code", "Mark", "# Released") |> 
-  gt() |> 
-  opt_row_striping()
+dit_table("Snohomish")
+
 ```
 
 ## Hood Canal MU
 
 ```{r}
-#| tbl-cap: Double-index tag codes released within the Hood Canal MU, brood years 1995 through 2022.
+#| tbl-cap: Double-index tag codes released within the Hood Canal MU, brood years 1995 through 2023.
 #| label: tbl-dit-hoodcanal
 
-static$dit_codes |> 
-  filter(`Management Unit` == "Hood Canal") |> 
-  filter(DIT == "Yes") |> 
-  select("Brood Year", "Hatchery", "DIT Group ID", "Tag Code", "Mark", "# Released") |> 
-  gt() |> 
-  opt_row_striping()
+dit_table("Hood Canal")
+
 ```
 
 ## Strait of Juan de Fuca MU
 
 ```{r}
-#| tbl-cap: Double-index tag codes released within the Strait of Juan de Fuca (SJDF) MU, brood years 1995 through 2022.
+#| tbl-cap: Double-index tag codes released within the Strait of Juan de Fuca (SJDF) MU, brood years 1995 through 2023.
 #| label: tbl-dit-sjdf
 
-static$dit_codes |> 
-  filter(`Management Unit` == "SJDF") |> 
-  filter(DIT == "Yes") |> 
-  select("Brood Year", "Hatchery", "DIT Group ID", "Tag Code", "Mark", "# Released") |> 
-  gt() |> 
-  opt_row_striping()
+dit_table("Strait of Juan de Fuca")
+
 ```
 
 ## Quillayute MU
 
 ```{r}
-#| tbl-cap: Double-index tag codes released within the Quillayute MU, brood years 1996 through 2022.
+#| tbl-cap: Double-index tag codes released within the Quillayute MU, brood years 1996 through 2023.
 #| label: tbl-dit-quillayute
 
-static$dit_codes |> 
-  filter(`Management Unit` == "Quillayute") |> 
-  filter(DIT == "Yes") |> 
-  select("Brood Year", "Hatchery", "DIT Group ID", "Tag Code", "Mark", "# Released") |> 
-  gt() |> 
-  opt_row_striping()
+dit_table("Quillayute")
+
 ```
 ## Hoh MU
 No Double-index-tag groups have been released in the Hoh {{< glossary MU >}} to date.
@@ -6271,27 +6281,19 @@ No Double-index-tag groups have been released in the Hoh {{< glossary MU >}} to 
 ## Queets MU
 
 ```{r}
-#| tbl-cap: Double-index tag codes released within the Queets MU, brood years 1995 through 2022.
+#| tbl-cap: Double-index tag codes released within the Queets MU, brood years 1995 through 2023.
 #| label: tbl-dit-Queets
 
-static$dit_codes |> 
-  filter(`Management Unit` == "Queets") |> 
-  filter(DIT == "Yes") |> 
-  select("Brood Year", "Hatchery", "DIT Group ID", "Tag Code", "Mark", "# Released") |> 
-  gt() |> 
-  opt_row_striping()
+dit_table("Queets")
+
 ```
 
 ## Grays Harbor MU
 
 ```{r}
-#| tbl-cap: Double-index tag codes released within the Grays Harbor MU, brood years 1995 through 2022.
+#| tbl-cap: Double-index tag codes released within the Grays Harbor MU, brood years 1995 through 2023.
 #| label: tbl-dit-graysharbor
 
-static$dit_codes |> 
-  filter(`Management Unit` == "Grays Harbor") |> 
-  filter(DIT == "Yes") |> 
-  select("Brood Year", "Hatchery", "DIT Group ID", "Tag Code", "Mark", "# Released") |> 
-  gt() |> 
-  opt_row_striping()
+dit_table("Grays Harbor")
+
 ```
